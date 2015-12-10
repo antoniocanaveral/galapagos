@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="tct_residentes" language="groovy" pageWidth="243" pageHeight="153" orientation="Landscape" columnWidth="243" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isSummaryNewPage="true">
+	<property name="ireport.zoom" value="2.1435888100000056"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="P_CRCNT_CODIGO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_PREVIEW" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT CRPER.CRPER_CODIGO,
+		CRPER.CRPER_NOMBRES NOMBRES,
+		CRPER.CRPER_APELLIDO_PATERNO APELLIDOS_PATERNO,
+		CRPER.CRPER_APELLIDO_MATERNO APELLIDOS_MATERNO,
+		CRPER.CRPER_NUM_DOC_IDENTIFIC CEDULA,
+		CRPER.CRPER_FECHA_NACIMIENTO FECHA_NAC,
+		CRPER.CRPER_LUGAR_NACIMIENTO,
+		CRDID.CRDID_DESCRIPCION,
+		CRPER.CRPER_GENERO,
+		CRPER.CRPER_OBSERVACIONES,
+		CRPER.CRPER_NUMERO_RESIDENCIA RESIDENCIA,
+		CRPER.CRPER_AUTORIZADO,
+		CRPER.CRPER_NUMERO_EXPEDIENTE,
+		CRPER.CRPER_FECHA_ARCHIVO,
+		CRPER.CRPER_FOTO FOTO,
+		CRPER.CRPER_FIRMA FIRMA,
+		CRRSD.CRTST_CODIGO,
+		CRRSD.CRRSD_MODALIDAD MODALIDAD,
+		CRTST.CRTST_DESCRIPCION DESCRIPCION,
+		CRNT.CRCNT_FECHA_APROBACION APROBACION,
+		CRNT.CRCNT_FECHA_CADUCIDAD RENOVACION,
+		CRNCN.CGNCN_NACIONALIDAD NACIONALIDAD,
+	(SELECT CRPER_FIRMA FROM SII.CGG_RES_PERSONA WHERE CRPER_CODIGO = (SELECT CGCNF_VALOR_CADENA FROM SII.CGG_CONFIGURACION WHERE CGCNF_CODIGO = 'CONF30')) FIRMA_PRE,
+	(SELECT CRPER_FIRMA FROM SII.CGG_RES_PERSONA WHERE CRPER_CODIGO = (SELECT CGCNF_VALOR_CADENA FROM SII.CGG_CONFIGURACION WHERE CGCNF_CODIGO = 'CONF31')) FIRMA_SECRE
+FROM SII.CGG_RES_PERSONA CRPER
+INNER JOIN SII.CGG_RES_DOCUMENTO_IDENTIFICACIO CRDID ON (CRPER.CRDID_CODIGO = CRDID.CRDID_CODIGO)
+INNER JOIN SII.CGG_RES_RESIDENCIA CRRSD ON CRPER.CRPER_CODIGO = CRRSD.CRPER_CODIGO AND CRRSD.CRRSD_VIGENTE
+INNER JOIN SII.CGG_NACIONALIDAD CRNCN ON (CRNCN.CGNCN_CODIGO = CRPER.CGNCN_CODIGO )
+INNER JOIN SII.CGG_RES_TIPO_SOLICITUD_TRAMITE CRTST ON (CRTST.CRTST_CODIGO = CRRSD.CRTST_CODIGO)
+INNER JOIN SII.CGG_RES_CARNET CRNT ON CRNT.CRRSD_CODIGO = CRRSD.CRRSD_CODIGO AND CRNT.CRCNT_CODIGO = $P{P_CRCNT_CODIGO}]]>
+	</queryString>
+	<field name="crper_codigo" class="java.lang.String"/>
+	<field name="nombres" class="java.lang.String"/>
+	<field name="apellidos_paterno" class="java.lang.String"/>
+	<field name="apellidos_materno" class="java.lang.String"/>
+	<field name="cedula" class="java.lang.String"/>
+	<field name="fecha_nac" class="java.sql.Timestamp"/>
+	<field name="crper_lugar_nacimiento" class="java.lang.String"/>
+	<field name="crdid_descripcion" class="java.lang.String"/>
+	<field name="crper_genero" class="java.lang.Integer"/>
+	<field name="crper_observaciones" class="java.lang.String"/>
+	<field name="residencia" class="java.lang.String"/>
+	<field name="crper_autorizado" class="java.lang.Boolean"/>
+	<field name="crper_numero_expediente" class="java.lang.String"/>
+	<field name="crper_fecha_archivo" class="java.sql.Timestamp"/>
+	<field name="foto" class="java.lang.Object"/>
+	<field name="firma" class="java.lang.Object"/>
+	<field name="crtst_codigo" class="java.lang.String"/>
+	<field name="modalidad" class="java.lang.Integer"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="aprobacion" class="java.sql.Timestamp"/>
+	<field name="renovacion" class="java.sql.Timestamp"/>
+	<field name="nacionalidad" class="java.lang.String"/>
+	<field name="firma_pre" class="java.lang.Object"/>
+	<field name="firma_secre" class="java.lang.Object"/>
+	<detail>
+		<band height="153" splitType="Stretch">
+			<image>
+				<reportElement x="70" y="25" width="103" height="102">
+					<printWhenExpression><![CDATA[$P{P_PREVIEW}==1]]></printWhenExpression>
+				</reportElement>
+				<imageExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/images/VistaPreliminar"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="125" y="61" width="85" height="8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cedula}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="72" y="61" width="52" height="8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CEDULA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="72" y="45" width="52" height="8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOMBRES:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="72" y="53" width="52" height="8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[APELLIDOS:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="72" y="69" width="52" height="8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NACIONALIDAD:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="72" y="77" width="52" height="8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[F. NACIMIENTO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="72" y="85" width="52" height="8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MOTIVO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="72" y="93" width="52" height="8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[APROBACION:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="125" y="93" width="35" height="8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{aprobacion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="72" y="101" width="52" height="8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CADUCIDAD:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="125" y="101" width="35" height="8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{renovacion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="102" width="72" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["No. "+$F{residencia}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="112" width="72" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[($F{modalidad}.intValue()==0?"PERMANENTE":"TEMPORAL")]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="5" y="40" width="60" height="60"/>
+				<imageExpression class="java.io.InputStream"><![CDATA[new ByteArrayInputStream((byte[])$F{foto})]]></imageExpression>
+			</image>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="125" y="77" width="84" height="8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{fecha_nac}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="125" y="45" width="104" height="8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nombres}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="125" y="69" width="85" height="8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nacionalidad}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="125" y="85" width="84" height="8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="133" y="109" width="82" height="32"/>
+				<imageExpression class="java.io.InputStream"><![CDATA[new ByteArrayInputStream((byte[])$F{firma})]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="125" y="53" width="85" height="8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{apellidos_paterno}+" "+$F{apellidos_materno}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="121" y="135" width="100" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="4" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FIRMA]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<summary>
+		<band height="153">
+			<staticText>
+				<reportElement x="0" y="118" width="70" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="Arial" size="5" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PRESIDENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="172" y="118" width="70" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="Arial" size="5" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SECRETARIO]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="70" y="123" width="102" height="11"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128B" drawText="false" checksumRequired="false">
+					<jr:codeExpression><![CDATA[$F{residencia}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<image>
+				<reportElement x="6" y="85" width="82" height="32"/>
+				<imageExpression class="java.io.InputStream"><![CDATA[new ByteArrayInputStream((byte[])$F{firma_pre})]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="155" y="85" width="82" height="32"/>
+				<imageExpression class="java.io.InputStream"><![CDATA[new ByteArrayInputStream((byte[])$F{firma_secre})]]></imageExpression>
+			</image>
+		</band>
+	</summary>
+</jasperReport>

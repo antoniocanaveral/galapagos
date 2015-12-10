@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="ireport.jasperserver.url" value="http://190.95.187.82:8081/jasperserver/services/repository"/>
+	<property name="ireport.jasperserver.reportUnit" value="/Reports/sii/gem/rptEstadisticoAplicacionesUbicacionesGeneral"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["E:\\CGG\\APP\\REPORTS\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_FECHA_INICIAL" class="java.util.Date"/>
+	<parameter name="P_FECHA_FINAL" class="java.util.Date"/>
+	<parameter name="P_TIPO_FECHA" class="java.lang.Integer"/>
+	<parameter name="P_TIPO_OFERTA" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT
+	CASE
+	WHEN  $P{P_TIPO_OFERTA} = 0 THEN 'Aplicaciones'
+	WHEN  $P{P_TIPO_OFERTA} = 3 THEN 'Ubicaciones'
+	WHEN  $P{P_TIPO_OFERTA} = 4 THEN 'Rechazados'
+	END AS CGCND_MENS_SELECCIONADO,
+	CASE
+	WHEN $P{P_TIPO_FECHA}=0 THEN (EXTRACT (YEAR FROM CGVCN_FECHA_PUBLICACION))::varchar
+	WHEN $P{P_TIPO_FECHA}=1 THEN (EXTRACT (YEAR FROM CGVCN_FECHA_PUBLICACION))||' - '||TO_CHAR(CGVCN_FECHA_PUBLICACION,'TMMonth')
+	WHEN $P{P_TIPO_FECHA}=2 THEN ''
+	END AS TIPO_FECHA,
+	ISL.CISLA_NOMBRE,
+	ARE.CGARE_NOMBRE,
+	SII.F_CGG_RES_PERSONA_SELECT_NOMBRES(PER.CRPER_CODIGO) NOMBRE_APLICANTE,
+	PER.CRPER_NUM_DOC_IDENTIFIC IDENTIFICACION,
+	COUNT(CAN.CGCND_CODIGO)
+FROM SII.CGG_GEM_VACANTE VAC
+INNER JOIN SII.CGG_GEM_CANDIDATO CAN ON(CAN.CGVCN_CODIGO=VAC.CGVCN_CODIGO)
+INNER JOIN SII.CGG_GEM_CARGO CAR ON(CAR.CGCRG_CODIGO=VAC.CGCRG_CODIGO)
+INNER JOIN  SII.CGG_GEM_AREA_FUNCIONAL ARE ON(ARE.CGARE_CODIGO=CAR.CGARE_CODIGO)
+INNER JOIN SII.CGG_USUARIO USU ON(USU.CUSU_CODIGO=CAN.CUSU_CODIGO)
+INNER JOIN SII.CGG_RES_PERSONA PER ON (PER.CRPER_CODIGO=USU.CRPER_CODIGO)
+LEFT JOIN SII.CGG_ISLA ISL ON(ISL.CISLA_CODIGO=VAC.CISLA_CODIGO)
+WHERE CGVCN_FECHA_PUBLICACION::DATE BETWEEN $P{P_FECHA_INICIAL} AND $P{P_FECHA_FINAL}
+AND($P{P_TIPO_OFERTA}=0 OR $P{P_TIPO_OFERTA}=CAN.CGCND_SELECCIONADO)
+GROUP BY TIPO_FECHA,CISLA_NOMBRE,CGCND_MENS_SELECCIONADO,ARE.CGARE_NOMBRE,NOMBRE_APLICANTE,IDENTIFICACION
+ORDER BY CISLA_NOMBRE DESC,CGARE_NOMBRE DESC]]>
+	</queryString>
+	<field name="cgcnd_mens_seleccionado" class="java.lang.String"/>
+	<field name="tipo_fecha" class="java.lang.String"/>
+	<field name="cisla_nombre" class="java.lang.String"/>
+	<field name="cgare_nombre" class="java.lang.String"/>
+	<field name="nombre_aplicante" class="java.lang.String"/>
+	<field name="identificacion" class="java.lang.String"/>
+	<field name="count" class="java.lang.Long"/>
+	<variable name="V_FILA" class="java.math.BigDecimal" incrementType="Report" calculation="Sum">
+		<variableExpression><![CDATA[new BigDecimal($V{V_FILA}.intValue()+1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<variable name="V_FECHA_ACTUAL" class="java.util.Date">
+		<variableExpression><![CDATA[new Date()]]></variableExpression>
+	</variable>
+	<variable name="V_TOTAL_REGISTROS" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{REPORT_COUNT}]]></variableExpression>
+	</variable>
+	<variable name="vTotal" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{count}]]></variableExpression>
+	</variable>
+	<variable name="vTotalOfertas" class="java.lang.Integer" resetType="Group" resetGroup="gSector" calculation="Sum">
+		<variableExpression><![CDATA[$F{count}]]></variableExpression>
+	</variable>
+	<group name="gTipoFecha">
+		<groupExpression><![CDATA[$F{tipo_fecha}]]></groupExpression>
+		<groupHeader>
+			<band height="25">
+				<textField>
+					<reportElement x="55" y="10" width="540" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{tipo_fecha}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="3" y="10" width="52" height="15"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[( $P{P_TIPO_FECHA}==0 ? "Año: " : ($P{P_TIPO_FECHA}==1 ? "Mes: " :"" ) )]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="414">
+				<crosstab>
+					<reportElement x="23" y="16" width="555" height="105"/>
+					<crosstabDataset>
+						<dataset resetType="Group" resetGroup="gTipoFecha"/>
+					</crosstabDataset>
+					<rowGroup name="cgare_nombre" width="70" totalPosition="End">
+						<bucket>
+							<bucketExpression class="java.lang.String"><![CDATA[$F{cgare_nombre}]]></bucketExpression>
+						</bucket>
+						<crosstabRowHeader>
+							<cellContents backcolor="#F0F8FF" mode="Opaque">
+								<box>
+									<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textField>
+									<reportElement style="Crosstab Data Text" x="0" y="0" width="70" height="15"/>
+									<textElement verticalAlignment="Middle"/>
+									<textFieldExpression class="java.lang.String"><![CDATA[$V{cgare_nombre}]]></textFieldExpression>
+								</textField>
+							</cellContents>
+						</crosstabRowHeader>
+						<crosstabTotalRowHeader>
+							<cellContents backcolor="#BFE1FF" mode="Opaque">
+								<box>
+									<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="70" height="13"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle"/>
+									<text><![CDATA[Total Isla]]></text>
+								</staticText>
+							</cellContents>
+						</crosstabTotalRowHeader>
+					</rowGroup>
+					<columnGroup name="cisla_nombre" height="17" totalPosition="End">
+						<bucket>
+							<bucketExpression class="java.lang.String"><![CDATA[$F{cisla_nombre}]]></bucketExpression>
+						</bucket>
+						<crosstabColumnHeader>
+							<cellContents backcolor="#F0F8FF" mode="Opaque">
+								<box>
+									<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textField>
+									<reportElement style="Crosstab Data Text" x="0" y="0" width="79" height="16"/>
+									<textElement verticalAlignment="Middle"/>
+									<textFieldExpression class="java.lang.String"><![CDATA[$V{cisla_nombre}]]></textFieldExpression>
+								</textField>
+							</cellContents>
+						</crosstabColumnHeader>
+						<crosstabTotalColumnHeader>
+							<cellContents backcolor="#BFE1FF" mode="Opaque">
+								<box>
+									<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="98" height="16"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle"/>
+									<text><![CDATA[Total Sector]]></text>
+								</staticText>
+							</cellContents>
+						</crosstabTotalColumnHeader>
+					</columnGroup>
+					<measure name="countMeasure" class="java.lang.Long" calculation="Sum">
+						<measureExpression><![CDATA[$F{count}]]></measureExpression>
+					</measure>
+					<crosstabCell width="79" height="16">
+						<cellContents>
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="79" height="15"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression class="java.lang.Long"><![CDATA[$V{countMeasure}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="79" height="14" rowTotalGroup="cgare_nombre">
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="79" height="13"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression class="java.lang.Long"><![CDATA[$V{countMeasure}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="98" height="16" columnTotalGroup="cisla_nombre">
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="98" height="15"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression class="java.lang.Long"><![CDATA[$V{countMeasure}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="98" height="14" rowTotalGroup="cgare_nombre" columnTotalGroup="cisla_nombre">
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="98" height="13"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression class="java.lang.Long"><![CDATA[$V{countMeasure}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabCell>
+				</crosstab>
+				<bar3DChart>
+					<chart>
+						<reportElement positionType="Float" x="5" y="121" width="590" height="293"/>
+						<chartTitle>
+							<font size="13" isBold="true"/>
+							<titleExpression><![CDATA["OFERTAS APLICADAS POR SECTOR E ISLA"]]></titleExpression>
+						</chartTitle>
+						<chartSubtitle>
+							<subtitleExpression><![CDATA["Desde " + new java.text.SimpleDateFormat("dd/MM/yyyy").format($P{P_FECHA_INICIAL})+ " hasta " + new java.text.SimpleDateFormat("dd/MM/yyyy").format($P{P_FECHA_FINAL})+"     "]]></subtitleExpression>
+						</chartSubtitle>
+						<chartLegend position="Bottom"/>
+					</chart>
+					<categoryDataset>
+						<dataset resetType="Group" resetGroup="gTipoFecha"/>
+						<categorySeries>
+							<seriesExpression><![CDATA[$F{cisla_nombre}]]></seriesExpression>
+							<categoryExpression><![CDATA[$F{cgare_nombre}]]></categoryExpression>
+							<valueExpression><![CDATA[$V{vTotalOfertas}]]></valueExpression>
+						</categorySeries>
+					</categoryDataset>
+					<bar3DPlot isShowLabels="true">
+						<plot foregroundAlpha="1.0"/>
+						<itemLabel color="#000000" backgroundColor="#FFFFFF"/>
+						<categoryAxisLabelExpression><![CDATA["SECTORES"]]></categoryAxisLabelExpression>
+						<categoryAxisFormat>
+							<axisFormat>
+								<labelFont>
+									<font size="9" isBold="true"/>
+								</labelFont>
+								<tickLabelFont/>
+							</axisFormat>
+						</categoryAxisFormat>
+						<valueAxisLabelExpression><![CDATA["N° DE OFERTAS APLICADAS"]]></valueAxisLabelExpression>
+						<valueAxisFormat>
+							<axisFormat>
+								<labelFont>
+									<font size="9" isBold="true"/>
+								</labelFont>
+								<tickLabelFont/>
+							</axisFormat>
+						</valueAxisFormat>
+					</bar3DPlot>
+				</bar3DChart>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="gIsla">
+		<groupExpression><![CDATA[$F{cisla_nombre}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<textField>
+					<reportElement x="35" y="0" width="560" height="20"/>
+					<box leftPadding="5"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{cisla_nombre}.toUpperCase()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="5" y="0" width="30" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Isla:]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="gSector">
+		<groupExpression><![CDATA[$F{cgare_nombre}]]></groupExpression>
+		<groupHeader>
+			<band height="41">
+				<textField>
+					<reportElement x="55" y="0" width="540" height="20"/>
+					<box leftPadding="5"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{cgare_nombre}.toUpperCase()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="283" y="26" width="83" height="15"/>
+					<box leftPadding="3">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Identificación]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="366" y="26" width="100" height="15"/>
+					<box leftPadding="3">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Ofertas aplicadas]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="81" y="26" width="202" height="15"/>
+					<box leftPadding="3">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Nombres]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="5" y="0" width="50" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Sector:]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="15">
+				<textField>
+					<reportElement x="366" y="0" width="100" height="15"/>
+					<box rightPadding="5"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$V{vTotalOfertas}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="283" y="0" width="83" height="15"/>
+					<box leftPadding="0" rightPadding="3"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8" isBold="true" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Total:]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="13">
+			<textField>
+				<reportElement x="366" y="0" width="100" height="13"/>
+				<box rightPadding="5">
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{count}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="81" y="0" width="202" height="13"/>
+				<box leftPadding="3">
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nombre_aplicante}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="283" y="0" width="83" height="13"/>
+				<box leftPadding="3">
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{identificacion}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="14" splitType="Stretch"/>
+	</summary>
+</jasperReport>

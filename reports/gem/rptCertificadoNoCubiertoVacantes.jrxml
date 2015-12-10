@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="595" pageHeight="841" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.2396694214876032"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="181"/>
+	<property name="ireport.jasperserver.reportUnit" value="/Reports/sii/gem/rptCertificadoNoCubiertoVacantes"/>
+	<property name="ireport.jasperserver.url" value="https://190.95.187.82/jasperserver/services/repository"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["E:\\CGG\\APP\\REPORTS\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CGVCN_CODIGO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+VAC.CGVCN_NUMERO_COMUNICADO,
+CISLA_NOMBRE,
+TO_CHAR(VAC.CGVCN_FECHA_PUBLICACION,'dd/mm/YYYY') as CGVCN_FECHA_PUBLICACION,
+SII.F_RPT_NOMBRE_OFERTANTE(VAC.CUSU_CODIGO)  AS CGVCN_OFERTANTE,
+CGVCN_NUMERO_VACANTES::VARCHAR AS CGVCN_NUMERO_VACANTES,
+CGCRG_NOMBRE,
+VAC.CGVCN_DIRECCION,
+VAC.CGVCN_DURACION_OFERTA,
+CRG.CRCRG_NOMBRE,
+SII.F_RPT_NOMBRE_OFERTANTE(VAC.CGVCN_USUARIO_INSERT,1) AS CUSU_RESPONSABLE,
+CASE
+ WHEN SII.F_RPT_PERSONA_TIPO(VAC.CUSU_CODIGO)::BOOLEAN = FALSE THEN SII.F_RPT_NOMBRE_OFERTANTE(VAC.CUSU_CODIGO)
+ WHEN SII.F_RPT_PERSONA_TIPO(VAC.CUSU_CODIGO)::BOOLEAN = TRUE THEN VAC.CGVCN_DESCRIPCION
+END AS CGVCN_DESCRIPCION_TRABAJO,
+VAC.CGVCN_SALARIO,
+TSA.CGTSA_NOMBRE
+FROM SII.CGG_GEM_VACANTE VAC
+INNER JOIN SII.CGG_ISLA ISL ON ISL.CISLA_CODIGO = VAC.CISLA_CODIGO
+INNER JOIN SII.CGG_GEM_CARGO CAR ON CAR.CGCRG_CODIGO = VAC.CGCRG_CODIGO
+INNER JOIN SII.CGG_GEM_TIPO_SALARIO TSA ON TSA.CGTSA_CODIGO = VAC.CGTSA_CODIGO
+INNER JOIN SII.CGG_USUARIO USU ON USU.CUSU_CODIGO = VAC.CUSU_CODIGO
+LEFT JOIN SII.CGG_USUARIO USU_RES ON USU_RES.CUSU_NOMBRE_USUARIO = VAC.CGVCN_USUARIO_INSERT
+INNER JOIN SII.CGG_RES_PERSONA PER ON PER.CRPER_CODIGO = USU.CRPER_CODIGO
+LEFT JOIN SII.CGG_RES_CARGO CRG ON CRG.CRCRG_CODIGO = USU_RES.CRCRG_CODIGO
+WHERE VAC.CGVCN_ESTADO = TRUE
+AND VAC.CGVCN_NUMERO_COMUNICADO IS NOT NULL
+AND VAC.CGVCN_CODIGO =$P{P_CGVCN_CODIGO}]]>
+	</queryString>
+	<field name="cgvcn_numero_comunicado" class="java.lang.String"/>
+	<field name="cisla_nombre" class="java.lang.String"/>
+	<field name="cgvcn_fecha_publicacion" class="java.lang.String"/>
+	<field name="cgvcn_ofertante" class="java.lang.String"/>
+	<field name="cgvcn_numero_vacantes" class="java.lang.String"/>
+	<field name="cgcrg_nombre" class="java.lang.String"/>
+	<field name="cgvcn_direccion" class="java.lang.String"/>
+	<field name="cgvcn_duracion_oferta" class="java.lang.Integer"/>
+	<field name="crcrg_nombre" class="java.lang.String"/>
+	<field name="cusu_responsable" class="java.lang.String"/>
+	<field name="cgvcn_descripcion_trabajo" class="java.lang.String"/>
+	<field name="cgvcn_salario" class="java.math.BigDecimal"/>
+	<field name="cgtsa_nombre" class="java.lang.String"/>
+	<variable name="V_FILA" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[new BigDecimal($V{V_FILA}.intValue()+1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<variable name="V_FECHA_ACTUAL" class="java.util.Date">
+		<variableExpression><![CDATA[new Date()]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="167" splitType="Stretch">
+			<image>
+				<reportElement x="-21" y="-20" width="596" height="139"/>
+				<imageExpression class="java.lang.String"><![CDATA["repo:logo_certificado"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="100" y="110" width="155" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CERTIFICADO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="260" y="110" width="220" height="20"/>
+				<textElement verticalAlignment="Top">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["SGE-"+$F{cgvcn_numero_comunicado}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="19" y="141" width="519" height="17" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["La suscrita  "+$F{cusu_responsable}+" "+$F{crcrg_nombre}+" CERTIFICA:<BR>"+
+"De acuerdo a comunicado No. "+$F{cgvcn_numero_comunicado}+" de fecha "+$F{cgvcn_fecha_publicacion}+" publicado por "+"<i>"+ $F{cgvcn_ofertante}+"</i>"+
+", para contratar "+$F{cgvcn_numero_vacantes}+" "+$F{cgcrg_nombre}+", el departamento de Gestión de Empleo en la Isla "+$F{cisla_nombre}+
+" recept&oacute; las siguientes postulaciones a dicho cargo publicado: <br>"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="210" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="Float" x="17" y="67" width="517" height="80"/>
+				<textElement textAlignment="Justified" markup="html"/>
+				<text><![CDATA[La empresa si cumplió con el proceso de entrevista  como lo indica la resolución <b>No 6623-CCCRCI-29-VII-2008</b> emitida por el Comité de Calificación y Control de Residencia en su <b>Art. 1</b> manifiesta que “En el caso que el certificado de existencia de mano de obra otorgado por el <b>CONSEJO DE GOBIERNO</b> señale que <b>si existe personal calificado para ocupar el cargo</b>, las Unidades de Control de Residencia <b>designará un delegado para que esté presente en el momento de la entrevista y adherirá su firma de responsabilidad en los informes técnicos presentados</b>”. <br><br>
+La conclusión de la entrevista fue la siguiente:]]></text>
+			</staticText>
+			<subreport>
+				<reportElement positionType="Float" x="34" y="152" width="499" height="11"/>
+				<subreportParameter name="P_CGVCN_CODIGO">
+					<subreportParameterExpression><![CDATA[$P{P_CGVCN_CODIGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:rptCertificadoNoCubiertoVacantes_entrevista"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement positionType="Float" x="16" y="168" width="517" height="30"/>
+				<textElement/>
+				<text><![CDATA[Información que pongo a su disposición para la decisión del Comité de Calificación y Control de Residencia.]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="17" y="21" width="519" height="16"/>
+				<textElement textAlignment="Justified">
+					<font size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Revisadas las postulaciones recibidas, se procedió a analizar el cumplimiento de los requisitos exigido en el comunicado radial, procediendo a entregar al SOLICITANTE las siguientes postulaciones que cumplen con el perfil adjuntando sus CV y documentos de respaldo en formato digital de :"]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement positionType="Float" x="37" y="46" width="499" height="11"/>
+				<subreportParameter name="P_CGVCN_CODIGO">
+					<subreportParameterExpression><![CDATA[$P{P_CGVCN_CODIGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="P_MOSTRAR">
+					<subreportParameterExpression><![CDATA['1']]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:rptCertificadoNoCubiertoVacantes_candidato"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement positionType="Float" x="37" y="0" width="497" height="11"/>
+				<subreportParameter name="P_CGVCN_CODIGO">
+					<subreportParameterExpression><![CDATA[$P{P_CGVCN_CODIGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="P_MOSTRAR">
+					<subreportParameterExpression><![CDATA['0']]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:rptCertificadoNoCubiertoVacantes_candidato"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="32" splitType="Stretch">
+			<textField evaluationTime="Page" pattern="EEEEE dd MMMMM yyyy HH:mm:ss">
+				<reportElement x="3" y="3" width="197" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="2" y="1" width="552" height="1"/>
+			</line>
+			<textField evaluationTime="Report">
+				<reportElement x="517" y="3" width="17" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="469" y="2" width="23" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Pág.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="492" y="2" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="505" y="2" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[de ]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="147">
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement positionType="FixRelativeToBottom" x="18" y="0" width="519" height="49" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center" markup="html">
+					<font size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Atentamente,"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement positionType="FixRelativeToBottom" x="20" y="49" width="517" height="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cusu_responsable}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement positionType="FixRelativeToBottom" isPrintRepeatedValues="false" x="153" y="63" width="250" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" markup="html">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crcrg_nombre}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="112" width="552" height="1"/>
+			</line>
+			<textField evaluationTime="Page" pattern="EEEEE dd MMMMM yyyy HH:mm:ss">
+				<reportElement x="1" y="114" width="199" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="517" y="115" width="17" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="469" y="114" width="23" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Pág.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="492" y="114" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="505" y="114" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[de ]]></text>
+			</staticText>
+		</band>
+	</lastPageFooter>
+</jasperReport>

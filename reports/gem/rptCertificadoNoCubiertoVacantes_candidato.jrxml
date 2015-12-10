@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptCertificadoNoCubiertoVacantes_candidato" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="P_CGVCN_CODIGO" class="java.lang.String"/>
+	<parameter name="P_MOSTRAR" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[Select
+	CRPER_NUM_DOC_IDENTIFIC,
+	crper_apellido_paterno||' '||crper_apellido_materno||' '||crper_nombres as CRPER_NOMBRES,
+	CRPER_NUMERO_RESIDENCIA,
+	CGCND_SELECCIONADO
+from sii.cgg_gem_candidato can
+inner join sii.cgg_usuario usu on usu.cusu_codigo = can.cusu_codigo
+inner join sii.cgg_res_persona per on usu.crper_codigo = per.crper_codigo
+where can.CGVCN_CODIGO  = $P{P_CGVCN_CODIGO}
+ORDER BY CRPER_NOMBRES]]>
+	</queryString>
+	<field name="crper_num_doc_identific" class="java.lang.String"/>
+	<field name="crper_nombres" class="java.lang.String"/>
+	<field name="crper_numero_residencia" class="java.lang.String"/>
+	<field name="cgcnd_seleccionado" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="82" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_num_doc_identific}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="82" y="0" width="168" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_nombres}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="270" y="0" width="86" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_numero_residencia}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="398" y="0" width="100" height="20">
+					<printWhenExpression><![CDATA[$P{P_MOSTRAR}.equals('1')]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cgcnd_seleccionado}.equals(0) ||  $F{cgcnd_seleccionado}.equals(2)
+    ? "NO CUMPLE PERFIL":"CUMPLE PERFIL"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="0.9090909090909101"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["E:\\CGG\\APP\\REPORTS\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CVVEH_CODIGO" class="java.lang.String"/>
+	<parameter name="P_NUMERO_CERTIFICADO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+VEH.CVVEH_FECHA_INGRESO CVHST_FECHA_TRASPASO,
+(SELECT I.CISLA_NOMBRE FROM SII.CGG_ISLA I WHERE I.CISLA_CODIGO = TRA.CISLA_CODIGO) CISLA_NOMBRE,
+CASE
+	WHEN TRA.CRPER_CODIGO IS NOT NULL AND TRA.CRPJR_CODIGO IS NULL THEN SII.F_CGG_RES_PERSONA_SELECT_NOMBRES(TRA.CRPER_CODIGO)
+	WHEN TRA.CRPJR_CODIGO IS NOT NULL THEN (SELECT PER.CRPJR_RAZON_SOCIAL FROM SII.CGG_RES_PERSONA_JURIDICA PER WHERE PER.CRPJR_CODIGO=TRA.CRPJR_CODIGO)
+END  AS CRPER_SOLICITANTE,
+CASE
+	WHEN TRA.CRPER_CODIGO IS NOT NULL AND TRA.CRPJR_CODIGO IS NULL THEN (SELECT PER.CRPER_NUM_DOC_IDENTIFIC FROM SII.CGG_RES_PERSONA PER WHERE PER.CRPER_CODIGO=TRA.CRPER_CODIGO)
+	WHEN TRA.CRPJR_CODIGO IS NOT NULL THEN (SELECT PER.CRPJR_NUMERO_IDENTIFICACION FROM SII.CGG_RES_PERSONA_JURIDICA PER WHERE PER.CRPJR_CODIGO=TRA.CRPJR_CODIGO)
+END AS CRPER_NUM_DOC_IDENTIFIC,
+SII.F_RPT_VEHICULO_CATEGORIAS(VEH.CVCTG_CODIGO) AS CVCTG_NOMBRE,
+CASE
+ WHEN VEH.CVVEH_TIPO = 0 THEN (SELECT MAR.CVMRC_NOMBRE FROM SII.CGG_VEH_MARCA MAR WHERE MAR.CVMRC_CODIGO = VEH.CVMRC_CODIGO)
+ WHEN VEH.CVVEH_TIPO = 1 THEN VEH.CVVEH_NOMBRE
+ WHEN VEH.CVVEH_TIPO = 2 THEN (SELECT MAR.CVMRC_NOMBRE FROM SII.CGG_VEH_MARCA MAR WHERE MAR.CVMRC_CODIGO = VEH.CVMRC_CODIGO)
+END AS CVVEH_NOMBRE_MARCA,
+VEH.CVVEH_ANIO_PRODUCCION,
+ARRAY_TO_STRING(ARRAY((SELECT DISTINCT MOT.CVMTR_SERIE FROM SII.CGG_VEH_VEHICULO_MOTOR VMO INNER JOIN SII.CGG_VEH_MOTOR MOT ON (VMO.CVMTR_CODIGO = MOT.CVMTR_CODIGO) WHERE VEH.CVVEH_CODIGO=VMO.CVVEH_CODIGO)),', ') AS CVMTR_SERIE,
+CASE
+ WHEN VEH.CVVEH_TIPO = 0 THEN ', chasis: '||VEH.CVVEH_CHASIS||', placa: '||VEH.CVVEH_PLACA
+ WHEN VEH.CVVEH_TIPO = 1 THEN 'eslora: '||VEH.CVVEH_ESLORA::VARCHAR||' m.'||', manga: '||VEH.CVVEH_MANGA::VARCHAR||' m.'||', puntal: '||VEH.CVVEH_PUNTAL::VARCHAR||' m.'||', material: '||VEH.CVVEH_MATERIAL
+ WHEN VEH.CVVEH_TIPO = 2 THEN ', chasis: '||VEH.CVVEH_CHASIS||', placa: '||VEH.CVVEH_PLACA
+END  AS CVVEH_CARACTERISTICAS,
+CASE
+ WHEN VEH.CVCLR_CODIGO IS NOT NULL AND VEH.CGG_CVCLR_CODIGO IS NULL THEN (SELECT CVCLR_NOMBRE FROM CGG_VEH_COLOR COL WHERE COL.CVCLR_CODIGO=VEH.CVCLR_CODIGO OR COL.CVCLR_CODIGO=VEH.CVCLR_CODIGO)
+ WHEN VEH.CGG_CVCLR_CODIGO IS NOT NULL AND VEH.CVCLR_CODIGO IS NULL THEN (SELECT CVCLR_NOMBRE FROM CGG_VEH_COLOR COL WHERE COL.CVCLR_CODIGO=VEH.CVCLR_CODIGO OR COL.CVCLR_CODIGO=VEH.CGG_CVCLR_CODIGO)
+ WHEN VEH.CVCLR_CODIGO IS NOT NULL AND VEH.CGG_CVCLR_CODIGO IS NOT NULL THEN
+ CASE
+	WHEN VEH.CVCLR_CODIGO <> VEH.CGG_CVCLR_CODIGO THEN(SELECT CVCLR_NOMBRE FROM CGG_VEH_COLOR COL WHERE COL.CVCLR_CODIGO=VEH.CVCLR_CODIGO) ||' y '||(SELECT CVCLR_NOMBRE FROM CGG_VEH_COLOR COL WHERE COL.CVCLR_CODIGO=VEH.CGG_CVCLR_CODIGO)
+	WHEN VEH.CVCLR_CODIGO = VEH.CGG_CVCLR_CODIGO THEN(SELECT CVCLR_NOMBRE FROM CGG_VEH_COLOR COL WHERE COL.CVCLR_CODIGO=VEH.CVCLR_CODIGO OR COL.CVCLR_CODIGO=VEH.CGG_CVCLR_CODIGO)
+ END
+END AS CVCLR_COLORES,
+(SELECT CGCNF_VALOR_CADENA FROM SII.CGG_CONFIGURACION WHERE CGCNF_CODIGO = 'CONF115') REPRESENTANTE_CGG
+FROM SII.CGG_VEH_VEHICULO VEH
+LEFT JOIN  SII.CGG_RES_TRAMITE TRA ON(VEH.CVVEH_CODIGO=TRA.CVVEH_CODIGO)
+LEFT JOIN SII.CGG_VEH_HISTORIAL HIS ON(VEH.CVVEH_CODIGO=HIS.CVVEH_CODIGO)
+WHERE VEH.CVVEH_CODIGO=$P{P_CVVEH_CODIGO}
+AND VEH.CVVEH_INGRESO=TRUE
+AND (VEH.CVVEH_SALIO=FALSE OR VEH.CVVEH_SALIO IS NULL)]]>
+	</queryString>
+	<field name="cvhst_fecha_traspaso" class="java.sql.Timestamp"/>
+	<field name="cisla_nombre" class="java.lang.String"/>
+	<field name="crper_solicitante" class="java.lang.String"/>
+	<field name="crper_num_doc_identific" class="java.lang.String"/>
+	<field name="cvctg_nombre" class="java.lang.String"/>
+	<field name="cvveh_nombre_marca" class="java.lang.String"/>
+	<field name="cvveh_anio_produccion" class="java.lang.Long"/>
+	<field name="cvmtr_serie" class="java.lang.String"/>
+	<field name="cvveh_caracteristicas" class="java.lang.String"/>
+	<field name="cvclr_colores" class="java.lang.String"/>
+	<field name="representante_cgg" class="java.lang.String"/>
+	<variable name="V_FILA" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[new BigDecimal($V{V_FILA}.intValue()+1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<variable name="V_FECHA_ACTUAL" class="java.util.Date">
+		<variableExpression><![CDATA[new Date()]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="20" splitType="Stretch">
+			<subreport>
+				<reportElement x="4" y="0" width="554" height="20"/>
+				<subreportParameter name="SUBREPORT_DIR"/>
+				<subreportParameter name="P_SUBTITULO_2">
+					<subreportParameterExpression><![CDATA[""]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="P_SUBTITULO_1">
+					<subreportParameterExpression><![CDATA[""]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptEncabezado"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="94" splitType="Stretch">
+			<textField>
+				<reportElement x="18" y="33" width="518" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="17"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["No." + $P{P_NUMERO_CERTIFICADO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="18" y="13" width="518" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="17" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["CERTIFICADO DE REGISTRO"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="6" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="474" splitType="Stretch">
+			<textField>
+				<reportElement x="16" y="64" width="524" height="136" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["En representación del CONSEJO DE GOBIERNO DE REGIMEN ESPECIAL DE GALAPAGOS, certifico que el Sr(a) "+$F{crper_solicitante}+", con identificación No: "+$F{crper_num_doc_identific}+ ", registró en la isla "+$F{cisla_nombre}.toUpperCase()+" su vehiculo con "+$F{cvveh_caracteristicas}+", categoria "+$F{cvctg_nombre}+", marca: "+$F{cvveh_nombre_marca}+", año de fabricación "+$F{cvveh_anio_produccion}+", con número de motor "+$F{cvmtr_serie}+". <br><br><br> El interesado podrá hacer uso de este certificado para la matriculación de su vehículo, y todo trámite pertinente."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="57" y="335" width="145" height="22" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Representante CGG"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="16" y="18" width="390" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cisla_nombre}+" "+new java.text.SimpleDateFormat("EEEEE, dd MMMMM yyyy").format(new Date())]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="318" y="335" width="170" height="22" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Control Previo,"]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="416" y="418" width="120" height="24"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code39 (Extended)" drawText="false" checksumRequired="false">
+					<jr:codeExpression><![CDATA[$P{P_NUMERO_CERTIFICADO}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<textField>
+				<reportElement x="416" y="442" width="120" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{P_NUMERO_CERTIFICADO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="23" y="315" width="211" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{representante_cgg}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="7" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="52" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="18" width="554" height="13"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptPie"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement x="511" y="3" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="488" y="3" width="23" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Pág.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="524" y="3" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[de ]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="3" y="3" width="120" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="2" y="1" width="552" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="536" y="3" width="17" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

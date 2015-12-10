@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="0" isSummaryWithPageHeaderAndFooter="true" isFloatColumnFooter="true">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="ireport.jasperserver.reportUnit" value="/Reports/sii/residencia/rptListadoResidentesTemporalesPreaprobados"/>
+	<property name="ireport.jasperserver.url" value="http://190.95.187.82:8081/jasperserver/services/repository"/>
+	<parameter name="P_CISLA_CODIGO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_FECHA_INICIAL" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_FECHA_FINAL" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT	CMT.CRCOM_CODIGO,
+	CMT.CRCOM_NOMBRE,
+	CSL.CISLA_NOMBRE,
+ F_TRAMITE_TIPO(F_TIPO_SOLICITUD_PADRE(TR.CRTST_CODIGO)) AS TIPO_RESIDENCIA,
+  TR.CRTRA_ANIO||'-'||TR.CRTRA_NUMERO AS CRTRA_NUMERO,
+  SII.F_CGG_RES_PERSONA_SELECT_NOMBRES(TR.CGG_CRPER_CODIGO) AS CRPER_BENEFICIARIO,
+  (SELECT RP.CRPER_NUM_DOC_IDENTIFIC FROM SII.CGG_RES_PERSONA RP WHERE TR.CGG_CRPER_CODIGO = RP.CRPER_CODIGO) AS CRPER_NUM_DOC_IDENTIFIC_BENEF,
+  CASE
+  WHEN SCP.CSCTP_NOMBRE IS NULL AND CA.CRCRG_NOMBRE IS NOT NULL THEN CA.CRCRG_NOMBRE
+  WHEN SCP.CSCTP_NOMBRE IS NOT NULL AND CA.CRCRG_NOMBRE IS NULL  THEN SCP.CSCTP_NOMBRE
+  WHEN SCP.CSCTP_NOMBRE IS NOT NULL AND CA.CRCRG_NOMBRE IS NOT NULL  THEN SCP.CSCTP_NOMBRE||' / '||CA.CRCRG_NOMBRE
+  WHEN SCP.CSCTP_NOMBRE IS NULL AND CA.CRCRG_NOMBRE IS NULL THEN 'No Define'
+  END AS CRCRG_NOMBRE,
+  (SELECT ST.CRTST_DESCRIPCION FROM SII.CGG_RES_TIPO_SOLICITUD_TRAMITE ST WHERE ST.CRTST_CODIGO = TR.CRTST_CODIGO) AS CRTST_DESCRIPCION,
+  CASE
+	WHEN TR.CRPJR_CODIGO IS NOT NULL AND TR.CRPER_CODIGO IS NULL THEN SII.F_CGG_RES_PERSONA_JURIDICA_SELECT_NOMBRES(TR.CRPJR_CODIGO)
+	WHEN TR.CRPJR_CODIGO IS NOT NULL AND TR.CRPER_CODIGO IS NOT NULL THEN SII.F_CGG_RES_PERSONA_JURIDICA_SELECT_NOMBRES(TR.CRPJR_CODIGO) ||' '||SII.F_CGG_RES_PERSONA_SELECT_NOMBRES(TR.CRPER_CODIGO)
+	WHEN TR.CRPJR_CODIGO IS NULL AND TR.CRPER_CODIGO IS NOT NULL THEN SII.F_CGG_RES_PERSONA_SELECT_NOMBRES(TR.CRPER_CODIGO)
+  END AS CRPER_AUSPICIANTE,
+  (SELECT RP.CRPER_NUM_DOC_IDENTIFIC FROM SII.CGG_RES_PERSONA RP WHERE TR.CRPER_CODIGO = RP.CRPER_CODIGO) AS CRPER_NUM_DOC_IDENTIFIC_AUSP,
+  TR.CRTRA_FOLIO,
+  (SELECT TST.CRTST_DESCRIPCION FROM SII.CGG_RES_TIPO_SOLICITUD_TRAMITE TST WHERE TST.CRTST_CODIGO=TR.CRTST_CODIGO) AS CRTST_SOLICITUD,
+  (SELECT CI.CISLA_NOMBRE FROM SII.CGG_ISLA CI WHERE CI.CISLA_CODIGO=TR.CISLA_CODIGO ) AS CISLA_NOMBRE,
+  (SELECT TST.CRTST_DESCRIPCION FROM SII.CGG_RES_TIPO_SOLICITUD_TRAMITE TST WHERE TST.CRTST_CODIGO=SII.F_TIPO_SOLICITUD_PADRE(TR.CRTST_CODIGO)) AS CRTST_DESCRIPCION_PADRE,
+  (SELECT ET.CRETT_NOMBRE FROM SII.CGG_RES_ESTADO_TRAMITE ET WHERE ET.CRETT_CODIGO=TR.CRETT_CODIGO )  AS CRETT_NOMBRE,
+  (SELECT CONF.CGCNF_VALOR_CADENA FROM SII.CGG_CONFIGURACION CONF WHERE CONF.CGCNF_CODIGO = 'CONF113') CUSU_RESPONSABLE
+FROM SII.CGG_RES_TRAMITE TR
+INNER JOIN SII.CGG_ISLA CSL ON CSL.CISLA_CODIGO = TR.CISLA_CODIGO
+LEFT JOIN SII.CGG_RES_PERSONA PER ON(PER.CRPER_CODIGO=TR.CGG_CRPER_CODIGO)
+LEFT JOIN SII.CGG_RES_OCUPACION_LABORAL OCL ON(OCL.CRPER_CODIGO=PER.CRPER_CODIGO)
+LEFT JOIN SII.CGG_SECTOR_PRODUCTIVO SCP ON(SCP.CSCTP_CODIGO=OCL.CSCTP_CODIGO)
+LEFT JOIN SII.CGG_RES_CARGO CA ON(TR.CRTRA_ACTIVIDAD_RESIDENCIA = CA.CRCRG_CODIGO)
+LEFT JOIN SII.CGG_RES_TIPO_SOLICITUD_TRAMITE TST ON TST.CRTST_CODIGO = TR.CRTST_CODIGO
+LEFT JOIN SII.CGG_RES_TRAMITE_COMITE TCM ON TCM.CRTST_CODIGO = TST.CRTST_CODIGO
+LEFT JOIN SII.CGG_RES_COMITE CMT ON CMT.CRCOM_CODIGO = TCM.CRCOM_CODIGO
+WHERE TR.CRTRA_ESTADO AND
+	TR.CRETT_CODIGO = (SELECT CONF.CGCNF_VALOR_CADENA FROM SII.CGG_CONFIGURACION CONF WHERE CONF.CGCNF_CODIGO = '01') AND
+	TR.CRTST_CODIGO IN (WITH RECURSIVE TIPO(CRTST_CODIGO, CGG_CRTST_CODIGO, CRTST_DESCRIPCION)AS(
+					SELECT CRTST_CODIGO, CGG_CRTST_CODIGO, CRTST_DESCRIPCION FROM CGG_RES_TIPO_SOLICITUD_TRAMITE WHERE (CRTST_CODIGO = (SELECT CONF.CGCNF_VALOR_CADENA FROM SII.CGG_CONFIGURACION CONF WHERE CONF.CGCNF_CODIGO = '04'))
+					UNION SELECT TST.CRTST_CODIGO, TST.CGG_CRTST_CODIGO, TP.CRTST_DESCRIPCION FROM CGG_RES_TIPO_SOLICITUD_TRAMITE TST, TIPO TP
+					WHERE TST.CGG_CRTST_CODIGO = TP.CRTST_CODIGO
+				) SELECT CRTST_CODIGO  FROM TIPO)
+AND  (LENGTH($P{P_CISLA_CODIGO}) = 0 OR TR.CISLA_CODIGO = $P{P_CISLA_CODIGO})
+AND  TR.CRTRA_FECHA_RECEPCION::DATE BETWEEN $P{P_FECHA_INICIAL} AND $P{P_FECHA_FINAL}
+ORDER BY TIPO_RESIDENCIA,CRTST_SOLICITUD,CMT.CRCOM_NOMBRE,CSL.CISLA_NOMBRE DESC]]>
+	</queryString>
+	<field name="crcom_codigo" class="java.lang.String"/>
+	<field name="crcom_nombre" class="java.lang.String"/>
+	<field name="cisla_nombre" class="java.lang.String"/>
+	<field name="tipo_residencia" class="java.lang.String"/>
+	<field name="crtra_numero" class="java.lang.String"/>
+	<field name="crper_beneficiario" class="java.lang.String"/>
+	<field name="crper_num_doc_identific_benef" class="java.lang.String"/>
+	<field name="crcrg_nombre" class="java.lang.String"/>
+	<field name="crtst_descripcion" class="java.lang.String"/>
+	<field name="crper_auspiciante" class="java.lang.String"/>
+	<field name="crper_num_doc_identific_ausp" class="java.lang.String"/>
+	<field name="crtra_folio" class="java.math.BigDecimal"/>
+	<field name="crtst_solicitud" class="java.lang.String"/>
+	<field name="crtst_descripcion_padre" class="java.lang.String"/>
+	<field name="crett_nombre" class="java.lang.String"/>
+	<field name="cusu_responsable" class="java.lang.String"/>
+	<variable name="V_FILA" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[new BigDecimal($V{V_FILA}.intValue()+1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<variable name="V_FECHA_ACTUAL" class="java.util.Date">
+		<variableExpression><![CDATA[new Date()]]></variableExpression>
+	</variable>
+	<group name="gEstadoTramite">
+		<groupExpression><![CDATA[$F{crtst_descripcion_padre}]]></groupExpression>
+		<groupHeader>
+			<band height="29">
+				<textField>
+					<reportElement x="2" y="9" width="799" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["LISTADO DE RESIDENTES "+ $F{crtst_descripcion_padre}.toUpperCase()+ " "+ $F{crett_nombre}.toUpperCase()+", "+$F{cisla_nombre}.toUpperCase()]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="TIPO">
+		<groupExpression><![CDATA[$F{crtst_solicitud}]]></groupExpression>
+		<groupHeader>
+			<band height="64">
+				<staticText>
+					<reportElement x="114" y="42" width="160" height="22"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nombres]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="54" y="42" width="60" height="22"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Trámite]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="28" y="42" width="26" height="22"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[No.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="474" y="42" width="162" height="22"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nombres]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="274" y="42" width="87" height="22"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Identificación]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="636" y="42" width="116" height="22"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Identificación]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="362" y="42" width="112" height="22"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[ Ocupacion/Cargo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="2" y="0" width="77" height="21"/>
+					<box>
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[ Solicitud:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="28" y="21" width="446" height="21"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[BENEFICIARIO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="474" y="21" width="278" height="21"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[AUSPICIANTE]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="79" y="0" width="664" height="21"/>
+					<textElement verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{crtst_solicitud}.toUpperCase()]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="35" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="802" height="35"/>
+				<subreportParameter name="SUBREPORT_DIR"/>
+				<subreportParameter name="P_SUBTITULO_2">
+					<subreportParameterExpression><![CDATA["Desde "+ new java.text.SimpleDateFormat("dd/MM/yyyy").format($P{P_FECHA_INICIAL})+" hasta "+new java.text.SimpleDateFormat("dd/MM/yyyy").format($P{P_FECHA_FINAL})]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="P_SUBTITULO_1">
+					<subreportParameterExpression><![CDATA["Listado de tramites temporal para votacion"]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptEncabezadoHor"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<detail>
+		<band height="37" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="474" y="0" width="162" height="19" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_auspiciante}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="636" y="0" width="116" height="19"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_num_doc_identific_ausp}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="115" y="0" width="160" height="19" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_beneficiario}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="275" y="0" width="88" height="19"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_num_doc_identific_benef}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="363" y="0" width="112" height="19"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crcrg_nombre}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="55" y="0" width="60" height="19" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crtra_numero}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="29" y="0" width="26" height="19"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{V_FILA}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band/>
+	</detail>
+	<pageFooter>
+		<band height="307" splitType="Stretch">
+			<subreport>
+				<reportElement positionType="Float" x="0" y="169" width="802" height="50"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptPieHor"]]></subreportExpression>
+			</subreport>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement positionType="Float" x="0" y="154" width="120" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" x="0" y="0" width="802" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement positionType="Float" x="759" y="154" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="772" y="154" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[de ]]></text>
+			</staticText>
+			<textField evaluationTime="Report">
+				<reportElement positionType="Float" x="784" y="155" width="17" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="736" y="154" width="23" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Pág.]]></text>
+			</staticText>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="62" width="799" height="24"/>
+				<subreportParameter name="P_CRCOM_CODIGO">
+					<subreportParameterExpression><![CDATA[$F{crcom_codigo}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/comite/rptSubCargosComite"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement x="0" y="1" width="799" height="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Atentamente]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="3" y="28" width="799" height="14" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cusu_responsable}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="2" y="42" width="797" height="18" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["COORDINADORA DE CONTROL DE RESIDENCIA CONSEJO DE GOBIERNO DEL RÉGIMEN ESPECIAL DE GALÁPAGOS"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

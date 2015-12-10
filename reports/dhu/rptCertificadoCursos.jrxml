@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="802" pageHeight="555" orientation="Landscape" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="3.7974983358324192"/>
+	<property name="ireport.x" value="1961"/>
+	<property name="ireport.y" value="1662"/>
+	<property name="ireport.jasperserver.reportUnit" value="/Reports/sii/dhu/rptCertificadoCursos"/>
+	<property name="ireport.jasperserver.url" value="https://190.95.187.82/jasperserver/services/repository"/>
+	<style name="Heading 4" fontSize="12" isBold="true" isItalic="true"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["E:\\CGG\\APP\\REPORTS\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CDCUR_CODIGO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CRPER_CODIGO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT DISTINCT
+CAN.CCTN_NOMBRE,
+PRO.CGPRV_NOMBRE,
+PER.CRPER_APELLIDO_PATERNO||' '||PER.CRPER_APELLIDO_MATERNO||' '||PER.CRPER_NOMBRES NOMBRES_PERSONA,
+PER.CRPER_NUM_DOC_IDENTIFIC,
+UPPER(CUR.CDCUR_DESCRIPCION) TEMA_CURSO,
+CUR.CDCUR_NUMERO_HORAS,
+LOWER(TO_CHAR(CUR.CDCUR_FECHA_INICIO::DATE,'DD "de" TMMONTH "del" YYYY')||' y '||TO_CHAR(CUR.CDCUR_FECHA_CULMINACION::DATE,'DD "de" TMMONTH "del" YYYY')) PERIODO,
+(SELECT CGCNF_VALOR_CADENA FROM SII.CGG_CONFIGURACION WHERE CGCNF_CODIGO='CONF115') PRESIDENTE,
+(SELECT CGCNF_VALOR_CADENA FROM SII.CGG_CONFIGURACION WHERE CGCNF_CODIGO='CONF116') COORDINADORA,
+(SELECT CGCNF_CONFIGURACION FROM SII.CGG_CONFIGURACION WHERE CGCNF_CODIGO='CONF115') CARGO_PRESIDENTE,
+(SELECT CGCNF_CONFIGURACION FROM SII.CGG_CONFIGURACION WHERE CGCNF_CODIGO='CONF116') CARGO_COORDINADORA,
+ASI.CDASC_NUMERO_CERTIFICADO
+FROM SII.CGG_DHU_ASISTENTE_CURSO ASI
+INNER JOIN SII.CGG_RES_PERSONA PER ON (PER.CRPER_CODIGO=ASI.CRPER_CODIGO)
+INNER JOIN SII.CGG_DHU_CURSO CUR ON(CUR.CDCUR_CODIGO=ASI.CDCUR_CODIGO)
+INNER JOIN SII.CGG_CANTON CAN ON(CAN.CCTN_CODIGO=CUR.CCTN_CODIGO)
+INNER JOIN SII.CGG_PROVINCIA PRO ON(PRO.CGPRV_CODIGO=CAN.CGPRV_CODIGO)
+WHERE ASI.CDASC_ESTADO AND CUR.CDCUR_ESTADO
+AND ASI.CDASC_APROBADO=1
+AND CUR.CDCUR_CODIGO=$P{P_CDCUR_CODIGO}
+AND PER.CRPER_CODIGO=$P{P_CRPER_CODIGO}]]>
+	</queryString>
+	<field name="cctn_nombre" class="java.lang.String"/>
+	<field name="cgprv_nombre" class="java.lang.String"/>
+	<field name="nombres_persona" class="java.lang.String"/>
+	<field name="crper_num_doc_identific" class="java.lang.String"/>
+	<field name="tema_curso" class="java.lang.String"/>
+	<field name="cdcur_numero_horas" class="java.lang.Integer"/>
+	<field name="periodo" class="java.lang.String"/>
+	<field name="presidente" class="java.lang.String"/>
+	<field name="coordinadora" class="java.lang.String"/>
+	<field name="cargo_presidente" class="java.lang.String"/>
+	<field name="cargo_coordinadora" class="java.lang.String"/>
+	<field name="cdasc_numero_certificado" class="java.lang.String"/>
+	<variable name="V_FECHA_ACTUAL" class="java.util.Date">
+		<variableExpression><![CDATA[new Date()]]></variableExpression>
+	</variable>
+	<variable name="V_TOTAL_REGISTROS" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{REPORT_COUNT}]]></variableExpression>
+	</variable>
+	<variable name="vFilaActual" class="java.lang.Integer" resetType="None" incrementType="Report" calculation="Sum">
+		<variableExpression><![CDATA[new BigDecimal($V{vFilaActual}.intValue()+1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="555" splitType="Stretch">
+			<rectangle>
+				<reportElement x="28" y="28" width="745" height="498"/>
+				<graphicElement>
+					<pen lineWidth="1.5" lineStyle="Double"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="184" y="105" width="434" height="39"/>
+				<textElement textAlignment="Center">
+					<font size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EL "CONSEJO DE GOBIERNO DEL RÉGIMEN ESPECIAL DE LA PROVINCIA DE GALÁPAGOS"]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="46" y="144" width="712" height="28"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="13" isBold="false"/>
+				</textElement>
+				<text><![CDATA[OTORGA EL PRESENTE CERTIFICADO/ AWARDS THIS CERTIFICATE A/TO]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="46" y="172" width="712" height="28" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center">
+					<font size="17" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nombres_persona}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="46" y="202" width="712" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Cédula de Ciudadanía No. "+$F{crper_num_doc_identific}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="46" y="227" width="712" height="22" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="13" isBold="false"/>
+				</textElement>
+				<text><![CDATA[QUIEN APROBO EL CURSO DE / WHO HAS SUCCESSFULLY PASSED THE COURSE OF]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="46" y="255" width="712" height="23" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center">
+					<font size="15" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["\""+$F{tema_curso}.toUpperCase()+"\""]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="46" y="282" width="712" height="39" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="13" isBold="false"/>
+				</textElement>
+				<text><![CDATA[DE CONFORMIDAD CON EL ART.32 DE LA LEY ORGÁNICA DE RÉGIMEN ESPECIAL PARA LA CONSERVACIÓN Y EL DESARROLLO SUSTENTABLE DE LA PROVINCIA DE GALÁPAGOS.]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="46" y="321" width="712" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["DURACIÓN: "+$F{cdcur_numero_horas}.toString()+" HORAS / DURATION: "+$F{cdcur_numero_horas}.toString()+" HOURS"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="46" y="341" width="712" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["PERÍODO: "+$F{periodo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="46" y="453" width="265" height="39"/>
+				<textElement textAlignment="Center">
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cargo_presidente}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="46" y="436" width="265" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{presidente}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="493" y="436" width="265" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{coordinadora}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="493" y="453" width="265" height="39"/>
+				<textElement textAlignment="Center">
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cargo_coordinadora}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="46" y="361" width="712" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cctn_nombre}.toUpperCase()+", "+$F{cgprv_nombre}.toUpperCase()+", "+new java.text.SimpleDateFormat("EEEEE dd 'de' MMMMM 'del' yyyy").format(new Date())]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="542" y="492" width="109" height="21"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="2of7" drawText="false" checksumRequired="false">
+					<jr:codeExpression><![CDATA[$F{cdasc_numero_certificado}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<image scaleImage="FillFrame">
+				<reportElement x="69" y="28" width="73" height="73"/>
+				<imageExpression class="java.lang.String"><![CDATA["repo:logo-2.gif"]]></imageExpression>
+			</image>
+			<image scaleImage="FillFrame">
+				<reportElement x="285" y="28" width="208" height="73"/>
+				<imageExpression class="java.lang.String"><![CDATA["repo:logo-consejo.gif"]]></imageExpression>
+			</image>
+			<image scaleImage="FillFrame">
+				<reportElement x="662" y="28" width="73" height="73"/>
+				<imageExpression class="java.lang.String"><![CDATA["repo:logo-1.gif"]]></imageExpression>
+			</image>
+			<image scaleImage="FillFrame">
+				<reportElement x="285" y="492" width="208" height="34"/>
+				<imageExpression class="java.lang.String"><![CDATA["repo:logos.gif"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="542" y="513" width="109" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cdasc_numero_certificado}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

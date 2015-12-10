@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptSubPersonaAuspiciante" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="P_CRTRA_CODIGO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT COALESCE(TRM.CRPER_CODIGO,''),
+	TRM.CRPJR_CODIGO,
+	CASE
+	WHEN TRM.CRPJR_CODIGO IS NOT NULL THEN
+		PJR.CRPJR_RAZON_SOCIAL
+	ELSE
+		COALESCE(CRPER_NOMBRES,'')||' '||
+		COALESCE(CRPER_APELLIDO_PATERNO,'')||' '||
+		COALESCE(CRPER_APELLIDO_MATERNO,'')
+	END AS CRPER_AUSPICIANTE,
+	CASE WHEN TRM.CRPJR_CODIGO IS NOT NULL THEN
+		COALESCE(PJR.CRPJR_NUMERO_IDENTIFICACION,'')
+	ELSE COALESCE(PRS.CRPER_NUM_DOC_IDENTIFIC,'')
+	END IDENTIFICACION,
+	COALESCE(PRS.CRPER_NUMERO_RESIDENCIA,'') NUME_RESIDENCIA
+FROM SII.CGG_RES_TRAMITE TRM
+LEFT JOIN SII.CGG_RES_PERSONA PRS ON PRS.CRPER_CODIGO = TRM.CRPER_CODIGO
+LEFT JOIN SII.CGG_RES_PERSONA_JURIDICA PJR ON PJR.CRPJR_CODIGO = TRM.CRPJR_CODIGO
+LEFT JOIN SII.CGG_RES_RESIDENCIA RSD ON RSD.CRPER_CODIGO = PRS.CRPER_CODIGO AND
+	RSD.CRRSD_VIGENTE AND RSD.CRRSD_ESTADO
+WHERE TRM.CRTRA_CODIGO = $P{P_CRTRA_CODIGO}]]>
+	</queryString>
+	<field name="coalesce" class="java.lang.String"/>
+	<field name="crpjr_codigo" class="java.lang.String"/>
+	<field name="crper_auspiciante" class="java.lang.String"/>
+	<field name="identificacion" class="java.lang.String"/>
+	<field name="nume_residencia" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="117" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[AUSPICIANTE:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="117" y="49" width="310" height="12" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$F{crpjr_codigo} == null]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nume_residencia}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="117" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Nombres:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="117" y="20" width="310" height="14"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_auspiciante}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="34" width="117" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Identificación:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="49" width="117" height="12" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$F{crpjr_codigo} == null]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Nº Residencia:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="117" y="34" width="310" height="15"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{identificacion}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
