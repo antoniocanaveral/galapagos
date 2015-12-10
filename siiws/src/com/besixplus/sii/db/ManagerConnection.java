@@ -21,7 +21,12 @@ public class ManagerConnection {
 	private static String myAppUserName = null;
 	private static DataSource DATA_SOURCE = null;
 	private static boolean IS_DEPLOYED = false;
-	private static Session MAIL_SESSION = null; 
+	private static Session MAIL_SESSION = null;
+	private static final String USER_NAME_DB = "postgres";
+	private static final String PASS_DB = "root";
+	private static final String IP_DB = "192.168.211.113";
+	private static final String DATABASE_NAME = "sii";
+
 
 	/**
 	 * CONSTRUCTOR DE ManagerConecction
@@ -41,18 +46,18 @@ public class ManagerConnection {
 					ManagerConnection.IS_DEPLOYED= true;
 				} catch (NamingException e) {
 					e.printStackTrace();
-					ManagerConnection.IS_DEPLOYED= false;						
-				} 				
+					ManagerConnection.IS_DEPLOYED= false;
+				}
 			}
 			if(!ManagerConnection.IS_DEPLOYED){
 				try {
 					DriverManager.registerDriver(new org.postgresql.Driver());
 					Properties prop = new Properties();
-					ManagerConnection.setUserName("sii");
-					ManagerConnection.setPassword("sii");
+					ManagerConnection.setUserName(USER_NAME_DB);
+					ManagerConnection.setPassword(PASS_DB);
 					prop.put("user", ManagerConnection.getUserName());
 					prop.put("password", ManagerConnection.getPassword());
-					return DriverManager.getConnection("jdbc:postgresql://172.20.1.176/cgg", prop);
+					return DriverManager.getConnection("jdbc:postgresql://"+IP_DB+"/"+DATABASE_NAME, prop);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -69,7 +74,7 @@ public class ManagerConnection {
 	}
 
 	/**OBTIENE LA SESION ESTABLECIDA A LA BASE DE DATOS
-	 * @return SESION 
+	 * @return SESION
 	 */
 	public synchronized static Session getMailSession(){
 		if(MAIL_SESSION == null)
@@ -80,7 +85,7 @@ public class ManagerConnection {
 			}
 		return MAIL_SESSION;
 	}
-	
+
 	/**OBTIENE EL NOMBRE DE USUARIO DE LA CONEXION
 	 * @return NOMBRE DE USUARIO.
 	 */
