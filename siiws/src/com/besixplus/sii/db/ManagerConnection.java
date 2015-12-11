@@ -1,5 +1,7 @@
 package com.besixplus.sii.db;
 
+import com.besixplus.sii.util.InitParameters;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -22,16 +24,21 @@ public class ManagerConnection {
 	private static DataSource DATA_SOURCE = null;
 	private static boolean IS_DEPLOYED = false;
 	private static Session MAIL_SESSION = null;
-	private static final String USER_NAME_DB = "postgres";
+	private static String USER_NAME_DB = "postgres";
 	private static final String PASS_DB = "root";
-	private static final String IP_DB = "192.168.211.113";
-	private static final String DATABASE_NAME = "sii";
+	private static String IP_DB = "";
+	private static String DATABASE_NAME = "";
+	private InitParameters initParameters;
 
 
 	/**
 	 * CONSTRUCTOR DE ManagerConecction
 	 */
 	public ManagerConnection(){
+		initParameters = new InitParameters();
+		DATABASE_NAME = initParameters.getNombreBDD();
+		IP_DB = initParameters.getIpBDD();
+		USER_NAME_DB = initParameters.getUserBdd();
 	}
 
 	/** ESTABLECE LA CONEXION.
