@@ -24,7 +24,7 @@ public class ManagerConnection {
 	private static DataSource DATA_SOURCE = null;
 	private static boolean IS_DEPLOYED = false;
 	private static Session MAIL_SESSION = null;
-	private static String USER_NAME_DB = "postgres";
+	private static String USER_NAME_DB = "";
 	private static final String PASS_DB = "root";
 	private static String IP_DB = "";
 	private static String DATABASE_NAME = "";
