@@ -22,6 +22,7 @@ public class InitParameters {
     private String puertoReportes = "";
     private String pathXml = "/home/advance/Desktop/ADVANCE/PROYECTO SII/SERVIDOR/jboss-5.1.0.GA/server/default/deploy/parameters.xml";
     private String userBdd="";
+    private String passwordBDD="";
 
     public InitParameters (){
         getParameters();
@@ -53,6 +54,8 @@ public class InitParameters {
             puertoReportes = reportPort.getNodeValue();
             Node bddUser = raiz.getElementsByTagName("bdd-user").item(0);
             userBdd=bddUser.getNodeValue();
+            Node passBDD = raiz.getElementsByTagName("bdd-pass").item(0);
+            passwordBDD=passBDD.getNodeValue();
         } catch (SAXException ex) {
             System.out.println("ERROR: El formato XML del fichero no es correcto\n" + ex.getMessage());
         } catch (IOException ex) {
@@ -127,4 +130,14 @@ public class InitParameters {
     public void setUserBdd(String userBdd) {
         this.userBdd = userBdd;
     }
+
+	public String getPasswordBDD() {
+		return passwordBDD;
+	}
+
+	public void setPasswordBDD(String passwordBDD) {
+		this.passwordBDD = passwordBDD;
+	}
+    
+    
 }

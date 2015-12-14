@@ -17,17 +17,19 @@ public class ManagerConnection {
     private static String myAppUserName = null;
     private static DataSource DATA_SOURCE = null;
     private static boolean IS_DEPLOYED = false;
-    private static String USER_NAME_DB = "postgres";
-    private static final String PASS_DB = "root";
+    private static String USER_NAME_DB = "";
+    private static String PASS_DB = "";
     private static String IP_DB = "";
     private static String DATABASE_NAME = "";
     private InitParameters initParameters;
+    private static final String APP_NAME = "siicgg_web";
 
     public ManagerConnection() {
         initParameters = new InitParameters();
         DATABASE_NAME = initParameters.getNombreBDD();
         IP_DB = initParameters.getIpBDD();
         USER_NAME_DB = initParameters.getUserBdd();
+        PASS_DB= initParameters.getPasswordBDD();
     }
 
     public static Connection getConnection() {
@@ -50,6 +52,7 @@ public class ManagerConnection {
                     ManagerConnection.setPassword(PASS_DB);
                     prop.put("user", ManagerConnection.getUserName());
                     prop.put("password", ManagerConnection.getPassword());
+                    prop.put("ApplicationName",APP_NAME);
                     return DriverManager.getConnection("jdbc:postgresql://" + IP_DB + "/" + DATABASE_NAME, prop);
                 } catch (SQLException e) {
                     // TODO Auto-generated catch block
