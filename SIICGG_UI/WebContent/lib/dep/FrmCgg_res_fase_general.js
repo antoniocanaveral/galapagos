@@ -1,9 +1,0 @@
-<script type="text/javascript" src="lib/draw2d/wz_jsgraphics.js"></script>
-<script type="text/javascript" src='lib/draw2d/mootools-1.2.5-core-nc.js'></script>
-<script type="text/javascript" src='lib/draw2d/draw2d.js'></script>
-<script type="text/javascript" src='lib/draw2d/MyInputPort.js'></script>
-<script type="text/javascript" src='lib/draw2d/ContextmenuConnection.js'></script>
-<script type="text/javascript" src='lib/draw2d/ContextMenuConnection2.js'></script>
-<script type="text/javascript" src='lib/draw2d/MyWorkflow.js'></script>
-<script type="text/javascript" src="forms/flowfase/StartNode.js"></script>
-<script type="text/javascript" src="forms/flowfase/EndNode.js"></script>

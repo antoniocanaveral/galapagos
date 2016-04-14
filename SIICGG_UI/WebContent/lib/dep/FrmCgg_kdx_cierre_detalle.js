@@ -1,1 +1,0 @@
-<script type="text/javascript" src="lib/extjs/groupdataview.js"></script><script type="text/javascript" src="lib/extjs/groupcombo.js"></script>
