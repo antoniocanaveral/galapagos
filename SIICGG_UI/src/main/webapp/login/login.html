@@ -1,0 +1,111 @@
+<html>
+    <head>
+        <title>Sistema Integral Inform&aacute;tico SIICGG</title>
+        <link rel="stylesheet" type="text/css" href="login/resource.css" />        
+        <script type="text/javascript"  language="javascript">
+            Date.prototype.addHours= function(h){
+                this.setHours(this.getHours()+h);
+                return this;
+            }
+            
+            function ManagerCookies(){
+                this.create = function Create(name,value,hours) {
+                    var expires='';
+                    if (hours) {
+                        var auxFecha =new Date().addHours(hours);
+                        expires = "; expires="+auxFecha.toGMTString();
+                    }else{
+                        expires = "";
+                    }
+                    document.cookie = name+"="+value+expires+"; path=/";
+                }
+
+                this.read = function Read(name) {
+                    var nameEQ = name + "=";
+                    var ca = document.cookie.split(';');
+                    for(var i=0;i < ca.length;i++) {
+                        var c = ca[i];
+                        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+                    }
+                    return null;
+                }
+
+                this.erase = function Erase(name) {
+                    this.create(name,"",-3);
+                }
+            }
+
+            ManagerCookies.prototype.create = function(inName,inValue,inHours){
+                this.create(inName,inValue,inHours);
+            }
+
+            ManagerCookies.prototype.read = function(inName){
+                this.read(inName);
+            }
+
+            ManagerCookies.prototype.erase = function(inName,inValue,inHours){
+                this.erase(inName);
+            }
+
+            function setFocus(inId){
+                 document.getElementById(inId).focus();
+            }
+
+            function visualizar(){
+                var usuario = new ManagerCookies().read('cgg_res_usuario');
+                if(usuario !== null && usuario !== undefined && usuario !== 'undefined'){
+                    document.getElementById('j_username').value = usuario;                    
+                    setFocus('j_password');
+                }else{                    
+                    setFocus('j_username');
+                }
+            }
+
+            function recordarme(){                
+				//document.loginForm.j_username.value = document.loginForm.j_username.value.toLowerCase();
+                new ManagerCookies().create('cgg_res_usuario',document.getElementById('j_username').value,10080);
+            }         
+        </script>
+    </head>
+    <body onload="visualizar()">
+        <table width="100%" height="100%">
+            <tr valign="middle"><td>
+                    <table border=0 align="center" class="backGround" cellpadding=5 cellspacing=0>
+                        <tr valign="middle">
+                            <td class="titulo" align="center">
+					Sistema Integral Inform&aacute;tico SIICGG
+                            </td>
+                            <td rowspan=2 class="logo">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr valign="middle">
+                            <td rowspan=2 class="areaLogin">
+                                <form name="loginForm" method="post" action="j_security_check">
+                                    <table border=0 class="login" cellpadding=0 cellspacing=0 align="center">
+                                        <tr valign="bottom"><td align="left" height="50px">
+                                                <label>Nombre usuario</label><br/>
+                                                <input class="txtIcon iconText" type="text" id="j_username" name="j_username" />
+                                            </td></tr>
+                                        <tr><td>
+                                                <label>Contrase&ntilde;a</label><br/>
+                                                <input class="txtIcon iconkey" type="password" id="j_password" name="j_password" />
+                                            </td></tr>
+                                        <tr valign="top"><td align="right">
+                                                <button type="submit" onclick="recordarme()">Aceptar</button>
+                                            </td></tr>
+                                    </table>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr valign="top">
+                            <td class="descripcion">
+                                <div align="justify">Por favor ingrese los datos correspondientes al nombre de usuario y contrase&ntilde;a proporcionados por el administrador</div>
+                            </td>
+                        </tr>
+                    </table>
+                </td></tr>
+        </table>
+    </body>
+</html>

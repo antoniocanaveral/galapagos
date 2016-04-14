@@ -1,0 +1,73 @@
+.cssTabPanel {
+	
+}
+
+.cssTabPanel th {
+	color: #923F0D;
+	width: 150px;
+	text-align: left;
+	font-size: 12px;
+	font-weight: bolder;
+	vertical-align: top;
+}
+
+.tabSelect {
+	background-color: #F0DFA8;
+	border: 1px solid #E2BD7E;
+	border-bottom: 0px solid transparent;
+	font-size: 12px;
+	color: #923F0D;
+	font-weight: bolder;
+	-moz-border-radius: 3px 3px 0 0; /*Para que funcione en Mozilla*/
+	-khtml-border-radius: 3px 3px 0 0;
+	/*Para que funcione en Konqueror y Safari */
+	-webkit-border-radius: 3px 3px 0 0;
+	border-radius: 3px 3px 0 0;
+}
+
+.tabNoSelect {
+	height: 28px;
+	cursor: pointer;
+	color: #923F0D;
+	background-color: #F4E7BD;
+	/*border: 1px dashed #F0DFA8;*/
+	border-bottom: 1px solid #E7C794;
+	font-size: 12px;
+	-moz-border-radius: 3px 3px 0 0; /*Para que funcione en Mozilla*/
+	-khtml-border-radius: 3px 3px 0 0;
+	/*Para que funcione en Konqueror y Safari */
+	-webkit-border-radius: 3px 3px 0 0;
+	border-radius: 3px 3px 0 0;
+}
+
+.tabNoSelect:hover {
+	font-weight: bolder;
+}
+
+.tabBlanco {
+	border-bottom: 1px solid #E2BD7E;
+	width: 3px;
+}
+
+.tabBlancoFull {
+	border-bottom: 1px solid #E2BD7E;
+}
+
+.cssTabPanelBorde {
+	height: 5px;
+	background-color: #F0DFA8;
+	border: 1px solid #E2BD7E;
+	border-top: 0px;
+}
+
+.cssRowBody {
+	padding: 3px;
+	border: 1px solid #E2BD7E;
+	border-top: 0px;
+	/*background-color:#F8EFD1;*/
+	color: #923F0D;
+}
+
+.cssTabButton {
+	padding: 3px 3px 0 0;
+}

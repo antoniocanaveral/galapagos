@@ -1,0 +1,549 @@
+.lblTitulo{
+	font-weight:bold;
+	padding-top:6px;
+	padding-left:70px;
+}
+
+.lblDescripcion{
+	padding-top:0px;
+	padding-left:90px;
+	color:#3f3f3f;
+	font-size:11px;
+}
+
+.textDesktop{
+	text-shadow: 0.1em 0.1em 0.2em white
+}
+
+.messageGerencial {
+    padding-left:20px;
+    background:transparent url(../images/message.png) no-repeat 0 2px;
+}
+
+
+.logoTitulo{
+	background-image: url(../images/cgg2.png) !important;
+	background-repeat:no-repeat;	
+	height:50px;	
+	margin-left:5px;
+	padding-right:10px;
+	background-position:left;
+	vertical-align:top;
+}
+.logoTituloAdm{
+	background-image: url(../images/cggGem.gif) !important;
+	background-repeat:no-repeat;	
+	height:50px;	
+	margin-left:5px;
+	padding-right:10px;
+	background-position:left;
+	vertical-align:top;
+}
+.logoTituloEmp{
+	background-image: url(../images/cggEmp.png) !important;
+	background-repeat:no-repeat;	
+	height:50px;	
+	margin-left:5px;
+	padding-right:10px;
+	background-position:left;
+	vertical-align:top;
+}
+
+.fondoTitulo{
+	background-image: url(../images/fondoPanelTitulo.gif);
+        width:100%;
+	background-repeat:repeat-x;        
+	padding: 0px 0px 0px 0px;
+	height:50px;
+}
+.fondoTituloGE{
+	background-image: url(../images/fondoPanelTituloGEM.png);
+        width:100%;
+	background-repeat:repeat-x;        
+	padding: 0px 0px 0px 0px;
+	height:50px;
+}
+.iconMegafono{background-image:url(../images/16x16/custom/megafono.png) !important;}
+.iconOk{background-image:url(../images/16x16/actions/apply.png) !important;}
+.iconRevision{background-image:url(../images/16x16/actions/undo.png) !important;}
+.iconHand{background-image:url(../images/16x16/actions/hand.png) !important;}
+.iconAceptar{background-image:url(../images/16x16/actions/button_ok.png) !important;}
+.iconCancelar{background-image:url(../images/16x16/actions/button_cancel.png) !important;}
+.iconRecargar{background-image:url(../images/16x16/actions/reload.png) !important;}
+.iconNuevo{background-image:url(../images/16x16/actions/add.png) !important;}
+.iconCarnet{background-image:url(../images/16x16/custom/credential.png) !important;}
+.iconIngreso{background-image:url(../images/16x16/custom/ingreso.png) !important;}
+.iconSalida{background-image:url(../images/16x16/custom/salida.png) !important;}
+.iconMovilidad{background-image:url(../images/16x16/custom/movilidad.png) !important;}
+.iconAdjunto{background-image:url(../images/16x16/actions/attach.png) !important;}
+.iconEditar{background-image:url(../images/16x16/actions/edit.png) !important;}
+.iconGuardar{background-image:url(../images/16x16/actions/filesave.png) !important;}
+.iconEliminar{background-image:url(../images/16x16/actions/remove.png) !important;}
+.iconImprimir{background-image:url(../images/16x16/devices/printer.png) !important;}
+.iconPreview{background-image:url(../images/16x16/actions/filequickprint.png) !important;}
+.iconSalir{background-image:url(../images/16x16/actions/exit.png) !important;}
+.iconCerrar{background-image:url(../images/16x16/actions/exit.png) !important;}
+.iconAplicacion{background-image:url(../images/16x16/actions/aplicacion.png) !important;}
+.iconCargando{background-image:url(../images/16x16/actions/cargando.gif) !important;}
+.iconBuscar{background-image:url(../images/16x16/actions/search.png) !important;}
+.iconAtender{background-image:url(../images/16x16/actions/apply.png) !important;}
+.iconForm{background-image:url(../images/16x16/actions/form.png) !important;}
+.iconBusquedaAvanzada{background-image:url(../images/16x16/actions/viewmag.png) !important;}
+.iconTmp{background-image:url(../images/16x16/actions/terminal.png) !important;}
+.iconListado{background-image:url(../images/16x16/actions/view_text.png) !important;}
+.iconInforme{background-image:url(../images/16x16/mimetypes/package_wordprocessing.png) !important;}
+.iconMatrimonio{background-image:url(../images/16x16/apps/userconfig.png) !important;}
+.iconPersona{background-image:url(../images/16x16/apps/config-users.png) !important;}
+.iconResidencia{background-image:url(../images/16x16/filesystems/folder_home2.png) !important;}
+.iconRegistrarTramite{background-image:url(../images/16x16/custom/tramite.png) !important;}
+.iconAnularTramite{background-image:url(../images/16x16/actions/fileclose.png) !important;}
+.iconVer{background-image:url(../images/16x16/apps/gwenview.png) !important;}
+.iconCalc{background-image:url(../images/16x16/apps/calc.png) !important;}
+.iconDescargar{background-image:url(../images/16x16/apps/kget.png) !important;}
+.iconListado{background-image:url(../images/16x16/actions/view_text.png) !important;}
+.iconMetodo{background-image:url(../images/16x16/apps/kcmsystem.png) !important;}
+.iconTodo{background-image:url(../images/16x16/actions/view_text.png) !important;}
+.iconSeleccion{background-image:url(../images/16x16/actions/view_detailed.png) !important;}
+.iconCamara{background-image:url(../images/16x16/devices/camera_mount.png) !important;}
+.iconFirma{background-image:url(../images/16x16/custom/pluma.png) !important;}
+.iconSeguimiento{background-image:url(../images/16x16/apps/kdesvn.png) !important;}
+.iconPredeterminado{background-image:url(../images/16x16/actions/apply.png) !important;}
+.iconAprobar{background-image:url(../images/16x16/actions/adept_commit.png) !important; background-repeat:no-repeat;}
+.iconNegar{background-image:url(../images/16x16/actions/editdelete.png) !important;}
+.iconInicio{background-image:url(../images/16x16/actions/top.png) !important;}
+.iconArriba{background-image:url(../images/16x16/actions/up.png) !important;}
+.iconAbajo{background-image:url(../images/16x16/actions/down.png) !important;}
+.iconFinal{background-image:url(../images/16x16/actions/bottom.png) !important;}
+.iconEstadia{background-image:url(../images/16x16/actions/today.png) !important;}
+.iconMigratorio{background-image:url(../images/16x16/actions/Kontact_sumary.png) !important;}
+.iconHistorial{background-image:url(../images/16x16/actions/show_side_panel.png) !important;}
+.iconHistorialPersona{background-image:url(../images/16x16/custom/historialPersona.png) !important;}
+.iconAddCSV{background-image:url(../images/icono_CSV.png) !important;}
+.iconDistribuir{background-image:url(../images/16x16/actions/despachar.png) !important;}
+.iconComite{background-image:url(../images/16x16/custom/user-group-icon.png) !important;}
+.iconConfiguracion{background-image:url(../images/16x16/categories/package_settings.png) !important;}
+.iconPersona{background-image:url(../images/16x16/apps/userconfig.png) !important;}
+.iconProceso{background-image:url(../images/16x16/apps/linuxconf.png) !important;}
+.iconProcesoFase{background-image:url(../images/16x16/custom/proceso.png) !important;}
+.iconSeguridad{background-image:url(../images/16x16/actions/lock.png) !important;}
+.iconOperativo{background-image:url(../images/16x16/custom/police_icon.gif) !important;}
+.iconVehiculos{background-image:url(../images/16x16/custom/vehiculo.png) !important;}
+.iconRevisar{background-image:url(../images/16x16/actions/todo.png) !important;}
+.iconTipoSolicitud{background-image:url(../images/16x16/apps/kmenuedit.png) !important;}
+.iconHistorial{background-image:url(../images/16x16/apps/clock.png) !important;}
+.iconTCT{background-image:url(../images/table.png) !important;}
+.iconTramite{background-image:url(../images/16x16/filesystems/folder_home2.png) !important;}
+.iconAgregarProceso{background-image:url(../images/16x16/actions/thumbnail.png) !important;}
+.iconGestionEmpleo{background-image:url(../images/gestion-empleo.png) !important;}
+.iconAprobado{background-image:url(../images/16x16/actions/adept_commit.png)!important; background-repeat:no-repeat;}
+.iconNegado{background-image:url(../images/16x16/actions/editdelete.png) !important; background-repeat:no-repeat;}
+.iconAviso{background-image:url(../images/16x16/custom/aviso.gif)!important;}
+.iconPendiente{background-image:url(../images/16x16/apps/kalarm.png)!important;}
+.iconFinalizar{background-image:url(../images/16x16/actions/finish.png)!important;}
+.iconIndeterminado{background:url(../images/16x16/actions/sel2.png) no-repeat !important;}
+.iconSeleccionar{background:url(../images/16x16/actions/sel3.png) no-repeat !important;}
+.iconSeleccionado{background:url(../images/16x16/actions/sel1.png) no-repeat !important;}
+.iconNoSeleccionado{background:url(../images/16x16/actions/button_cancel.png) no-repeat !important;}
+.iconCell{width:16px;height:16px;}
+.iconPersonaNatural{background:url(../images/16x16/actions/user.png) no-repeat !important;}
+.iconPersonaJuridica{background:url(../images/16x16/actions/user_admin.png) no-repeat !important;}
+.iconFlag{background:url(../images/16x16/actions/flag_blue.png) no-repeat !important;}
+.iconClave{background:url(../images/16x16/actions/key.png) no-repeat !important;}
+.iconSoloGuardar{background:url(../images/16x16/custom/guardar.png) no-repeat !important;}
+.iconGuardarDespachar{background:url(../images/16x16/custom/guardarDespachar.png) no-repeat !important;}
+.iconAnular{background:url(../images/16x16/actions/eliminar.png) no-repeat !important;}
+.iconDep{background-image:url(../images/16x16/custom/blockdevice.png) !important;}
+.iconJuridico{background-image:url(../images/16x16/custom/leyes.png) !important;}
+.iconRegla{background-image:url(../images/16x16/custom/reglavalidacion.png) !important;}
+.iconAprobacionResidencia{background-image:url(../images/16x16/custom/residencia_ok.png) !important;}
+.iconDesHumano{background-image:url(../images/16x16/mimetypes/contents2.png) !important;}
+.iconHojaVida{background-image:url(../images/16x16/actions/vcard.png) !important;}
+.iconVerAdjunto{background-image:url(../images/16x16/actions/viewmagfit.png) !important;}
+.iconEntrevistaUser{background-image:url(../images/16x16/actions/entrevistaUser.png) !important;}
+.iconEntrevistaAdmin{background-image:url(../images/16x16/actions/entrevistaAdmin.png) !important;}
+.iconGerencial{background-image:url(../images/16x16/custom/gerencial.png) !important;}
+.iconOffline{background-image:url(../images/16x16/custom/offline.png) !important;}
+.iconGerencialRpt{background-image:url(../images/16x16/report/chart_bar1.png) !important;}
+.iconReporte{background-image:url(../images/16x16/custom/reporte.png) !important;}
+.iconAyuda{background:url(../images/16x16/actions/help.png) no-repeat !important;}
+.iconPrefs{background:url(../images/16x16/custom/preferences_icon.png) no-repeat !important;}
+.iconNuevoTranseunte{background:url(../images/16x16/custom/nuevoTranseunte.png) no-repeat !important;}
+
+.iconHover:hover{
+	background-color:#99BBE8;	
+	border-radius: 2;
+	-moz-border-radius: 2;
+	-webkit-border-radius: 2;
+	-khtml-border-radius:2;
+}
+.tituloGeneral{
+    font-weight:bold;
+    font-size:11px;
+    text-align:left;
+    text-indent:0px;
+    padding:0px 0px 10px 0px;
+}
+.itemGeneral{
+    text-align:left;
+    font-size:11px;
+    text-indent:5px;
+    padding:0px 0px 10px 0px;
+}
+
+.CggTemplate{
+}
+
+.CggTemplate th{	
+    font-weight:bold;
+	vertical-align:text-top;
+    font-size:11px;
+    text-align:left;
+    text-indent:0px;
+	color:#15428B;
+    padding:5px 0px 0px 0px;
+}
+
+.CggTemplate td{	
+    text-align:left;
+    vertical-align:text-top;
+    font-size:11px;
+	color:#333333;
+    text-indent:0px;
+    padding:5px 0px 0px 0px;
+}
+
+.tituloTemplate {
+    font-weight:bold;
+    font-size:12px;
+    text-align:left;
+    text-indent:0px;
+    padding:5px 0px 0px 0px;
+}
+
+
+.itemTemplate{
+    text-align:left;
+    font-size:12px;
+    text-indent:0px;
+    padding:5px 0px 0px 0px;
+}
+
+
+.icon-heart{
+    border:solid 1px #DEDEDE;
+    background:#4E78B1 url(../images/16x16/apps/konversation.png) 8px 6px no-repeat;
+    color:#222222;
+    padding:4px;
+    text-align:center;
+}
+
+.wfl{
+    width: 100%;
+}
+
+.numeroTramite {
+    color:rgb(0,0,255);
+    font-size: 14px;
+    font-weight: bold;
+    font-family: serif
+}
+
+#ver-zebra
+{
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    font-size: 12px;
+    border-collapse: collapse;
+    border: 1px solid #69c;
+    padding-top: 10px
+}
+
+#ver-zebra2
+{
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    font-size: 12px;
+    border-collapse: collapse;
+    border: 1px solid #69c;
+}
+
+#ver-zebra th
+{
+    font-size: 12px;
+    font-weight: normal;
+    border-right: 1px solid #fff;
+    border-left: 1px solid #fff;    
+}
+
+#ver-zebra td
+{
+    border-right: 1px solid #69c;
+    border-left: 1px solid #69c;
+}
+
+#ver-zebra2 td
+{
+    border-right: 1px solid #69c;
+    border-left: 1px solid #69c;
+}
+
+.vzebra-odd
+{
+    background: #D6E3F2;
+    font-size: 12px;
+}
+
+.vzebra-odd-strong
+{
+    background: #D6E3F2;    
+    font-weight: 900;
+}
+
+.vzebra-even
+{
+    background: #e8edff;
+}
+
+.vzebra-even-tight
+{
+    background: #e8edff;
+    font-size: smaller
+}
+
+#box-table-a
+{
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    font-size: 12px;
+    /*	margin: 45px;
+	width: 480px;*/
+    text-align: left;
+    border-collapse: collapse;
+    border: 1px solid #69c;
+}
+#box-table-a th
+{
+    font-size: 12px;
+    font-weight: normal;
+    padding: 4px;
+    background: #D6E3F2;
+    border-top: 1px solid #69c;
+    border-bottom: 1px solid #69c;
+    border-left: 1px solid #69c;
+    border-right: 1px solid #69c;
+}
+#box-table-a td
+{
+    padding: 4px;
+    background: #e8edff;
+}
+
+#box-table-a tr:hover td
+{
+    background: #d0dafd;
+}
+
+.empty .x-panel-body {
+    padding-top:20px;
+    text-align:center;
+    font-style:italic;
+    color: gray;
+    font-size:11px;
+}
+
+.row-green{
+    background-color: #99ff99 !important;
+}
+
+.row-yellow{
+    background-color: #ffff99 !important;
+}
+.link{
+	cursor:pointer;
+}
+.link:hover{
+	color:blue;
+	text-decoration:underline
+}
+.row-orange{
+    background-color: #ffcc99 !important; 
+}
+
+.messagebox_info{
+    background-image:url(../images/48x48/messagebox_info.png) !important;
+    background-repeat:no-repeat;
+    width:50px;
+    height:50px;
+}
+.messagebox_info_16{
+    background-image:url(../images/16x16/actions/messagebox_info.png) !important;    
+}
+
+.win_index{
+    z-index:7000;
+}
+
+.imgNode{
+    background-image:url(../images/48x48/messagebox_info.png) !important;    
+}
+
+.x-action-col-cell img {
+  height: 16px;
+  width: 16px;
+}
+
+.msg .x-box-mc {
+    font-size:14px;
+}
+
+#msg-div {
+    position:absolute;
+    left:35%;
+    top:10px;
+    width:250px;
+    z-index:20000;
+}
+
+.vacanteTemplate{
+	padding-top:0px;
+	color:#333333;	
+	font-size:11px;
+	vertical-align:text-top;
+}
+.vacanteTemplate td{
+	border-bottom: 1px dotted #CCCCCC;
+	padding-bottom:5px;
+}
+
+.vacanteTemplate th{
+	border-bottom: 1px dotted #CCCCCC;
+	font-weight: bold;
+	padding-right:10px;
+	vertical-align:text-top;
+	color:#15428B;
+	padding-bottom:5px;
+}
+.vacanteTemplate span{
+	padding-top:35px;
+	padding-bottom:35px;
+}
+
+.fondoPanelTmp{
+	background-color:#F7EFD5;
+}
+.fondoPanelTmpUsr{
+	background-color:#F9FDEC;
+}
+
+.clsRegistro{
+	background-image:url(../images/48x48/messagebox_info.png) !important ;
+	background-repeat:no-repeat;
+
+	width:48px;
+	height:48px;
+	border:1px dashed transparent;
+}
+.clsRegistro:hover{
+	border:1px dashed #B79C56;
+}
+
+.divNodoRecibido{
+    background-image: url(../images/48x48/recibido.png) !important;
+    background-repeat:no-repeat;
+    height: 48px; width: 48px;
+}
+
+.divNodoRevisado{
+    background-image: url(../images/48x48/revisado.png) !important;
+    background-repeat:no-repeat;
+    height: 48px; width: 48px;
+}
+
+.divNodoDistribuido{
+    background-image: url(../images/48x48/distribuido.png) !important;
+    background-repeat:no-repeat;
+    height: 48px; width: 48px;
+}
+
+.divNodoPendiente{
+    background-image: url(../images/48x48/pendiente.png) !important;
+    background-repeat:no-repeat;
+    height: 48px; width: 48px;
+}
+
+.divNodoDespachado{
+    background-image: url(../images/48x48/despachado.png) !important;
+    background-repeat:no-repeat;
+    height: 48px; width: 48px;
+}
+
+.divNodoRevisadoDistribuido{
+    background-image: url(../images/48x48/revisadodistribuido.png) !important;
+    background-repeat:no-repeat;
+    height: 48px; width: 48px;
+}
+
+.divNodoInhabilitado{
+    background-image: url(../images/48x48/inhabilitado.png) !important;
+    background-repeat:no-repeat;
+    height: 48px; width: 48px;
+}
+
+.divNodoDesconocido{
+    background-image: url(../images/48x48/desconocido.png) !important;
+    background-repeat:no-repeat;
+    height: 48px; width: 48px;
+}
+
+.divNodoTramite{
+    background-image: url(../images/48x48/tramite.png) !important;
+    background-repeat:no-repeat;
+    height: 48px; width: 48px;
+}
+
+.divNodoTraVeh{
+    background-image: url(../images/48x48/tramiteVeh.png) !important;
+    background-repeat:no-repeat;
+    height: 48px; width: 48px;
+}
+
+.divNodoTramiteFinalizado{
+    background-image: url(../images/48x48/tramiteFinalizado.png) !important;
+    background-repeat:no-repeat;
+    height: 48px; width: 48px;
+}
+
+.divNodoTramiteAnulado{
+    background-image: url(../images/48x48/tramiteAnulado.png) !important;
+    background-repeat:no-repeat;
+    height: 48px; width: 48px;
+}
+
+.labelNodo{
+    font-size: 9px;
+    font-weight: bold;
+    color: #333333
+}
+
+.headline1{   
+    font-size: 18px;
+    line-height: 40px;
+    letter-spacing: -1px;
+    color: #444;
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+    font-weight: 100;
+}
+
+.headline2{    
+    font-size: 14px;
+    line-height: 40px;
+    letter-spacing: -1px;color: #444;
+}
+
+.textoResultado{
+    color: #ff9966;
+    font-weight: bold;    
+}
+
+.textResaltado{
+    color: #3333ff;
+    font-weight: bold;
+}

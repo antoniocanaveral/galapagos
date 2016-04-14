@@ -1,0 +1,320 @@
+/*
+ *Form CSS
+ */
+fieldset {
+	border: 1px solid #999999;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+}
+
+legend {
+	padding: 0.2em 0.5em;
+	border: 1px solid #999999;
+	/*color:green;*/
+	font-size: 90%;
+	text-align: right;
+}
+
+.cargando {
+	border: 1px solid #E6E6E6;
+	margin: 150px 355px;
+	background-image: url(icon/loading.gif);
+	text-indent: 40px;
+	background-repeat: no-repeat;
+	height: 30px;
+	width: 110px;
+	font-size: 12px;
+	color: #545454;
+	background-position: 3px 4px;
+	padding-top: 10px;
+	position: absolute;
+	/*visibility:hidden;*/
+	background-color: white;
+}
+
+.form-textarea-limit {
+	
+}
+
+.form-textarea-limit textarea { /*border:1px solid #aaa;*/
+	overflow: auto;
+}
+
+.form-textarea-limit textarea:focus {
+	outline: none !important;
+}
+
+.form-textarea-limit-indicator {
+	/*background: none repeat scroll 0 0 #F5F5F5;
+    border-color: -moz-use-text-color #AAAAAA #AAAAAA;
+    border-right: 1px solid #AAAAAA;
+    border-style: none solid solid;
+    border-width: medium 1px 1px;*/
+	color: #666666;
+	font-size: 9px;
+	margin-top: -1px;
+	padding: 2px;
+	text-align: right;
+}
+
+.form-textarea-limit-indicator-error {
+	background: #FFAAAA;
+	color: #fff;
+}
+
+.form-radio,.form-checkbox {
+	vertical-align: middle;
+	margin: 0px;
+	padding: 0px;
+}
+
+.form-radio-item,.form-checkbox-item {
+	margin-top: 5px;
+	float: left;
+}
+
+.form-multiple-column,.form-single-column {
+	display: inline-block;
+}
+
+.form-multiple-column .form-radio-item,.form-multiple-column .form-checkbox-item
+	{
+	width: 150px;
+}
+
+.form-radio-item label,.form-checkbox-item label {
+	margin-left: 5px;
+}
+
+.form-radio-item br,.form-checkbox-item br {
+	clear: left;
+}
+
+.form-submit-button,.form-submit-reset,.form-submit-print {
+	margin: 0px;
+	overflow: visible;
+	padding: 1px 6px;
+	width: auto;
+}
+
+.form-grading-item {
+	margin-bottom: 3px;
+}
+
+.form-header {
+	margin: 0px;
+}
+
+.form-subHeader {
+	border-top: 1px solid #ccc;
+	font-style: italic;
+}
+
+.form-header-group {
+	background: #f5f5f5;
+	border-bottom: 1px solid #ccc;
+	padding: 12px;
+	clear: both;
+}
+
+.form-label {
+	width: 150px;
+	margin-bottom: 6px;
+	display: inline-block;
+}
+
+.form-label-top {
+	margin-bottom: 6px;
+	display: inline-block;
+}
+
+.form-label-left {
+	float: left;
+	display: inline-block;
+	text-align: left;
+	padding: 3px;
+	width: 150px !important;
+}
+
+.form-label-right {
+	float: left;
+	display: inline-block;
+	text-align: right;
+	margin-right: 6px;
+	margin-bottom: 6px;
+	padding: 3px;
+}
+
+.form-input-wide {
+	
+}
+
+.form-section,.form-section-closed {
+	list-style: none;
+	list-style-position: outside;
+	margin: 0px;
+	padding: 0px;
+	position: relative;
+	zoom: 1;
+}
+
+.form-section-closed {
+	overflow: hidden;
+	height: 60px;
+}
+
+.form-input {
+	display: inline-block;
+}
+
+.form-line {
+	clear: both;
+	padding: 3px;
+	margin: 0px;
+	display: inline-block;
+	width: 97%;
+	width: -moz-available;
+	/* Removed this because it was changing the size of the migrated forms */
+	/* border:1px solid transparent ; */
+	position: relative;
+}
+
+.form-line-column {
+	float: left;
+	clear: none;
+	width: auto;
+}
+
+.form-line-column-clear {
+	clear: left;
+	width: auto;
+}
+
+.form-line-active {
+	background-color: #FFFFE0;
+	/*outline: 1px solid #EEEED0;*/
+	color: #333;
+}
+
+.form-required {
+	margin-left: 5px;
+	color: red;
+}
+
+.form-button-error {
+	color: red;
+	display: inline;
+}
+
+.form-line-error {
+	border: 1px solid #dd8888;
+	background: #FFCCCC;
+	/*border:1px solid #FFAAAA;*/
+	color: #333;
+}
+
+.form-validation-error {
+	border: 2px solid red;
+}
+
+.form-line-active .form-error-message {
+	display: none;
+}
+
+.form-error-message { /*
+    right:7px;
+    top:6px;
+    */
+	z-index: 900;
+	position: absolute;
+	max-width: 130px;
+	right: 0px;
+	top: 0px;
+	color: #333;
+	padding: 3px;
+	font-size: 10px;
+	border: 4px solid #dd8888;
+	/*  -moz-box-shadow:0px 2px 4px rgba(102, 102, 102, 0.5);
+    -webkit-box-shadow:0px 2px 4px rgba(102, 102, 102, 0.5);
+    -moz-border-radius:6px 6px;
+    -webkit-border-radius:6px 6px;*/
+	background: #FFCCCC;
+}
+
+.form-error-arrow {
+	position: absolute;
+	top: -20px;
+	left: 10px;
+	height: 0px;
+	width: 0px;
+	border: 10px solid transparent;
+	border-bottom-color: #666;
+	border-bottom: 10px solid rgba(102, 102, 102, 0.3);
+}
+
+.form-error-arrow-inner {
+	position: absolute;
+	top: 1px;
+	height: 0px;
+	width: 0px;
+	border: 10px solid transparent;
+	border-bottom-color: #FFCCCC;
+	border-bottom-width: 11px;
+	left: -10px;
+	top: -10px;
+}
+
+.form-input .form-error-message,.form-input-wide .form-error-message {
+	bottom: -5px;
+	font-size: 11px;
+	position: relative;
+	z-index: 900;
+	right: auto;
+	top: auto;
+	color: #333;
+	padding: 3px;
+	max-width: 100%;
+	padding-bottom: 3px;
+	font-size: 12px;
+	border: none;
+	-moz-box-shadow: 0px 2px 4px rgba(102, 102, 102, 0.5);
+	-webkit-box-shadow: 0px 2px 4px rgba(102, 102, 102, 0.5);
+	-moz-border-radius: 6px 6px;
+	-webkit-border-radius: 6px 6px;
+	background: #FFCCCC;
+}
+
+.form-sub-label-container {
+	display: inline-block;
+	margin-right: 5px;
+	white-space: nowrap;
+}
+
+.form-sub-label {
+	color: #999999;
+	display: block;
+	font-size: 9px;
+}
+
+.form-radio-other-input {
+	margin-left: 5px;
+}
+
+.form-spinner-input-td {
+	white-space: normal;
+}
+
+/*
+ * TODO: This a fix for column view in IE6 and IE7
+ * only in single column. After relaxing we have
+ * to change the HTML code directly to fix column
+ * problems in IE6 and IE7.
+ */
+.form-single-column .clearfix {
+	display: inline-block;
+}
+
+.form-single-column .clearfix {
+	display: block;
+}
