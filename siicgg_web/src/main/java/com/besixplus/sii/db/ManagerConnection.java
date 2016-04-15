@@ -2,14 +2,13 @@ package com.besixplus.sii.db;
 
 import com.besixplus.sii.util.InitParameters;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
-
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
 
 public class ManagerConnection {
     private static String USER_NAME = null;
@@ -37,7 +36,7 @@ public class ManagerConnection {
         try {
             if (ManagerConnection.DATA_SOURCE == null) {
                 try {
-                    ManagerConnection.DATA_SOURCE = (DataSource) new InitialContext().lookup("java:/sii-web");
+                    ManagerConnection.DATA_SOURCE = (DataSource) new InitialContext().lookup("java:/sii");
                     ManagerConnection.IS_DEPLOYED = true;
                 } catch (NamingException e) {
                     e.printStackTrace();

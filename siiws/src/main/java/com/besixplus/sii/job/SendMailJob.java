@@ -1,23 +1,21 @@
 package com.besixplus.sii.job;
 
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import com.besixplus.sii.db.ManagerConnection;
+import com.besixplus.sii.objects.Cgg_buzon_correo;
+import com.besixplus.sii.objects.Cgg_configuracion;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-
-import com.besixplus.sii.db.ManagerConnection;
-import com.besixplus.sii.objects.Cgg_buzon_correo;
-import com.besixplus.sii.objects.Cgg_configuracion;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class SendMailJob implements Job{
 
@@ -36,7 +34,7 @@ public class SendMailJob implements Job{
 			tmpCon.close();
 			
 			for (Cgg_buzon_correo tmpCorreo : tmpCorreos) {
-				new SendMailThread(tmpCorreo, tmpConf.getCGCNF_VALOR_CADENA()).start();
+				//new SendMailThread(tmpCorreo, tmpConf.getCGCNF_VALOR_CADENA()).start();
 			}
 			
 			tmpCorreos.clear();

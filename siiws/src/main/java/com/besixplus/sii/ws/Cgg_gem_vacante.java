@@ -32,8 +32,8 @@ import com.besixplus.sii.db.ManagerConnection;
  *
  * @author BESIXPLUS CIA. LTDA.
  */
-@WebService()
-@SOAPBinding(style=Style.RPC)
+@WebService(serviceName="Cgg_gem_vacante", targetNamespace="http://ws.sii.besixplus.com/")
+@SOAPBinding(style=Style.RPC, use=SOAPBinding.Use.LITERAL)
 public class Cgg_gem_vacante implements Serializable{
 
 	private static final long serialVersionUID = 1375632177;
@@ -558,8 +558,9 @@ FINALIZADA
 	 * Obtiene el rol del usuario logineado
 	 * @return rol NOMBRE DEL ROL.
 	 */
-	@WebMethod
+	@WebMethod(action = "void", operationName = "getRolUsuario")
 	public String getRolUsuario(
+
 	){
 		String res = "true";
 		HttpServletRequest tmpRequest = (HttpServletRequest) wctx.getMessageContext().get(MessageContext.SERVLET_REQUEST);
