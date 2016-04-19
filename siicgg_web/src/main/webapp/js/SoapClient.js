@@ -235,8 +235,8 @@ SOAPClient._sendSoapRequest = function(url, method, parameters, async, callback,
     else
         xmlHttp.open("POST", url, async);
 	
-    var soapaction = ((ns.lastIndexOf("/") != ns.length - 1) ? ns + "/" : ns) + method;
-    xmlHttp.setRequestHeader("SOAPAction", soapaction);
+    //var soapaction = ((ns.lastIndexOf("/") != ns.length - 1) ? ns + "/" : ns) + method;
+    //xmlHttp.setRequestHeader("SOAPAction", soapaction);
     xmlHttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
     if(async)
     {
