@@ -131,13 +131,19 @@ function applyGrants(inButtonsArray, inDisabled){
     }
     tmpJSON += "]";
     function CallBackGrants(r){
+        if ( window.console && window.console.log ) {
+            window.console.log("CallBack: "+r);
+        }
         var tmpResJSON = Ext.util.JSON.decode(r);
+        if ( window.console && window.console.log ) {
+            window.console.log("Stringify: "+JSON.stringify(tmpResJSON));
+        }
         if(tmpJSON.length > 0){
             for(i = 0; i < tmpIds.length; i++){
                 if(inDisabled)
-                    Ext.getCmp(tmpIds[i]).setDisabled(!tmpResJSON[i] && inDisabled)
+                    Ext.getCmp(tmpIds[i]).setDisabled(!tmpResJSON[i] && inDisabled);
                 else
-                    Ext.getCmp(tmpIds[i]).setVisible(tmpResJSON[i])
+                    Ext.getCmp(tmpIds[i]).setVisible(tmpResJSON[i]);
             }
         }
     }

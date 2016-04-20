@@ -12,11 +12,11 @@
   <name>siiws Maven Webapp</name>
   <url>http://maven.apache.org</url>
   <dependencies>
-  	<dependency>
-		<groupId>postgresql</groupId>
-		<artifactId>postgresql</artifactId>
-		<version>9.1-901.jdbc4</version>
-	</dependency>
+	  <dependency>
+		  <groupId>com.bmlaurus</groupId>
+		  <artifactId>sii_commons</artifactId>
+		  <version>${version}</version>
+	  </dependency>
 	
 	<dependency>
 		<groupId>javax.servlet</groupId>
@@ -36,12 +36,6 @@
 		<version>1.4.7</version>
 	</dependency>
 	
-	<dependency>
-		<groupId>org.quartz-scheduler</groupId>
-		<artifactId>quartz</artifactId>
-		<version>1.8.6</version>
-	</dependency>
-		
 	<dependency>
 		<groupId>dom4j</groupId>
 		<artifactId>dom4j</artifactId>
