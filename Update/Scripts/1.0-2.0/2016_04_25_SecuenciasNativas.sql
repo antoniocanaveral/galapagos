@@ -51,6 +51,7 @@ $BODY$
   COST 100;
 
 
+--> MIGRATION SCRIPT CONTROLLER <--
 INSERT INTO sii.cgg_migrationscript (mrgsp_codigo,mrgsp_fecha,mrgsp_usuario_insert,mrgsp_fecha_insert,mrgsp_usuario_update,mrgsp_fecha_update,
 	mrgsp_estado,mrgsp_developer,mrgsp_name,mrgsp_description,
 	mrgsp_releaseno,mrgsp_filename,mrgsp_isapply)
