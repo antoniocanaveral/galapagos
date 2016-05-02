@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Definition of new Model -->
+
+<!-- The important part here is the name - Note: the use of the my: namespace
+     which is defined further on in the document -->
+<model name="sii:siimodel" xmlns="http://www.alfresco.org/model/dictionary/1.0">
+
+    <!-- Optional meta-data about the model -->
+    <description>Modelo para enlace fisico de almacenamiento</description>
+    <author>BMLaurus</author>
+    <version>1.0</version>
+
+    <!-- Imports are required to allow references to definitions in other models -->
+    <imports>
+        <!-- Import Alfresco Dictionary Definitions -->
+        <import uri="http://www.alfresco.org/model/dictionary/1.0" prefix="d"/>
+        <!-- Import Alfresco Content Domain Model Definitions -->
+        <import uri="http://www.alfresco.org/model/content/1.0" prefix="cm"/>
+    </imports>
+
+    <!-- Introduction of new namespaces defined by this model -->
+    <!-- NOTE: The following namespace my.new.model should be changed to reflect your own namespace -->
+    <namespaces>
+        <namespace uri="http://www.bmlaurus.com/model/content/1.0" prefix="sii"/>
+    </namespaces>
+
+    <types>
+        <!--  Enterprise-wide generic document type -->
+        <type name="sii:attachmentDocument">
+            <title>Documento Administrado por SII</title>
+            <parent>cm:content</parent>
+        </type>
+        <type name="sii:personales">
+            <title>Documentos Personales SII</title>
+            <parent>sii:attachmentDocument</parent>
+        </type>
+        <type name="sii:respaldo">
+            <title>Documentos Respaldo SII</title>
+            <parent>sii:attachmentDocument</parent>
+        </type>
+    </types>
+
+    <aspects>
+        <aspect name="sii:almacenable">
+            <title>Almacenable Fisicamente</title>
+            <properties>
+                <property name="sii:caja">
+                    <type>d:text</type>
+                    <mandatory>true</mandatory>
+                </property>
+                <property name="sii:carpeta">
+                    <type>d:text</type>
+                    <mandatory>false</mandatory>
+                </property>
+                <property name="sii:descripcion">
+                    <type>d:text</type>
+                    <mandatory>false</mandatory>
+                </property>
+            </properties>
+        </aspect>
+        <aspect name="sii:caducable">
+            <title>Tiene Fecha de Caducidad</title>
+            <properties>
+                <property name="sii:caducidad">
+                    <type>d:date</type>
+                </property>
+            </properties>
+        </aspect>
+        <aspect name="sii:identificable">
+            <title>Relacion Base de Datos</title>
+            <properties>
+                <property name="sii:table_name">
+                    <type>d:text</type>
+                    <mandatory>true</mandatory>
+                </property>
+                <property name="sii:record_id">
+                    <type>d:text</type>
+                    <mandatory>true</mandatory>
+                </property>
+            </properties>
+        </aspect>
+    </aspects>
+</model>
