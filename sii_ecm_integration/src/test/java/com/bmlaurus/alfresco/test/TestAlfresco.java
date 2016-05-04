@@ -1,9 +1,11 @@
 package com.bmlaurus.alfresco.test;
 
 import com.bmlaurus.alfresco.cmis.BaseAPI;
-import com.bmlaurus.alfresco.connection.AlfrescoServer;
-import com.bmlaurus.alfresco.entity.AlfSessionData;
 import com.bmlaurus.alfresco.entity.AlfUser;
+import com.bmlaurus.alfresco.integration.SiiAlmacenable;
+import com.bmlaurus.alfresco.integration.SiiCaducable;
+import com.bmlaurus.alfresco.integration.SiiIdentificable;
+import com.bmlaurus.alfresco.integration.SiiPersonalesDocument;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.client.api.Folder;
@@ -11,6 +13,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,14 +28,14 @@ public class TestAlfresco {
         user.setUsername("acanaveral");
         user.setPassword("adm5505");
 
-        AlfrescoServer conn = new AlfrescoServer("http://200.125.146.82","80","/alfresco/service/api/");
+        /*AlfrescoServer conn = new AlfrescoServer("http://200.125.146.82","80","/alfresco/service/api/");
         AlfSessionData sessionData = conn.logIn(user);
         assert sessionData!=null;
         assert sessionData.getTicket()!=null;
         if(sessionData!=null) { //logged IN
             user.setData(sessionData);
             assert conn.logOut(user) == true;
-        }
+        }*/
 
     }
 
@@ -71,7 +74,7 @@ public class TestAlfresco {
             CmisObject obj = cmis.getObjectByPath("res/casos/123456789" + "/" + "test.pdf");
             if(obj != null) {
                 if (obj instanceof Document) {
-                    cmis.updateDocument((Document) obj,file);
+                    cmis.updateDocument((Document) obj,file, null);
                 } else{
                     System.out.println("Object :"+obj.getType().getId());
                 }
@@ -79,7 +82,7 @@ public class TestAlfresco {
                 String rootFolderId = cmis.getRootFolderId(cmis.getSite());
                 // Create a new folder in the root folder
                 List<Folder> subFolder = cmis.createFoldersByPath(rootFolderId, "res/casos/123456789");
-                cmis.createDocument(subFolder.get(subFolder.size() - 1), file, "application/pdf");
+                cmis.createDocument(subFolder.get(subFolder.size() - 1), file, "application/pdf", null);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -97,6 +100,40 @@ public class TestAlfresco {
 
         System.out.println(objs.toString());
     }
+
+    @Test
+    public void DocumentsAndAspects(){
+        System.setProperty("sii.home","/Users/acanaveral/Desarrollo/Advance/fuentes/galapagos_ws/galapagos/SII_HOME");
+        BaseAPI cmis = new BaseAPI();
+
+        File file = new File("/Users/antonio/Downloads/test.pdf");
+
+        //Generamos el documento y los aspectos necesarios. Pueden ser varios.
+        SiiPersonalesDocument doc = new SiiPersonalesDocument("1710679968");
+        doc.addAspect(new SiiAlmacenable("C10", "1", "Descripcion del almacenamiento"));
+        doc.addAspect(new SiiCaducable(new Date()));
+        doc.addAspect(new SiiIdentificable("tabla_test", "testID1"));
+
+        try {
+            //Obtenemos el Objeto
+            CmisObject obj = cmis.getObjectByPath("res/casos/123456789" + "/" + "test.pdf");
+            if(obj != null) {
+                if (obj instanceof Document) {
+                    cmis.updateDocument((Document) obj,file, doc);
+                } else{
+                    System.out.println("Object :"+obj.getType().getId());
+                }
+            }else{
+                String rootFolderId = cmis.getRootFolderId(cmis.getSite());
+                // Create a new folder in the root folder
+                List<Folder> subFolder = cmis.createFoldersByPath(rootFolderId, "res/casos/123456789");
+                cmis.createDocument(subFolder.get(subFolder.size() - 1), file, "application/pdf", doc);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Test
     public void AlfrescoAspect(){

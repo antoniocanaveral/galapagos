@@ -3,12 +3,12 @@
 	<parent>
 		<artifactId>sii</artifactId>
 		<groupId>com.bmlaurus</groupId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>${sii.version}</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
   <artifactId>siiws</artifactId>
   <packaging>war</packaging>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>${sii.version}</version>
   <name>siiws Maven Webapp</name>
   <url>http://maven.apache.org</url>
   <dependencies>

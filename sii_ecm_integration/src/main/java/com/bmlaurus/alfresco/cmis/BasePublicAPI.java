@@ -1,29 +1,24 @@
 package com.bmlaurus.alfresco.cmis;
 
+import com.bmlaurus.alfresco.integration.SiiAttachmentDocument;
+import com.bmlaurus.alfresco.model.ContainerEntry;
+import com.bmlaurus.alfresco.model.ContainerList;
+import com.bmlaurus.alfresco.model.NetworkEntry;
+import com.bmlaurus.alfresco.model.NetworkList;
+import com.bmlaurus.alfresco.utils.Config;
+import com.google.api.client.http.*;
+import org.alfresco.webservice.content.Aspect;
+import org.apache.chemistry.opencmis.client.api.*;
+import org.apache.chemistry.opencmis.commons.PropertyIds;
+import org.apache.chemistry.opencmis.commons.data.ContentStream;
+import org.apache.chemistry.opencmis.commons.exceptions.CmisContentAlreadyExistsException;
+import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import com.bmlaurus.alfresco.model.*;
-import com.bmlaurus.alfresco.utils.Config;
-import org.apache.chemistry.opencmis.client.api.*;
-import org.apache.chemistry.opencmis.commons.PropertyIds;
-import org.apache.chemistry.opencmis.commons.data.ContentStream;
-import org.apache.chemistry.opencmis.commons.definitions.TypeDefinition;
-import org.apache.chemistry.opencmis.commons.enums.VersioningState;
-import org.apache.chemistry.opencmis.commons.exceptions.CmisContentAlreadyExistsException;
-import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
-
-import com.google.api.client.http.ByteArrayContent;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestFactory;
 
 /**
  * Created by acanaveral on 28/4/16.
@@ -58,11 +53,11 @@ public abstract class BasePublicAPI {
             subFolder = (Folder) cmisSession.getObjectByPath(rootFolder.getPath() + "/" + folderName);
             System.out.println("Folder already exists!");
         } catch (CmisObjectNotFoundException onfe) {
-            Map<String, Object> props = new HashMap<String, Object>();
+            LinkedHashMap<String, Object> props = new LinkedHashMap<String, Object>();
             props.put(PropertyIds.OBJECT_TYPE_ID, "cmis:folder,P:cm:titled");
             props.put(PropertyIds.NAME, folderName);
             subFolder = rootFolder.createFolder(props);
-            addAspectProperty(props,"P:cm:titled","cm:description",getDefaultDescription());
+            Aspect.addAspectProperty(props, "P:cm:titled", "cm:description", getDefaultDescription());
             String subFolderId = subFolder.getId();
             System.out.println("Created new folder: " + subFolderId);
         }
@@ -90,11 +85,11 @@ public abstract class BasePublicAPI {
                 subFolder = (Folder) cmisSession.getObjectByPath(parentPath.toString());
                 System.out.println("Folder already exists!");
             } catch (CmisObjectNotFoundException onfe) {
-                Map<String, Object> props = new HashMap<String, Object>();
+                LinkedHashMap<String, Object> props = new LinkedHashMap<String, Object>();
                 props.put(PropertyIds.OBJECT_TYPE_ID, "cmis:folder");
                 props.put(PropertyIds.NAME, folder);
-                addAspectProperty(props, "P:cm:titled", "cm:description", getDefaultDescription());
-                addAspectProperty(props, "P:cm:titled", "cm:title",folder);
+                Aspect.addAspectProperty(props, "P:cm:titled", "cm:description", getDefaultDescription());
+                Aspect.addAspectProperty(props, "P:cm:titled", "cm:title", folder);
                 subFolder = rootFolder.createFolder(props);
                 String subFolderId = subFolder.getId();
                 System.out.println("Created new folder: " + subFolderId);
@@ -103,23 +98,6 @@ public abstract class BasePublicAPI {
         }
         return folders;
     }
-
-    private void addAspectProperty(Map<String, Object> props, String aspectId, String propertyId, String propertyValue){
-        ArrayList<String> secIds = new ArrayList<String>();
-        if(props.get(PropertyIds.SECONDARY_OBJECT_TYPE_IDS)!=null){
-            ArrayList<String> currentAspects = (ArrayList<String>) props.get(PropertyIds.SECONDARY_OBJECT_TYPE_IDS);
-            for(String prop: currentAspects){
-                secIds.add(prop);
-            }
-            if(!currentAspects.contains(aspectId))
-                secIds.add(aspectId);
-        }else
-            secIds.add(aspectId);
-
-        props.put(PropertyIds.SECONDARY_OBJECT_TYPE_IDS, secIds);
-        props.put(propertyId, propertyValue);
-    }
-
 
     private void updateSecondaryType(Folder folder, String aspectId, String propertyId, String propertyValue){
         List aspects = folder.getProperty(PropertyIds.SECONDARY_OBJECT_TYPE_IDS).getValues();
@@ -163,9 +141,9 @@ public abstract class BasePublicAPI {
 
     public Document createDocument(Folder parentFolder,
                                    File file,
-                                   String fileType)
+                                   String fileType, SiiAttachmentDocument aspect)
             throws FileNotFoundException {
-        return createDocument(parentFolder, file, fileType, null);
+        return createDocument(parentFolder, file, fileType, null, aspect);
     }
 
     public CmisObject getObjectByPath(String path) throws IOException {
@@ -221,7 +199,7 @@ public abstract class BasePublicAPI {
     public Document createDocument(Folder parentFolder,
                                    File file,
                                    String fileType,
-                                   Map<String, Object> props)
+                                   LinkedHashMap<String, Object> props, SiiAttachmentDocument aspect)
             throws FileNotFoundException {
 
         Session cmisSession = getCmisSession();
@@ -230,7 +208,7 @@ public abstract class BasePublicAPI {
 
         // create a map of properties if one wasn't passed in
         if (props == null) {
-            props = new HashMap<String, Object>();
+            props = new LinkedHashMap<String, Object>();
         }
 
         // Add the object type ID if it wasn't already
@@ -243,7 +221,11 @@ public abstract class BasePublicAPI {
             props.put("cmis:name", fileName);
         }
 
-        addAspectProperty(props,"P:cm:titled","cm:description",getDefaultDescription());
+        Aspect.addAspectProperty(props, "P:cm:titled", "cm:description", getDefaultDescription());
+
+        if(aspect!=null){
+            aspect.createDocument(props);
+        }
 
         ContentStream contentStream = cmisSession.getObjectFactory().
                 createContentStream(
@@ -266,13 +248,18 @@ public abstract class BasePublicAPI {
     }
 
 
-    public void updateDocument(Document doc, File file){
+    public void updateDocument(Document doc, File file, SiiAttachmentDocument aspect){
         Session cmisSession = getCmisSession();
         List<Property<?>> list = doc.getProperties();
-        HashMap<String, Object> props = new HashMap<>();
+        LinkedHashMap<String, Object> props = new LinkedHashMap<>();
         for (Property<?> i : list) props.put(i.getId(),i.getValue());
         props.put(PropertyIds.IS_LATEST_MAJOR_VERSION,true);
-        addAspectProperty(props, "P:cm:titled", "cm:description", getDefaultDescription());
+        Aspect.addAspectProperty(props, "P:cm:titled", "cm:description", getDefaultDescription());
+
+        if(aspect!=null){
+            aspect.createDocument(props);
+            doc.updateProperties(props);
+        }
         try {
             ContentStream contentStream = cmisSession.getObjectFactory().
                     createContentStream(

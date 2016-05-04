@@ -16,6 +16,7 @@
     <target name="package-jar" depends="mkdirs">
         <jar destfile="${jar.file}" >
             <fileset dir="${project.dir}/config" includes="**/*" />
+            <metainf dir="${project.dir}/config/alfresco/web-extension" includes="**/share-config-custom.xml"/>
         </jar>
     </target>
 

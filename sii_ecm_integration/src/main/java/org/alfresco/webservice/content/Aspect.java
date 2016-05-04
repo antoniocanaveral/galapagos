@@ -1,60 +1,37 @@
 package org.alfresco.webservice.content;
 
+import org.apache.chemistry.opencmis.commons.PropertyIds;
 
-public class Aspect {
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
-  protected String aspect_name = "";
-  protected String aspect_domain = "";
-  protected String[] property_names;
-  protected String[] property_values;
+public abstract class Aspect {
+  protected final String prefix = "sii";
 
-  public Aspect(String aspect_name, String aspect_domain, String[] property_names,
-      String[] property_values) {
-    this.aspect_name = aspect_name;
-    this.aspect_domain = aspect_domain;
-    this.property_names = property_names;
-    this.property_values = property_values;
+  abstract public String getAspectName();
+  abstract public List<AspectProperty> toProperties();
 
-  }
+  public static void addAspectProperty(LinkedHashMap<String, Object> props, String aspectId, String propertyId, Serializable propertyValue){
+    ArrayList<String> secIds = new ArrayList<String>();
+    if(props.get(PropertyIds.SECONDARY_OBJECT_TYPE_IDS)!=null){
+      ArrayList<String> currentAspects = (ArrayList<String>) props.get(PropertyIds.SECONDARY_OBJECT_TYPE_IDS);
+      for(String prop: currentAspects){
+        secIds.add(prop);
+      }
+      if(!currentAspects.contains(aspectId))
+        secIds.add(aspectId);
+      props.replace(PropertyIds.SECONDARY_OBJECT_TYPE_IDS, secIds);
+    }else{
+      secIds.add(aspectId);
+      props.put(PropertyIds.SECONDARY_OBJECT_TYPE_IDS, secIds);
+    }
 
-  public String getAspect_name() {
-    return aspect_name;
-  }
-
-  public void setAspect_name(String aspect_name) {
-    this.aspect_name = aspect_name;
-  }
-
-  public String getAspect_domain() {
-    return aspect_domain;
-  }
-
-  public void setAspect_domain(String aspect_domain) {
-    this.aspect_domain = aspect_domain;
-  }
-
-  public String[] getProperty_names() {
-    return property_names;
-  }
-
-  public String[] getProperty_names_as_array() {
-    return property_names;
-  }
-
-  public void setProperty_names(String[] property_names) {
-    this.property_names = property_names;
-  }
-
-  public String[] getProperty_values() {
-    return property_values;
-  }
-
-  public String[] getProperty_values_as_array() {
-    return (String[]) property_values;
-  }
-
-  public void setProperty_values(String[] property_values) {
-    this.property_values = property_values;
+    if(props.get(propertyId)==null)
+      props.put(propertyId, propertyValue);
+    else
+      props.replace(propertyId, propertyValue);
   }
 
 }

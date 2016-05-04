@@ -7,7 +7,7 @@
 <model name="sii:siimodel" xmlns="http://www.alfresco.org/model/dictionary/1.0">
 
     <!-- Optional meta-data about the model -->
-    <description>Modelo para enlace fisico de almacenamiento</description>
+    <description>Modelo para el Sistema Informatico Integral de CGG</description>
     <author>BMLaurus</author>
     <version>1.0</version>
 
@@ -20,7 +20,6 @@
     </imports>
 
     <!-- Introduction of new namespaces defined by this model -->
-    <!-- NOTE: The following namespace my.new.model should be changed to reflect your own namespace -->
     <namespaces>
         <namespace uri="http://www.bmlaurus.com/model/content/1.0" prefix="sii"/>
     </namespaces>
@@ -34,10 +33,22 @@
         <type name="sii:personales">
             <title>Documentos Personales SII</title>
             <parent>sii:attachmentDocument</parent>
+            <properties>
+                <property name="sii:personal_ref">
+                    <type>d:text</type>
+                    <multiple>false</multiple>
+                </property>
+            </properties>
         </type>
         <type name="sii:respaldo">
             <title>Documentos Respaldo SII</title>
             <parent>sii:attachmentDocument</parent>
+            <properties>
+                <property name="sii:respaldo_ref">
+                    <type>d:text</type>
+                    <multiple>false</multiple>
+                </property>
+            </properties>
         </type>
     </types>
 
