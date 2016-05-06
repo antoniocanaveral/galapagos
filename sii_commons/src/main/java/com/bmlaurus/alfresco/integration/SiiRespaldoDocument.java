@@ -1,18 +1,18 @@
 package com.bmlaurus.alfresco.integration;
 
-import javax.annotation.Nullable;
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 
 /**
  * Created by acanaveral on 4/5/16.
  */
-public class SiiPersonalesDocument extends SiiAttachmentDocument {
+public class SiiRespaldoDocument extends SiiAttachmentDocument implements Serializable{
 
-    private final String DOCUMENT_NAME = "D:sii:personales";
+    private static final long serialVersionUID = -1903855662967805280L;
+    private final String DOCUMENT_NAME = "D:sii:respaldo";
     private String personal_ref;
 
-    @Nullable
-    public SiiPersonalesDocument(String personal_ref) {
+    public SiiRespaldoDocument(String personal_ref) {
         documentName=DOCUMENT_NAME;
         this.personal_ref = personal_ref;
     }
@@ -27,6 +27,6 @@ public class SiiPersonalesDocument extends SiiAttachmentDocument {
         super.createDocument(props);
         //Esto no funciona. Hay que ver porque.
         //if(personal_ref!=null)
-        //    props.put("sii:personal_ref",personal_ref);
+        //    props.put("sii:respaldo_ref",personal_ref);
     }
 }

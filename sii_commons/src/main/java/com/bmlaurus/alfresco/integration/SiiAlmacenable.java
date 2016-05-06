@@ -1,16 +1,18 @@
 package com.bmlaurus.alfresco.integration;
 
-import org.alfresco.webservice.content.Aspect;
-import org.alfresco.webservice.content.AspectProperty;
+import com.bmlaurus.alfresco.aspects.Aspect;
+import com.bmlaurus.alfresco.aspects.AspectProperty;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by acanaveral on 3/5/16.
  */
-public class SiiAlmacenable extends Aspect {
+public class SiiAlmacenable extends Aspect implements Serializable{
 
+    private static final long serialVersionUID = -8668381223267046607L;
     private final String ASPECT_NAME = "P:"+prefix+":almacenable";
 
     private final String CAJA_NAME = prefix+":caja";

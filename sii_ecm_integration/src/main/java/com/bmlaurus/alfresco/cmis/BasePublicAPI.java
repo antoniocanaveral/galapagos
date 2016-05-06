@@ -5,19 +5,18 @@ import com.bmlaurus.alfresco.model.ContainerEntry;
 import com.bmlaurus.alfresco.model.ContainerList;
 import com.bmlaurus.alfresco.model.NetworkEntry;
 import com.bmlaurus.alfresco.model.NetworkList;
-import com.bmlaurus.alfresco.utils.Config;
+import com.bmlaurus.utils.Config;
 import com.google.api.client.http.*;
-import org.alfresco.webservice.content.Aspect;
+import com.bmlaurus.alfresco.aspects.Aspect;
 import org.apache.chemistry.opencmis.client.api.*;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisContentAlreadyExistsException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -35,7 +34,6 @@ public abstract class BasePublicAPI {
      * target site, then create a new folder, then create
      * a new document in the new folder
      *
-     * @param cmisSession
      * @param parentFolderId
      * @param folderName
      * @return Folder
@@ -143,7 +141,13 @@ public abstract class BasePublicAPI {
                                    File file,
                                    String fileType, SiiAttachmentDocument aspect)
             throws FileNotFoundException {
-        return createDocument(parentFolder, file, fileType, null, aspect);
+        return createDocument(parentFolder, new DataHandler(new FileDataSource(file)), fileType, null, aspect);
+    }
+
+    public DataHandler getDocument(String fileId){
+        Document document = (Document) getObjectById(fileId);
+        DataHandler retFile = new DataHandler(document.getContentStream(),document.getContentStream().getMimeType());
+        return  retFile;
     }
 
     public CmisObject getObjectByPath(String path) throws IOException {
@@ -182,10 +186,14 @@ public abstract class BasePublicAPI {
     }
 
 
+    public CmisObject getObjectById(String objectId){
+        Session cmisSession = getCmisSession();
+        return cmisSession.getObject(objectId);
+    }
+
     /**
      * Use the CMIS API to create a document in a folder
      *
-     * @param cmisSession
      * @param parentFolder
      * @param file
      * @param fileType
@@ -197,7 +205,7 @@ public abstract class BasePublicAPI {
      *
      */
     public Document createDocument(Folder parentFolder,
-                                   File file,
+                                   DataHandler file,
                                    String fileType,
                                    LinkedHashMap<String, Object> props, SiiAttachmentDocument aspect)
             throws FileNotFoundException {
@@ -227,13 +235,18 @@ public abstract class BasePublicAPI {
             aspect.createDocument(props);
         }
 
-        ContentStream contentStream = cmisSession.getObjectFactory().
-                createContentStream(
-                        fileName,
-                        file.length(),
-                        fileType,
-                        new FileInputStream(file)
-                );
+        ContentStream contentStream = null;
+        try {
+            contentStream = cmisSession.getObjectFactory().
+                    createContentStream(
+                            fileName,
+                            Integer.toUnsignedLong(file.getInputStream().available()),
+                            fileType,
+                            file.getInputStream()
+                    );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         Document document = null;
         try {
@@ -247,8 +260,11 @@ public abstract class BasePublicAPI {
         return document;
     }
 
-
     public void updateDocument(Document doc, File file, SiiAttachmentDocument aspect){
+        updateDocument(doc,new DataHandler(new FileDataSource(file)),aspect);
+    }
+
+    public void updateDocument(Document doc, DataHandler file, SiiAttachmentDocument aspect){
         Session cmisSession = getCmisSession();
         List<Property<?>> list = doc.getProperties();
         LinkedHashMap<String, Object> props = new LinkedHashMap<>();
@@ -264,13 +280,15 @@ public abstract class BasePublicAPI {
             ContentStream contentStream = cmisSession.getObjectFactory().
                     createContentStream(
                             doc.getName(),
-                            file.length(),
+                            Integer.toUnsignedLong(file.getInputStream().available()),
                             (String) props.get(PropertyIds.OBJECT_TYPE_ID),
-                            new FileInputStream(file)
+                            file.getInputStream()
                     );
             doc.appendContentStream(contentStream,true);
             System.out.println("Document Updated V: "+doc.getVersionLabel() +" Id: " + doc.getId());
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -306,8 +324,6 @@ public abstract class BasePublicAPI {
     /**
      * Use the REST API to "like" an object
      *
-     * @param requestFactory
-     * @param homeNetwork
      * @param objectId
      * @throws IOException
      */
@@ -326,8 +342,6 @@ public abstract class BasePublicAPI {
     /**
      * Use the REST API to comment on an object
      *
-     * @param requestFactory
-     * @param homeNetwork
      * @param objectId
      * @param comment
      * @throws IOException

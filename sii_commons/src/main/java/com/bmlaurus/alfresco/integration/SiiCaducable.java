@@ -1,8 +1,9 @@
 package com.bmlaurus.alfresco.integration;
 
-import org.alfresco.webservice.content.Aspect;
-import org.alfresco.webservice.content.AspectProperty;
+import com.bmlaurus.alfresco.aspects.Aspect;
+import com.bmlaurus.alfresco.aspects.AspectProperty;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 /**
  * Created by acanaveral on 3/5/16.
  */
-public class SiiCaducable extends Aspect {
+public class SiiCaducable extends Aspect implements Serializable{
 
     private final String ASPECT_NAME = "P:"+prefix+":caducable";
 

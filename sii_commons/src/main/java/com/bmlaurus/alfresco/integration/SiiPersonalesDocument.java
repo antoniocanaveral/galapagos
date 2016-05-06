@@ -1,16 +1,18 @@
 package com.bmlaurus.alfresco.integration;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 
 /**
  * Created by acanaveral on 4/5/16.
  */
-public class SiiRespaldoDocument extends SiiAttachmentDocument {
+public class SiiPersonalesDocument extends SiiAttachmentDocument implements Serializable{
 
-    private final String DOCUMENT_NAME = "D:sii:respaldo";
+    private static final long serialVersionUID = -1988541771138413461L;
+    private final String DOCUMENT_NAME = "D:sii:personales";
     private String personal_ref;
 
-    public SiiRespaldoDocument(String personal_ref) {
+    public SiiPersonalesDocument(String personal_ref) {
         documentName=DOCUMENT_NAME;
         this.personal_ref = personal_ref;
     }
@@ -25,6 +27,6 @@ public class SiiRespaldoDocument extends SiiAttachmentDocument {
         super.createDocument(props);
         //Esto no funciona. Hay que ver porque.
         //if(personal_ref!=null)
-        //    props.put("sii:respaldo_ref",personal_ref);
+        //    props.put("sii:personal_ref",personal_ref);
     }
 }

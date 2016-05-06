@@ -1,4 +1,4 @@
-package com.bmlaurus.alfresco.utils;
+package com.bmlaurus.utils;
 
 import com.besixplus.sii.util.Env;
 

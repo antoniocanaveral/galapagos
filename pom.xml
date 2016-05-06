@@ -28,10 +28,10 @@
 	</properties>
 
 	<modules>
+		<module>sii_commons</module>
+		<module>sii_ecm_integration</module>
 		<module>SIICGG_UI</module>
 		<module>siicgg_web</module>
 		<module>siiws</module>
-		<module>sii_commons</module>
-		<module>sii_ecm_integration</module>
   </modules>
 </project>

@@ -1,4 +1,4 @@
-package org.alfresco.webservice.content;
+package com.bmlaurus.alfresco.aspects;
 
 import java.io.Serializable;
 

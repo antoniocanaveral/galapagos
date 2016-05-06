@@ -1,6 +1,6 @@
-package org.alfresco.webservice.content;
+package com.bmlaurus.alfresco.aspects;
 
-import org.apache.chemistry.opencmis.commons.PropertyIds;
+import com.bmlaurus.alfresco.utils.PropertyIds;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -1,9 +1,10 @@
 package com.bmlaurus.alfresco.integration;
 
-import org.alfresco.webservice.content.Aspect;
-import org.alfresco.webservice.content.AspectProperty;
-import org.apache.chemistry.opencmis.commons.PropertyIds;
+import com.bmlaurus.alfresco.aspects.Aspect;
+import com.bmlaurus.alfresco.aspects.AspectProperty;
+import com.bmlaurus.alfresco.utils.PropertyIds;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -11,9 +12,12 @@ import java.util.List;
 /**
  * Created by acanaveral on 4/5/16.
  */
-public abstract class SiiAttachmentDocument {
-    private final String domain = "{com.bmlaurus.model}";
+public abstract class SiiAttachmentDocument implements Serializable{
 
+    private static final long serialVersionUID = 2407193988302831253L;
+    private final String domain = "{com.bmlaurus.model}";
+    private String path;
+    private String fileName;
     private final String DOCUMENT_NAME = "D:sii:attachmentDocument";
     protected String documentName = DOCUMENT_NAME;
 
@@ -21,6 +25,26 @@ public abstract class SiiAttachmentDocument {
 
     public String getDomain() {
         return domain;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getFullPath(){
+        return getPath()+"/"+getFileName();
     }
 
     public abstract String getDocumentName();
