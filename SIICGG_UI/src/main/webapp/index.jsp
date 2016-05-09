@@ -259,7 +259,7 @@
                 </tr>
                 <tr style="height: 50px">
                     <td>
-                        <div align="left"><span class="headline1"> Sistema integral inform&aacute;tico SIICGG</span><br></div>                                                
+                        <div align="left"><span class="headline1"> Sistema integral inform&aacute;tico SIICGG</span><br></div>
                     </td>
                     <td>
                         <div align="center"><a href="http://www.besixplus.com"

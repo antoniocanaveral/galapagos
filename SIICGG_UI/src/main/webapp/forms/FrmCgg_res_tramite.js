@@ -90,12 +90,15 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
         CRECV_CODIGO: '',
         CRPER_FECHA_NACIMIENTO: ''
     });
-    var rFilaDepositoGarantia = Ext.data.Record.create(['CRDPT_CODIGO', 'CRDPT_NUMERO_DOCUMENTO']);
+
+//MO
+    /*var rFilaDepositoGarantia = Ext.data.Record.create(['CRDPT_CODIGO', 'CRDPT_NUMERO_DOCUMENTO']);
     var rDepositoGarantia = new rFilaDepositoGarantia({
         CRDPT_CODIGO: '',
         CRDPT_NUMERO: '',
         CRGRT_CODIGO:''
-    });
+    });*/
+//
 
     var rFilaAuspiciante = Ext.data.Record.create(['CRPER_CODIGO', 'CRPER_NOMBRES', 'CRPER_APELLIDO_PATERNO']);
     var rAuspiciante = new rFilaAuspiciante({
@@ -567,12 +570,14 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                 }
             });
 
-            sCgg_res_garantia_solicitud.reload({
+//MO
+         /*   sCgg_res_garantia_solicitud.reload({
                 params: {
                     inCrtst_codigo: tmpRecord.get('CRTST_CODIGO'),
                     format: TypeFormat.JSON
                 }
-            });
+            });*/
+//
 
             pnlFrmCgg_res_tramitePrincipal.getEl().unmask();
             winFrmCgg_res_tramite.doLayout();
@@ -2481,19 +2486,23 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                     }]
                 }, grdCgg_res_fase]
             }]
-        }, {
+        },
+//MO
+        /*{
             title: 'Garant\u00EDas',
             id: 'tpFrmCgg_res_tramite24',
             frame: true,
             layout: 'border',
-            items:[{
-                xtype:'panel',
-                layout:'border',
-                id:'pnlTpFrmCgg_res_tramite24',
-                region:'center',
-                items:[pnlGarantia,grdCgg_res_garantia_solicitud]
+            items: [{
+                xtype: 'panel',
+                layout: 'border',
+                id: 'pnlTpFrmCgg_res_tramite24',
+                region: 'center',
+                items: [pnlGarantia, grdCgg_res_garantia_solicitud]
             }]
-        },{
+        },*/
+//
+            {
             title: 'Mas informaci\u00F3n',
             id: 'tpFrmCgg_res_tramite22',
             frame: true,

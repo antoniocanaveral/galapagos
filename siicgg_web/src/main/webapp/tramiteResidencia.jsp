@@ -82,6 +82,16 @@ e iniciar un tramite de residencia</div>
 <div class="jotform-form" id="myForm" style="display: none">
 <div class="form-all">
 <fieldset><legend><b>Datos tr&aacute;mite</b></legend>
+
+<%--MO--%>
+<li class="form-line"><label class="form-label-left"
+	 id="lblTipoTramite" for="divTipoTramite"> Tipo de tramite:</label>
+<div class="form-input">
+<div id='divTipoTramite'></div>
+</div>
+<label class="obligatorio">(*)</label></li>
+<%----%>
+
 <li class="form-line"><label class="form-label-left"
 	id="lblIslaTramite" for="divIslaTramite"> Lugar registro:</label>
 <div class="form-input">
@@ -162,6 +172,7 @@ auspiciante</b></legend>
 	<li><a href="#divAuspiciado"><b>Informaci&oacute;n
 	Beneficiario</b></a></li>
 	<li><a href="#divContacto"><b>Contacto</b></a></li>
+	<li><a href="#divDocumentacion"><b>Documentaci&oacute;n</b></a></li>
 </ul>
 <div id="divAuspiciado">
 <ul class="form-section">
@@ -303,6 +314,51 @@ obligatorios</span></div>
 </table>
 </div>
 </div>
+
+
+<%--MO--%>
+	<div id="divDocumentacion">
+		<div class="form-line cssTabButton">
+			<div id="divBgModal" class="bgtransparent"
+				 style="width: 100%; height: 100%"></div>
+			<table width="200" border="0" style="font-size: 11px">
+				<tr>
+					<td><!--  -->
+						<br />
+						<div id="FrmListaDocumentacion" style="border: 1px solid gray">
+
+							<table class="tabla" cellspacing="0" border="0"
+								   id='tblDocumentacion'
+								   style="font-size: 11px; border: 1px solid #CCCCCC; width: 600px">
+								<thead
+										style="display: block; border-bottom: 1px solid #CCCCCC; width: 100%">
+								<tr>
+									<th width="225px">
+										<div align="left">Documentos</div>
+									</th>
+									<th width="365px">
+										<div align="left">Adjuntos</div>
+									</th>
+								</tr>
+								</thead>
+								<tbody
+										style="width: 100%; height: 130px; overflow: auto; display: block"></tbody>
+							</table>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+<%----%>
+
 </div>
 </div>
 <br />
