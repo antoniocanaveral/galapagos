@@ -3,12 +3,12 @@
 	<parent>
 		<artifactId>sii</artifactId>
 		<groupId>com.bmlaurus</groupId>
-		<version>${sii.version}</version>
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
   <artifactId>SIICGG_UI</artifactId>
   <packaging>war</packaging>
-  <version>${sii.version}</version>
+  <version>0.0.1-SNAPSHOT</version>
   <name>SIICGG_UI Maven Webapp</name>
   <url>http://maven.apache.org</url>
   <dependencies>
@@ -16,7 +16,7 @@
 	  <dependency>
 		  <groupId>com.bmlaurus</groupId>
 		  <artifactId>sii_commons</artifactId>
-		  <version>${version}</version>
+		  <version>0.0.1-SNAPSHOT</version>
 	  </dependency>
 	<dependency>
 		<groupId>javax.servlet</groupId>

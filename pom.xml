@@ -4,7 +4,7 @@
 	<artifactId>sii</artifactId>
 	<groupId>com.bmlaurus</groupId>
 	<packaging>pom</packaging>
-	<version>${sii.version}</version>
+	<version>0.0.1-SNAPSHOT</version>
 
 	<name>CGG ::: Sistema Informatico Integral</name>
 	<description>CGG ::: Sistema Informatico Integral</description>
@@ -24,7 +24,6 @@
 
 	<properties>
 		<alfresco.version>4.2.e-SNAPSHOT</alfresco.version>
-		<sii.version>0.0.1-SNAPSHOT</sii.version>
 	</properties>
 
 	<modules>
