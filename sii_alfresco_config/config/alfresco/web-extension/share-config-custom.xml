@@ -1,0 +1,139 @@
+
+<alfresco-config>
+    <!-- Document Library config section -->
+    <config evaluator="string-compare" condition="DocumentLibrary">
+        <aspects>
+            <!-- Aspects that a user can see -->
+            <visible>
+                <aspect name="sii:almacenable" />
+                <aspect name="sii:caducable" />
+                <aspect name="sii:identificable" />
+            </visible>
+
+            <!-- Aspects that a user can add. Same as "visible" if left empty -->
+            <addable>
+                <aspect name="sii:almacenable" />
+                <aspect name="sii:caducable" />
+            </addable>
+
+            <!-- Aspects that a user can remove. Same as "visible" if left empty -->
+            <removeable>
+                <aspect name="sii:caducable" />
+            </removeable>
+        </aspects>
+
+        <types>
+            <type name="cm:content">
+                <subtype name="sii:attachmentDocument" />
+                <subtype name="sii:personales" />
+                <subtype name="sii:respaldo" />
+            </type>
+            <type name="sii:attachmentDocument">
+                <subtype name="sii:personales" />
+                <subtype name="sii:respaldo" />
+            </type>
+        </types>
+    </config>
+
+    <config evaluator="aspect" condition="sc:webable">
+        <forms>
+            <form>
+                <field-visibility>
+                    <!-- sii:almacenableRelated -->
+                    <show id="sii:caja" />
+                    <show id="sii:carpeta" />
+                    <show id="sii:descripcion" />
+                    <!-- sii:caducableRelated -->
+                    <show id="sii:caducidad" />
+                    <!-- sii:identificableRelated -->
+                    <show id="sii:table_name" />
+                    <show id="sii:record_id" />
+                </field-visibility>
+                <appearance>
+                    <!-- sii:almacenableRelated -->
+                    <field id="sii:caja" label-id="prop.sii_caja"/>
+                    <field id="sii:carpeta" label-id="prop.sii_carpeta"/>
+                    <field id="sii:descripcion" label-id="prop.sii_descripcion"/>
+                    <!-- sii:caducableRelated -->
+                    <field id="sii:caducidad" label-id="prop.sii_caducidad"/>
+                    <!-- sii:identificableRelated -->
+                    <field id="sii:table_name" read-only="true" label-id="prop.sii_table_name"/>
+                    <field id="sii:record_id" read-only="true" label-id="prop.sii_record_id"/>
+                </appearance>
+            </form>
+        </forms>
+    </config>
+
+    <config replace="true" evaluator="string-compare" condition="AdvancedSearch">
+        <advanced-search>
+            <!-- Forms for the advanced search type list -->
+            <forms>
+                <form labelId="search.form.label.cm_content" descriptionId="search.form.desc.cm_content">cm:content</form>
+                <form labelId="search.form.label.cm_folder" descriptionId="search.form.desc.cm_folder">cm:folder</form>
+                <form labelId="type.sii_attachmentDocument" descriptionId="search.form.desc.sii_attachmentDocument">sii:attachmentDocument</form>
+            </forms>
+        </advanced-search>
+    </config>
+
+    <!-- sc:whitepaper type (new nodes) -->
+    <config evaluator="model-type" condition="sii:attachmentDocument">
+        <forms>
+            <!-- Search form -->
+            <form id="search">
+                <field-visibility>
+                    <show id="cm:name" />
+                    <show id="cm:title" force="true" />
+                    <show id="cm:description" force="true" />
+                    <show id="mimetype" />
+                    <show id="cm:modified" />
+                    <show id="cm:modifier" />
+                    <!-- sii:almacenableRelated -->
+                    <show id="sii:caja" />
+                    <show id="sii:carpeta" />
+                    <show id="sii:descripcion" />
+                    <!-- sii:caducableRelated -->
+                    <show id="sii:caducidad" />
+                    <!-- sii:identificableRelated -->
+                    <show id="sii:table_name" />
+                    <show id="sii:record_id" />
+                </field-visibility>
+                <appearance>
+                    <field id="mimetype">
+                        <control template="/org/alfresco/components/form/controls/mimetype.ftl" />
+                    </field>
+                    <field id="cm:modifier">
+                        <control>
+                            <control-param name="forceEditable">true</control-param>
+                        </control>
+                    </field>
+                    <field id="cm:modified">
+                        <control template="/org/alfresco/components/form/controls/daterange.ftl" />
+                    </field>
+                    <!-- sii:almacenableRelated -->
+                    <field id="sii:caja" label-id="prop.sii_caja">
+                        <control template="/org/alfresco/components/form/controls/textfield.ftl" />
+                    </field>
+                    <field id="sii:carpeta" label-id="prop.sii_carpeta">
+                        <control template="/org/alfresco/components/form/controls/textfield.ftl" />
+                    </field>
+                    <field id="sii:descripcion" label-id="prop.sii_descripcion">
+                        <control template="/org/alfresco/components/form/controls/textfield.ftl" />
+                    </field>
+
+                    <!-- sii:caducableRelated -->
+                    <field id="sii:caducidad" label-id="prop.sii_caducidad">
+                        <control template="/org/alfresco/components/form/controls/date.ftl" />
+                    </field>
+
+                    <!-- sii:identificableRelated -->
+                    <field id="sii:table_name" label-id="prop.sii_table_name">
+                        <control template="/org/alfresco/components/form/controls/textfield.ftl" />
+                    </field>
+                    <field id="sii:record_id" label-id="prop.sii_record_id">
+                        <control template="/org/alfresco/components/form/controls/textfield.ftl" />
+                    </field>
+                </appearance>
+            </form>
+        </forms>
+    </config>
+</alfresco-config>

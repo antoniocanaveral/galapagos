@@ -1,6 +1,6 @@
 package com.bmlaurus.alfresco.cmis;
 
-import com.bmlaurus.alfresco.utils.Config;
+import com.bmlaurus.utils.Config;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
