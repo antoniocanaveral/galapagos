@@ -477,6 +477,38 @@ function FrmListadoCgg_res_carnet(inDesktop) {
         }
     });
 
+//MO
+
+    /**
+     * Ext.Button Boton para obtener información relevante para el área financiera
+     */
+    var btnNotificacionFinanCgg_res_carnet = new Ext.Button({
+        id: 'btnNotificacionFinanCgg_res_carnet',
+        name: 'btnNotificacionFinanCgg_res_carnet',
+        text: 'Generar Notificaci\u00f3n Finan.',
+        //iconCls: 'iconImprimir',
+        listeners:{
+            click:function(){
+               /* var r = tmpPersona.data.CRPER_CODIGO;
+                if (!r){
+                    Ext.Msg.show({
+                        title: 'Datos de Persona',
+                        msg: 'Seleccione un registro antes de continuar.',
+                        buttons: Ext.Msg.OK,
+                        icon: Ext.MessageBox.INFO
+                    });
+                    return;
+                }
+                var reporte = new Reporte("rptListadoCarnetizacion", '/Reports/sii/residencia', {
+                    P_CRPER_CODIGO:r
+                });
+                reporte.show();*/
+            }
+        }
+    });
+
+//
+
     /**
      * Ext.Button Boton para obtener reportes, general o individual.
      */
@@ -629,7 +661,7 @@ function FrmListadoCgg_res_carnet(inDesktop) {
             layout: 'border',
             tbar: getPanelTitulo(tituloListadoCgg_res_carnet, descListadoCgg_res_carnet),
             items: [pnlPersona,grdCgg_res_carnet],
-            bbar: [btnNuevoCgg_res_carnet,btnActualizarPersonaCgg_res_carnet,btnActualizarAuspicianteCgg_res_carnet,'-',btnPreviewCgg_res_carnet, btnReporteCgg_res_carnet,btnDatosPersonaCgg_res_carnet, '->', btnSalirCgg_res_carnet]
+            bbar: [btnNuevoCgg_res_carnet,btnActualizarPersonaCgg_res_carnet,btnActualizarAuspicianteCgg_res_carnet,'-',btnPreviewCgg_res_carnet, btnReporteCgg_res_carnet,btnDatosPersonaCgg_res_carnet,'-',btnNotificacionFinanCgg_res_carnet, '->', btnSalirCgg_res_carnet]
         });
         /**
          * Funcion que aplica los privilegios del usuario.

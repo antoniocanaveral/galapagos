@@ -240,6 +240,32 @@ $(function() {
     });
     cbxIslaTramite.reload();
 
+    //MO
+
+    var cbxTipoTramite = new bsxComboBox({
+        id:"cbxTipoTramite",
+        renderTo:"divTipoTramite",
+        displayField:"CTIPO_NOMBRE",
+        valueField:"CTIPO_CODIGO",
+        webService:{
+            url:URL_WS+"Cgg_isla",
+            method:"selectAllAtencionCliente",
+            params:[
+                {name:"format",value:"JSON"}
+            ]
+        },
+        events:{
+            load:function(v){
+                $('#cbxTipoTramite').prepend("<option value=></option>");
+                $("#cbxTipoTramite").val(0);
+            }
+        }
+    });
+    cbxTipoTramite.reload();
+
+    /////
+
+
     /**
      *	DETERMINA DATOS RELACIONADOS CON EL USUARIO LOGONEADO.
      **/
@@ -815,6 +841,9 @@ $(function() {
         // param.add('inCrtst_codigo', $("#cbxTipoSolicitudResidencia").val()) ;
         param.add('inCrtst_codigo', tmpMotivoResidenciaId);
         param.add('inCisla_codigo', $("#cbxIslaTramite").val()) ;
+        //MO
+        param.add('inCisla_codigo', $("#cbxTipoTramite").val()) ;
+        //
         param.add('inCrtra_observacion','Registro desde Atencion al Cliente') ;
         param.add('inCvveh_codigo',null) ;
         param.add('inCvmtr_codigo',null) ;
@@ -972,6 +1001,16 @@ $(function() {
             isComplete = false;
             return isComplete;
         }
+
+        //MO
+        if(!$('#cbxTipoTramite').val())
+        {
+            $('#cbxTipoTramite').addClass("form-line-error");
+            isComplete = false;
+            return isComplete;
+        }
+        //
+
         if(!$('#cbxTipoResidenciaPadre').val())
         {
             $('#cbxTipoResidenciaPadre').addClass("form-line-error");

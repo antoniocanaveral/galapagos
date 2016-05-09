@@ -504,6 +504,22 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
         }
     });
 
+
+//MO
+    /**
+     * Boton que permite adjuntar el documento correspondiente a la Resolución.
+     */
+    var btnResolucionCgg_res_seguimiento = new Ext.Button({
+        id:'btnResolucionCgg_res_seguimiento',
+        text:'Resoluci\u00f3n',
+        iconCls:'iconGuardar',
+        tooltip:'Adjuntar documento de Resoluci\u00f3n',
+        handler:function(){
+            // enviarSeguimiento(TypeRespuestaSeguimiento.APROBADO);
+        }
+    });
+//
+
     /**
      * Boton que permite cerrar la ventana winFrmCgg_res_seguimiento.
      */
@@ -1868,7 +1884,7 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
                     }
                     ]
                 }
-            },'->',btnCerrarCgg_res_seguimiento],
+            },'-',btnResolucionCgg_res_seguimiento,'->',btnCerrarCgg_res_seguimiento],
             listeners:{
                 show:function(){
                     tpSeguimiento.activate('tpSeguimiento1');
@@ -1902,7 +1918,7 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
             minimizable:true,
             constrain:true,
             iconCls:'iconSeguimiento',
-            bbar:[btnAprobarCgg_res_seguimiento,btnNegarCgg_res_seguimiento,btnOtraAccionCgg_res_seguimiento,'->',btnCerrarCgg_res_seguimiento],
+            bbar:[btnAprobarCgg_res_seguimiento,btnNegarCgg_res_seguimiento,btnOtraAccionCgg_res_seguimiento,btnResolucionCgg_res_seguimiento,'->',btnCerrarCgg_res_seguimiento],
             listeners:{
                 show:function() {
                     $('divTramite').innerHTML = tplTramite.apply(datosTramite);
@@ -1911,6 +1927,7 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
             }
         });
     }
+
 
     function isla(inCISLA_CODIGO) {
         var tmp1 = SCGG_ISLA.findExact('CISLA_CODIGO', inCISLA_CODIGO);
@@ -2085,6 +2102,9 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
                 btnDistribuirCgg_res_seguimiento.disable();
                 btnNegarCgg_res_seguimiento.disable();
                 Ext.getCmp('btnOtraAccionCgg_res_seguimiento').disable();
+                //MO
+                btnResolucionCgg_res_seguimiento.disable();
+                //
                 Ext.MsgPopup.msg(tituloCgg_res_seguimiento, "El seguimiento se encuentra distribuido.<br>No puede realizar ninguna actividad hasta la ateci\u00F3n del mismo.", MsgPopup.INFO);
             }else if(inRecordCgg_res_seguimiento.get('CRSEG_ESTADO_ATENCION') == TypeEstadoAtencion.REVISADODISTRIBUIDO) {
                 btnDistribuirCgg_res_seguimiento.disable();                
@@ -2100,6 +2120,9 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
                 btnNegarCgg_res_seguimiento.hide();
                 btnDistribuirCgg_res_seguimiento.hide();
                 Ext.getCmp('btnOtraAccionCgg_res_seguimiento').hide();
+                //MO
+                btnResolucionCgg_res_seguimiento.hide();
+                //
 
                 Ext.getCmp('btnAgregarNovedad').hide();
                 Ext.getCmp('btnEliminarNovedad').hide();
@@ -2159,6 +2182,9 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
                     btnNegarCgg_res_seguimiento.disable();
                     btnDistribuirCgg_res_seguimiento.disable();
                     Ext.getCmp('btnOtraAccionCgg_res_seguimiento').disable();
+                    //MO
+                    btnResolucionCgg_res_seguimiento.disable();
+                    //
                 }
             });
             flagFinalizacion = null;
