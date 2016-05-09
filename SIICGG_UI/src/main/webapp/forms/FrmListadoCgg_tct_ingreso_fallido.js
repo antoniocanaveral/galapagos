@@ -8,8 +8,8 @@ function FrmListadoCgg_tct_ingreso_fallido(inDesktop){
     var urlListadoCgg_tct_ingreso_fallido=URL_WS+"Cgg_tct_ingreso_fallido";
     var tituloListadoCgg_tct_ingreso_fallido='Listado de ingresos fallidos';
     var descListadoCgg_tct_ingreso_fallido='El formulario permite administrar informaci\u00f3n del ingreso fallido';
-    var myJasperServer = new JasperServer();
-    /*var gsCgg_kdx_especie = new Ext.data.Store({
+	var myJasperServer = new JasperServer();
+	/*var gsCgg_kdx_especie = new Ext.data.Store({
         proxy:new Ext.ux.bsx.SoapProxy({
             url:URL_WS+"Cgg_kdx_especie",
             method:"selectAll"
@@ -40,46 +40,35 @@ function FrmListadoCgg_tct_ingreso_fallido(inDesktop){
         iconCls:'iconEliminar',
         listeners:{
             click:function(){
-                Ext.Msg.show({
-                    title:'Aviso',
-                    msg:'¿Seguro de eliminar el registro seleccionado?',
-                    buttons: Ext.Msg.YESNO,
-                    fn: SWRCgg_tct_ingreso_fallido,
-                    icon: Ext.MessageBox.QUESTION
-                });
-                function SWRCgg_tct_ingreso_fallido(btn){
-                    if (btn=='yes'){
-                        try{
-                            function CallBackCgg_tct_ingreso_fallido(r){
-                                winFrmListadoCgg_tct_ingreso_fallido.getEl().unmask();
-                                if(r=='true'){
-                                    Ext.Msg.show({
-                                        title:tituloListadoCgg_tct_ingreso_fallido,
-                                        msg: 'La informaci\u00f3n de Tct ingreso fallido ha sido eliminada.',
-                                        buttons: Ext.Msg.OK,
-                                        icon: Ext.MessageBox.INFO
-                                    });
-                                    gsCgg_tct_ingreso_fallido.reload();
-                                }else{
-                                    Ext.Msg.show({
-                                        title:tituloListadoCgg_tct_ingreso_fallido,
-                                        msg: 'La informaci\u00f3n de Tct ingreso fallido no ha podido ser eliminada.',
-                                        buttons: Ext.Msg.OK,
-                                        icon: Ext.MessageBox.ERROR
-                                    });
-                                }
-                            }
-                            winFrmListadoCgg_tct_ingreso_fallido.getEl().mask('Eliminando...', 'x-mask-loading');
-                            var param = new SOAPClientParameters();
-                            param.add('inCtigf_codigo',grdCgg_tct_ingreso_fallido.getSelectionModel().getSelected().get('CTIGF_CODIGO'));
-                            SOAPClient.invoke(urlListadoCgg_tct_ingreso_fallido,"delete",param, true, CallBackCgg_tct_ingreso_fallido);
-                        }catch(inErr){
+                Ext.Msg.show({title:'Aviso', msg:'¿Seguro de eliminar el registro seleccionado?', buttons: Ext.Msg.YESNO,fn: SWRCgg_tct_ingreso_fallido,icon: Ext.MessageBox.QUESTION});
+                function SWRCgg_tct_ingreso_fallido(btn){if (btn=='yes'){
+                    try{
+                        function CallBackCgg_tct_ingreso_fallido(r){
                             winFrmListadoCgg_tct_ingreso_fallido.getEl().unmask();
-                        }
-                    }
-                }
-            }
-        }
+                            if(r=='true'){
+                                Ext.Msg.show({
+                                    title:tituloListadoCgg_tct_ingreso_fallido,
+                                    msg: 'La informaci\u00f3n de Tct ingreso fallido ha sido eliminada.',
+                                    buttons: Ext.Msg.OK,
+                                    icon: Ext.MessageBox.INFO
+                                });
+                                gsCgg_tct_ingreso_fallido.reload();
+                            }else{
+                                Ext.Msg.show({
+                                    title:tituloListadoCgg_tct_ingreso_fallido,
+                                    msg: 'La informaci\u00f3n de Tct ingreso fallido no ha podido ser eliminada.',
+                                    buttons: Ext.Msg.OK,
+                                    icon: Ext.MessageBox.ERROR
+                                });
+                            }}
+                        winFrmListadoCgg_tct_ingreso_fallido.getEl().mask('Eliminando...', 'x-mask-loading');
+                        var param = new SOAPClientParameters();
+                        param.add('inCtigf_codigo',grdCgg_tct_ingreso_fallido.getSelectionModel().getSelected().get('CTIGF_CODIGO'));
+                        SOAPClient.invoke(urlListadoCgg_tct_ingreso_fallido,"delete",param, true, CallBackCgg_tct_ingreso_fallido);
+                    }catch(inErr){
+                        winFrmListadoCgg_tct_ingreso_fallido.getEl().unmask();
+                    }}}
+            }}
     });
     /**
      * Ext.Button Boton que permite salir de la ventana winFrmListadoCgg_tct_ingreso_fallido.
@@ -91,8 +80,7 @@ function FrmListadoCgg_tct_ingreso_fallido(inDesktop){
         listeners:{
             click:function(){
                 winFrmListadoCgg_tct_ingreso_fallido.close();
-            }
-        }
+            }}
     });
     /**
      * Ext.Button Boton para obtener reportes, general o individual.
@@ -102,80 +90,48 @@ function FrmListadoCgg_tct_ingreso_fallido(inDesktop){
         text:'Imprimir especie',
         iconCls:'iconImprimir',
         listeners:{
-            click:function(){
-                var tmpRecord = grdCgg_tct_ingreso_fallido.getSelectionModel().getSelected();
-                if(tmpRecord){
-                    printEspecie(SCGG_CONFIGURACION.getAt(SCGG_CONFIGURACION.findExact('CGCNF_CODIGO','CONF50')).get('CGCNF_VALOR_CADENA'), tmpRecord);
-                }
-            }
-        }
+			click:function(){
+				var tmpRecord = grdCgg_tct_ingreso_fallido.getSelectionModel().getSelected();
+				if(tmpRecord){
+					printEspecie(SCGG_CONFIGURACION.getAt(SCGG_CONFIGURACION.findExact('CGCNF_CODIGO','CONF50')).get('CGCNF_VALOR_CADENA'), tmpRecord);
+				}
+			}
+		}
     });
-
-    function printEspecie(inCKESP_CODIGO, inRecord){
-        function CallBackVentaEspecie(inResponse){
-            if(inResponse == 'true'){
-                myJasperServer.addParam('P_CTIGF_CODIGO',inRecord.data.CTIGF_CODIGO);
-                myJasperServer.setReportFolder('/Reports/sii/tct');
-                myJasperServer.setReportName(SCGG_CONFIGURACION.getAt(SCGG_CONFIGURACION.findExact('CGCNF_CODIGO','CONF37')).get('CGCNF_VALOR_CADENA'));
-                myJasperServer.run();
-                gsCgg_tct_ingreso_fallido.reload();
-            }else{
-                Ext.Msg.show({
-                    title:tituloListadoCgg_tct_ingreso_fallido,
-                    msg: 'No se ha podido imprimir el registro seleccionado. '+(inResponse.message?inResponse.message:inResponse),
-                    buttons: Ext.Msg.OK,
-                    icon: Ext.MessageBox.ERROR
-                });
-            }
-        }
-        var param = new SOAPClientParameters();
-        param.add('inCkesp_codigo',inCKESP_CODIGO);
+	function printEspecie(inCKESP_CODIGO, inRecord){
+		function CallBackVentaEspecie(inResponse){
+			if(inResponse == 'true'){
+				myJasperServer.addParam('P_CTIGF_CODIGO',inRecord.data.CTIGF_CODIGO);
+				myJasperServer.setReportFolder('/Reports/sii/tct');
+				myJasperServer.setReportName(SCGG_CONFIGURACION.getAt(SCGG_CONFIGURACION.findExact('CGCNF_CODIGO','CONF37')).get('CGCNF_VALOR_CADENA'));
+				myJasperServer.run();
+				gsCgg_tct_ingreso_fallido.reload();
+			}else{
+				Ext.Msg.show({
+					title:tituloListadoCgg_tct_ingreso_fallido,
+					msg: 'No se ha podido imprimir el registro seleccionado. '+(inResponse.message?inResponse.message:inResponse),
+					buttons: Ext.Msg.OK,
+					icon: Ext.MessageBox.ERROR
+				});
+			}
+		}
+		var param = new SOAPClientParameters();
+		param.add('inCkesp_codigo',inCKESP_CODIGO);
         param.add('inCtreg_codigo',inRecord.data.CTIGF_CODIGO);
         param.add('inAmbito',TypeAmbitoEspecie.INTF);
-        SOAPClient.invoke(URL_WS+'Cgg_kdx_venta_detalle','ventaRegistro',param, true, CallBackVentaEspecie);
-    }
+		SOAPClient.invoke(URL_WS+'Cgg_kdx_venta_detalle','ventaRegistro',param, true, CallBackVentaEspecie);
+	}
     /**
      * Ext.grid.ColumnModel Define el modelo de columnas para el objeto cgg_tct_ingreso_fallido.
      */
     var cmCgg_tct_ingreso_fallido = new Ext.grid.ColumnModel([
-    {
-        dataIndex:'CRPER_NUM_DOC_IDENTIFIC',
-        header:'Documento',
-        width:100
-    },
-    {
-        dataIndex:'CRPER_NOMBRE_PERSONA',
-        header:'Persona',
-        width:200,
-        sortable:true
-    },
-    {
-        dataIndex:'CARPT_NOMBRE_INGRESO',
-        header:'Aeropuerto',
-        width:150,
-        sortable:true
-    },
-    {
-        dataIndex:'CTIGF_DESCRIPCION',
-        header:'Descripcion',
-        width:150,
-        sortable:true
-    },
-    {
-        dataIndex:'CTIGF_FECHA_INTENTO',
-        header:'Fecha',
-        width:120,
-        sortable:true,
-        renderer:truncDateTime
-    },
-    {
-        dataIndex:'CKVDT_FECHA_UPDATE',
-        header:'Impresi\u00f3n',
-        width:120,
-        sortable:true,
-        renderer:truncDateTime
-    }
-    ]);
+        {dataIndex:'CRPER_NUM_DOC_IDENTIFIC',header:'Documento',width:100},
+        {dataIndex:'CRPER_NOMBRE_PERSONA',header:'Persona',width:200,sortable:true},
+        {dataIndex:'CARPT_NOMBRE_INGRESO',header:'Aeropuerto',width:150,sortable:true},
+		{dataIndex:'CTIGF_DESCRIPCION',header:'Descripcion',width:150,sortable:true},
+        {dataIndex:'CTIGF_FECHA_INTENTO',header:'Fecha',width:120,sortable:true,renderer:truncDateTime},
+        {dataIndex:'CKVDT_FECHA_UPDATE',header:'Impresi\u00f3n',width:120,sortable:true,renderer:truncDateTime}        
+	]);
     /**
      * Ext.data.Store Agrupacion de registros de la tabla Cgg_tct_ingreso_fallido por un campo especifico.
      */
@@ -191,54 +147,19 @@ function FrmListadoCgg_tct_ingreso_fallido(inDesktop){
             root:'dataSet',
             totalProperty: 'totalCount'
         },[
-        {
-            name:'CTIGF_CODIGO'
-        },
-
-        {
-            name:'CRPER_CODIGO'
-        },
-
-        {
-            name:'CRPER_NOMBRE_PERSONA'
-        },
-
-        {
-            name:'CRPER_NUM_DOC_IDENTIFIC'
-        },
-
-        {
-            name:'CARPT_CODIGO'
-        },
-
-        {
-            name:'CARPT_NOMBRE_INGRESO'
-        },
-
-        {
-            name:'CTIGF_FECHA_INTENTO'
-        },
-
-        {
-            name:'CTIGF_TIPO_INGRESO_FALLIDO'
-        },
-
-        {
-            name:'CTIGF_DESCRIPCION'
-        },
-
-        {
-            name:'CKVDT_FECHA_UPDATE'
-        }
+            {name:'CTIGF_CODIGO'},
+            {name:'CRPER_CODIGO'},
+            {name:'CRPER_NOMBRE_PERSONA'},
+			{name:'CRPER_NUM_DOC_IDENTIFIC'},
+            {name:'CARPT_CODIGO'},
+            {name:'CARPT_NOMBRE_INGRESO'},
+            {name:'CTIGF_FECHA_INTENTO'},
+            {name:'CTIGF_TIPO_INGRESO_FALLIDO'},
+            {name:'CTIGF_DESCRIPCION'},
+			{name:'CKVDT_FECHA_UPDATE'}
         ]),
-        sortInfo:{
-            field: 'CTIGF_FECHA_INTENTO',
-            direction: 'DESC'
-        },
-        baseParams:{
-            keyword:"",
-            format:'JSON'
-        }
+        sortInfo:{field: 'CTIGF_FECHA_INTENTO', direction: 'DESC'},
+        baseParams:{keyword:"",format:'JSON'}
     });
     /**
      * Ext.PagingToolbar Barra de navegacion que permite la visualizacion organizada de los registros de la tabla Cgg_tct_ingreso_fallido.
@@ -257,27 +178,22 @@ function FrmListadoCgg_tct_ingreso_fallido(inDesktop){
         cm:cmCgg_tct_ingreso_fallido,
         store:gsCgg_tct_ingreso_fallido,
         region:'center',
-        sm:new Ext.grid.RowSelectionModel({
-            singleSelect:true
-        }),
-        loadMask:{
-            msg:"Cargando..."
-        },
+        sm:new Ext.grid.RowSelectionModel({singleSelect:true}),
+        loadMask:{msg:"Cargando..."},
         tbar: [
-        'Buscar: ',
-        new Ext.ux.bsx.SearchField({
-            store:gsCgg_tct_ingreso_fallido,
-            width:200
-        })
+            'Buscar: ',
+            new Ext.ux.bsx.SearchField({
+                store:gsCgg_tct_ingreso_fallido,
+                width:200
+            })
         ],
         bbar:pgBarCgg_tct_ingreso_fallido
-    });
-    gsCgg_tct_ingreso_fallido.reload({
-        params:{
-            start:0,
-            limit:(RECORD_PAGE - 10),
-            format:'JSON'
-        }
+      });
+    gsCgg_tct_ingreso_fallido.reload({params:{
+        start:0,
+        limit:(RECORD_PAGE - 10),
+        format:'JSON'
+    }
     });
     /**
      * Ext.Window Ventana en la que reside los controles necesarios para visualizar la informacion de los registros de la tabla Cgg_tct_ingreso_fallido.

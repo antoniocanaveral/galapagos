@@ -1,7 +1,6 @@
 /**
-* FUNCION. CREA EL OBJETO FRMSELECCIONSEGUIMIENTO PARA SELECCION DE SEGUIMIENTO DE FASES A LAS QUE SE DESPACHA UN SEGUIMIENTO DE UN TRAMITE.
-* CONSTRUCTOR
-*/
+ *Funcion. Crea el objeto FrmSeleccionSeguimiento para seleccion de seguimiento de fases a las que se despacha un seguimiento de un tramite.
+ */
 function DlgSeleccionSeguimiento(){
 
     var tituloDlgSeleccionSeguimiento = 'Selecci\u00F3n de seguimiento';
@@ -360,30 +359,22 @@ function DlgSeleccionSeguimiento(){
     });
 
     /**
-     *FUNCION MIEMBRO QUE DEVUELVE LA VENTANA WINDLGSELECCIONSEGUIMIENTO.E
-     * @returns VENTANA winDlgSeleccionSeguimiento.
+     * Funcion miembro que devuelve la ventana winDlgSeleccionSeguimiento.
+     * @returns ventana winDlgSeleccionSeguimiento.
+     * @base winDlgSeleccionSeguimiento.prototype.show
      */
     this.getWindow = function(){
         return winDlgSeleccionSeguimiento;
     }
-    /**
-     *FUNCION QUE DEVUELVE EL CODIGO DE PROCESO
-     * @returns crproCodigo CODIGO DE PROCESO
-     */
+
     this.getCrproCodigo = function(){
         return crproCodigo;
     }
-    /**
-     *FUNCION QUE DEVUELVE EL CODIGO DE  FASE
-     * @returns crfasCodigo CODIGO DE FASE
-     */
+
     this.getCrfasCodigo = function(){
         return crfasCodigo;
     }
-    /**
-     *FUNCION QUE DEVUELVE LA FASE DE SEGUIMIENTO
-     * @returns outResult
-     */
+
     this.getCrfasSeguimiento = function(){
         return outResult;
     }
@@ -391,42 +382,41 @@ function DlgSeleccionSeguimiento(){
 }
 
 /**
- * FUNCION PROTOTIPO. PERMITE MOSTRAR LA VENTANA WINFRMLISTADOCGG_RES_VOTO DESDE UNA INSTANCIA.
+ * Funcion prototipo. Permite mostrar la ventana winFrmListadoCgg_res_voto desde una instancia.
  */
 DlgSeleccionSeguimiento.prototype.show = function(){
     this.getWindow().show();
 }
 /**
- * FUNCION PROTOTIPO. PERMITE CERRAR LA VENTANA WINFRMLISTADOCGG_RES_VOTO DESDE UNA INSTANCIA.
+ * Funcion prototipo. Permite cerrar la ventana winFrmListadoCgg_res_voto desde una instancia.
  */
 DlgSeleccionSeguimiento.prototype.close = function(){
     this.getWindow().close();
 }
 /**
- * FUNCION PROTOTIPO. PERMITE SABER SI SE HA CERRADO LA VENTANA WINFRMLISTADOCGG_RES_VOTO,
- * CON EL FIN DE REALIZAR OTRAS ACCIONES DESDE UNA INSTANCIA.
- * @param inFunctionHandler FUNCION
+ * Funcion prototipo. Permite saber si se ha cerrado la ventana winFrmListadoCgg_res_voto,
+ * con el fin de realizar otras acciones desde una instancia.
  */
 DlgSeleccionSeguimiento.prototype.closeHandler = function(inFunctionHandler){
     this.getWindow().on('close',inFunctionHandler);
 }
 
 /**
- *FUNCION PROTOTIPO. SELECIONA EL CODIGO DE PROCESO SELECCIONADO.
+ * Funcion prototipo. Seleciona el codigo de proceso seleccionado.
  */
 DlgSeleccionSeguimiento.prototype.getCrproCodigo = function(){
     this.getCrproCodigo();
 }
 
 /**
- * FUNCION PROTOTIPO. SELECIONA EL CODIGO DE PROCESO SELECCIONADO.
+ * Funcion prototipo. Seleciona el codigo de proceso seleccionado.
  */
 DlgSeleccionSeguimiento.prototype.getCrfasCodigo = function(){
     this.getCrfasCodigo();
 }
 
 /**
- * FUNCION PROTOTIPO. SELECIONA EL CODIGO DE PROCESO SELECCIONADO.
+ * Funcion prototipo. Seleciona el codigo de proceso seleccionado.
  */
 DlgSeleccionSeguimiento.prototype.getCrfasSeguimiento = function(){
     this.getCrfasSeguimiento();

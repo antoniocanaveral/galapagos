@@ -1328,8 +1328,8 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                                 {
                                     var tmpParams = recordRegla.get('CRVAL_FUNCION_PLSQL_PARAMETROS');
                                     //tmpParams = tmpParams.substring(1,tmpParams.length-1).split(',');
-                                    //if(tmpParams.length>0)
-                                    //{
+                                    if(tmpParams.length>0)
+                                    {
                                         tmpParams = tmpParams.split(',');
                                         for(var i=0;i<(tmpParams.length-2);i++)
                                         {
@@ -1349,7 +1349,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                                         grdCgg_res_tipo_solicitud_regla.getSelectionModel().selectRow(0);
                                     }
                                 //  reTipoSolicitudRegla.startEditing(0);
-                               // }
+                                }
                             }
                         }
                         )

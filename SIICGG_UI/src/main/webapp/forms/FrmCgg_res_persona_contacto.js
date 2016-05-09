@@ -196,14 +196,14 @@ function FrmCgg_res_persona_contacto(INSENTENCIA_CGG_RES_PERSONA_CONTACTO,INRECO
 							if(r=='true'){
 								Ext.Msg.show({
 										title:tituloCgg_res_persona_contacto,
-										msg: 'La informaci\u00f3n de contacto ha sido almacenada.',
+										msg: 'La informaci\u00f3n de Area ha sido almacenada.',
 										buttons: Ext.Msg.OK,
 										icon: Ext.MessageBox.INFO
 								});winFrmCgg_res_persona_contacto.close()
 							}else{
 								Ext.Msg.show({
 										title:tituloCgg_res_persona_contacto,
-										msg: 'La informaci\u00f3n de contacto no ha podido ser almacenada. '+r,
+										msg: 'La informaci\u00f3n de Area no ha podido ser almacenada. '+r,
 										buttons: Ext.Msg.OK,
 										icon: Ext.MessageBox.ERROR
 								});

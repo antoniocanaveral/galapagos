@@ -110,33 +110,32 @@ function FrmListadoCgg_res_movilidad(inDesktop){
     });
     /**
      * Ext.Button Boton para obtener reportes, general o individual.
-     */
-    var btnReporteCgg_res_movilidad = new Ext.Toolbar.SplitButton({
-    id:'btnReporteCgg_res_movilidad',
-    name:'btnReporteCgg_res_movilidad',
-    text:'Tiempos de estad\u00eda',
-    iconCls:'iconImprimir',
-    menu:[
-    {
-        text:'Listado de turistas y transeuntes',
-        handler:function(){
-            var params = [];
+     */var btnReporteCgg_res_movilidad = new Ext.Toolbar.SplitButton({
+        id:'btnReporteCgg_res_movilidad',
+        name:'btnReporteCgg_res_movilidad',
+        text:'Tiempos de estad\u00eda',
+        iconCls:'iconImprimir',
+        menu:[
+            {
+                text:'Listado de turistas y transeuntes',
+                handler:function(){
+                    var params = [];
                     
-            params[0]={
-                label:'Fecha inicio',
-                paramName:'P_FECHA_INICIAL',
-                paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
-                type:'date'
-            };
+                    params[0]={
+                        label:'Fecha inicio',
+                        paramName:'P_FECHA_INICIAL',
+                        paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                        type:'date'
+                    };
 
-            params[1]={
-                label:'Fecha fin',
-                paramName:'P_FECHA_FINAL',
-                paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
-                type:'date'
-            };
+                    params[1]={
+                        label:'Fecha fin',
+                        paramName:'P_FECHA_FINAL',
+                        paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                        type:'date'
+                    };
 
-            /*params[2]={
+                    /*params[2]={
                         objectName:'FrmListadoCgg_res_tipo_solicitud_tramite',
                         label:'Tipo solicitud',
                         valueField:'CRTST_CODIGO',
@@ -148,84 +147,81 @@ function FrmListadoCgg_res_movilidad(inDesktop){
                         type:'searchable'
                     };*/
 
-            params[2]=
-            {
-                label:'Tipo residencia',
-                paramName:'P_CRTST_CODIGO',
-                value: dsTipoSolicitudPadre,
-                paramValue:'',
-                type:'combo',
-                required:false
-            };
+                     params[2]=
+                                        {
+                                            label:'Tipo residencia',
+                                            paramName:'P_CRTST_CODIGO',
+                                            value: dsTipoSolicitudPadre,
+                                            paramValue:'',
+                                            type:'combo',
+                                            required:false
+                                        };
                                         
-            params[3]={
-                label:'Operaci\u00f3n',
-                paramName:'P_CRMOV_TIPO_OPERACION',
-                value:dsTipoOperacion,
-                paramValue:'',
-                type:'combo',
-                required:false
-            };
-            params[4]={
-                objectName:'FrmListadoCgg_res_aeropuerto',
-                label:'Aeropuerto',
-                valueField:'CARPT_CODIGO',
-                displayField:'CARPT_NOMBRE',
-                paramName:'P_CARPT_CODIGO',
-                value:'',
-                paramValue:'',
-                required:false,
-                type:'searchable'
-            };
-            params[5] = {
-                type:'input',
-                label:'Vuelo',
-                value:'',
-                paramValue:'',
-                required:false,
-                paramName:'P_CRMOV_NUMERO_VUELO'
-            };
-            params[6]=
-            {
-                objectName:'FrmListadoCgg_usuario',
-                label:'Usuario',
-                valueField:'CUSU_CODIGO',
-                displayField:'CUSU_NOMBRE_USUARIO',
-                paramName:'P_CUSU_CODIGO',
-                paramValue:'',
-                value:'',                
-                required:false,
-                type:'searchable'
-            };
+                    params[3]={
+                        label:'Operaci\u00f3n',
+                        paramName:'P_CRMOV_TIPO_OPERACION',
+                        value:dsTipoOperacion,
+						paramValue:'',
+                        type:'combo'
+                    };
+					params[4]={
+                        objectName:'FrmListadoCgg_res_aeropuerto',
+                        label:'Aeropuerto',
+                        valueField:'CARPT_CODIGO',
+                        displayField:'CARPT_NOMBRE',
+                        paramName:'P_CARPT_CODIGO',
+                        value:'',
+						paramValue:'',
+                        required:false,
+                        type:'searchable'
+                    };
+					params[5] = {
+						type:'input',
+						label:'Vuelo',
+						value:'',
+						paramValue:'',
+						required:false,
+						paramName:'P_CRMOV_NUMERO_VUELO'
+					};
+					 params[6]=
+                     {
+                        objectName:'FrmListadoCgg_usuario',
+                        label:'Usuario',
+                        valueField:'CUSU_CODIGO',
+                        displayField:'CUSU_NOMBRE_USUARIO',
+                        paramName:'P_CUSU_CODIGO',
+                        paramValue:'',
+                        type:'searchable'
+                    };
 
-            var reporte = new FrmCriterioReporte('rptListadodeTuristasTranseuntesNacionalesExtranjeros', '/Reports/sii/tct', null);
-            reporte.addParams(params);
-            reporte.show();
-        }
-    },
-    {
-        text:'Listado de excedido dias galapagos',
-        handler:function(){
-            var params = [];                                      
-            params[0] = {
-                type:'input',
-                label:'N. filas',
-                value:'',
-                paramValue:'',
-                required:false,
-                paramName:'P_INICIO'
-            };
-            var reporte = new FrmCriterioReporte('rptListadoExcedidoDia', '/Reports/sii/tct', null);
-            reporte.addParams(params);
-            reporte.show();
-        }
-    }
-    ],
-    handler:function(){
+                    var reporte = new FrmCriterioReporte('rptListadodeTuristasTranseuntesNacionalesExtranjeros', '/Reports/sii/tct', null);
+                    reporte.addParams(params);
+                    reporte.show();
+                }
+            },
+            {
+                text:'Listado de excedido dias galapagos',
+                handler:function(){
+                    var params = [];                                      
+                    params[0] = {
+                            type:'input',
+                            label:'N. filas',
+                            value:'',
+                            paramValue:'',
+                            required:false,
+                            paramName:'P_INICIO'
+                    };
+                    var reporte = new FrmCriterioReporte('rptListadoExcedidoDia', '/Reports/sii/tct', null);
+                    reporte.addParams(params);
+                    reporte.show();
+                }
+            }
+        ],
+		handler:function(){
         var params = [];
 
         var tmpCurrentDate = new Date();
-        tmpCurrentDate.setDate(tmpCurrentDate.getDate()-365);
+					tmpCurrentDate.setDate(tmpCurrentDate.getDate()-365);
                     
         params[0]={
             label:'Fecha inicio',
@@ -269,7 +265,7 @@ function FrmListadoCgg_res_movilidad(inDesktop){
         reporte.addParams(params);
         reporte.show();
     }
-});
+    });
 	/**
      * Ext.Button Boton que permite insertar un nuevo registro de la ventana winFrmCgg_tct_ingreso_salida_csv.
      */

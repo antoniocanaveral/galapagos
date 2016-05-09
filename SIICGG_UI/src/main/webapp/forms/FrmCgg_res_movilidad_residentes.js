@@ -471,73 +471,70 @@ function FrmCgg_res_movilidad_residentes(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_
 			btnGuardarCgg_res_movilidad3.fireEvent('click', btnGuardarCgg_res_movilidad3);
 		}}],
         listeners:{
-        click:function() {
-            if (pnlCgg_res_movilidad3.getForm().isValid() == false) {
-                return;
-            }
-            try {
-                var tmpMsg = 'entrada';
-                if (cbxCtreg_tipo_operacion3.getValue() == 1 )
-                    tmpMsg = 'salida';
-                function CallBackCgg_res_movilidad(r) {
-                    winFrmCgg_res_movilidad_residentes.getEl().unmask();
-                    if (r == 'true') {
-                        Ext.MsgPopup.msg(tituloCgg_res_movilidad, 'La informaci\u00f3n de '+tmpMsg+' de la persona ha sido almacenada.', MsgPopup.INFO);
-                        if(tmpSaveAndClose)
-                            winFrmCgg_res_movilidad_residentes.close();
-                        else{
-                            pnlCgg_res_movilidad3.getForm().reset();
-							txtCrper_numero3.focus();
-                            cargarAeropuerto();
+            click:function() {
+                if (pnlCgg_res_movilidad3.getForm().isValid() == false) {
+                    return;
+                }
+                try {
+					var tmpMsg = 'entrada';
+					if (cbxCtreg_tipo_operacion3.getValue() == 1 )
+						tmpMsg = 'salida';
+                    function CallBackCgg_res_movilidad(r) {
+                        winFrmCgg_res_movilidad_residentes.getEl().unmask();
+                        if (r == 'true') {
+							Ext.MsgPopup.msg(tituloCgg_res_movilidad, 'La informaci\u00f3n de '+tmpMsg+' de la persona ha sido almacenada.', MsgPopup.INFO);
+							if(tmpSaveAndClose)
+								winFrmCgg_res_movilidad_residentes.close();
+							else{
+								pnlCgg_res_movilidad3.getForm().reset();
+							}
+							tmpSaveAndClose = false;
+                        } else {
+                            Ext.Msg.show({
+                                title:tituloCgg_res_movilidad,
+                                msg: 'La informaci\u00f3n de '+tmpMsg+' de la persona no ha podido ser almacenada. '+ (r.message?r.message:r),
+                                buttons: Ext.Msg.OK,
+                                icon: Ext.MessageBox.ERROR
+                            });
                         }
-                        tmpSaveAndClose = false;
-                    } else {
-                        Ext.Msg.show({
-                            title:tituloCgg_res_movilidad,
-                            msg: 'La informaci\u00f3n de '+tmpMsg+' de la persona no ha podido ser almacenada. '+ (r.message?r.message:r),
-                            buttons: Ext.Msg.OK,
-                            icon: Ext.MessageBox.ERROR
-                        });
                     }
+					if(new ManagerCookies().read('MOVILIDAD_VUELO'))
+						new ManagerCookies().erase('MOVILIDAD_VUELO');
+					new ManagerCookies().create('MOVILIDAD_VUELO', txtCrmov_numero_vuelo3.getValue(), 168);
+					
+					if(new ManagerCookies().read('MOVILIDAD_AEROLINEA'))
+						new ManagerCookies().erase('MOVILIDAD_AEROLINEA');
+					new ManagerCookies().create('MOVILIDAD_AEROLINEA', cbxCraln_codigo3.getValue(), 168);
+					
+					if(new ManagerCookies().read('MOVILIDAD_MODO'))
+						new ManagerCookies().erase('MOVILIDAD_MODO');
+					new ManagerCookies().create('MOVILIDAD_MODO', cbxCtreg_tipo_operacion3.getValue(), 168);
+					
+                    winFrmCgg_res_movilidad_residentes.getEl().mask('Guardando...', 'x-mask-loading');
+                    var param = new SOAPClientParameters();
+                    if (isEdit){
+                        param.add('inCrmov_codigo', tmpcrmov_codigo3);
+                    }
+                    param.add('inCraln_codigo', cbxCraln_codigo3.getValue());
+                    param.add('inCarpt_codigo', cbxCtreg_tipo_operacion3.getValue()==0?null:cbxCarpt_codigo3.getValue());
+                    param.add('inCgg_carpt_codigo', cbxCtreg_tipo_operacion3.getValue()==0?cbxCarpt_codigo3.getValue():null);
+                    param.add('inCrper_codigo', tmpCrper_codigo3);
+                    param.add('inCtreg_codigo', null);
+					param.add('inCrrsd_codigo', tmpCrrsd_codigo.length>0?tmpCrrsd_codigo:null);
+                    param.add('inCrmov_fecha_viaje', dtCrmov_fecha_viaje3.getValue().format('Y-m-d'));
+                    param.add('inCrmov_tipo_operacion', cbxCtreg_tipo_operacion3.getValue());
+                    param.add('inCrmov_numero_vuelo', txtCrmov_numero_vuelo3.getValue());
+                    param.add('inCrmov_observacion', txtCrmov_observacion3.getValue());
+                    param.add('inCrmov_tipo_salida', 0);
+                    param.add('inCrmov_filtro_interno',true);
+					param.add('inPersonaJSON',null);
+					param.add('inActividadesJSON',null);
+					param.add('inHospedajesJSON',null);
+                    SOAPClient.invoke(urlCgg_res_movilidad, INSENTENCIA_CGG_RES_MOVILIDAD, param, true, CallBackCgg_res_movilidad);
+                } catch(inErr) {
+                    winFrmCgg_res_movilidad_residentes.getEl().unmask();
                 }
-                if(new ManagerCookies().read('MOVILIDAD_VUELO'))
-                    new ManagerCookies().erase('MOVILIDAD_VUELO');
-                new ManagerCookies().create('MOVILIDAD_VUELO', txtCrmov_numero_vuelo3.getValue(), 168);
-					
-                if(new ManagerCookies().read('MOVILIDAD_AEROLINEA'))
-                    new ManagerCookies().erase('MOVILIDAD_AEROLINEA');
-                new ManagerCookies().create('MOVILIDAD_AEROLINEA', cbxCraln_codigo3.getValue(), 168);
-					
-                if(new ManagerCookies().read('MOVILIDAD_MODO'))
-                    new ManagerCookies().erase('MOVILIDAD_MODO');
-                new ManagerCookies().create('MOVILIDAD_MODO', cbxCtreg_tipo_operacion3.getValue(), 168);
-					
-                winFrmCgg_res_movilidad_residentes.getEl().mask('Guardando...', 'x-mask-loading');
-                var param = new SOAPClientParameters();
-                if (isEdit){
-                    param.add('inCrmov_codigo', tmpcrmov_codigo3);
-                }
-                param.add('inCraln_codigo', cbxCraln_codigo3.getValue());
-                param.add('inCarpt_codigo', cbxCtreg_tipo_operacion3.getValue()==0?null:cbxCarpt_codigo3.getValue());
-                param.add('inCgg_carpt_codigo', cbxCtreg_tipo_operacion3.getValue()==0?cbxCarpt_codigo3.getValue():null);
-                param.add('inCrper_codigo', tmpCrper_codigo3);
-                param.add('inCtreg_codigo', null);
-                param.add('inCrrsd_codigo', tmpCrrsd_codigo.length>0?tmpCrrsd_codigo:null);
-                param.add('inCrmov_fecha_viaje', dtCrmov_fecha_viaje3.getValue().format('Y-m-d'));
-                param.add('inCrmov_tipo_operacion', cbxCtreg_tipo_operacion3.getValue());
-                param.add('inCrmov_numero_vuelo', txtCrmov_numero_vuelo3.getValue());
-                param.add('inCrmov_observacion', txtCrmov_observacion3.getValue());
-                param.add('inCrmov_tipo_salida', 0);
-                param.add('inCrmov_filtro_interno',true);
-                param.add('inPersonaJSON',null);
-                param.add('inActividadesJSON',null);
-                param.add('inHospedajesJSON',null);
-                SOAPClient.invoke(urlCgg_res_movilidad, INSENTENCIA_CGG_RES_MOVILIDAD, param, true, CallBackCgg_res_movilidad);
-            } catch(inErr) {
-                winFrmCgg_res_movilidad_residentes.getEl().unmask();
-            }
-        }
-    }
+            }}
     });
     /**
      * Boton que permite cancelar los cambios de la informacion de la ventana winFrmCgg_res_movilidad_residentes.
@@ -644,7 +641,8 @@ function FrmCgg_res_movilidad_residentes(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_
         minWidth:400,
         maximizable:false,
         modal:true,
-        resizable:false,        
+        resizable:false,
+        minimizable:true,
         constrain:true,
         bbar:[btnGuardarCgg_res_movilidad3,btnCancelarCgg_res_movilidad3,'->',btnCerrarCgg_res_movilidad3],
 		listeners:{
@@ -692,7 +690,7 @@ function FrmCgg_res_movilidad_residentes(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_
 			cbxCraln_codigo3.setValue(new ManagerCookies().read('MOVILIDAD_AEROLINEA'));
 		cbxCarpt_codigo3.setValue(tmpUserSession.getUserData().CARPT_CODIGO);
 	}
-        
+
     /**
      * Funcion miembro que devuelve la ventana winFrmCgg_res_movilidad_residentes.
      * @returns ventana winFrmCgg_res_movilidad_residentes.

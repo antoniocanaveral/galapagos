@@ -102,7 +102,7 @@ function FrmHistorialTramite(inDesktop){
     });
     var actHstRptTramitePersonal = new Ext.Action({
         id:'actHstRptTramitePersonal',
-        text:'Tr\u00E1mites recibido - despachado',
+        text:'Tr\u00E1mites del personal recibidos - despachados',
         handler:function(){
 
             var params = [];
@@ -137,7 +137,7 @@ function FrmHistorialTramite(inDesktop){
             {
                 label:'Tipo residencia',
                 paramName:'P_CRTST_CODIGO',
-                value: dsTipoSolicitudPadreTranseunteTodos,
+                value: dsTipoSolicitudPadre,
                 paramValue:'',
                 type:'combo',
                 required:true

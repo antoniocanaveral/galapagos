@@ -1,8 +1,3 @@
-/**
-* FUNCION FECHA DE INGRESO
-* @constructor 
-* @author Besixplus Cia. Ltda.
-*/
 function DlgIngresoFecha(){
 	var mySuccess = false;
     var fecha = new Date();
@@ -58,22 +53,15 @@ function DlgIngresoFecha(){
 
 	/**
 	*Devuelve la ventada del objecto DlgIngresoFecha.
-	*@return winDlgIngresoFecha
 	*/
     	this.getWindow = function(){
         	return winDlgIngresoFecha;
     	}
-    /**
-    *Devuelve la fecha de ingreso
-    *@return fecha
-    */
+
     	this.getFechaIngreso = function(){
         	return fecha;
     	}
-    /**
-    * TRUE O FALSE SI A SIDO SATISFACTORIO LA OPERACION
-    *@return mySuccess
-    */  
+	   
 	this.isSuccess = function(){
 		return mySuccess;
 	}
@@ -88,7 +76,7 @@ DlgIngresoFecha.prototype.show = function(){
 
 /**
  * Estable una funcion para manejar el cierre del formulario.
- * @param inFunctionHandler Funcion.
+ * @parama inFunctionHandler Funcion.
  */
 DlgIngresoFecha.prototype.closeHandler = function(inFunctionHandler){
     this.getWindow().on('close',inFunctionHandler);

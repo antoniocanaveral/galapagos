@@ -407,7 +407,6 @@ function FrmCgg_kdx_punto_venta(IN_SENTENCIA_CGG_KDX_PUNTO_VENTA,IN_RECORD_CGG_K
         minimizable:false,
         layout:'border',
         constrain:true,
-        modal:true,
         tbar:getPanelTitulo(tituloCgg_kdx_punto_venta,descCgg_kdx_punto_venta),
         items:[pnlCgg_kdx_punto_venta_datos,pnlCgg_kdx_punto_venta_usuarios],
         bbar:[btnGuardarCgg_kdx_punto_venta,btnCancelarCgg_kdx_punto_venta,'->',btnCerrarCgg_kdx_punto_venta]

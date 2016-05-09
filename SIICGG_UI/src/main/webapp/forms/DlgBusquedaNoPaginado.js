@@ -1,8 +1,7 @@
 /**
- *FUNCION PUBLICA. FORMULARIO QUE PERMITE VISUALIZAR EN FORMA DE LISTADO, LA INFORMACION DE LOS REGISTROS DE LA TABLA BUSQUEDA.
- *@param gsBusqueda CONTIENE LOS DATOS QUE RETORNA EL WEBSERVICE
- *@param cmBusqueda DEFINICION DE LAS COLUMNAS DEL GRID
- *@param inMultiSelect SI LA BUSQUEDA PERMITE UNA SELECCION MULTIPLE DE DE LAS FILAS
+ *Funcion publica. Formulario que permite visualizar en forma de listado, la informacion de los registros de tabla Busqueda.
+ *@constructor
+ *@author Besixplus Cia. Ltda.
  */
 function DlgBusquedaNoPaginado(gsBusqueda, cmBusqueda, inMultiSelect){
     var r=null;
@@ -62,8 +61,7 @@ function DlgBusquedaNoPaginado(gsBusqueda, cmBusqueda, inMultiSelect){
         },
         tbar: ['Buscar: ', ' ',new Ext.ux.bsx.SearchField({
             store:gsBusqueda,
-            width:200,
-            pagin:false
+            width:200
         })],
          listeners:{
             rowdblclick:function(){
@@ -93,79 +91,55 @@ function DlgBusquedaNoPaginado(gsBusqueda, cmBusqueda, inMultiSelect){
         layout:'border',        
         bbar:[btnAceptarBusqueda,'->',btnCancelarBusqueda]
     });
-    /**
-     *FUNCION MIEMBRO QUE DEVUELVE LA VENTANA winBusquedaNoPaginado
-     * @returns VENTANA winBusquedaNoPaginado.
-     */      
+       
     this.getWindow = function(){
         return winBusquedaNoPaginado;
     }
-    /**
-     *FUNCION PERMITE OBTENER LA FILA SELECCIONADA.
-     *@return r FILA SELECCIONADA
-     */
     this.getSelectedRow = function(){
         return r;
     }
-    /**
-     *FUNCION QUE PERMITE OBTENER LAS FILAS SELECCIONADAS.
-     *@return r FILAS SELECCIONADAS
-     */
     this.getSelectedRows = function(){
         return r;
     }
-    /**
-     *FUNCION QUE OBTIENE LA INFORMACION RELACIONADA A LA BUSQUEDA EN UN GRID .
-     *@return grdBusqueda INFORMACION OBTENIDA
-     */
     this.getGrid = function(){
         return grdBusqueda;
     }
-    /**
-     *FUNCION QUE ESTABLECE EL TITULO.
-     *@param inTitle TITULO
-     */
 	this.setTitle = function(inTitle){
 		winBusquedaNoPaginado.setTitle(inTitle);
 	}
 }
 
 /**
- *FUNCION PROTOTIPO. PERMITE ESTABLECER EL TITULO DE LA VENTANA.
+ *Funcion prototipo. Permite establecer el titulo de la ventana.
  */
 DlgBusquedaNoPaginado.prototype.setTitle = function(inTitle){
     this.setTitle(inTitle);
 }
 
 /**
- *FUNCION PROTOTIPO. PERMITE MOSTRAR LA VENTANA WINBUSQUEDANOPAGINADO DESDE UNA INSTANCIA.
+ *Funcion prototipo. Permite mostrar la ventana winBusquedaNoPaginado desde una instancia.
  */
 DlgBusquedaNoPaginado.prototype.show = function(){
     this.getWindow().show();
 }
-/**
- *FUNCION PROTOTIPO. PERMITE OBTENER LA FILA SELECCIONADA.
- */
+
 DlgBusquedaNoPaginado.prototype.getSelectedRow = function(){
     this.getSelectedRow();
 }
-/**
- *FUNCION PROTOTIPO. PERMITE OBTENER LAS FILAS SELECCIONADAS.
- */
+
 DlgBusquedaNoPaginado.prototype.getSelectedRows = function(){
     this.getSelectedRows();
 }
 /**
- *FUNCION PROTOTIPO. PERMITE CERRAR LA VENTANA WINBUSQUEDANOPAGINADO DESDE UNA INSTANCIA.
+ *Funcion prototipo. Permite cerrar la ventana winBusquedaNoPaginado desde una instancia.
  */
 DlgBusquedaNoPaginado.prototype.close = function(){
     this.getWindow().close();
 }
 
 /**
- *FUNCION PROTOTIPO. PERMITE SABER SI SE HA CERRADO LA VENTANA WINBUSQUEDANOPAGINADO,
- *CON EL FIN DE REALIZAR OTRAS ACCIONES DESDE UNA INSTANCIA.
- *@param inFunctionHandler FUNCION
+ *Funcion prototipo. Permite saber si se ha cerrado la ventana winBusquedaNoPaginado,
+ *con el fin de realizar otras acciones desde una instancia.
  */
 DlgBusquedaNoPaginado.prototype.closeHandler = function(inFunctionHandler){
     this.getWindow().on('close',inFunctionHandler);

@@ -790,7 +790,6 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
     ]);
 
     function consultarPersona(){
-		btnGuardarCgg_tct_registro.setDisabled(true);
         function CallBackCgg_tct_persona(r){
             tmpNumeroDocumento = txtCrper_num_doc_identific.getValue();
             var tmpSelect = Ext.util.JSON.decode(r);
@@ -825,7 +824,7 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
                 tmpRecord.data.CRTRA_CODIGO = '';
                 txtCrtra_numero.setValue('');
                 txtCrtipo_persona.setValue('TURISTA');
-				btnGuardarCgg_tct_registro.setDisabled(false);
+
 
             }else{
                 var tmpRecord = gsCgg_res_persona.getAt(0);
@@ -1698,7 +1697,6 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
                                 gsCgg_res_persona.getAt(0).data.CKESP_CODIGO = SCGG_CONFIGURACION.getAt(SCGG_CONFIGURACION.findExact('CGCNF_CODIGO','CONF35')).get('CGCNF_VALOR_CADENA');
                         }
                     }
-					btnGuardarCgg_tct_registro.setDisabled(false);
                 }
                 catch (inErr) {
                     grdCgg_res_persona.getEl().unmask();

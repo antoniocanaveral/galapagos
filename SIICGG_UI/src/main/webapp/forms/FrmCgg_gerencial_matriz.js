@@ -289,6 +289,8 @@ function FrmCgg_gerencial_matriz(inDesktop){
 			text:'Refrescar',
 			listeners:{
 				click:function(){					
+					if (( txtTmpCggma_anio.getValue()||0) < 2010)
+						txtTmpCggma_anio.setValue(ANIO);
 					if ( txtTmpCggma_anio.getValue() > ANIO)
 						txtTmpCggma_anio.setValue(ANIO);
 					if (txtTmpCggin_codigo.getValue().length==0){

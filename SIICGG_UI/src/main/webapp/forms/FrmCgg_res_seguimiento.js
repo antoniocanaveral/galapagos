@@ -29,7 +29,7 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
         CRTRA_ANIO:'2010',
         CRTRA_NUMERO:'',
         CRPER_BENEFICIARIO:'',
-	CGG_CRPER_NUM_DOC_IDENTIFIC:'',
+		CGG_CRPER_NUM_DOC_IDENTIFIC:'',
         CRPER_AUSPICIANTE:'',
         CRTRA_FECHA_RECEPCION:'',
         CRPJR_RAZON_SOCIAL:'',
@@ -42,10 +42,7 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
         CRTRA_FOLIO:0,
         CRPER_CODIGO:'',
         CRFAS_NOMBRE:'',
-        CRTRA_MOTIVO:'',
-        FLAG_BENEFICIARIO:'none',
-        VEHICULO:'none',
-        CVVEH_CODIGO:''
+        CRTRA_MOTIVO:''
     };
 
     var datosSeguimiento = {
@@ -62,7 +59,7 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
 
     };
     var tplTramite = new Ext.Template(
-            '<table id="ver-zebra2" width="100%" border="0"> <colgroup> <col class="vzebra-odd-strong"/> <col class="vzebra-even-tight"/> <col class="vzebra-odd-strong"/> <col class="vzebra-even-tight"/> </colgroup> <tr> <td width=80> N&uacute;mero:</td> <td width="33%"> {CRTRA_ANIO}-{CRTRA_NUMERO}</td> <td width=80> Tipo solicitud:</td> <td width="33%"> {CRTST_DESCRIPCION:ellipsis(25)}</td> </tr> <tr> <td> <div id="idDivBeneficiario">{ETIQUETA}</div></td> <td> {CRPER_BENEFICIARIO:ellipsis(25)}<br>{CGG_CRPER_NUM_DOC_IDENTIFIC}<a id="lnkPersona" href="#" style="display:{FLAG_BENEFICIARIO}" onClick="abrirPersona(\'{CRPER_CODIGO}\')"> Ver mas...</a></td> <td> Isla:</td> <td> {CISLA_NOMBRE}</td> </tr> <tr> <td> Auspiciante:</td> <td> {CRPER_AUSPICIANTE:ellipsis(25)}</td> <td> Recepci&oacute;n:</td> <td> {CRTRA_FECHA_RECEPCION}</td> </tr> <tr> <td> Pers. jur&iacute;dica:</td> <td> {CRPJR_RAZON_SOCIAL}</td> <td> N. folios:</td> <td> {CRTRA_FOLIO}</td> </tr> <tr> <td> Observaci&oacute;n:</td> <td> {CRTRA_OBSERVACION:ellipsis(30)}</td> <td> Comunicado(R):</td> <td> {CRTRA_COMUNICADO_RADIAL}</td> </tr> <tr> <td>Actividad:</td> <td>{CRTRA_ACTIVIDAD_RESIDENCIA}</td> <td>Permanencia:</td> <td>{CRTRA_DIAS_PERMANENCIA}</td> </tr> <tr> <td>Fase:</td> <td><span class="textoResultado">{CRFAS_NOMBRE:ellipsis(30)}</span></td> <td>Veh&iacute;culo</td> <td><a id="lnkVeh" href="#" style="display:{VEHICULO}" onClick="abrirVeh(\'{CVVEH_CODIGO}\')"> Ver veh&iacute;culo</a></td> </tr> <tr> <td></td> <td></td> <td></td> <td> <a id="lnkSeguimiento" href="#" onClick="abrirTramite(\'{CRTRA_CODIGO}\')"> Ver mas...</a> </td> </tr> </table>'
+            '<table id="ver-zebra2" width="100%" border="0"> <colgroup> <col class="vzebra-odd-strong"/> <col class="vzebra-even-tight"/> <col class="vzebra-odd-strong"/> <col class="vzebra-even-tight"/> </colgroup> <tr> <td width=80> N&uacute;mero:</td> <td width="33%"> {CRTRA_ANIO}-{CRTRA_NUMERO}</td> <td width=80> Tipo solicitud:</td> <td width="33%"> {CRTST_DESCRIPCION:ellipsis(25)}</td> </tr> <tr> <td> <div id="idDivBeneficiario">{ETIQUETA}</div></td> <td> {CRPER_BENEFICIARIO:ellipsis(25)}<br>{CGG_CRPER_NUM_DOC_IDENTIFIC}<a id ="lnkPersona" href="#" onClick="abrirPersona(\'{CRPER_CODIGO}\')"> Ver mas...</a></td> <td> Isla:</td> <td> {CISLA_NOMBRE}</td> </tr> <tr> <td> Auspiciante:</td> <td> {CRPER_AUSPICIANTE:ellipsis(25)}</td> <td> Recepci&oacute;n:</td> <td> {CRTRA_FECHA_RECEPCION}</td> </tr> <tr> <td> Pers. jur&iacute;dica:</td> <td> {CRPJR_RAZON_SOCIAL}</td> <td> N. folios:</td> <td> {CRTRA_FOLIO}</td> </tr> <tr> <td> Observaci&oacute;n:</td> <td> {CRTRA_OBSERVACION:ellipsis(30)}</td> <td> Comunicado(R):</td> <td> {CRTRA_COMUNICADO_RADIAL}</td> </tr> <tr> <td>Actividad:</td> <td>{CRTRA_ACTIVIDAD_RESIDENCIA}</td> <td>Permanencia:</td> <td>{CRTRA_DIAS_PERMANENCIA}</td> </tr> <tr> <td>Fase:</td> <td><span class="textoResultado">{CRFAS_NOMBRE:ellipsis(30)}</span></td> <td>Recalificaci\u00f3n</td> <td>{CRTRA_MOTIVO}</td> </tr> <tr> <td></td> <td></td> <td></td> <td> <a id ="lnkSeguimiento" href="#" onClick="abrirTramite(\'{CRTRA_CODIGO}\')"> Ver mas...</a> </td> </tr> </table>'
             );
 
     var tplSeguimientoFase = new Ext.Template(
@@ -1873,7 +1870,7 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
                 show:function(){
                     tpSeguimiento.activate('tpSeguimiento1');
                     //tpSeguimiento.activate('tpInfoResidencia');
-                    //tpSeguimiento.activate('tpSeguimiento1');
+                    tpSeguimiento.activate('tpSeguimiento1');
 
                     tplTramite.compile();
                     tplTramite.overwrite('divTramite', datosTramite);
@@ -1990,11 +1987,6 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
             datosTramite.CRPER_CODIGO = inRecordCgg_res_seguimiento.get('CGG_CRPER_CODIGO');
             datosTramite.CRFAS_NOMBRE = inRecordCgg_res_seguimiento.get('CRFAS_NOMBRE');
 
-            datosTramite.CVVEH_CODIGO = crtraData.CVVEH_CODIGO ;
-            if(crtraData.CVVEH_CODIGO){
-                datosTramite.VEHICULO = 'block';
-            }
-
             datosSeguimiento.CRSEG_NUMERO = inRecordCgg_res_seguimiento.get('CRSEG_NUMERO');
             datosSeguimiento.CRFAS_NOMBRE = inRecordCgg_res_seguimiento.get('CRFAS_NOMBRE');
             datosSeguimiento.CRSEG_FECHA_RECEPCION = truncDate(inRecordCgg_res_seguimiento.get('CRSEG_FECHA_RECEPCION'));
@@ -2002,9 +1994,7 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
             datosSeguimiento.CRSEG_OBSERVACION = inRecordCgg_res_seguimiento.get('CRSEG_OBSERVACION');
             datosSeguimiento.CRSEG_TIPO_ACTIVIDAD = inRecordCgg_res_seguimiento.get('CRSEG_TIPO_ACTIVIDAD');
             datosSeguimiento.CRSEG_DESCRIPCION = inRecordCgg_res_seguimiento.get('CRSEG_DESCRIPCION');
-            datosSeguimiento.CUSU_NOMBRES = inRecordCgg_res_seguimiento.get('CUSU_NOMBRES');
-
-            
+            datosSeguimiento.CUSU_NOMBRES = inRecordCgg_res_seguimiento.get('CUSU_NOMBRES');           
 
             var tmpTipoSolicitudTramite = inRecordCgg_res_seguimiento.get('CRTST_CODIGO');
             var scpTipoSolicitudTramite = new SOAPClientParameters();

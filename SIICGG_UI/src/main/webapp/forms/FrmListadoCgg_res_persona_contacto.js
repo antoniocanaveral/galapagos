@@ -112,7 +112,11 @@ function FrmListadoCgg_res_persona_contacto(inDesktop,IN_CRPER_CODIGO,IN_ADMINIS
      * Ext.grid.ColumnModel Define el modelo de columnas para el objeto cgg_res_persona_contacto.
      */
     var cmCgg_res_persona_contacto = new Ext.grid.ColumnModel([
-        {dataIndex:'CRTCO_NOMBRE',header:'Nombre',width:150,sortable:true},        
+        {dataIndex:'CRPRC_CODIGO',header:'Codigo',width:150,sortable:true,hidden:true},
+        {dataIndex:'CRPER_CODIGO',header:'Codigo',width:150,sortable:true,hidden:true},
+        {dataIndex:'CRTCO_NOMBRE',header:'Nombre',width:150,sortable:true},
+        {dataIndex:'CRTCO_CODIGO',header:'Codigo',width:150,sortable:true,hidden:true},
+        {dataIndex:'CRPRC_DESCRIPCION',header:'Descripcion',width:150,sortable:true},
         {dataIndex:'CRPRC_CONTACTO',header:'Contacto',width:150,sortable:true}]);
 	
 	/**

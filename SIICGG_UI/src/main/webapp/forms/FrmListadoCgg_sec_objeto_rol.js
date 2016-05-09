@@ -360,7 +360,7 @@ function FrmListadoCgg_sec_objeto_rol(inDesktop){
 	{name:'CSRPT_ACTIVO'}
 	]),
 	sortInfo:{field: 'CSRPT_REPORTE', direction: 'ASC'},
-	baseParams:{keyword:"",format:'JSON',inCsrol_codigo:'',start:0,limit:RECORD_PAGE}
+	baseParams:{keyword:"",format:'JSON',inCsrol_codigo:''}
 	});
 	/**
 	* Ext.PagingToolbar Barra de navegacion que permite la visualizacion organizada de los registros de la tabla Cgg_sec_reporte.
@@ -423,13 +423,7 @@ function FrmListadoCgg_sec_objeto_rol(inDesktop){
 				start:0,
 				limit:RECORD_PAGE
 			}
-		});	
-		gsCgg_sec_reporte.reload({
-			params:{
-				start:0,
-				limit:RECORD_PAGE
-			}
-		});		
+		});						
 		grdCgg_sec_objeto_rol.getSelectionModel().on("selectionchange",function(inSelectionModel){
 			btnEditarCgg_sec_objeto_rol.setDisabled(!inSelectionModel.hasSelection());
 			btnEliminarCgg_sec_objeto_rol.setDisabled(!inSelectionModel.hasSelection());

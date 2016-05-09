@@ -13,15 +13,12 @@ function FrmCgg_usuario_pvt(){
     });
 
     var btnDescargarCgg_usuario_pvt = new Ext.Button({
-        id:'btnDescargarCgg_usuario_pvt',
+        id:'btnDescargarCgg_usuario_pvt ',
         text: 'Descargar',
         iconCls: 'iconDescargar',
         tooltip:'Descarga datos',
         handler:function(){
             if(rUsuarioPvt){
-                
-                Ext.getCmp('btnDescargarCgg_usuario_pvt').setIconClass('cargandoIcon');
-                Ext.getCmp('btnDescargarCgg_usuario_pvt').setDisabled(true);
                 
                 var param = new SOAPClientParameters({
                     format:TypeFormat.JSON
@@ -53,14 +50,8 @@ function FrmCgg_usuario_pvt(){
                         var open_link = window.open('');
                         open_link.location= url ;
                     }
-                    
-                    Ext.getCmp('btnDescargarCgg_usuario_pvt').setIconClass('iconDescargar');
-                    Ext.getCmp('btnDescargarCgg_usuario_pvt').setDisabled(false);
-                    
                 });
                 
-            }else{
-                txtCusu_codigo.markInvalid('Establezca un usuario de punto de venta, por favor.');
             }
         }
     });

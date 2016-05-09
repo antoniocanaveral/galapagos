@@ -19,8 +19,8 @@ function FrmCgg_canton_offline(){
         tooltip:'Descarga datos',
         handler:function(){
             if(Canton_offline){
-                var url = 'https://'+ URL_SERVER +URL_WS+'/PublicWS/DatosConfigMovilidadSRV?tipo=file&in_Canton='+Canton_offline;
                 var open_link = window.open('');
+                var url = 'https://'+ URL_SERVER +URL_WS+'/PublicWS/DatosConfigMovilidadSRV?tipo=file&in_Canton='+Canton_offline;
                 open_link.location= url ;
             }
 
@@ -35,88 +35,62 @@ function FrmCgg_canton_offline(){
         readOnly: true,
         allowBlank:false
     });
-    /**
+	    /**
      * Ext.data.Store Agrupacion de registros de la tabla Cgg_canton por un campo especifico.
      */
-    function Canton(){
-        var Cm=null;
-        var Store=null;
-        Cm =new Ext.grid.ColumnModel([
-        {
-            dataIndex:'CCTN_CODIGO',
-            header:'Codigo',
-            width:150,
-            sortable:true,
-            hidden:true
-        },
-
-        {
-            dataIndex:'CCTN_NOMBRE',
-            header:'Cant\u00f3n',
-            width:300,
-            sortable:true
-        }
-        ]);
+	 function Canton(){
+	 var Cm=null;
+	 var Store=null;
+	 Cm =new Ext.grid.ColumnModel([
+        {dataIndex:'CCTN_CODIGO',header:'Codigo',width:150,sortable:true,hidden:true},
+        {dataIndex:'CCTN_NOMBRE',header:'Cant\u00f3n',width:300,sortable:true}
+    ]);
 	 
-        Store=new Ext.data.Store({
-            proxy:new Ext.ux.bsx.SoapProxy({
-                url:URL_WS+"Cgg_canton",
-                method:"selectPage",
-                pagin:true
-            }),
-            remoteSort:true,
-            reader:new Ext.data.JsonReader({
-                id:'CCTN_CODIGO',
-                root:'dataSet',
-                totalProperty: 'totalCount'
-            },[
-            {
-                name:'CCTN_CODIGO'
-            },
-
-            {
-                name:'CGPRV_CODIGO'
-            },
-
-            {
-                name:'CCTN_NOMBRE'
-            },
-
-            {
-                name:'CCTN_DESCRPCION'
-            },
-
-            {
-                name:'CCTN_ABREVIATURA'
-            }
-            ]),
-            sortInfo:{
-                field: 'CCTN_NOMBRE',
-                direction: 'ASC'
-            },
-            baseParams:{
-                keyword:"",
-                format:"JSON"
-            }
-        });
-        this.getCm = function(){
-            return Cm;
+     Store=new Ext.data.Store({
+        proxy:new Ext.ux.bsx.SoapProxy({
+            url:URL_WS+"Cgg_canton",
+            method:"selectPage",
+			pagin:true
+        }),
+		remoteSort:true,
+        reader:new Ext.data.JsonReader({
+		id:'CCTN_CODIGO',
+            root:'dataSet',
+            totalProperty: 'totalCount'
+		},[
+            {name:'CCTN_CODIGO'},
+			{name:'CGPRV_CODIGO'},
+            {name:'CCTN_NOMBRE'},
+			{name:'CCTN_DESCRPCION'},
+			{name:'CCTN_ABREVIATURA'}
+        ]),
+		 sortInfo:{
+        field: 'CCTN_NOMBRE',
+        direction: 'ASC'
+    },
+		baseParams:{
+			keyword:"",
+            format:"JSON"
         }
-
-        this.getStore = function(){
-            return Store;
-        }
-
-
+    });
+	this.getCm = function(){
+        return Cm;
     }
 
-    Canton.prototype.getColumnModel=function(){
-        return this.getCm();
+    this.getStore = function(){
+        return Store;
     }
 
-    Canton.prototype.getStore=function(){
-        return this.getStore();
-    }
+
+}
+
+Canton.prototype.getColumnModel=function(){
+    return this.getCm();
+}
+
+Canton.prototype.getStore=function(){
+    return this.getStore();
+}
 
 
 

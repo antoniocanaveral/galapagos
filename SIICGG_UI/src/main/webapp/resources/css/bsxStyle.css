@@ -171,10 +171,10 @@
 
 .iconHover:hover{
 	background-color:#99BBE8;	
-	border-radius: 2;
-	-moz-border-radius: 2;
-	-webkit-border-radius: 2;
-	-khtml-border-radius:2;
+	border-radius: 2px;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-khtml-border-radius:2px;
 }
 .tituloGeneral{
     font-weight:bold;

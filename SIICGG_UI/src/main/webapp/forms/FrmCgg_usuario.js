@@ -36,7 +36,23 @@ function FrmCgg_usuario(INSENTENCIA_CGG_USUARIO, INRECORD_CGG_USUARIO) {
     });
     
     var tmpInfoUsuario = new Ext.XTemplate(
-        '<table width="100%" height="100%" cellpadding="0"> <tr> <td style="width:25%"><div class="tituloTemplate">Identificaci\u00f3n</div></td> <td style="width:25%"><div class="itemTemplate">{CRPER_NUM_DOC_IDENTIFIC}</div></td> <td style="width:25%"><div class="tituloTemplate"> Fecha Nacimiento</div></td> <td style="width:25%"><div class="itemTemplate">{[this.myDate(values.CRPER_FECHA_NACIMIENTO)]}</div> </tr> <tr> <td><div class="tituloTemplate">Nombres</div></td> <td><div class="itemTemplate">{CRPER_NOMBRES}</div></td> <td><div class="tituloTemplate">Apellidos</div></td> <td><div class="itemTemplate">{CRPER_APELLIDO_PATERNO} {CRPER_APELLIDO_MATERNO}</div></td> </tr> <tr> <td><div class="tituloTemplate">Genero</div></td> <td><div class="itemTemplate">{[this.myTipoSexo(values.CRPER_GENERO)]}</div></td> <td></td> <td></td> </tr> </table>',
+        '<table width="100%" height="100%" cellpadding="0">' +
+        '<tr rowspan="0"><td>' +
+        '<div class="tituloTemplate">Documento</div></td>' +
+        '<td><div class="itemTemplate">{[this.myTipoDoc(values.CRDID_CODIGO)]}</div></td>' +
+        '<td><div class="tituloTemplate">Identificaci\u00f3n</div></td>' +
+        '<td><div class="itemTemplate">{CRPER_NUM_DOC_IDENTIFIC}</div></td></tr>' +
+        '<tr rowspan="0">' +
+        '<td><div class="tituloTemplate">Nombres</div></td>' +
+        '<td><div class="itemTemplate">{CRPER_NOMBRES}</div></td>' +
+        '<td><div class="tituloTemplate">Apellidos</div></td>' +
+        '<td><div class="itemTemplate">{CRPER_APELLIDO_PATERNO} {CRPER_APELLIDO_MATERNO}</div></td></tr>' +
+        '<tr rowspan="0">' +
+        '<td><div class="tituloTemplate"> Fecha Nacimiento</div></td>' +
+        '<td><div class="itemTemplate">{[this.myDate(values.CRPER_FECHA_NACIMIENTO)]}</div>' +
+        '<td><div class="tituloTemplate">Genero</div></td>' +
+        '<td><div class="itemTemplate">{[this.myTipoSexo(values.CRPER_GENERO)]}</div></td>' +
+        '</td></tr></table>',
         {
             disableFormats: true,
             myDate: function(CRPER_FECHA_NACIMIENTO){
@@ -44,7 +60,14 @@ function FrmCgg_usuario(INSENTENCIA_CGG_USUARIO, INRECORD_CGG_USUARIO) {
                 if(outVal)
                     return outVal;
                 return CRPER_FECHA_NACIMIENTO;
-            },            
+            },
+            myTipoDoc:function(inTipoDoc){
+                for(i = 0; i < tmpStoreTipoDocumento.getTotalCount(); i++){
+                    tmpRecord = tmpStoreTipoDocumento.getAt(i);
+                    if(tmpRecord.data.CRDID_CODIGO = inTipoDoc)
+                        return tmpRecord.data.CRDID_DESCRIPCION
+                }
+            },
             myTipoSexo:function(inTipoSexo){
                 if(inTipoSexo == TypeGenero.MASCULINO)
                     return 'MASCULINO';
@@ -555,7 +578,7 @@ function FrmCgg_usuario(INSENTENCIA_CGG_USUARIO, INRECORD_CGG_USUARIO) {
         }]
     });
 	/**
-     * Ext.ux.grid.RowEditor Edito de filas personalizado para utilizaciï¿½n en el grid de contacto
+     * Ext.ux.grid.RowEditor Edito de filas personalizado para utilización en el grid de contacto
      */
     var reContacto= new Ext.ux.grid.RowEditor({
         saveText: 'Aceptar',
@@ -798,7 +821,7 @@ function FrmCgg_usuario(INSENTENCIA_CGG_USUARIO, INRECORD_CGG_USUARIO) {
 			]
 		},{
 			xtype:'panel',
-			height:90,
+			height:70,
             html:'<div id="divInfoUsuario" style="padding:0px 0px 0px 0px;"></div>'
         }
         ]

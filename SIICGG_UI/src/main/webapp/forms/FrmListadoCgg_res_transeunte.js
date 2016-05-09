@@ -134,6 +134,9 @@ function FrmListadoCgg_res_transeunte(inDesktop){
                                 reporte.addParams(tmpParams);
                                 reporte.show();
                             }
+
+
+
                         }catch(inErr){
                             Ext.MsgPopup.msg(tituloListadoCgg_res_transeunte, 'Se present\u00f3 un problema al presentar su reporte.<br>Error:'+inErr+'.<br>'+ERR_MESSAGE, MsgPopup.WARNING);
                         }
