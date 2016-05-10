@@ -3,10 +3,10 @@
 
     <!-- Set these as required -->
     <property name="jar.name" value="SIIContentModel.jar"/>
-    <property name="jar.deploy.dir" value="./build/deploy/alfresco-x.y.z/tomcat/shared/lib"/>
+    <property name="jar.deploy.dir" value="./target/deploy/alfresco-x.y.z/tomcat/shared/lib"/>
 
     <property name="project.dir" value="."/>
-    <property name="build.dir" value="${project.dir}/build"/>
+    <property name="build.dir" value="${project.dir}/target"/>
     <property name="jar.file" value="${build.dir}/lib/${jar.name}"/>
 
     <target name="mkdirs">
