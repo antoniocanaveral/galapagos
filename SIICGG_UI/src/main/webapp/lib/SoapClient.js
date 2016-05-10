@@ -205,14 +205,14 @@ SOAPClient._sendSoapRequest = function(url, method, parameters, async, callback,
     var ns = (wsdl.documentElement.attributes["targetNamespace"]  == undefined) ? wsdl.documentElement.attributes.getNamedItem("targetNamespace").nodeValue : wsdl.documentElement.attributes["targetNamespace"].value;
     // build SOAP request
     var sr ="<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
-    "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\""+ns+"\""+
+    "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ns1=\""+ns+"\""+
     " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" >"+
     "<soapenv:Header/>"+
     "<soapenv:Body>"+
-    "<ws:"+ method + ">";
+    "<ns1:"+ method + ">";
     if(parameters)
         sr = sr +parameters.toXml();
-    sr = sr + "</ws:"+ method + ">"+
+    sr = sr + "</ns1:"+ method + ">"+
     "</soapenv:Body>"+
     "</soapenv:Envelope>";
     // send request
@@ -255,10 +255,11 @@ SOAPClient._sendSoapRequest = function(url, method, parameters, async, callback,
 SOAPClient._onSendSoapRequest = function(method, async, callback, wsdl, req){
     var o = null;
     try {
-        var nd = SOAPClient._getElementsByTagName(req.responseXML, 'ws:' + method + "Response");
-        if (nd !== null && nd.length == 0) {
+        var nd = SOAPClient._getElementsByTagName(req.responseXML, 'ns1:' + method + "Response");
+        if (nd !== null && nd.length == 0)
+            nd = SOAPClient._getElementsByTagName(req.responseXML, 'ws:' + method + "Response");
+        if (nd !== null && nd.length == 0)
             nd = SOAPClient._getElementsByTagName(req.responseXML, method + "Response");
-        }
 
         if (nd == null || nd.length == 0) {
             if (req.responseXML != null && req.responseXML.getElementsByTagName("faultcode").length > 0) {
@@ -448,7 +449,7 @@ SOAPClient._getXmlHttpProgID = function()
             o = new ActiveXObject(progids[i]);
             return SOAPClient._getXmlHttpProgID.progid = progids[i];
         }
-        catch (ex) {}
+        catch (ex) {};
     }
     throw new Error("Could not find an installed XML parser");
 }
