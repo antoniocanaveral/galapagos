@@ -13,13 +13,13 @@ import java.util.Properties;
  */
 public class Env {
 
-    public static final String EFISA_HOME = "EFISA_HOME";
+    public static final String SII_HOME = "SII_HOME";
 
     public static String getHomePath() throws EnvironmentVariableNotDefinedException {
         String SIIHome = System.getProperty("sii.home");
 
         if (SIIHome == null || SIIHome.length() <= 0) {
-            throw new EnvironmentVariableNotDefinedException(Env.EFISA_HOME);
+            throw new EnvironmentVariableNotDefinedException(Env.SII_HOME);
         }
 
         return SIIHome;
