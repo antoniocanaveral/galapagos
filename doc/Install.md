@@ -50,11 +50,20 @@ Editar el archivo _standalone.xml_ reemplazando el datasource, con las configura
         </statement>
     </datasource>
 
-Copiar los archivos _cgg_sii.keystore_ y _standalone.xml_ en _JBOSS_HOME/configuration_
+Copiar el archivo _standalone.xml_ en _JBOSS_HOME/configuration_
+
+**Copiar SII_HOME**
+
+Copiar la carpeta _PROJECT_HOME/JbossEAP/SII_HOME_ en _JBOSS_HOME_
+
+**Copiar Script de Arranque**
+
+Copiar el archivo _PROJECT_HOME/JbossEAP/startup.sh_ en _JBOSS_HOME_
 
 **Registrar el Keystore**
 
-En una consola, ubicarse en el directorio _JBOSS_HOME/configuration_
+En una consola, ubicarse en el directorio _JBOSS_HOME/SII_HOME_<br/>
+Ejecutar el comando: `keytool -genkey -alias cgg_sii -keyalg RSA -validity 1500 -keystore cgg_sii.keystore` la clave preliminar es **siicgg2010**
 
 ## Compilación
 
@@ -76,6 +85,15 @@ En la carpeta PROJECT_HOME existe el archivo _deployProject.sh_<br/>
 Edite el archivo modificando la variable JBOSS_HOME con la ruta de instalación de su JBOSS EAP.
 
 Modifique los permisos del archivo `chmod 777 deployProject.sh` <br/>
-A partir de ahora puede ejecutar el archivo cada vez que quiera desplegar el proyeco en su ambiente: `./deployProject.sh`
+A partir de ahora puede ejecutar el archivo cada vez que quiera desplegar el proyecto en su ambiente: `./deployProject.sh`
 
 
+## Ejecución
+
+Para iniciar el servidor con todos los servicios configurados. Abrir una consola y posicionarse en el directorio de JBOSS_HOME<br/>
+Ejecutar el script:<br/>
+`./startup.sh`
+
+_**No arranque el servidor con el script nativo (JBOSS_HOME/bin/standalone.sh) porque hay variables del sistema que se deben cargar previamente.**_
+<br/>
+<br/>
