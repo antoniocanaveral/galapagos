@@ -27,6 +27,8 @@
     <target name="clean">
         <delete file="${jar.file}"/>
         <delete file="${jar.deploy.dir}/${jar.name}"/>
+        <delete dir="target/lib"/>
+        <delete dir="target/deploy"/>
     </target>
 
 </project>
