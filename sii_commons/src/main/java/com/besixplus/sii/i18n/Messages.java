@@ -1,8 +1,10 @@
 package com.besixplus.sii.i18n;
 
+import com.besixplus.sii.util.Env;
+
 import java.text.MessageFormat;
 import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.Properties;
 
 /**
  * Clase Messages
@@ -26,7 +28,7 @@ public class Messages {
 	/**
 	 * Manejador de recursos incrustados.
 	 */
-	private ResourceBundle myMessages;
+	private Properties myMessages;
 	/**
 	 * Formateador de texto.
 	 */
@@ -45,8 +47,8 @@ public class Messages {
 	 */
 	public Messages(Types inType, Locale inLocale) {
 		this.myLocale = inLocale!=null?inLocale:Locale.getDefault();
-		this.myProperties = this.getClass().getPackage().getName()+"."+inType.toString();
-		this.myMessages = ResourceBundle.getBundle(this.myProperties, myLocale);
+		this.myProperties = inType.toString()+".properties";
+		this.myMessages = Env.getExternalProperties("message/"+this.myProperties);
 	}
 	/**
 	 * Establece la localizacion de los mensajes.
@@ -54,7 +56,7 @@ public class Messages {
 	 */
 	public void setLocale(Locale inLocale) {
 		this.myLocale = inLocale;
-		this.myMessages = ResourceBundle.getBundle(this.myProperties, myLocale);
+		//this.myMessages = ResourceBundle.getBundle(this.myProperties, myLocale);
 	}
 	/**
 	 * Obtiene la localizacion con la que se esta trabajando.
@@ -70,7 +72,7 @@ public class Messages {
 	 * @return Cadena de texto formateada.
 	 */
 	public String getMessage(String inKey, Object[] inArgs){
-		this.myMsgFormatter.applyPattern(this.myMessages.getString(inKey));
+		this.myMsgFormatter.applyPattern(this.myMessages.getProperty(inKey));
 		return this.myMsgFormatter.format(inArgs);
 	}
 }

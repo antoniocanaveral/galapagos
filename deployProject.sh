@@ -31,4 +31,9 @@ echo "2/3"
 cp $ROOT_PATH/siiws/target/siiws.war $JBOSS_HOME/standalone/deployments
 echo "3/3"
 echo ""
+echo ""
+echo "Copiando SII_HOME"
+echo ""
+cp -RP $ROOT_PATH/JbossEAP/SII_HOME $JBOSS_HOME/
+echo ""
 echo "Deploy Finalizado"
