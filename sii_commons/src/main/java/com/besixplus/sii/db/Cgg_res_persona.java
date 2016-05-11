@@ -1,20 +1,14 @@
 package com.besixplus.sii.db;
 
+import com.besixplus.sii.misc.Utils;
+import org.postgresql.jdbc4.Jdbc4Array;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Savepoint;
-import java.sql.Types;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-
-import org.postgresql.jdbc4.Jdbc4Array;
-
-import com.besixplus.sii.misc.Utils;
 
 /**
  * CLASE Cgg_res_persona
@@ -2356,10 +2350,9 @@ public class Cgg_res_persona implements Serializable{
 		int outCount = 0;
 		
 		try{
-			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_PERSONA_SELECT_CONSULTA_GENERAL_COUNT(?,?) }");
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.f_cgg_res_persona_count(?) }");
 			stmSelect.registerOutParameter(1, Types.INTEGER);
 			stmSelect.setString(2, inKeyword);
-			stmSelect.setString(3, inKeyword);
 			stmSelect.execute();
 			outCount = stmSelect.getInt(1);
 			stmSelect.close();

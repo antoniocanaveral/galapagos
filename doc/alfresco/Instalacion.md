@@ -6,6 +6,8 @@ El modelo documental de Alfresco está diseñado para versiones superiores a la 
 
 Para revisar la guía de instalación de Alfresco puede seguier el siguiente [enlace][]
 
+Debe crear un sitio en Alfresco Share para que se gestione la documentación de SII. El nombre de este sitio no debe tener espacios ni caracteres especiales. Por default es **documentos-sii**
+
 ## Definición del Modelo Documental
 
 ### Tipos de Documento
@@ -44,7 +46,7 @@ Para revisar la guía de instalación de Alfresco puede seguier el siguiente [en
 
 ## Compilación e Instalación del Modelo
 
-En el proyecto principal de maven, identificar el sub-proyecto __sii_alfresco_config__
+En el proyecto principal de maven, identificar el sub-proyecto **sii_alfresco_config**
 
 Identifique la ruta de su compilador `ant`
 
@@ -59,6 +61,11 @@ En su servidor de Alfresco previamente instalado y configurado.
 
 Vaya hasta el directorio `$ALFRESCO_HOME/tomcat/shared/lib`
 
-En ese directorio copie el archivo __SIIContentModel.jar__ generado previamente.
+En ese directorio copie el archivo **SIIContentModel.jar** generado previamente.
 
 Reinicie los servicios.
+
+## Configuración de Parámetros de conexión
+[Instalador]: ../Install.md "Guía de Instalación"
+Una vez instalado su servidor de SII según el manual [Instalador][], en la carpeta SII_HOME de su JBOSS EAP, existe una carpeta
+llamada alfresco. Dentro está el archivo config.properties, que le proveerá de información para los parámetros de conexión.
