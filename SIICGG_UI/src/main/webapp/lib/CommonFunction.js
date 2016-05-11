@@ -802,6 +802,17 @@ function abrirPersona(inCrper_codigo){
     objCgg_res_persona.show();
 }
 
+// MO
+
+function abrirNotificacionFinan(inCrper_codigo){
+    var objCgg_res_notificacion_Finan = new FrmCgg_res_notificacion_finan("update",inCrper_codigo);
+    objCgg_res_notificacion_Finan.loadData1();
+    objCgg_res_notificacion_Finan.show();
+}
+
+//
+
+
 /**
  *Abre el formulario de seguimiento.
  *@param inCrseg_codigo Codigo de seguimiento.

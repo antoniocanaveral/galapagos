@@ -488,23 +488,10 @@ function FrmListadoCgg_res_carnet(inDesktop) {
         text: 'Generar Notificaci\u00f3n Finan.',
         //iconCls: 'iconImprimir',
         listeners:{
-            click:function(){
-               /* var r = tmpPersona.data.CRPER_CODIGO;
-                if (!r){
-                    Ext.Msg.show({
-                        title: 'Datos de Persona',
-                        msg: 'Seleccione un registro antes de continuar.',
-                        buttons: Ext.Msg.OK,
-                        icon: Ext.MessageBox.INFO
-                    });
-                    return;
+                click: function () {
+                    abrirNotificacionFinan(tmpPersona.get('CRPER_CODIGO'));
                 }
-                var reporte = new Reporte("rptListadoCarnetizacion", '/Reports/sii/residencia', {
-                    P_CRPER_CODIGO:r
-                });
-                reporte.show();*/
             }
-        }
     });
 
 //
