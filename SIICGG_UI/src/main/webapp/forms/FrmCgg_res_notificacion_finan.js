@@ -10,8 +10,8 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
     var inSentenciaCgg_res_persona = INSENTENCIA_CGG_RES_PERSONA;
     var inRecordCgg_res_persona=INRECORD_CGG_RES_PERSONA;
     var urlCgg_res_persona=URL_WS+"Cgg_res_persona";
-    var tituloCgg_res_persona='Persona';
-    var descCgg_res_persona='El formulario permite administrar informaci\u00f3n de Persona';
+    var tituloCgg_res_persona='Notificaci\u00f3n Area Fianaciera';
+    var descCgg_res_persona='El formulario permite visualizar informaci\u00f3n de Notificac\u00f3n a ser enviada';
     var isEdit = false;
     var flagImage = false; //Variable utilizada para determinar si la persona tiene ingresada su fotografia en el sistema
     var tmpEstado = false; //Variable utilizada para determinar si ya se esta visualizando la ventana
@@ -855,6 +855,20 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
         anchor:'98%'
         //allowBlank :false
     });
+
+    /**
+     * Ext.form.TextField Cobro
+     */
+    var txtCrper_cobro = new Ext.form.TextField({
+        id:'txtCrper_cobro',
+        name:'txtCrper_cobro',
+        fieldLabel :'Cobro realizado',
+        anchor:'98%',
+        allowBlank :false,
+        invalidText : 'Es necesario ingresar el apellido  de la persona '
+    });
+
+
     /**
      * Ext.form.NumberField GENERO DE LA PERSONA
      0 - MASCULINO
@@ -892,8 +906,8 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
                         objImageDefault.AVATAR = 'resources/images/male_avatar.jpeg';
 
                     }
-                    if (tmpEstado)
-                        tplImagePersona.overwrite(pnlImage.body,objImageDefault);
+                   /* if (tmpEstado)
+                        tplImagePersona.overwrite(pnlImage.body,objImageDefault);*/
                 }
             }
         }
@@ -954,8 +968,8 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
                     objImageDefault.AUTORIZADO ='resources/images/32x32/fail.png';
 
                 }
-                if (tmpEstado)
-                    tplImagePersona.overwrite(pnlImage.body,objImageDefault);
+               /* if (tmpEstado)
+                    tplImagePersona.overwrite(pnlImage.body,objImageDefault);*/
 
             }
         }
@@ -1152,7 +1166,7 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
         tooltip:TypeTooltip.GUARDAR,
         listeners:{
             click:function(){
-                if ( valCedula()==false || pnlCgg_res_persona.getForm().isValid()==false){
+               /* if ( valCedula()==false || pnlCgg_res_persona.getForm().isValid()==false){
                     return;
                 }
                 try{
@@ -1248,7 +1262,7 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
                     });
                     winFrmCgg_res_notificacion_finan.getEl().unmask();
                 }
-            }
+*/            }
         }
     });
     /**
@@ -1338,7 +1352,7 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
                                 allowBlank : true
                             });
 
-                           /* tabpnlInformacionAdicional.add({
+                            tabpnlInformacionAdicional.add({
                                 id:'pnlOpcional',
                                 layout:'form',
                                 frame : true,
@@ -1394,7 +1408,7 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
 
                                                         var url1 = URL_DOC_VIEWER+'?table=cgg_res_persona&keyc=crper_codigo&keyv='+inRecordCgg_res_persona.get('CRPER_CODIGO') +'&column=Crper_adjunto_acta&fn='+txtCrper_nombre_adjunto_acta.getValue()+'&request=view';
                                                         window.open(url1);
-                                                        /!* window.open( new Ajax.Request(URL_DOC_VIEWER, {
+                                                        /* window.open( new Ajax.Request(URL_DOC_VIEWER, {
                                                          onSuccess: function(response) {
                                                          //alert(response);
                                                          },
@@ -1410,7 +1424,7 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
                                                          fn:txtCrper_nombre_adjunto_acta.getValue(),
                                                          request:'view'
                                                          }
-                                                         }));*!/
+                                                         }));*/
 
                                                     }
                                                 }
@@ -1437,7 +1451,7 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
                                         }
                                     ]
                                 }]
-                            });*/
+                            });
                             Ext.getCmp('pnlOpcional').show();
                             if(inRecordCgg_res_persona)
                             {
@@ -1689,8 +1703,9 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
                 dtgCgg_res_persona_contacto.getSelectionModel().selectRow(0);
                 reContacto.startEditing(0);
             }
-        },
-            {
+        }
+            /* ,
+           {
                 iconCls:'iconEliminar',
                 tooltip:'Eliminar contacto',
                 handler:function(){
@@ -1749,7 +1764,7 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
                     }
                 }
 
-            }
+            }*/
         ],
         plugins:[reContacto]
     });
@@ -2159,10 +2174,10 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
         FIRMA:'resources/images/signature.png'
     };
 
-    var tplImagePersona = new Ext.Template('<div style="position:absolute; top:0px; left:0px;height: 100% ; width: 100% ; padding:5px 0px 0px 5px"' +
+    /*var tplImagePersona = new Ext.Template('<div style="position:absolute; top:0px; left:0px;height: 100% ; width: 100% ; padding:5px 0px 0px 5px"' +
     '><img id="imgFotoPrs" src={AVATAR} width = "95%"  height = "95%" /></div>' +
     '<div style="position:absolute; top:90px; left:110px;height: 32px ; width: 32px ; padding:5px 0px 0px 5px"' +
-    '><img src={AUTORIZADO} width = "95%"  height = "95%" /></div>');
+    '><img src={AUTORIZADO} width = "95%"  height = "95%" /></div>');*/
 
     var tplHuella = new Ext.Template('<div style="height: 100% ; width:100% ; padding:5px 0px 0px 5px;text-align: center;"' +
     '><img id="imgHuellaPrs" src={HUELLA}  width = "55%"  height = "90%" /></div>');
@@ -2170,20 +2185,20 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
     var tplFirma = new Ext.Template('<div style="height: 100% ; width: 100% ; padding:5px 0px 0px 5px;text-align: center;"' +
     '><img id="imgFirmaPrs" src={FIRMA} width = "65%"  height = "60%"/></div>');
 
-    var pnlImage = new Ext.Panel({
+/*    var pnlImage = new Ext.Panel({
         id:'pnlImage',
         anchor: '100%',
         frame:true,
         height: 150,
         data:objImageDefault,
         tpl:tplImagePersona
-    });
+    });*/
 
 
-   /* var tabpnlInformacionAdicional= new Ext.TabPanel({
+    var tabpnlInformacionAdicional= new Ext.TabPanel({
         activeTab: 0,
         frame:false,
-        anchor:'100% 38%',
+        anchor:'100% 50%',
         autoDestroy: true,
         labelWidth :100,
         plugins: new Ext.ux.TabCloseMenu(),
@@ -2219,14 +2234,14 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
                                         layout:'form',
                                         anchor:'100% 100%',
                                         frame:true,
-                                        /!* style:{
+                                        /* style:{
                                          marginLeft: '5px'
                                          },
-                                         bodyStyle: 'padding:0px 0px 0px 0px',*!/
+                                         bodyStyle: 'padding:0px 0px 0px 0px',*/
                                         items :[cbxCpais_nombre_residencia,cbxCgprv_nombre_residencia,cbxCctn_nombre_residencia,cbxCprr_codigo]
 
                                     },
-                                    {
+                                    /*{
                                         // xtype:'fieldset',
                                         title: 'Anterior',
                                         layout:'form',
@@ -2238,14 +2253,15 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
                                          bodyStyle: 'padding:0px 0px 0px 0px',*!/
                                         items :[cbxCpais_nombre_res_anterior,cbxCgprv_nombre_res_anterior,cbxCctn_nombre_res_anterior]
 
-                                    }
+                                    }*/
                                 ]
                             }
 
                         ]
                     }]
 
-            },
+            }
+            /*,
             {
                 //xtype:'panel',
                 layout:'border',
@@ -2402,8 +2418,8 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
 
                 ],
                 items:[grdCgg_gem_perfil_prof]
-            },
-            {
+            },*/
+            /*{
                 //xtype:'panel',
                 layout:'border',
                 frame : false,
@@ -2529,8 +2545,8 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
 
                 ],
                 items:[grdCgg_res_ocupacion_laboral]
-            },
-            {
+            },*/
+           /* {
                 frame : true,
                 title:'Identificaci\u00f3n',
                 html:'<object id="bsxCrperRegisterBiometric" type="' + SII_mimeType + '" width="0" height="0"></object>',
@@ -2749,8 +2765,8 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
                 ]
 
             }
-            ,
-            {
+            ,*/
+            /*{
                 layout:'column',
                 frame : true,
                 title:'Datos Complementarios',
@@ -2782,15 +2798,15 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
                             txtCrper_observaciones
                         ]
                     }]
-            }
+            }*/
         ]
-    });*/
+    });
 
     /**
      * Ext.form.FormPanel Panel principal que contiene los controles de la ventana winFrmCgg_res_notificacion_finan.
      */
     var pnlCgg_res_persona = new Ext.form.FormPanel({
-        anchor:'100% 100%',
+        anchor:'100% 50%',
         items:[
             {
                 xtype:'panel',
@@ -2831,15 +2847,33 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
                                     {
                                         columnWidth:.5,
                                         layout:'form',
-                                        items:[txtCrper_num_doc_identific,txtCrper_numero_expediente]
+                                        items:[txtCrper_num_doc_identific]
                                     },
 
                                     {
                                         columnWidth:.5,
                                         layout:'form',
-                                        items:[txtCrper_numero_residencia,chkCrper_autorizado]
+                                        items:[txtCrper_numero_residencia]
                                     }]
-                            }
+                            },
+                            {
+                                xtype:'fieldset',
+                                columnWidth: 0.75,
+                                title: 'Cobro',
+                                layout: 'form',
+                                items :[
+                                    {
+                                        xtype:'panel',
+                                        layout:'column',
+                                        items:[
+
+                                            {
+                                                columnWidth:.5,
+                                                layout:'form',
+                                                items:[txtCrper_cobro]
+                                            }]
+                                    }]
+                                    }
                         ]
                     }/*,{
                         xtype:'fieldset',
@@ -2850,7 +2884,7 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
                         border: false,
                         items :[pnlImage]
                     }*/]
-            },
+            }/*,
             {
                 xtype:'panel',
                 layout:'column',
@@ -2875,7 +2909,7 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
                         border: true,
                         items :[dtCrper_fecha_nacimiento,cbxCpais_nombre_nacimiento,cbxCgprv_nombre_nacimiento,cbxCctn_nombre_nacimiento]
                     }]
-            }],
+            }*/],
         frame:true,
         labelWidth :100
     });
@@ -2887,10 +2921,10 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
         id:'winFrmCgg_res_notificacion_finan',
         title:tituloCgg_res_persona,
         tbar:getPanelTitulo(tituloCgg_res_persona,descCgg_res_persona),
-        items:[pnlCgg_res_persona],
+        items:[pnlCgg_res_persona,tabpnlInformacionAdicional],
         width:710,
         minWidth:700,
-        height:600,
+        height:470,
         minHeight:600,
         maximizable:false,
         resizable:false,
@@ -2898,7 +2932,7 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
         layout:'anchor',
         modal:true,
         constrain:true,
-        bbar:[btnGuardarCgg_res_persona,btnMasAcciones,btnCancelarCgg_res_persona,'->',btnCerrarCgg_res_persona],
+        bbar:[btnGuardarCgg_res_persona,'->',btnCerrarCgg_res_persona],
         listeners:{
             show:function()
             {
@@ -2912,13 +2946,13 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
                     objImageDefault.AVATAR = 'resources/images/male_avatar.jpeg';
 
                 }
-                if (tmpEstado)
-                    tplImagePersona.overwrite(pnlImage.body,objImageDefault);
+                /*if (tmpEstado)
+                    tplImagePersona.overwrite(pnlImage.body,objImageDefault);*/
 
                 if(isEdit)
                 {
-                   /* tabpnlInformacionAdicional.setActiveTab(3);
-                    tabpnlInformacionAdicional.setActiveTab(0);*/
+                    tabpnlInformacionAdicional.setActiveTab(3);
+                    tabpnlInformacionAdicional.setActiveTab(0);
                     consultarImagen();
                 }
 
