@@ -391,6 +391,9 @@ var script=document.createElement('script');script.type="text/javascript";script
 var script=document.createElement('script');script.type="text/javascript";script.src="forms/FrmListadoCgg_ger_indicador_tipo.js";head.appendChild(script);
 var script=document.createElement('script');script.type="text/javascript";script.src="forms/FrmListadoCgg_ger_indicador_encargado.js";head.appendChild(script);
 var script=document.createElement('script');script.type="text/javascript";script.src="forms/FrmCgg_ger_indicador_encargado.js";head.appendChild(script);
+var script=document.createElement('script');script.type="text/javascript";script.src="forms/FrmCgg_res_notificacion_finan.js";head.appendChild(script);
+
+
 
 /*sitio web*/
 var script=document.createElement('script');script.type="text/javascript";script.src="forms/FrmListadoCgg_web_frase_bienvenida.js";head.appendChild(script);
