@@ -32,8 +32,8 @@ import com.besixplus.sii.db.ManagerConnection;
  *
  * @author BESIXPLUS CIA. LTDA.
  */
-@WebService(serviceName="Cgg_gem_vacante", targetNamespace="http://ws.sii.besixplus.com/")
-@SOAPBinding(style=Style.RPC, use=SOAPBinding.Use.LITERAL)
+@WebService()
+@SOAPBinding(style=Style.RPC)
 public class Cgg_gem_vacante implements Serializable{
 
 	private static final long serialVersionUID = 1375632177;

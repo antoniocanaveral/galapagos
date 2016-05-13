@@ -227,29 +227,22 @@ SOAPClient._sendSoapRequest = function(url, method, parameters, async, callback,
 	
     //var soapaction = ((ns.lastIndexOf("/") != ns.length - 1) ? ns + "/" : ns) + method;
     //xmlHttp.setRequestHeader("SOAPAction", soapaction);
+
     xmlHttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 
-    xmlHttp.onreadystatechange = function () {
-        if (xmlHttp.readyState == 4) {
-            if (xmlHttp.status == 200) {
-                SOAPClient._onSendSoapRequest(method, true, callback, wsdl, xmlHttp);
+    if(async) {
+        xmlHttp.onreadystatechange = function () {
+            if (xmlHttp.readyState == 4) {
+                if (xmlHttp.status == 200) {
+                    SOAPClient._onSendSoapRequest(method, true, callback, wsdl, xmlHttp);
+                }
             }
         }
     }
     xmlHttp.send(sr);
-    /*if(async)
-    {
-        xmlHttp.onreadystatechange = function()
-        {			
-            if(xmlHttp.readyState == 4)
-                SOAPClient._onSendSoapRequest(method, async, callback, wsdl, xmlHttp);
-        }
-    }
 
-    xmlHttp.send(sr);
     if (!async)
         return SOAPClient._onSendSoapRequest(method, async, callback, wsdl, xmlHttp);
-        */
 }
 
 SOAPClient._onSendSoapRequest = function(method, async, callback, wsdl, req){

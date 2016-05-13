@@ -367,15 +367,6 @@ public abstract class BasePublicAPI {
         return Config.getConfig().getProperty("folder_name");
     }
 
-    public File getLocalFile() {
-        String filePath = Config.getConfig().getProperty("local_file_path");
-        return new File(filePath);
-    }
-
-    public String getLocalFileType() {
-        return Config.getConfig().getProperty("local_file_type");
-    }
-
     abstract public String getAlfrescoAPIUrl();
     abstract public Session getCmisSession();
     abstract public HttpRequestFactory getRequestFactory();

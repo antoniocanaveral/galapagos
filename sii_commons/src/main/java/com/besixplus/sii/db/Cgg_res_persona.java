@@ -1,20 +1,14 @@
 package com.besixplus.sii.db;
 
+import com.besixplus.sii.misc.Utils;
+import org.postgresql.jdbc4.Jdbc4Array;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Savepoint;
-import java.sql.Types;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-
-import org.postgresql.jdbc4.Jdbc4Array;
-
-import com.besixplus.sii.misc.Utils;
 
 /**
  * CLASE Cgg_res_persona
@@ -349,7 +343,26 @@ public class Cgg_res_persona implements Serializable{
 		return outCount;
 	}
 
-
+	/**
+	 * CONTABILIZA CUANTOS REGISTROS CUMPLEN CON EL CRITERIO DE BUSQUEDA.
+	 * @param inConnection CONEXION A LA BASE DE DATOS.
+	 * @return int NUMERO DE REGISTROS.
+	 */
+	public static int selectCount(
+			java.sql.Connection inConnection
+	){
+		int outCount = 0;
+		try{
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_PERSONA_COUNT() }");
+			stmSelect.registerOutParameter(1, Types.INTEGER);
+			stmSelect.execute();
+			outCount = stmSelect.getInt(1);
+			stmSelect.close();
+		}catch(SQLException e){
+			com.besixplus.sii.db.SQLErrorHandler.errorHandler(e);
+		}
+		return outCount;
+	}
 
 
 	/**
@@ -404,7 +417,7 @@ public class Cgg_res_persona implements Serializable{
 		try{
 			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_PERSONA_S_CGG_NACIONALIDAD(?) }");
 			stmSelect.registerOutParameter(1, Types.OTHER);
-			stmSelect.setString(2,this.getCgg_res_persona().getCGNCN_CODIGO());
+			stmSelect.setString(2, this.getCgg_res_persona().getCGNCN_CODIGO());
 			stmSelect.execute();
 			ResultSet results = (ResultSet) stmSelect.getObject(1);
 			while (results.next()) {
@@ -512,7 +525,7 @@ public class Cgg_res_persona implements Serializable{
 		try{
 			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_PERSONA_S_CGG_PARROQUIA(?) }");
 			stmSelect.registerOutParameter(1, Types.OTHER);
-			stmSelect.setString(2,this.getCgg_res_persona().getCPRR_CODIGO());
+			stmSelect.setString(2, this.getCgg_res_persona().getCPRR_CODIGO());
 			stmSelect.execute();
 			ResultSet results = (ResultSet) stmSelect.getObject(1);
 			while (results.next()) {
@@ -620,7 +633,7 @@ public class Cgg_res_persona implements Serializable{
 		try{
 			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_PERSONA_S_CGG_RES_TIPO_SANGUINEO(?) }");
 			stmSelect.registerOutParameter(1, Types.OTHER);
-			stmSelect.setString(2,this.getCgg_res_persona().getCRTSG_CODIGO());
+			stmSelect.setString(2, this.getCgg_res_persona().getCRTSG_CODIGO());
 			stmSelect.execute();
 			ResultSet results = (ResultSet) stmSelect.getObject(1);
 			while (results.next()) {
@@ -728,8 +741,8 @@ public class Cgg_res_persona implements Serializable{
 		try{
 			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_PERSONA_S_CGG_CANTON(?, ?) }");
 			stmSelect.registerOutParameter(1, Types.OTHER);
-			stmSelect.setString(2,this.getCgg_res_persona().getCCTN_CODIGO());
-			stmSelect.setString(3,this.getCgg_res_persona().getCGG_CCTN_CODIGO());
+			stmSelect.setString(2, this.getCgg_res_persona().getCCTN_CODIGO());
+			stmSelect.setString(3, this.getCgg_res_persona().getCGG_CCTN_CODIGO());
 			stmSelect.execute();
 			ResultSet results = (ResultSet) stmSelect.getObject(1);
 			while (results.next()) {
@@ -947,7 +960,7 @@ public class Cgg_res_persona implements Serializable{
 		try{
 			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_PERSONA_S_CGG_RES_DOCUMENTO_IDENTIFICACIO(?) }");
 			stmSelect.registerOutParameter(1, Types.OTHER);
-			stmSelect.setString(2,this.getCgg_res_persona().getCRDID_CODIGO());
+			stmSelect.setString(2, this.getCgg_res_persona().getCRDID_CODIGO());
 			stmSelect.execute();
 			ResultSet results = (ResultSet) stmSelect.getObject(1);
 			while (results.next()) {
@@ -1115,7 +1128,7 @@ public class Cgg_res_persona implements Serializable{
 		try{
 			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_PERSONA_SELECT(?) }");
 			stmSelect.registerOutParameter(1, Types.OTHER);
-			stmSelect.setString(2,this.getCgg_res_persona().getCRPER_CODIGO());
+			stmSelect.setString(2, this.getCgg_res_persona().getCRPER_CODIGO());
 			stmSelect.execute();
 			ResultSet results = (ResultSet) stmSelect.getObject(1);
 			while (results.next()) {
@@ -1196,7 +1209,7 @@ public class Cgg_res_persona implements Serializable{
 	){
 		ArrayList<LinkedHashMap<String,Object>> outCgg_res_persona = new ArrayList<LinkedHashMap<String,Object>>();
 		try{
-			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_PERSONA_SELECT_LITE(?,?,?,?,?,?,?,?,?) }");
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_PERSONA_SELECT_LITE(?,?,?,?,?,?,?,?) }");
 			stmSelect.registerOutParameter(1, Types.OTHER);
 			stmSelect.setString(2, inUserName);
 			stmSelect.setInt(3, inStart);
@@ -1206,7 +1219,6 @@ public class Cgg_res_persona implements Serializable{
 			stmSelect.setString(7, inKeyword);
 			stmSelect.setString(8, inCrtst_codigo);
 			stmSelect.setBoolean(9, inCarnet);
-			stmSelect.setString(10, inIdentificacion);
 			stmSelect.execute();
 			ResultSet results = (ResultSet) stmSelect.getObject(1);
 			int tmpColumnCount = results.getMetaData().getColumnCount();
@@ -1243,12 +1255,11 @@ public class Cgg_res_persona implements Serializable{
 	){
 		BigDecimal outCount = new BigDecimal(0);
 		try{
-			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_PERSONA_COUNT_LITE(?,?,?,?) }");
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_PERSONA_COUNT_LITE(?,?,?) }");
 			stmSelect.registerOutParameter(1, Types.NUMERIC);
 			stmSelect.setString(2, inKeyword);
 			stmSelect.setString(3, inCrtst_codigo);
 			stmSelect.setBoolean(4, inCarnet);
-			stmSelect.setString(5, inIdentificacion);
 			stmSelect.execute();
 			outCount = stmSelect.getBigDecimal(1);
 			stmSelect.close();
@@ -1268,10 +1279,10 @@ public class Cgg_res_persona implements Serializable{
 		String outResult = "true";
 		try{
 			CallableStatement stmUpdate = inConnection.prepareCall("{ call sii.F_CGG_RES_PERSONA_UPDATE_HUELLA_IMG(?,?,?,?) }");
-			stmUpdate.setString(1,this.getCgg_res_persona().getCRPER_CODIGO());
+			stmUpdate.setString(1, this.getCgg_res_persona().getCRPER_CODIGO());
 			stmUpdate.setString(2,this.getCgg_res_persona().getCRPER_HUELLA_DACTILAR());
 			stmUpdate.setBytes(3, this.getCgg_res_persona().getCRPER_HUELLA_IMAGEN());
-			stmUpdate.setString(4,this.getCgg_res_persona().getCRPER_HUELLA_CADENA());
+			stmUpdate.setString(4, this.getCgg_res_persona().getCRPER_HUELLA_CADENA());
 			stmUpdate.executeUpdate();
 			stmUpdate.close();
 		}catch(SQLException e){
@@ -1359,7 +1370,55 @@ public class Cgg_res_persona implements Serializable{
 		}
 		return outResult;
 	}
-	
+
+	public static ArrayList<HashMap<String, Object>> selectPersonaNotificacion(Connection inConnection, String inUserName, int inStart, int inLimit, String inSortFieldName, String inDirection, String inKeyword)
+	{
+		ArrayList outCgg_res_persona = new ArrayList();
+		try {
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.f_cgg_res_persona_s_notificacion(?,?,?,?,?,?) }");
+			stmSelect.registerOutParameter(1, 1111);
+			stmSelect.setString(2, inUserName);
+			stmSelect.setInt(3, inStart);
+			stmSelect.setInt(4, inLimit);
+			stmSelect.setString(5, inSortFieldName);
+			stmSelect.setString(6, inDirection);
+			stmSelect.setString(7, inKeyword);
+			stmSelect.execute();
+			ResultSet results = (ResultSet)stmSelect.getObject(1);
+			int tmpColumnCount = results.getMetaData().getColumnCount();
+			while (results.next()) {
+				HashMap tmpObj = new HashMap();
+				for (int i = 1; i <= tmpColumnCount; i++)
+					if (results.getObject(i) != null)
+						tmpObj.put(results.getMetaData().getColumnName(i).toUpperCase(), results.getObject(i));
+				outCgg_res_persona.add(tmpObj);
+			}
+			results.close();
+			stmSelect.close();
+		} catch (SQLException e) {
+			SQLErrorHandler.errorHandler(e);
+		}
+		return outCgg_res_persona;
+	}
+
+	public static int selectCountNotificacion(Connection inConnection, String inKeyword)
+	{
+		int outCount = 0;
+		if ((inKeyword == null) || (inKeyword.trim().length() == 0))
+			return selectCount(inConnection);
+		try {
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.f.cgg_res_persona_notificacion_count(?) }");
+			stmSelect.registerOutParameter(1, 4);
+			stmSelect.setString(2, inKeyword);
+			stmSelect.execute();
+			outCount = stmSelect.getInt(1);
+			stmSelect.close();
+		} catch (SQLException e) {
+			SQLErrorHandler.errorHandler(e);
+		}
+		return outCount;
+	}
+
 	/**
 	 * OBTIENE TODOS LOS REGISTROS DE LA TABLA Cgg_res_persona QUE CUMPLEN CON EL CRITERIO DE BUSQUEDA.
 	 * @param inConnection CONEXION A LA BASE DE DATOS.
@@ -1392,7 +1451,55 @@ public class Cgg_res_persona implements Serializable{
 		}
 		return outCgg_res_persona;
 	}
-	
+
+	public static ArrayList<HashMap<String, Object>> selectPersonaDenuncia(Connection inConnection, String inUserName, int inStart, int inLimit, String inSortFieldName, String inDirection, String inKeyword)
+	{
+		ArrayList outCgg_res_persona = new ArrayList();
+		try {
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.f_cgg_res_persona_s_denuncia(?,?,?,?,?,?) }");
+			stmSelect.registerOutParameter(1, 1111);
+			stmSelect.setString(2, inUserName);
+			stmSelect.setInt(3, inStart);
+			stmSelect.setInt(4, inLimit);
+			stmSelect.setString(5, inSortFieldName);
+			stmSelect.setString(6, inDirection);
+			stmSelect.setString(7, inKeyword);
+			stmSelect.execute();
+			ResultSet results = (ResultSet)stmSelect.getObject(1);
+			int tmpColumnCount = results.getMetaData().getColumnCount();
+			while (results.next()) {
+				HashMap tmpObj = new HashMap();
+				for (int i = 1; i <= tmpColumnCount; i++)
+					if (results.getObject(i) != null)
+						tmpObj.put(results.getMetaData().getColumnName(i).toUpperCase(), results.getObject(i));
+				outCgg_res_persona.add(tmpObj);
+			}
+			results.close();
+			stmSelect.close();
+		} catch (SQLException e) {
+			SQLErrorHandler.errorHandler(e);
+		}
+		return outCgg_res_persona;
+	}
+
+	public static int selectDenunciaCount(Connection inConnection, String inKeyword)
+	{
+		int outCount = 0;
+		if ((inKeyword == null) || (inKeyword.trim().length() == 0))
+			return selectCount(inConnection);
+		try {
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.f_cgg_res_persona_denuncia_count(?) }");
+			stmSelect.registerOutParameter(1, 4);
+			stmSelect.setString(2, inKeyword);
+			stmSelect.execute();
+			outCount = stmSelect.getInt(1);
+			stmSelect.close();
+		} catch (SQLException e) {
+			SQLErrorHandler.errorHandler(e);
+		}
+		return outCount;
+	}
+
 	/**
 	 * SELECCIONA UN REGISTRO DE LA TABLA Cgg_res_persona DE ACUERDO A SU NUMERO DE DOCUMENTO.
 	 * @param inConnection CONEXION A LA BASE DE DATOS.
@@ -1507,11 +1614,6 @@ public class Cgg_res_persona implements Serializable{
 	/**
 	 * OBTIENE TODOS LOS REGISTROS DE LA TABLA Cgg_res_prestamo QUE CUMPLEN CON EL CRITERIO DE BUSQUEDA.
 	 * @param inConnection CONEXION A LA BASE DE DATOS.
-	 * @param inUserName NOMBRE DEL USUARIO DEL SERVIDOR DE APLICACIONES.
-	 * @param inStart INDICE DE INICIO.
-	 * @param inLimit TOTAL DE REGISTRO QUE SON CONSIDERADOS.
-	 * @param inSortFieldName NOMBRE DE LA COLUMNA DE ORDENAMIENTO (<code>ASC|DESC</code>).
-	 * @param inKeyword CRITERIO DE BUSQUEDA
 	 * @return ArrayList<com.besixplus.sii.objects.Cgg_res_seguimiento> VECTOR DE OBJETOS EQUIVALENTE A LOS REGISTROS DE LA TABLA.
 	 */		
 	public ArrayList<com.besixplus.sii.objects.Cgg_res_prestamo_expediente> selectPrestamo(
@@ -1605,7 +1707,7 @@ public class Cgg_res_persona implements Serializable{
 				for (int i = 1 ; i <= tmpColumnCount; i++)
 					if(results.getObject(i) != null)
 						tmpObj.put(results.getMetaData().getColumnName(i).toUpperCase(), results.getObject(i));
-				tmpObj.put("OBSERVADO", Cgg_res_observado.selectCGG_RES_PERSONADirect(results.getString(1).toString(),inConnection));
+				tmpObj.put("OBSERVADO", Cgg_res_observado.selectCGG_RES_PERSONADirect(results.getString(1).toString(), inConnection));
 				outCgg_res_persona.add(tmpObj);
 			}
 			results.close();
@@ -1714,6 +1816,45 @@ public class Cgg_res_persona implements Serializable{
 		return outCgg_res_personahistorial;
 	}
 
+	public com.besixplus.sii.objects.Cgg_res_persona selectNumDocHistorial(Connection inConnection)
+	{
+		try
+		{
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.f_cgg_res_persona_select_num_doc_historial(?) }");
+			stmSelect.registerOutParameter(1, 1111);
+			stmSelect.setString(2, getCgg_res_persona().getCRPER_NUM_DOC_IDENTIFIC());
+			stmSelect.execute();
+			ResultSet results = (ResultSet)stmSelect.getObject(1);
+			while (results.next()) {
+				getCgg_res_persona().setCRPER_CODIGO(results.getString(1));
+				getCgg_res_persona().setCRECV_ESTADO_CIVIL(results.getString(2));
+				getCgg_res_persona().setCRDID_TIPO(results.getString(3));
+				getCgg_res_persona().setCGNCN_NOMBRE(results.getString(4));
+				getCgg_res_persona().setCPRR_NOMBRE(results.getString(5));
+				getCgg_res_persona().setCCNT_NOMBRE(results.getString(6));
+				getCgg_res_persona().setCCNT_NOMBRE_ORIGEN(results.getString(7));
+				getCgg_res_persona().setCRPER_NOMBRES(results.getString(8));
+				getCgg_res_persona().setCRPER_APELLIDO_PATERNO(results.getString(9));
+				getCgg_res_persona().setCRPER_APELLIDO_MATERNO(results.getString(10));
+				getCgg_res_persona().setCRPER_NUM_DOC_IDENTIFIC(results.getString(11));
+				getCgg_res_persona().setCRPER_FECHA_NACIMIENTO(results.getTimestamp(12));
+				getCgg_res_persona().setCRPER_LUGAR_NACIMIENTO(results.getString(13));
+				getCgg_res_persona().setCRPER_GENERO(results.getInt(14));
+				getCgg_res_persona().setCRPER_NUMERO_RESIDENCIA(results.getString(15));
+				getCgg_res_persona().setCRPER_AUTORIZADO(results.getBoolean(16));
+				getCgg_res_persona().setCRPER_TIPO_PERSONA(results.getInt(17));
+				getCgg_res_persona().setCRPER_TIPO(results.getInt(18));
+				getCgg_res_persona().setCRPER_ESTADO(results.getBoolean(19));
+			}
+			results.close();
+			stmSelect.close();
+		} catch (SQLException e) {
+			SQLErrorHandler.errorHandler(e);
+			e.printStackTrace();
+		}
+		return getCgg_res_persona();
+	}
+
 	/**
 	 * SELECCIONA UN REGISTRO DE LA TABLA Cgg_res_observadoDE ACUERDO A SU NUMERO DE DOCUMENTO.
 	 * @param inConnection CONEXION A LA BASE DE DATOS.
@@ -1780,6 +1921,56 @@ public class Cgg_res_persona implements Serializable{
 		return outCgg_res_notificacion;
 	}
 
+	public static ArrayList<HashMap<String, Object>> selectPersonaHistorialMovilidadIngreso(Connection inConnection, String inCrper_codigo)
+	{
+		ArrayList outCgg_res_movilidad_ingreso = new ArrayList();
+		try {
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.f_cgg_res_persona_select_movilidad_ingreso(?) }");
+			stmSelect.registerOutParameter(1, 1111);
+			stmSelect.setString(2, inCrper_codigo);
+			stmSelect.execute();
+			ResultSet results = (ResultSet)stmSelect.getObject(1);
+			int tmpColumnCount = results.getMetaData().getColumnCount();
+			while (results.next()) {
+				HashMap tmpObj = new HashMap();
+				for (int i = 1; i <= tmpColumnCount; i++)
+					if (results.getObject(i) != null)
+						tmpObj.put(results.getMetaData().getColumnName(i).toUpperCase(), results.getObject(i));
+				outCgg_res_movilidad_ingreso.add(tmpObj);
+			}
+			results.close();
+			stmSelect.close();
+			outCgg_res_movilidad_ingreso = selectPersonaHistorialMovilidadGeneral(inConnection, inCrper_codigo, outCgg_res_movilidad_ingreso);
+		} catch (SQLException e) {
+			SQLErrorHandler.errorHandler(e);
+		}
+		return outCgg_res_movilidad_ingreso;
+	}
+
+	public static ArrayList<HashMap<String, Object>> selectPersonaHistorialMovilidadGeneral(Connection inConnection, String inCrper_codigo, ArrayList<HashMap<String, Object>> inCgg_res_movilidad)
+	{
+		try
+		{
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.f_cgg_res_persona_select_movilidad_general(?) }");
+			stmSelect.registerOutParameter(1, 1111);
+			stmSelect.setString(2, inCrper_codigo);
+			stmSelect.execute();
+			ResultSet results = (ResultSet)stmSelect.getObject(1);
+			int tmpColumnCount = results.getMetaData().getColumnCount();
+			while (results.next()) {
+				HashMap tmpObj = new HashMap();
+				for (int i = 1; i <= tmpColumnCount; i++)
+					if (results.getObject(i) != null)
+						tmpObj.put(results.getMetaData().getColumnName(i).toUpperCase(), results.getObject(i));
+				inCgg_res_movilidad.add(tmpObj);
+			}
+			results.close();
+			stmSelect.close();
+		} catch (SQLException e) {
+			SQLErrorHandler.errorHandler(e);
+		}
+		return inCgg_res_movilidad;
+	}
 
 	/**
 	 * OBTIENE TODOS LOS REGISTROS DE LA TABLA Cgg_res_movilidad QUE CUMPLEN CON EL CRITERIO DE BUSQUEDA.
@@ -1833,6 +2024,57 @@ public class Cgg_res_persona implements Serializable{
 		}
 		return outCgg_res_movilidad;
 	}
+	public static ArrayList<HashMap<String, Object>> selectPersonaHistorialMovilidadInternaIngreso(Connection inConnection, String inCrper_codigo)
+	{
+		ArrayList outCgg_res_movilidad_interna_ingreso = new ArrayList();
+		try {
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.f_cgg_res_persona_select_movilidad_interna_ingreso(?) }");
+			stmSelect.registerOutParameter(1, 1111);
+			stmSelect.setString(2, inCrper_codigo);
+			stmSelect.execute();
+			ResultSet results = (ResultSet)stmSelect.getObject(1);
+			int tmpColumnCount = results.getMetaData().getColumnCount();
+			while (results.next()) {
+				HashMap tmpObj = new HashMap();
+				for (int i = 1; i <= tmpColumnCount; i++)
+					if (results.getObject(i) != null)
+						tmpObj.put(results.getMetaData().getColumnName(i).toUpperCase(), results.getObject(i));
+				outCgg_res_movilidad_interna_ingreso.add(tmpObj);
+			}
+			results.close();
+			stmSelect.close();
+			outCgg_res_movilidad_interna_ingreso = selectPersonaHistorialMovilidadInterna(inConnection, inCrper_codigo, outCgg_res_movilidad_interna_ingreso);
+		} catch (SQLException e) {
+			SQLErrorHandler.errorHandler(e);
+		}
+		return outCgg_res_movilidad_interna_ingreso;
+	}
+
+	public static ArrayList<HashMap<String, Object>> selectPersonaHistorialMovilidadInterna(Connection inConnection, String inCrper_codigo, ArrayList<HashMap<String, Object>> inCgg_res_movilidad_interna)
+	{
+		try
+		{
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.f_cgg_res_persona_select_movilidad_interna(?) }");
+			stmSelect.registerOutParameter(1, 1111);
+			stmSelect.setString(2, inCrper_codigo);
+			stmSelect.execute();
+			ResultSet results = (ResultSet)stmSelect.getObject(1);
+			int tmpColumnCount = results.getMetaData().getColumnCount();
+			while (results.next()) {
+				HashMap tmpObj = new HashMap();
+				for (int i = 1; i <= tmpColumnCount; i++)
+					if (results.getObject(i) != null)
+						tmpObj.put(results.getMetaData().getColumnName(i).toUpperCase(), results.getObject(i));
+				inCgg_res_movilidad_interna.add(tmpObj);
+			}
+			results.close();
+			stmSelect.close();
+		} catch (SQLException e) {
+			SQLErrorHandler.errorHandler(e);
+		}
+		return inCgg_res_movilidad_interna;
+	}
+
 	/**
 	 * CONTABILIZA CUANTOS REGISTROS CUMPLEN CON EL CRITERIO DE BUSQUEDA.
 	 * @param inConnection CONEXION A LA BASE DE DATOS.
@@ -2076,6 +2318,24 @@ public class Cgg_res_persona implements Serializable{
 		}
 		return outCgg_res_residencia;
 	}
+
+	public static int selectPersonaHistorialCount(Connection inConnection, String inKeyword)
+	{
+		int outCount = 0;
+		try
+		{
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.f_cgg_res_persona_count(?) }");
+			stmSelect.registerOutParameter(1, 4);
+			stmSelect.setString(2, inKeyword);
+			stmSelect.execute();
+			outCount = stmSelect.getInt(1);
+			stmSelect.close();
+		} catch (SQLException e) {
+			SQLErrorHandler.errorHandler(e);
+		}
+		return outCount;
+	}
+
 	/**
 	 * CONTABILIZA CUANTOS REGISTROS CUMPLEN CON EL CRITERIO DE BUSQUEDA.
 	 * @param inConnection CONEXION A LA BASE DE DATOS.
@@ -2090,10 +2350,9 @@ public class Cgg_res_persona implements Serializable{
 		int outCount = 0;
 		
 		try{
-			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_PERSONA_SELECT_CONSULTA_GENERAL_COUNT(?,?) }");
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.f_cgg_res_persona_count(?) }");
 			stmSelect.registerOutParameter(1, Types.INTEGER);
 			stmSelect.setString(2, inKeyword);
-			stmSelect.setString(3, inKeyword);
 			stmSelect.execute();
 			outCount = stmSelect.getInt(1);
 			stmSelect.close();

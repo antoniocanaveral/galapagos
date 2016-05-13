@@ -63,7 +63,10 @@ Copiar el archivo _PROJECT_HOME/JbossEAP/startup.sh_ en _JBOSS_HOME_
 **Registrar el Keystore**
 
 En una consola, ubicarse en el directorio _JBOSS_HOME/SII_HOME_<br/>
-Ejecutar el comando: `keytool -genkey -alias cgg_sii -keyalg RSA -validity 1500 -keystore cgg_sii.keystore` la clave preliminar es **siicgg2010**
+
+Para mayor información: https://support.globalsign.com/customer/en/portal/articles/2121490-java-keytool---create-keystore
+
+Ejecutar el comando: `keytool -genkey -alias gobiernogalapagos.gob.ec -keyalg RSA -validity 1500 -keystore cgg_sii.jks` la clave preliminar es **siicgg2010**
 
 ## Compilación
 

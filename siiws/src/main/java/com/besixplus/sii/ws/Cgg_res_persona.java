@@ -1408,7 +1408,7 @@ public class Cgg_res_persona implements Serializable{
 				con.close();
 				throw new SOAPFaultException(SOAPFactory.newInstance().createFault(myInfoMessages.getMessage("sii.seguridad.acceso.negado", null), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
 			}
-			tmpCount = com.besixplus.sii.db.Cgg_res_persona.selectPersonaHistorialCount(con, keyword,inIdentificacion);
+			tmpCount = com.besixplus.sii.db.Cgg_res_persona.selectPersonaHistorialCount(con, keyword);
 			con.setAutoCommit(!ManagerConnection.isDeployed());
 			obj = com.besixplus.sii.db.Cgg_res_persona.selectConsultaGeneralPersona(con,tmpRequest.getUserPrincipal().getName(), start, limit, sort, dir, keyword, inIdentificacion);
 			tmpFormat = new com.besixplus.sii.misc.Formatter(format, obj);
