@@ -489,7 +489,7 @@ function FrmListadoCgg_res_carnet(inDesktop) {
         //iconCls: 'iconImprimir',
         listeners:{
                 click: function () {
-                    abrirNotificacionFinan(tmpPersona.get('CRPER_CODIGO'));
+                    abrirNotificacionFinan(tmpPersona.get('CRPER_CODIGO'),grdCgg_res_carnet.get('CRCNT_CODIGO'));
                 }
             }
     });

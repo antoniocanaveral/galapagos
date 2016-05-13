@@ -6,9 +6,10 @@
  * @base FrmListadoCgg_res_persona
  * @author Besixplus Cia. Ltda.
  */
-function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_RES_PERSONA){
+function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_RES_PERSONA,INRECORD_CGG_RES_CARNET){
     var inSentenciaCgg_res_persona = INSENTENCIA_CGG_RES_PERSONA;
     var inRecordCgg_res_persona=INRECORD_CGG_RES_PERSONA;
+    var inRecordCgg_res_carnet=INRECORD_CGG_RES_CARNET;
     var urlCgg_res_persona=URL_WS+"Cgg_res_persona";
     var tituloCgg_res_persona='Notificaci\u00f3n Area Fianaciera';
     var descCgg_res_persona='El formulario permite visualizar informaci\u00f3n de Notificac\u00f3n a ser enviada';
@@ -81,6 +82,54 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
                 }
                 gsCgg_res_estado_civil.sort('CRECV_DESCRPCION','ASC');
             }
+        }
+    });
+
+    /**
+     * Ext.data.Store Agrupacion de registros de la tabla Cgg_res_carnet por un campo especifico.
+     */
+    var gsCgg_res_carnet = new Ext.data.Store({
+        proxy: new Ext.ux.bsx.SoapProxy({
+            url: URL_WS + "Cgg_res_carnet",
+            method: "selectPageDirect",
+            pagin: true
+        }),
+        remoteSort: true,
+        reader: new Ext.data.JsonReader({
+            id: 'CRCNT_CODIGO',
+            root: 'dataSet',
+            totalProperty: 'totalCount'
+        }, [
+            {name: 'CRCNT_CODIGO'},
+            {name: 'CRPER_CODIGO'},
+            {name: 'CRPER_NUM_DOC_IDENTIFIC'},
+            {name: 'CRPER_NUMERO_RESIDENCIA'},
+            {name: 'CRRSD_CODIGO'},
+            {name: 'CRCOM_CODIGO'},
+            {name: 'CRADJ_CODIGO'},
+            {name: 'CRCNT_SERIE'},
+            {name: 'CRCNT_FECHA_EMISION'},
+            {name: 'CRCNT_FECHA_APROBACION'},
+            {name: 'CRCNT_FECHA_CADUCIDAD'},
+            {name: 'CRCNT_FECHA_DEPOSITO'},
+            {name:'CRCNT_NUMERO_COMP'},
+            {name:'CRCNT_CARNET_IMPRESO'},
+            {name: 'CUENTA'},
+            {name: 'CRCNT_VALOR'},
+            {name: 'CRCNT_OBSERVACION'},
+            {name: 'CKESP_CODIGO'},
+            {name: 'CKESP_REPORTE'},
+            {name: 'AUSPICIANTE'},
+            {name: 'OCUPACION'}
+        ]),
+        sortInfo: {
+            field: 'CRCNT_SERIE',
+            direction: 'ASC'
+        },
+        baseParams: {
+            keyword: "",
+            format: 'JSON',
+            inCrrsd_codigo:''
         }
     });
 
@@ -252,6 +301,7 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
                 if(record.getCount()>0)
                 {
                     inRecordCgg_res_persona = record.getAt(0);
+                    inRecordCgg_res_carnet = record.getAt(0);
                     cargarCgg_res_personaCtrls();
                     cbxCrecv_codigo.setValue(inRecordCgg_res_persona.get('CRECV_CODIGO'));
                     cbxCrdid_codigo.setValue(inRecordCgg_res_persona.get('CRDID_CODIGO'));
@@ -3081,6 +3131,7 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
      */
     function cargarCgg_res_personaCtrls(){
         if(inRecordCgg_res_persona){
+            txtCrper_cobro.setValue(inRecordCgg_res_carnet.get('CRCNT_VALOR'));
             txtCrper_codigo.setValue(inRecordCgg_res_persona.get('CRPER_CODIGO'));
             //  cbxCrecv_codigo.setValue(inRecordCgg_res_persona.get('CRECV_CODIGO'));
             //  cbxCrdid_codigo.setValue(inRecordCgg_res_persona.get('CRDID_CODIGO'));

@@ -28,7 +28,7 @@ function FrmListadoCgg_res_tramite(inDesktop){
         }
     });
 //MO
-   /* var btnNuevoTranseunte = new Ext.Button({
+    var btnNuevoTranseunte = new Ext.Button({
         id:'btnNuevoTranseunte',
         text:'Nuevo transe\u00fante',
         iconCls:'iconNuevoTranseunte',
@@ -41,7 +41,7 @@ function FrmListadoCgg_res_tramite(inDesktop){
                     objCgg_res_tramiteTranseunte.show();
             }
         }
-    });*/
+    });
 
 //
 
@@ -378,9 +378,9 @@ function FrmListadoCgg_res_tramite(inDesktop){
             constrain:true,
             layout:'border',
             iconCls:'iconTramite',
-            bbar:[btnNuevoCgg_res_tramite,btnEditarCgg_res_tramite,btnEliminarCgg_res_tramite,'-',btnReporteCgg_res_tramite,'->',btnSalirCgg_res_tramite]
+            //bbar:[btnNuevoCgg_res_tramite,btnEditarCgg_res_tramite,btnEliminarCgg_res_tramite,'-',btnReporteCgg_res_tramite,'->',btnSalirCgg_res_tramite]
 //MO
-           // /*bbar:[btnNuevoCgg_res_tramite,btnNuevoTranseunte,btnEditarCgg_res_tramite,btnEliminarCgg_res_tramite,'-',btnReporteCgg_res_tramite,'->',btnSalirCgg_res_tramite]*/
+           bbar:[btnNuevoCgg_res_tramite,btnNuevoTranseunte,btnEditarCgg_res_tramite,btnEliminarCgg_res_tramite,'-',btnReporteCgg_res_tramite,'->',btnSalirCgg_res_tramite]
 //
         });
     }else{

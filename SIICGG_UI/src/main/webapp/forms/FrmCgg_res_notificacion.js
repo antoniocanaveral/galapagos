@@ -1617,14 +1617,14 @@ function FrmCgg_res_notificacion(INSENTENCIA_CGG_RES_NOTIFICACION,INRECORD_CGG_R
                 if(isEdit==true && chkCrnot_estado.getValue()==false&&tmpFecha_audiencia && tmp_estado != TypeEstadoNotificacion.EJECUTADA){
                     tmp_estado=TypeEstadoNotificacion.PROCESADA;
                 }
-                if(cbxCrnot_estatus.getValue()==Typeestatus_migratorio.PERMITIDO ){
+                /*if(cbxCrnot_estatus.getValue()==Typeestatus_migratorio.PERMITIDO ){
                     //tmp_estado=TypeEstadoNotificacion.PERMITIDO_INGRESO;
                     if (txtCrres_resolucion.getValue().length == 0)
                     {
                         txtCrres_resolucion.markInvalid("Es necesario seleccionar una resoluci\u00f3n de respaldo");
                         return;
                     }
-                }
+                }*/
 
                 Ext.getCmp('pnlCgg_res_Notificacion').getForm().submit({
                     url: URL_WS + "Cgg_res_notificacionSRV",
@@ -2526,7 +2526,7 @@ function FrmCgg_res_notificacion(INSENTENCIA_CGG_RES_NOTIFICACION,INRECORD_CGG_R
                 btnGuardarCgg_res_notificacion.disable();
 
             }
-            cbxCrnot_estatus.setValue(inRecordCgg_res_notificacion.get('CRNOT_REGULARIZACION'));			
+            //cbxCrnot_estatus.setValue(inRecordCgg_res_notificacion.get('CRNOT_REGULARIZACION'));
             if(inRecordCgg_res_notificacion.get('CRNOT_REGULARIZACION')==Typeestatus_migratorio.PERMITIDO){
                 txtCrres_resolucion.setVisible(true);
                 btnCrres_codigoCgg_res_notificacion.setVisible(true);                
@@ -2543,7 +2543,7 @@ function FrmCgg_res_notificacion(INSENTENCIA_CGG_RES_NOTIFICACION,INRECORD_CGG_R
             dtCrnot_fecha_expulsion.setValue(truncDate(inRecordCgg_res_notificacion.get('CRNOT_FECHA_EXPULSION')));
             isEdit = true;
             //  cbxCanton.hiddenValue = inRecordCgg_res_notificacion.get('CCTN_CODIGO');
-            cbxCrnot_estatus.hiddenValue = inRecordCgg_res_notificacion.get('CRNOT_REGULARIZACION');
+            //cbxCrnot_estatus.hiddenValue = inRecordCgg_res_notificacion.get('CRNOT_REGULARIZACION');
             chkCrnot_estado.hideLabel=false;
             chkCrnot_estado.setVisible(true);
             dtCrnot_fecha_expulsion.setVisible(false);
