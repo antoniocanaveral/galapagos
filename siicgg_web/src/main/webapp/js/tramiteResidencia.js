@@ -245,13 +245,14 @@ $(function() {
     var cbxTipoTramite = new bsxComboBox({
         id:"cbxTipoTramite",
         renderTo:"divTipoTramite",
-        displayField:"CTIPO_NOMBRE",
-        valueField:"CTIPO_CODIGO",
+        displayField:"CISLA_NOMBRE",
+        valueField:"CISLA_CODIGO",
         webService:{
             url:URL_WS+"Cgg_isla",
             method:"selectAllAtencionCliente",
             params:[
                 {name:"format",value:"JSON"}
+
             ]
         },
         events:{
