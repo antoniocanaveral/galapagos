@@ -1,6 +1,5 @@
-package com.bmlaurus.utils;
+package com.bmlaurus.json;
 
-import com.bmlaurus.alfresco.entity.serializer.AlfNodeSerializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
@@ -8,7 +7,6 @@ import com.google.gson.JsonSerializer;
 import com.google.gson.stream.JsonReader;
 
 import java.io.StringReader;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -20,11 +18,12 @@ public class GsonEngineImp implements GsonEngine{
     private Gson gson;
     private Map<String, Object> typeAdapters;
 
-    public GsonEngineImp() {
-        GsonBuilder gsonBuilder = new GsonBuilder()
-                .setDateFormat(GSON_DATE_TIME_FORMAT);
-        //typeAdapters = new HashMap<String, Object>();
-        //typeAdapters.put("com.bmlaurus.alfresco.entity.AlfNode", new AlfNodeSerializer());
+    public GsonEngineImp(Map<String, Object> typeAdapters, String dateFormat) {
+        GsonBuilder gsonBuilder = null;
+        if(dateFormat!=null)
+            gsonBuilder = new GsonBuilder().setDateFormat(dateFormat);
+        else
+            gsonBuilder = new GsonBuilder().setDateFormat(GSON_DATE_TIME_FORMAT);
         if (typeAdapters != null) {
             for (Map.Entry<String, Object> entry : typeAdapters.entrySet()) {
                 try {

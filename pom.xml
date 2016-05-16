@@ -32,5 +32,6 @@
 		<module>SIICGG_UI</module>
 		<module>siicgg_web</module>
 		<module>siiws</module>
-  </modules>
+		<module>sii_jasper_api</module>
+	</modules>
 </project>

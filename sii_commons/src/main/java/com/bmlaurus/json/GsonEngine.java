@@ -1,4 +1,4 @@
-package com.bmlaurus.utils;
+package com.bmlaurus.json;
 
 import com.google.gson.Gson;
 
