@@ -412,5 +412,4 @@ public class Cgg_isla implements Serializable{
 		}
 		return outCgg_isla;
 	}
-
 }

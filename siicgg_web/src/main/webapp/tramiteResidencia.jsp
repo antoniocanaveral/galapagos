@@ -98,6 +98,7 @@ e iniciar un tramite de residencia</div>
 <div id='divIslaTramite'></div>
 </div>
 <label class="obligatorio">(*)</label></li>
+
 <li class="form-line"><label class="form-label-left"
 	id="lblTipoResidencia" for="divTipoResidenciaPadre"> Tipo
 residencia </label>
