@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
 import javax.xml.ws.WebServiceContext;
 import java.io.File;
 import java.io.Serializable;
@@ -24,6 +25,7 @@ import java.util.Properties;
  * Created by acanaveral on 16/5/16.
  */
 @WebService()
+@SOAPBinding(style= SOAPBinding.Style.RPC)
 public class JasperServerService implements Serializable {
     private static final long serialVersionUID = -7120354058063274129L;
 

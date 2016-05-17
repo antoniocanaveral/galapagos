@@ -28,7 +28,7 @@ function Reporte(inReportName,inReportFolder,inParams){
         var jasperResponse = SOAPClient.invoke(URL_WS+'JasperServerService', "validateReport", param, false, null);
 
         if(jasperResponse) {
-            jasperResponse = JSON.toJSON(jasperResponse);
+            jasperResponse = eval("(" + jasperResponse + ')'); //Convierte string a Objeto JSON
             if (jasperResponse.result == true) {
 
                 for (var p in params) {
