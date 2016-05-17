@@ -1,0 +1,5 @@
+$P{SUBREPORT_DIR} + "rptEncabezado.jasper"
+$P{SUBREPORT_DIR} + "rptPie.jasper"
+
+"repo:/Resources/sii/rptEncabezado"
+"repo:/Resources/sii/rptPie"
