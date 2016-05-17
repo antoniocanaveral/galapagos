@@ -1,10 +1,18 @@
 package com.jaspersoft.jasperserver.rest.sample;
 
+import com.besixplus.sii.exception.EnvironmentVariableNotDefinedException;
 import com.besixplus.sii.util.Env;
+import com.bmlaurus.jasper.JasperResponse;
+import com.bmlaurus.jaspersoft.model.ExtraResource;
 import com.bmlaurus.jaspersoft.services.*;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.junit.Test;
 
 import java.io.File;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -14,41 +22,93 @@ public class LocalTests {
 
     @Test
     public void CreatePath(){
-        //CREAMOS LAS CARPETAS BASE
-        Properties config = Env.getExternalProperties("jasper/config.properties");
-        FolderService folderService = null;
-        if(Boolean.valueOf(config.getProperty("INIT_JASPERSERVER"))) {
-            UserService userService = new UserService();
-            userService.verifyUser();
+        System.err.println(validateReport("/Reports/sii/residencia", "rptInformeTecnicoResidencia"));
+    }
 
-            folderService = new FolderService();
-            folderService.getOrCreateFolder(config.getProperty("SII_RESOURCES_PATH"), "sii");
 
-            folderService = new FolderService();
-            folderService.getOrCreateFolder(config.getProperty("SII_REPORTS_PATH"), "sii");
+    private String validateReport(String reportFolder, String reportName){
+        Gson gson = new Gson();
+        JasperResponse response = new JasperResponse(true,null,null);
+        try {
+            //String parentFolder = reportFolder.substring(0, reportFolder.lastIndexOf("/"));
+            reportFolder = reportFolder.substring(reportFolder.lastIndexOf("/")+1,reportFolder.length());
 
-            folderService = new FolderService();
-            folderService.getOrCreateFolder(config.getProperty("SII_DATASOURCE_PATH"), "sii");
+            Properties config = Env.getExternalProperties("jasper/config.properties");
+            FolderService folderService = null;
+            if(Boolean.valueOf(config.getProperty("INIT_JASPERSERVER"))) {
+                UserService userService = new UserService();
+                userService.verifyUser();
+                //CREAMOS LAS CARPETAS BASE
+                folderService = new FolderService();
+                folderService.getOrCreateFolder(config.getProperty("SII_RESOURCES_PATH"), "sii");
 
-            DataSourceService dataSourceService = new DataSourceService();
-            dataSourceService.getOrCreateDataSource();
+                folderService = new FolderService();
+                folderService.getOrCreateFolder(config.getProperty("SII_REPORTS_PATH"), "sii");
 
+                folderService = new FolderService();
+                folderService.getOrCreateFolder(config.getProperty("SII_DATASOURCE_PATH"), "sii");
+                //CREAMOS EL DATASOURCE
+                DataSourceService dataSourceService = new DataSourceService();
+                dataSourceService.getOrCreateDataSource();
+
+                //AGREGAMOS LOS RECURSOS ADICIONALES DEFINIDOS EN EL CONFIG.PROPERTIES
+                Type resoucesListType = new TypeToken<ArrayList<ExtraResource>>() {}.getType();
+                List<ExtraResource> resources = (List<ExtraResource>) gson.fromJson(config.getProperty("SII_EXTRA_RESOURCES_PATHS"), resoucesListType);
+                for(ExtraResource resource:resources){
+                    FileService fileService = new FileService();
+                    String lastFolder = resource.getRemoteFolder().substring(resource.getRemoteFolder().lastIndexOf("/") + 1, resource.getRemoteFolder().length());
+                    List<String> filesToUpload = new ArrayList<>();
+                    if(resource.getLocalFile()==null){
+                        File folder = new File(Env.getHomePath() + config.getProperty("SII_LOCAL_REPOSITORY") + "/" +resource.getLocalFolder());
+                        if(folder.exists()){
+                            for(File inFile: folder.listFiles()){
+                                if(inFile.isFile() && !inFile.getName().equals("Thumbs.db"))
+                                    filesToUpload.add(inFile.getName());
+                            }
+                        }
+                    }else
+                        filesToUpload.add(resource.getLocalFile());
+                    for(String localFile:filesToUpload) {
+                        if (!fileService.touchFile(resource.getRemoteFolder() + "/" + localFile)) {
+                            folderService = new FolderService();
+                            folderService.getOrCreateFolder(resource.getRemoteFolder(), lastFolder);
+
+                            File f = new File(Env.getHomePath() + config.getProperty("SII_LOCAL_REPOSITORY") + "/" + resource.getLocalFolder() + "/" + localFile);
+                            if (f.exists())
+                                fileService.uploadFile(resource.getRemoteFolder(), localFile, f);
+                            else {
+                                response.setResult(false);
+                                response.setErrorMessage("RECURSOS ADICIONALES: El archivo " + localFile + " NO existe localmente");
+                            }
+                        }
+                        if (resource.isReport()) {
+                            JasperService jasperService = new JasperService();
+                            jasperService.getOrCreateJasperReport(lastFolder,localFile.substring(0, localFile.lastIndexOf(".")));
+                        }
+                    }
+                }
+            }
+            FileService fileService = new FileService();
+            if(!fileService.touchFile(config.getProperty("SII_RESOURCES_PATH")+"/"+reportFolder+"/"+reportName+".jrxml")){
+                folderService = new FolderService();
+                folderService.getOrCreateFolder(config.getProperty("SII_RESOURCES_PATH") + "/" + reportFolder, reportFolder);
+
+                File f  = new File(Env.getHomePath()+config.getProperty("SII_LOCAL_REPOSITORY")+"/"+reportFolder+"/"+reportName+".jrxml");
+                if(f.exists())
+                    fileService.uploadFile(config.getProperty("SII_RESOURCES_PATH")+"/"+reportFolder, reportName+".jrxml", f);
+                else{
+                    response.setResult(false);
+                    response.setErrorMessage("El archivo "+reportName+".jrxml NO existe localmente");
+                }
+            }
+
+            JasperService jasperService = new JasperService();
+            jasperService.getOrCreateJasperReport(reportFolder, reportName);
+
+        } catch (EnvironmentVariableNotDefinedException e) {
+            response.setErrorMessage(e.getMessage());
+            response.setResult(false);
         }
-
-        //INICIAMOS UNA TRANSACCION A PARTIR DE LA PETICION:
-        //http://localhost:8081/jasperserver/flow.html?_flowId=viewReportFlow&standAlone=true&j_username=sii&j_password=sii&ParentFolderUri=/Reports/sii/residencia&reportUnit=/Reports/sii/residencia/rptListadoSolicitudesResidenciaReceptados&output=pdf&P_FECHA_INICIAL=20160516045455&P_FECHA_FINAL=20160516045455&P_CUSU_CODIGO=CUSU35510&P_CRTST_CODIGO=CRTST1&P_CRSEC_CODIGO=&P_CRSEG_ESTADO_ATENCION=0
-
-        FileService fileService = new FileService();
-        if(!fileService.touchFile(config.getProperty("SII_RESOURCES_PATH")+"/"+"residencia/rptListadoSolicitudesResidenciaReceptados.jrxml")){
-            folderService = new FolderService();
-            folderService.getOrCreateFolder(config.getProperty("SII_RESOURCES_PATH")+"/"+"residencia","residencia");
-
-            File f = new File("/Users/acanaveral/Desarrollo/Advance/fuentes/galapagos_ws/galapagos/doc/reports/residencia/rptListadoSolicitudesResidenciaReceptados.jrxml");
-            fileService.uploadFile(config.getProperty("SII_RESOURCES_PATH")+"/"+"residencia", "rptListadoSolicitudesResidenciaReceptados.jrxml", f);
-        }
-
-        JasperService jasperService = new JasperService();
-        jasperService.getOrCreateJasperReport("residencia","rptListadoSolicitudesResidenciaReceptados");
-
+        return gson.toJson(response);
     }
 }
