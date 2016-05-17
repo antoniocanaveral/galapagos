@@ -125,6 +125,7 @@ public abstract class BasePublicAPI {
     }
 
     private URI createURI(String path, List<NameValuePair> qparams) throws Exception{
+        path = path.replace(" ","%20");
         URI uri;
         if (qparams!=null)
             uri = URIUtils.createURI(config.getProperty("SCHEME"), config.getProperty("HOST"), Integer.valueOf(config.getProperty("PORT")), path, URLEncodedUtils.format(qparams, "UTF-8"), null);

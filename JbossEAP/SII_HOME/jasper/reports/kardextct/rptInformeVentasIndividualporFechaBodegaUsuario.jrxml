@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="ireport.jasperserver.reportUnit" value="/Reports/sii/kardex/rptInformeVentasIndividualporFechaBodegaUsuario"/>
+	<property name="ireport.jasperserver.url" value="https://190.95.187.82/jasperserver/services/repository"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["E:\\CGG\\APP\\REPORTS\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CKVNT_NUMERO_VENTA" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CKPVT_CODIGO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_FECHA_INICIAL" class="java.util.Date"/>
+	<parameter name="P_FECHA_FINAL" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[SELECT DISTINCT
+VEN.CKVNT_CODIGO,
+VEN.CKVNT_NUMERO_VENTA,
+VEN.CKVNT_FECHA_INGRESO::DATE CKVNT_FECHA_INGRESO,
+'Especies vendidas por: ' ||
+(SELECT SII.F_CGG_RES_PERSONA_SELECT_NOMBRES(USU.CRPER_CODIGO)
+ FROM SII.CGG_USUARIO USU
+ INNER JOIN SII.CGG_KDX_USUARIO_PV USP ON(USP.CUSU_CODIGO=USU.CUSU_CODIGO)
+ WHERE USP.CKUPV_CODIGO=ASI.CGG_CKUPV_CODIGO
+) AS DETALLE,
+PVE.CKPVT_NOMBRE,
+'Si' CONTABILIZADA,
+(SELECT USU.CUSU_NOMBRE_USUARIO
+ FROM SII.CGG_USUARIO USU
+ INNER JOIN SII.CGG_KDX_USUARIO_PV USP ON(USP.CUSU_CODIGO=USU.CUSU_CODIGO)
+ WHERE USP.CKUPV_CODIGO=ASI.CGG_CKUPV_CODIGO
+) AS CUSU_NOMBRE_USUARIO_PV
+FROM SII.CGG_KDX_VENTA VEN
+INNER JOIN SII.CGG_KDX_ASIGNACION ASI ON(ASI.CKASG_CODIGO=VEN.CKASG_CODIGO)
+INNER JOIN SII.CGG_KDX_USUARIO_PV UPV ON(UPV.CKUPV_CODIGO=ASI.CGG_CKUPV_CODIGO)
+INNER JOIN SII.CGG_KDX_PUNTO_VENTA PVE ON(PVE.CKPVT_CODIGO=UPV.CKPVT_CODIGO)
+WHERE VEN.CKVNT_ESTADO
+AND (LENGTH($P{P_CKVNT_NUMERO_VENTA})=0 OR VEN.CKVNT_NUMERO_VENTA=$P{P_CKVNT_NUMERO_VENTA})
+AND (LENGTH($P{P_CKPVT_CODIGO})=0 OR PVE.CKPVT_CODIGO=$P{P_CKPVT_CODIGO})
+AND ((LENGTH($P{P_FECHA_INICIAL}::VARCHAR)=0 AND LENGTH($P{P_FECHA_FINAL}::VARCHAR)=0) OR (VEN.CKVNT_FECHA_INGRESO::DATE BETWEEN $P{P_FECHA_INICIAL} AND $P{P_FECHA_FINAL}))
+ORDER BY PVE.CKPVT_NOMBRE,CKVNT_NUMERO_VENTA,CKVNT_FECHA_INGRESO,DETALLE DESC]]>
+	</queryString>
+	<field name="ckvnt_codigo" class="java.lang.String"/>
+	<field name="ckvnt_numero_venta" class="java.lang.String"/>
+	<field name="ckvnt_fecha_ingreso" class="java.sql.Date"/>
+	<field name="detalle" class="java.lang.String"/>
+	<field name="ckpvt_nombre" class="java.lang.String"/>
+	<field name="contabilizada" class="java.lang.String"/>
+	<field name="cusu_nombre_usuario_pv" class="java.lang.String"/>
+	<variable name="V_FECHA_ACTUAL" class="java.util.Date">
+		<variableExpression><![CDATA[new Date()]]></variableExpression>
+	</variable>
+	<variable name="V_TOTAL_REGISTROS" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{REPORT_COUNT}]]></variableExpression>
+	</variable>
+	<variable name="vFilaActual" class="java.lang.Integer" resetType="None" incrementType="Report" calculation="Sum">
+		<variableExpression><![CDATA[new BigDecimal($V{vFilaActual}.intValue()+1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<group name="gPuntoVenta">
+		<groupExpression><![CDATA[$F{ckpvt_nombre}]]></groupExpression>
+		<groupHeader>
+			<band height="31">
+				<textField>
+					<reportElement x="0" y="11" width="802" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.String"><![CDATA["Punto de Venta: "+$F{ckpvt_nombre}.toUpperCase()]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="gNumeroVenta">
+		<groupExpression><![CDATA[$F{ckvnt_numero_venta}]]></groupExpression>
+		<groupHeader>
+			<band height="22">
+				<staticText>
+					<reportElement x="3" y="0" width="66" height="22"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[  Nº Venta]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="69" y="0" width="100" height="22"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Fecha]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="169" y="0" width="307" height="22"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Detalle]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="476" y="0" width="133" height="22"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Bodega]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="609" y="0" width="85" height="22"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Contabilizado]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="694" y="0" width="108" height="22"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Usuario]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="110">
+				<staticText>
+					<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="802" height="22"/>
+					<box leftPadding="5">
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Detalle de la Venta:]]></text>
+				</staticText>
+				<subreport>
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="22" width="802" height="88"/>
+					<subreportParameter name="P_CKVNT_CODIGO">
+						<subreportParameterExpression><![CDATA[$F{ckvnt_codigo}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression class="java.lang.String"><![CDATA["repo:rptInformeDetalleVenta"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="20" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="802" height="20"/>
+				<subreportParameter name="SUBREPORT_DIR"/>
+				<subreportParameter name="P_SUBTITULO_2">
+					<subreportParameterExpression><![CDATA["Desde " + new java.text.SimpleDateFormat("dd/MM/yyyy").format($P{P_FECHA_INICIAL})+ " hasta " + new java.text.SimpleDateFormat("dd/MM/yyyy").format($P{P_FECHA_FINAL})]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="P_SUBTITULO_1">
+					<subreportParameterExpression><![CDATA["Informe de Ventas Individual"]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptEncabezadoHor"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="3" y="0" width="66" height="20"/>
+				<box leftPadding="5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ckvnt_numero_venta}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="69" y="0" width="100" height="20"/>
+				<box leftPadding="5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{ckvnt_fecha_ingreso}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="169" y="0" width="307" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{detalle}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="476" y="0" width="133" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ckpvt_nombre}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="609" y="0" width="85" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{contabilizada}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="694" y="0" width="108" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cusu_nombre_usuario_pv}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="52" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="18" width="802" height="13"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptPieHor"]]></subreportExpression>
+			</subreport>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="3" y="3" width="120" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="2" y="1" width="800" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="738" y="1" width="23" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Pág.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="761" y="1" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="786" y="1" width="16" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="774" y="1" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[de ]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

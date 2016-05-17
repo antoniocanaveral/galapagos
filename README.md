@@ -18,3 +18,5 @@ Nuevo Branch de Desarrollo a partir de aqui.
 - SII_HOME carpeta global externa para almacenar archivos de propiedades
 - Api para manejo de JasperServer
 - Inclusion de archivo de configuracion de JasperServer en SII_HOME/jasper
+- Se movieron los reportes a SII_HOME/jasper
+- Servicio de Inicialización de JasperServer controlado desde el archivo de configuración

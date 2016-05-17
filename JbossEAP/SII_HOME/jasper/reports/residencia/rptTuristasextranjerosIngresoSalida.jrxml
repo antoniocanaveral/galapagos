@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.2100000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\SII\\REPORTS\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_FECHA_INICIAL" class="java.util.Date"/>
+	<parameter name="P_FECHA_FINAL" class="java.util.Date"/>
+	<parameter name="P_CRALN_CODIGO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+
+	R.CRMOV_TIPO_OPERACION,
+	R.CISLA_NOMBRE,
+	R.CRTST_DESCRIPCION,
+	R.CRALN_NOMBRE,
+	R.CRMOV_NUMERO_VUELO,
+
+	COUNT(R.CRMOV_CODIGO)
+FROM(
+	SELECT
+
+	C1.CRMOV_TIPO_OPERACION,
+	C1.CRALN_NOMBRE,
+	C1.CISLA_NOMBRE,
+	C1.CRMOV_NUMERO_VUELO,
+	(SELECT SOL.CRTST_DESCRIPCION FROM SII.CGG_RES_TIPO_SOLICITUD_TRAMITE SOL WHERE SOL.CRTST_CODIGO = C1.CRTST_CODIGO_PADRE) CRTST_DESCRIPCION,
+	C1.CRMOV_CODIGO
+	FROM (
+		SELECT
+
+			M.CRMOV_NUMERO_VUELO,
+			CASE M.CRMOV_TIPO_OPERACION
+			WHEN 0 THEN 'ENTRADA'
+			WHEN 1 THEN 'SALIDA'
+			END CRMOV_TIPO_OPERACION,
+			SII.F_TIPO_SOLICITUD_PADRE(R.CRTST_CODIGO) CRTST_CODIGO_PADRE,
+			(SELECT AR.CRALN_NOMBRE FROM SII.CGG_RES_AEROLINEA AR WHERE AR.CRALN_CODIGO = M.CRALN_CODIGO) CRALN_NOMBRE,
+			(SELECT C.CCTN_NOMBRE
+			FROM SII.CGG_CANTON C
+			WHERE C.CCTN_CODIGO = (SELECT A.CCTN_CODIGO
+						FROM SII.CGG_RES_AEROPUERTO A
+						WHERE A.CARPT_CODIGO = M.CARPT_CODIGO)) CISLA_NOMBRE,
+			M.CRMOV_CODIGO
+		FROM SII.CGG_RES_MOVILIDAD M
+		INNER JOIN SII.CGG_RES_RESIDENCIA R ON (M.CRRSD_CODIGO = R.CRRSD_CODIGO)
+		INNER JOIN SII.CGG_RES_PERSONA P ON (R.CRPER_CODIGO = P.CRPER_CODIGO)
+		AND DATE(M.CRMOV_FECHA_VIAJE) BETWEEN $P{P_FECHA_INICIAL} AND $P{P_FECHA_FINAL}
+		AND M.CRALN_CODIGO=$P{P_CRALN_CODIGO}
+
+		AND P.CGNCN_CODIGO != (SELECT UPPER(TRIM(CGCNF_VALOR_CADENA))
+					FROM SII.CGG_CONFIGURACION 								WHERE CGCNF_CODIGO = 'CONF36')
+
+
+		AND (SELECT SII.F_TIPO_SOLICITUD_PADRE(R.CRTST_CODIGO)) IN
+			(SELECT TRIM(CGCNF_VALOR_CADENA)
+			FROM SII.CGG_CONFIGURACION
+			WHERE CGCNF_CODIGO IN ('06') )
+	)AS C1
+)AS R
+GROUP BY CISLA_NOMBRE, CRMOV_TIPO_OPERACION,CRTST_DESCRIPCION,CRALN_NOMBRE,CRMOV_NUMERO_VUELO]]>
+	</queryString>
+	<field name="crmov_tipo_operacion" class="java.lang.String"/>
+	<field name="cisla_nombre" class="java.lang.String"/>
+	<field name="crtst_descripcion" class="java.lang.String"/>
+	<field name="craln_nombre" class="java.lang.String"/>
+	<field name="crmov_numero_vuelo" class="java.lang.String"/>
+	<field name="count" class="java.lang.Long"/>
+	<variable name="V_FECHA_ACTUAL" class="java.util.Date">
+		<variableExpression><![CDATA[new Date()]]></variableExpression>
+	</variable>
+	<variable name="V_TOTAL_REGISTROS" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{REPORT_COUNT}]]></variableExpression>
+	</variable>
+	<variable name="vFilaActual" class="java.lang.Integer" incrementType="Report" calculation="Sum">
+		<variableExpression><![CDATA[new BigDecimal($V{vFilaActual}.intValue()+1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="20" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="554" height="20"/>
+				<subreportParameter name="SUBREPORT_DIR"/>
+				<subreportParameter name="P_SUBTITULO_2">
+					<subreportParameterExpression><![CDATA["Desde " + new java.text.SimpleDateFormat("dd/MM/yyyy").format($P{P_FECHA_INICIAL})+ " hasta " + new java.text.SimpleDateFormat("dd/MM/yyyy").format($P{P_FECHA_FINAL})]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="P_SUBTITULO_1">
+					<subreportParameterExpression><![CDATA["Listado total de turistas extranjeros"]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptEncabezado"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="11" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="24" splitType="Stretch">
+			<staticText>
+				<reportElement x="5" y="4" width="49" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Aerolínea:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="64" y="4" width="90" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{craln_nombre}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="4" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="4" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="46" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="18" width="554" height="13"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptPie"]]></subreportExpression>
+			</subreport>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="3" y="3" width="120" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="2" y="1" width="552" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="488" y="0" width="23" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Pág.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="511" y="0" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="536" y="0" width="16" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="524" y="0" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[de ]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="151" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="10" width="554" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Turistas Extranjeros]]></text>
+			</staticText>
+			<crosstab>
+				<reportElement x="0" y="30" width="552" height="116"/>
+				<rowGroup name="crmov_tipo_operacion" width="70" totalPosition="End">
+					<bucket>
+						<bucketExpression class="java.lang.String"><![CDATA[$F{crmov_tipo_operacion}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="70" height="50"/>
+								<textElement verticalAlignment="Middle">
+									<font size="9" isBold="true"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$V{crmov_tipo_operacion}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#005FB3" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="140" height="25" forecolor="#FFFFFF"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Total Ingresos & Salidas]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="crmov_numero_vuelo" width="70" totalPosition="End">
+					<bucket>
+						<bucketExpression class="java.lang.String"><![CDATA[$F{crmov_numero_vuelo}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="29" y="1" width="41" height="24"/>
+								<textElement verticalAlignment="Middle">
+									<font size="9" isBold="false"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$V{crmov_numero_vuelo}]]></textFieldExpression>
+							</textField>
+							<staticText>
+								<reportElement style="Crosstab Data Text" x="0" y="1" width="29" height="24"/>
+								<textElement verticalAlignment="Middle">
+									<font size="9" isBold="false"/>
+								</textElement>
+								<text><![CDATA[Vuelo]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="70" height="25"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Total ]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="cisla_nombre" height="30" totalPosition="End">
+					<bucket>
+						<bucketExpression class="java.lang.String"><![CDATA[$F{cisla_nombre}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="63" height="30"/>
+								<textElement verticalAlignment="Middle">
+									<font size="9" isBold="true"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$V{cisla_nombre}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="50" height="30"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Total ]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="countMeasure" class="java.lang.Long" calculation="Sum">
+					<measureExpression><![CDATA[$F{count}]]></measureExpression>
+				</measure>
+				<crosstabCell width="63" height="25">
+					<cellContents>
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="63" height="25"/>
+							<textElement verticalAlignment="Middle">
+								<font size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.Long"><![CDATA[$V{countMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="63" height="25" rowTotalGroup="crmov_tipo_operacion">
+					<cellContents backcolor="#005FB3" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="63" height="25" forecolor="#FFFFFF"/>
+							<textElement verticalAlignment="Middle">
+								<font isBold="true"/>
+							</textElement>
+							<textFieldExpression class="java.lang.Long"><![CDATA[$V{countMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="50" height="25" columnTotalGroup="cisla_nombre">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25"/>
+							<textElement verticalAlignment="Middle">
+								<font isBold="true"/>
+							</textElement>
+							<textFieldExpression class="java.lang.Long"><![CDATA[$V{countMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell height="25" rowTotalGroup="crmov_tipo_operacion" columnTotalGroup="cisla_nombre">
+					<cellContents backcolor="#005FB3" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" forecolor="#FFFFFF"/>
+							<textElement verticalAlignment="Middle">
+								<font isBold="true"/>
+							</textElement>
+							<textFieldExpression class="java.lang.Long"><![CDATA[$V{countMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="63" height="25" rowTotalGroup="crmov_numero_vuelo">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="63" height="25"/>
+							<textElement verticalAlignment="Middle"/>
+							<textFieldExpression class="java.lang.Long"><![CDATA[$V{countMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="crmov_numero_vuelo" columnTotalGroup="cisla_nombre">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25"/>
+							<textElement verticalAlignment="Middle">
+								<font isBold="true"/>
+							</textElement>
+							<textFieldExpression class="java.lang.Long"><![CDATA[$V{countMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+		</band>
+	</summary>
+</jasperReport>

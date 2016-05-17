@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptListadoIngresoTuristaNacionalGalapagos" language="groovy" pageWidth="595" pageHeight="842" columnWidth="585" leftMargin="5" rightMargin="5" topMargin="5" bottomMargin="5">
+	<property name="ireport.zoom" value="1.1"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="ireport.jasperserver.reportUnit" value="/Reports/sii/gerencial/rptEstadisticoIngresoTctTuristaNacional"/>
+	<property name="ireport.jasperserver.url" value="http://190.95.187.82:8081/jasperserver/services/repository"/>
+	<parameter name="P_FECHA_INICIAL" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_FECHA_FINAL" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+		M.CTREG_IMPRESION_ESPECIE,
+		CTREG_NUMERO,
+		(COALESCE(P.CRPER_NOMBRES,'')||' '||COALESCE(P.CRPER_APELLIDO_MATERNO,'')||' '||COALESCE(P.CRPER_APELLIDO_MATERNO,''))CRPER_NOMBRES,
+		P.CRPER_NUM_DOC_IDENTIFIC,
+		(SELECT COALESCE(A.CRALN_NOMBRE,'') FROM CGG_RES_AEROLINEA A WHERE M.CRALN_CODIGO=A.CRALN_CODIGO)AEROLINEA,
+		C.CCTN_NOMBRE CISLA_NOMBRE,
+		M.CTREG_CODIGO
+	FROM SII.CGG_TCT_REGISTRO M
+	INNER JOIN SII.CGG_RES_PERSONA P ON (M.CRPER_CODIGO = P.CRPER_CODIGO)
+	INNER JOIN SII.CGG_RES_AEROPUERTO A ON (A.CARPT_CODIGO = M.CGG_CARPT_CODIGO)
+	INNER JOIN SII.CGG_CANTON C ON (C.CCTN_CODIGO = A.CCTN_CODIGO)
+	WHERE CTREG_ESTADO_REGISTRO = 1
+	AND C.CGPRV_CODIGO = '9'
+	AND M.CGG_CARPT_CODIGO IS NOT NULL
+	AND M.CTREG_IMPRESION_ESPECIE::DATE BETWEEN $P{P_FECHA_INICIAL} AND $P{P_FECHA_FINAL}
+	AND P.CGNCN_CODIGO = (SELECT CGCNF_VALOR_CADENA FROM SII.CGG_CONFIGURACION WHERE CGCNF_CODIGO='CONF36')
+	ORDER BY CISLA_NOMBRE,M.CTREG_IMPRESION_ESPECIE DESC]]>
+	</queryString>
+	<field name="ctreg_impresion_especie" class="java.sql.Timestamp"/>
+	<field name="ctreg_numero" class="java.lang.Long"/>
+	<field name="crper_nombres" class="java.lang.String"/>
+	<field name="crper_num_doc_identific" class="java.lang.String"/>
+	<field name="aerolinea" class="java.lang.String"/>
+	<field name="cisla_nombre" class="java.lang.String"/>
+	<field name="ctreg_codigo" class="java.lang.String"/>
+	<variable name="V_FILA" class="java.math.BigDecimal" resetType="Group" resetGroup="ISLA">
+		<variableExpression><![CDATA[new BigDecimal($V{V_FILA}.intValue()+1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<group name="ISLA">
+		<groupExpression><![CDATA[$F{cisla_nombre}]]></groupExpression>
+		<groupHeader>
+			<band height="40">
+				<textField>
+					<reportElement x="25" y="0" width="100" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{cisla_nombre}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="1" y="0" width="22" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Isla:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="135" y="20" width="67" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Identificación]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="202" y="20" width="175" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nombres]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="377" y="20" width="112" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[AerolÍnea]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="71" y="20" width="64" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[N° registro]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="489" y="20" width="67" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[F. Impresión]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="36" y="20" width="35" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[N°]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20">
+				<textField>
+					<reportElement x="489" y="0" width="45" height="18"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{V_FILA}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="448" y="0" width="41" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[TOTAL:]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="37" y="2" width="34" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{V_FILA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="135" y="0" width="67" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_num_doc_identific}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="202" y="0" width="175" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_nombres}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="389" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{aerolinea}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="36" y="20" width="510" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="71" y="0" width="64" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{ctreg_numero}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy " isBlankWhenNull="true">
+				<reportElement x="489" y="1" width="67" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{ctreg_impresion_especie}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

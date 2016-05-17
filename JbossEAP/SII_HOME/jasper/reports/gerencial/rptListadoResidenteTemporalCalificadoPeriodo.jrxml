@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptListadoResidenteTemporalCalificadoPeriodo" language="groovy" pageWidth="595" pageHeight="842" columnWidth="585" leftMargin="5" rightMargin="5" topMargin="5" bottomMargin="5">
+	<property name="ireport.zoom" value="1.0000000000000004"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="P_FECHA_INICIAL" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_FECHA_FINAL" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+	TO_CHAR(R.CRRSD_FECHA_INICIO,'dd/mm/yyyy'),
+	R.CISLA_NOMBRE,
+	R.CRRSD_NUMERO,
+	R.CRPER_NOMBRES,
+	R.CRPER_NUM_DOC_IDENTIFIC
+
+FROM(
+	SELECT
+		RES.CRRSD_NUMERO,
+		(SELECT COALESCE(P.CRPER_NOMBRES,'')||' ' ||COALESCE(P.CRPER_APELLIDO_PATERNO,'')||' '||COALESCE(P.CRPER_APELLIDO_Materno,'')
+		 FROM CGG_RES_PERSONA P
+		 WHERE P.CRPER_CODIGO = RES.CRPER_CODIGO)CRPER_NOMBRES,
+		 (SELECT COALESCE(P.CRPER_NUM_DOC_IDENTIFIC,'')
+		 FROM CGG_RES_PERSONA P
+		 WHERE P.CRPER_CODIGO = RES.CRPER_CODIGO)CRPER_NUM_DOC_IDENTIFIC,
+		RES.CRRSD_CODIGO,
+		SII.F_TIPO_SOLICITUD_PADRE(RES.CRTST_CODIGO) CRTST_CODIGO_PADRE,
+		(SELECT I.CISLA_NOMBRE FROM SII.CGG_ISLA I WHERE I.CISLA_CODIGO = TR.CISLA_CODIGO) CISLA_NOMBRE,
+		RES.CRRSD_FECHA_INICIO
+	FROM CGG_RES_RESIDENCIA RES
+	INNER JOIN CGG_RES_TRAMITE TR ON (RES.CRTRA_CODIGO=TR.CRTRA_CODIGO)
+	WHERE CRRSD_ESTADO  = TRUE
+	AND DATE(RES.CRRSD_FECHA_INICIO) BETWEEN $P{P_FECHA_INICIAL} AND $P{P_FECHA_FINAL}
+	ORDER BY RES.CRRSD_FECHA_INICIO ASC
+)AS R
+WHERE R.CRTST_CODIGO_PADRE = (SELECT CGCNF_VALOR_CADENA FROM SII.CGG_CONFIGURACION WHERE CGCNF_CODIGO = '04')
+ORDER BY R.CISLA_NOMBRE]]>
+	</queryString>
+	<field name="to_char" class="java.lang.String"/>
+	<field name="cisla_nombre" class="java.lang.String"/>
+	<field name="crrsd_numero" class="java.lang.Long"/>
+	<field name="crper_nombres" class="java.lang.String"/>
+	<field name="crper_num_doc_identific" class="java.lang.String"/>
+	<variable name="V_FILA" class="java.math.BigDecimal" resetType="Group" resetGroup="ISLA">
+		<variableExpression><![CDATA[new BigDecimal($V{V_FILA}.intValue()+1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<group name="ISLA">
+		<groupExpression><![CDATA[$F{cisla_nombre}]]></groupExpression>
+		<groupHeader>
+			<band height="40">
+				<staticText>
+					<reportElement x="0" y="0" width="31" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Isla:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="31" y="0" width="524" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{cisla_nombre}.toUpperCase()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="94" y="20" width="80" height="20"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[# Identificación]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="174" y="20" width="150" height="20"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nombres]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="324" y="20" width="90" height="20"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[# residencia]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="414" y="20" width="89" height="20"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Feha residencia]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="65" y="20" width="29" height="20"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nº]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20">
+				<textField>
+					<reportElement x="416" y="0" width="89" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{V_FILA}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="336" y="0" width="80" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<text><![CDATA[Total:]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="25" splitType="Stretch">
+			<textField>
+				<reportElement x="104" y="0" width="70" height="25"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_num_doc_identific}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="174" y="0" width="150" height="25"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_nombres}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="336" y="0" width="78" height="25"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{crrsd_numero}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="414" y="0" width="90" height="25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{to_char}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="65" y="0" width="29" height="25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{V_FILA}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="63" y="24" width="435" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

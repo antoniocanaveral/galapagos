@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.3310000000000015"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="ireport.jasperserver.reportUnit" value="/Reports/sii/comite/rptSesionesRealizadasporPeriodo"/>
+	<property name="ireport.jasperserver.url" value="http://190.95.187.82:8081/jasperserver/services/repository"/>
+	<parameter name="P_FECHA_INICIAL" class="java.sql.Timestamp"/>
+	<parameter name="P_FECHA_FINAL" class="java.sql.Timestamp"/>
+	<parameter name="P_CISLA_CODIGO" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\SII\\REPORTS\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+	(SELECT RCOM.CRCOM_NOMBRE
+	 FROM SII.CGG_RES_COMITE RCOM
+	 WHERE RCOM.CRCOM_CODIGO = RSCO.CRCOM_CODIGO ) AS CRCOM_NOMBRE,
+
+	(SELECT ISL.CISLA_NOMBRE
+	 FROM SII.CGG_ISLA ISL
+	 WHERE ISL.CISLA_CODIGO = RSCO.CISLA_CODIGO) AS CISLA_NOMBRE,
+
+	 RSCO.CRSSC_NUMERO_SESION,
+	 RSCO.CRSSC_FECHA_REUNION,
+	 RSCO.CRSSC_FECHA_FINALIZACION,
+	 RSCO.CRSSC_EXTRACTO,
+CASE
+ WHEN RSCO.CRSSC_ESTADO_CONVOCATORIA = 0 THEN 'REGISTRADA'
+ WHEN RSCO.CRSSC_ESTADO_CONVOCATORIA = 1 THEN 'APROBADA'
+ WHEN RSCO.CRSSC_ESTADO_CONVOCATORIA = 2 THEN 'ANULADA'
+ WHEN RSCO.CRSSC_ESTADO_CONVOCATORIA = 3 THEN 'EN PROCESO'
+ WHEN RSCO.CRSSC_ESTADO_CONVOCATORIA = 4 THEN 'SUSPENDIDA'
+ WHEN RSCO.CRSSC_ESTADO_CONVOCATORIA = 5 THEN 'CONCLUIDA'
+END AS CRSSC_ESTADO_CONVOCATORIA
+FROM SII.CGG_RES_SESION_COMITE RSCO
+WHERE RSCO.CRSSC_ESTADO=TRUE
+AND RSCO.CRSSC_FECHA_REUNION::DATE BETWEEN $P{P_FECHA_INICIAL} AND $P{P_FECHA_FINAL}
+AND (LENGTH($P{P_CISLA_CODIGO})=0 OR RSCO.CISLA_CODIGO = $P{P_CISLA_CODIGO})
+ORDER BY CISLA_NOMBRE,CRCOM_NOMBRE,CRSSC_ESTADO_CONVOCATORIA,RSCO.CRSSC_FECHA_REUNION]]>
+	</queryString>
+	<field name="crcom_nombre" class="java.lang.String"/>
+	<field name="cisla_nombre" class="java.lang.String"/>
+	<field name="crssc_numero_sesion" class="java.lang.String"/>
+	<field name="crssc_fecha_reunion" class="java.sql.Timestamp"/>
+	<field name="crssc_fecha_finalizacion" class="java.sql.Timestamp"/>
+	<field name="crssc_extracto" class="java.lang.String"/>
+	<field name="crssc_estado_convocatoria" class="java.lang.String"/>
+	<variable name="V_FILA" class="java.math.BigDecimal" resetType="Group" resetGroup="Estado_Convocatoria" calculation="Count">
+		<variableExpression><![CDATA[new BigDecimal($V{V_FILA}.intValue()+1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<variable name="V_FECHA_ACTUAL" class="java.util.Date">
+		<variableExpression><![CDATA[new Date()]]></variableExpression>
+	</variable>
+	<variable name="V_total" class="java.math.BigDecimal" resetType="Group" resetGroup="g_NombreComite" calculation="Count">
+		<variableExpression><![CDATA[new BigDecimal($V{V_FILA}.intValue()+1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<variable name="V_TOTALISLA" class="java.math.BigDecimal" resetType="Group" resetGroup="ISLA" calculation="Count">
+		<variableExpression><![CDATA[new BigDecimal($V{V_FILA}.intValue()+1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<group name="ISLA">
+		<groupExpression><![CDATA[$F{cisla_nombre}]]></groupExpression>
+		<groupHeader>
+			<band height="21">
+				<staticText>
+					<reportElement x="0" y="0" width="30" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Isla:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="29" y="0" width="524" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{cisla_nombre}.toUpperCase()]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+			<band height="21">
+				<textField>
+					<reportElement x="103" y="0" width="269" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["TOTAL DE SESIONES EN "+ $F{cisla_nombre}.toUpperCase() +":  "]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="385" y="1" width="86" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{V_TOTALISLA}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="g_NombreComite">
+		<groupExpression><![CDATA[$F{crcom_nombre}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<staticText>
+					<reportElement x="10" y="0" width="60" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Comité de:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="70" y="0" width="484" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{crcom_nombre}.toUpperCase()]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="23">
+				<staticText>
+					<reportElement x="187" y="0" width="185" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total de comité:   ]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="385" y="0" width="86" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{V_total}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Estado_Convocatoria">
+		<groupExpression><![CDATA[$F{crssc_estado_convocatoria}]]></groupExpression>
+		<groupHeader>
+			<band height="43">
+				<staticText>
+					<reportElement x="70" y="23" width="93" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nº Sesión]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="163" y="23" width="75" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Fecha inicio]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="238" y="23" width="87" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Fecha finalización]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="325" y="23" width="146" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Extracto]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="29" y="0" width="100" height="20"/>
+					<box>
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Estado convocatoria:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="50" y="23" width="20" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nº]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="129" y="0" width="359" height="20" isPrintWhenDetailOverflows="true"/>
+					<textElement verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{crssc_estado_convocatoria}.toUpperCase()]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20">
+				<textField>
+					<reportElement x="385" y="0" width="86" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$V{V_FILA}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="227" y="0" width="145" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[SubTotal de convocatoria:   ]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="20" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="554" height="20"/>
+				<subreportParameter name="SUBREPORT_DIR"/>
+				<subreportParameter name="P_SUBTITULO_2">
+					<subreportParameterExpression><![CDATA["Desde " + new java.text.SimpleDateFormat("dd/MM/yyyy").format($P{P_FECHA_INICIAL})+ " hasta " + new java.text.SimpleDateFormat("dd/MM/yyyy").format($P{P_FECHA_FINAL})]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="P_SUBTITULO_1">
+					<subreportParameterExpression><![CDATA["Listado de sesiones por período"]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptEncabezado"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="12" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="7" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="25" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="70" y="0" width="93" height="24" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crssc_numero_sesion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy " isBlankWhenNull="true">
+				<reportElement x="163" y="0" width="75" height="24" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{crssc_fecha_reunion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy " isBlankWhenNull="true">
+				<reportElement x="238" y="0" width="88" height="24" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{crssc_fecha_finalizacion}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="326" y="0" width="145" height="24" isPrintWhenDetailOverflows="true"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crssc_extracto}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" x="50" y="24" width="421" height="1" isPrintWhenDetailOverflows="true"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="50" y="1" width="20" height="23"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{V_FILA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="52" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="18" width="554" height="13"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptPie"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement x="511" y="3" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="488" y="3" width="23" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Pág.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="524" y="3" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[de ]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="3" y="3" width="120" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="2" y="1" width="552" height="1"/>
+			</line>
+			<textField evaluationTime="Report">
+				<reportElement x="536" y="3" width="13" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

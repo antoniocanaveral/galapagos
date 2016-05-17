@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptListadoTramitesNegadosComiteVehiculosPeriodo" language="groovy" pageWidth="595" pageHeight="842" columnWidth="585" leftMargin="5" rightMargin="5" topMargin="5" bottomMargin="5">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="ireport.jasperserver.reportUnit" value="/Reports/sii/gerencial/rptEstadisticoTramitesNegadosComiteVehiculosPeriodo"/>
+	<property name="ireport.jasperserver.url" value="http://190.95.187.82:8081/jasperserver/services/repository"/>
+	<parameter name="P_FECHA_INICIAL" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_FECHA_FINAL" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CRCOM_CODIGO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+	(   (SELECT COALESCE(CRPER_NOMBRES,'')||' '||COALESCE(CRPER_APELLIDO_PATERNO,'')||' '||COALESCE(CRPER_APELLIDO_MATERNO,'')
+		    FROM CGG_RES_PERSONA P
+		    WHERE TRA.CRPER_CODIGO=P.CRPER_CODIGO)
+	||' '||
+	    (SELECT COALESCE(PJ.CRPJR_RAZON_SOCIAL,'')
+	            FROM CGG_RES_PERSONA_JURIDICA PJ
+		    WHERE TRA.CRPJR_CODIGO=PJ.CRPJR_CODIGO)
+	)CRPER_AUSPICIANTE,
+	(SELECT COALESCE(CRPER_NOMBRES,'')||' '||COALESCE(CRPER_APELLIDO_PATERNO,'')||' '||COALESCE(CRPER_APELLIDO_MATERNO,'')
+		FROM CGG_RES_PERSONA P
+		WHERE TRA.CGG_CRPER_CODIGO=P.CRPER_CODIGO
+	)CRPER_BENEFICIARIO,
+	RSC.CRSSC_FECHA_REUNION,
+	ISL.CISLA_NOMBRE,
+	COM.CRCOM_NOMBRE,
+	TRA.CRTRA_NUMERO,
+	TRA.CRTRA_OBSERVACION
+
+	FROM SII.CGG_RES_TRAMITE TRA
+		INNER JOIN SII.CGG_RES_RESOL_TRAMITE RST ON(RST.CRTRA_CODIGO=TRA.CRTRA_CODIGO)
+		INNER JOIN SII.CGG_RES_RESOLUCION RES ON(RES.CRRES_CODIGO=RST.CRRES_CODIGO)
+		INNER JOIN SII.CGG_RES_SESION_COMITE RSC ON(RSC.CRSSC_CODIGO=RES.CRSSC_CODIGO)
+		INNER JOIN SII.CGG_RES_COMITE COM ON(COM.CRCOM_CODIGO=RSC.CRCOM_CODIGO)
+		LEFT JOIN SII.CGG_ISLA ISL ON(ISL.CISLA_CODIGO=TRA.CISLA_CODIGO)
+	WHERE TRA.CRTRA_ESTADO
+	AND TRA.CRETT_CODIGO=(SELECT CGCNF_VALOR_CADENA FROM SII.CGG_CONFIGURACION WHERE CGCNF_CODIGO='14')
+	AND RSC.CRSSC_FECHA_REUNION::DATE BETWEEN $P{P_FECHA_INICIAL} and $P{P_FECHA_FINAL}
+	AND COM.CRCOM_CODIGO=$P{P_CRCOM_CODIGO}
+	AND ISL.CISLA_CODIGO IS NOT NULL
+	ORDER BY CRSSC_FECHA_REUNION DESC]]>
+	</queryString>
+	<field name="crper_auspiciante" class="java.lang.String"/>
+	<field name="crper_beneficiario" class="java.lang.String"/>
+	<field name="crssc_fecha_reunion" class="java.sql.Timestamp"/>
+	<field name="cisla_nombre" class="java.lang.String"/>
+	<field name="crcom_nombre" class="java.lang.String"/>
+	<field name="crtra_numero" class="java.math.BigDecimal"/>
+	<field name="crtra_observacion" class="java.lang.String"/>
+	<variable name="V_FILA" class="java.math.BigDecimal" resetType="Group" resetGroup="ISLA">
+		<variableExpression><![CDATA[new BigDecimal($V{V_FILA}.intValue()+1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<group name="ISLA">
+		<groupExpression><![CDATA[$F{cisla_nombre}]]></groupExpression>
+		<groupHeader>
+			<band height="41">
+				<staticText>
+					<reportElement x="45" y="21" width="46" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[# trámite]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="91" y="21" width="161" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Auspiciante]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="252" y="21" width="150" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Beneficiario]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="402" y="21" width="131" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Observación]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="533" y="21" width="51" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[F.reunión]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="28" y="21" width="17" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[N° ]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="47" y="0" width="537" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{cisla_nombre}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="1" width="47" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Isla:]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="21">
+				<textField>
+					<reportElement x="521" y="0" width="64" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{V_FILA}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="466" y="1" width="55" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total:]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="26" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="27" y="1" width="17" height="21"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{V_FILA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="47" y="1" width="44" height="21"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{crtra_numero}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="101" y="1" width="151" height="22"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_auspiciante}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="262" y="1" width="140" height="22"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_beneficiario}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="412" y="1" width="121" height="22"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crtra_observacion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy " isBlankWhenNull="true">
+				<reportElement x="533" y="1" width="51" height="22"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{crssc_fecha_reunion}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="27" y="25" width="558" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
