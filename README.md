@@ -16,3 +16,5 @@ Nuevo Branch de Desarrollo a partir de aqui.
 - Proyecto de Servicios de integración con Alfresco **sii_ecm_integration**
 - Proyecto de Despliegue de modelo de Alfresco **sii_alfresco_config**
 - SII_HOME carpeta global externa para almacenar archivos de propiedades
+- Api para manejo de JasperServer
+- Inclusion de archivo de configuracion de JasperServer en SII_HOME/jasper

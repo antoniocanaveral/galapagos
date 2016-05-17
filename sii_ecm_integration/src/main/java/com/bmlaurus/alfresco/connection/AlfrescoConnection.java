@@ -2,8 +2,8 @@ package com.bmlaurus.alfresco.connection;
 
 import com.bmlaurus.alfresco.entity.AlfUser;
 import com.bmlaurus.alfresco.exception.ConnectionException;
-import com.bmlaurus.utils.GsonEngine;
-import com.bmlaurus.utils.GsonEngineImp;
+import com.bmlaurus.json.GsonEngine;
+import com.bmlaurus.json.GsonEngineImp;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -52,7 +52,7 @@ public abstract class AlfrescoConnection {
         this.port = port;
         this.serviceUrl = serviceUrl;
         //Inicialidar GsonEngine
-        gsonEngine = new GsonEngineImp();
+        gsonEngine = new GsonEngineImp(null,null);
     }
 
     protected String postAction(AlfUser user, String payload, String actionPath) throws ConnectionException, RuntimeException {
