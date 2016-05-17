@@ -39,6 +39,11 @@ bsxComboBox.prototype.getRowSelected=function(){
 			return this.dataSet[i];
 	return null;
 }
+
+bsxComboBox.prototype.addEventListener=function(eventName, callback){
+	this.dom.addEventListener(eventName, callback);
+}
+
 bsxComboBox.prototype.reload=function(){
 	var displayField1=this.displayField;
 	var valueField1=this.valueField;

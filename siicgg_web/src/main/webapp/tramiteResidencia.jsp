@@ -240,6 +240,7 @@ auspiciante</b></legend>
 </ul>
 <span class="obligatorio"> Los campos marcados con (*) son
 obligatorios</span></div>
+
 <div id="divContacto">
 <div class="form-line cssTabButton">
 <div id="divBgModal" class="bgtransparent"
@@ -334,10 +335,10 @@ obligatorios</span></div>
 								<thead
 										style="display: block; border-bottom: 1px solid #CCCCCC; width: 100%">
 								<tr>
-									<th width="225px">
+									<th width="365px">
 										<div align="left">Documentos</div>
 									</th>
-									<th width="365px">
+									<th width="225px">
 										<div align="left">Adjuntos</div>
 									</th>
 								</tr>

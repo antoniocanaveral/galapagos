@@ -65,7 +65,7 @@ public class Cgg_res_documentacion_solicitada implements Serializable{
 	}
 
 	/**
-	 * CONTABILIZA CUANTOS REGISTROS EXISTEN EN LA TABLA Cgg_res_tipo_tramite.
+	 * CONTABILIZA CUANTOS REGISTROS EXISTEN EN LA TABLA Cgg_res_documentacion_solicitada.
 	 * @param inConnection CONEXION A LA BASE DE DATOS.
 	 * @return int TOTAL DE REGISTROS.
 	 */
@@ -74,7 +74,7 @@ public class Cgg_res_documentacion_solicitada implements Serializable{
 	){
 		int outCount = 0;
 		try{
-			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_TIPO_TRAMITE_COUNT() }");
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_DOCUMENTACION_SOLICITADA_COUNT() }");
 			stmSelect.registerOutParameter(1, Types.INTEGER);
 			stmSelect.execute();
 			outCount = stmSelect.getInt(1);
@@ -99,7 +99,7 @@ public class Cgg_res_documentacion_solicitada implements Serializable{
 		if (inKeyword == null || inKeyword.trim().length() == 0 )
 			return selectCount(inConnection);
 		try{
-			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_TIPO_TRAMITE_COUNT(?) }");
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_DOCUMENTACION_SOLICITADA_COUNT(?) }");
 			stmSelect.registerOutParameter(1, Types.INTEGER);
 			stmSelect.setString(2, inKeyword);
 			stmSelect.execute();

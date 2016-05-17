@@ -30,6 +30,11 @@ $(function() {
     var posicion;
     var swEdit;
 
+    /******************INICIO DE DEFINICION DE VARIABLES PARA DOCUMENTACION SOLICITADA*******************/
+    var filaTablaDocumentacion;
+    var posicionD;
+
+
     /******************FIN DE DEFINICION DE VARIABLES PARA LOS CONTACTOS DE LA PERSONA*******************/
 
     if (document.getElementById("txtUsuario").value != "false") {
@@ -235,13 +240,14 @@ $(function() {
             load:function(v){
                 $('#cbxIslaTramite').prepend("<option value=></option>");
                 $("#cbxIslaTramite").val(0);
+
             }
         }
     });
     cbxIslaTramite.reload();
 
     //MO
-
+    var codigoTipoTramite='';
     var cbxTipoTramite = new bsxComboBox({
         id:"cbxTipoTramite",
         renderTo:"divTipoTramite",
@@ -257,10 +263,17 @@ $(function() {
         },
         events:{
             load:function(v){
+
                 $('#cbxTipoTramite').prepend("<option value=></option>");
                 $("#cbxTipoTramite").val(0);
+
             }
         }
+    });
+
+    cbxTipoTramite.addEventListener('change', function(e){
+        codigoTipoTramite=cbxTipoTramite.getRowSelected().CRTT_CODIGO;
+        cargarDocumentos(codigoTipoTramite);
     });
     cbxTipoTramite.reload();
 
@@ -274,6 +287,7 @@ $(function() {
 
     var userObject;
     var codigoPersona='';
+
     $.ajax({
         type: "POST",
         url: URL_WS+"SessionManager?request=userobject",
@@ -283,6 +297,7 @@ $(function() {
         success: function (response) {
             codigoPersona = response.CRPER_CODIGO;
             cargarContactos(codigoPersona);
+
             /*userObject = eval("("+response.responseText+")");
              var contactos = (typeof response.d) == 'string' ?
              eval('(' + response.d + ')') :
@@ -478,152 +493,55 @@ $(function() {
      *	DOCUMENTOS
      **/
 
-    function cargarDocumentos(crttCodigo){
+    function cargarDocumentos(crdcslTipo){
 
         function CallBackCgg_res_documentacion_solicitada(r){
+
             var a = eval('('+r+')');
             var tbodyDocumentacionSolicitada = document.getElementById("tblDocumentacion").tBodies[0];
+            tbodyDocumentacionSolicitada.reload();
             for(i=0;i<a.dataSet.length;i++){
                 var fila = insertarFila();
-                //Documentos
+                //Tipo de Contacto
                 var celda= fila.insertCell(0);
-                celda.id = a.dataSet[i].CRTCO_CODIGO;
-                celda.innerHTML = a.dataSet[i].CRTCO_NOMBRE;
+                celda.id = a.dataSet[i].CRDCSL_CODIGO;
+                celda.innerHTML = a.dataSet[i].CRDCSL_DESCRIPCION;
                 celda.width = 225;
             }
+
         }
 
         var param = new SOAPClientParameters();
         param.add('format','JSON');
         param.add('start',0);
         param.add('limit',10);
-        param.add('sort','CRTCO_CODIGO');
+        param.add('sort','CRDCSL_CODIGO');
         param.add('dir','ASC');
-        param.add('keyword','');
-        param.add('inCrper_codigo',codPersona);
-        SOAPClient.invoke(URL_WS+"Cgg_res_persona_contacto","selectPageContactosPersona",param, true, CallBackCgg_res_contacto_persona);
+        param.add('keyword',crdcslTipo);
+        param.add('inCrdcsl_tipo',crdcslTipo);
+        SOAPClient.invoke(URL_WS+"Cgg_res_documentacion_solicitada","selectPageDirect",param, true, CallBackCgg_res_documentacion_solicitada);
 
 
-        btnNuevoCgg_gem_contacto_persona.onclick=function(){
-            cbxTipoContacto.dom.disabled = false;
-            limpiarControlesContactoPersona();
-            showForm(FrmContactoPersona);
-        }
-        btnEditarCgg_gem_contacto_persona.onclick=function(){
-            cbxTipoContacto.dom.disabled = true;
-            if (filaTablaContacto){
-                if(posicion>0){
-                    var tblContacto = document.getElementById("tblContactosPersona");
-                    cbxTipoContacto.dom.value = tblContacto.rows[posicion].cells[0].id;
-                    txtCrprc_contacto.value = tblContacto.rows[posicion].cells[1].id;
-                    txtCrprc_contacto.value = tblContacto.rows[posicion].cells[1].innerHTML;
-                    swEdit = true;
-                    showForm(FrmContactoPersona);
-                }
-            }else{
-                new bsxMessageBox({
-                    title:"Contacto",
-                    msg:"Seleccione un contacto",
-                    icon:"iconInfo"
-                });
-            }
-        }
-        btnEliminarCgg_gem_contacto_persona.onclick = function(){
-            if(filaTablaContacto){
-                if(confirm("Esta seguro que desea eliminar el contacto?")){
-                    var tbodyContacto = document.getElementById("tblContactosPersona").tBodies[0];
-                    tbodyContacto.removeChild(filaTablaContacto);
-                    filaTablaContacto='';
-                }
-            }else{
-                new bsxMessageBox({
-                    title:"Contacto",
-                    msg:"Seleccione un Contacto",
-                    icon:"iconInfo"
-                });
-            }
-        }
-        /**
-         *	Permite crear un nuevo formulario para ingresos o modificaciones de datos
-         **/
-        function showForm(frm){
-            $('#txtCrprc_contacto').removeClass("form-line-error");
-            document.getElementById("divBgModal").style.display="block";
-            frm.style.display="block";
-        }
-        function btnSalirAll(frm){
-            divBgModal.style.display="none";
-            frm.style.display="none";
-        }
         function insertarFila(){
-            var tbodyContactosPersona = document.getElementById("tblContactosPersona").tBodies[0];
-            var fila =tbodyContactosPersona.insertRow(-1);
+            var tbodyDocumentacionSolicitada = document.getElementById("tblDocumentacion").tBodies[0];
+            var fila =tbodyDocumentacionSolicitada.insertRow();
             fila.onclick = function(){
-                filaTablaContacto = this;
-                posicion = this.sectionRowIndex+1;
-                for (var i=1;i<document.getElementById("tblContactosPersona").rows.length;i++) {
-                    document.getElementById("tblContactosPersona").rows[i].className = "rowNoSelectTable";
+                filaTablaDocumentacion = this;
+                posicionD = this.sectionRowIndex+1;
+                for (var i=1;i<document.getElementById("tblDocumentacion").rows.length;i++) {
+                    document.getElementById("tblDocumentacion").rows[i].className = "rowNoSelectTable";
                 }
                 this.className="rowSelectTable";
             };
             return fila;
         }
-        /**
-         *	GUARDAR O ACTUALIZAR DATOS SOBRE CONTACTOS DE LA PERSONA
-         */
-        btnGuardarCgg_gem_contacto_persona.onclick=function(){
-            if(txtCrprc_contacto.value.length ==0 )
-            {
-                $('#txtCrprc_contacto').addClass("form-line-error");
-                return;
-            }
-            var fila = insertarFila();
-            //Tipo de Contacto
-            var celda= fila.insertCell(0);
-            celda.id = cbxTipoContacto.dom.value;
-            celda.innerHTML = cbxTipoContacto.dom.options[cbxTipoContacto.dom.selectedIndex].text;
-            celda.width = 100;
-
-            //Contacto
-            celda= fila.insertCell(1);
-            celda.id = txtCrprc_codigo.value?txtCrprc_codigo.value:'KEYGEN';
-            celda.innerHTML = txtCrprc_contacto.value;
-            celda.width = 150;
-
-            celda= fila.insertCell(2);
-            celda.innerHTML = '';
-            celda.width = 80;
-            btnSalirAll(FrmContactoPersona);
-        }
-        btnSalirCgg_gem_contacto_persona.onclick=function(){
-            btnSalirAll(FrmContactoPersona);
-        }
-        function limpiarControlesContactoPersona(){
-            txtCrprc_codigo.value = '';
-            txtCrprc_contacto.value = '';
-        }
     }
 
-    function obtenerJSONContactos(){
-        /*
-         * Formar Json de la tabla tblPersona
-         */
-        var jsonContactos = '[';
-        var i=0;
-        var textos='';
-        var tblContacto = document.getElementById("tblContactosPersona");
-        for (var i=1;i<tblContacto.rows.length;i++) {
-            jsonContactos += ((i==1)?'':',')+'{"CRPRC_CODIGO":"'+tblContacto.rows[i].cells[1].id+'","CRPER_CODIGO":"'+codigoPersona+'",'+
-            '"CRTCO_CODIGO":"'+tblContacto.rows[i].cells[0].id+'",'+
-            '"CRPRC_DESCRIPCION":"'+tblContacto.rows[i].cells[2].innerHTML+'",'+
-            '"CRPRC_CONTACTO":"'+tblContacto.rows[i].cells[1].innerHTML+'"}';
-        }
-        jsonContactos += ']';
-        return jsonContactos;
-
-    }
 
     //
+
+
+
 
     $("select#cbxTipoResidenciaPadre").change(function(){
         //cbxTipoSolicitudResidencia.setParam('inCrtst_codigo',$(this).val());
