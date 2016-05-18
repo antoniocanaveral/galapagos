@@ -3063,7 +3063,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
         }                
       
         //Validacion de garantia
-        if(tmpTipoSolicitud.get('CRTST_APLICA_GARANTIA') == true) {
+       /* if(tmpTipoSolicitud.get('CRTST_APLICA_GARANTIA') == true) {
             if(tmpDepositoGarantia == null){
                 Ext.Msg.show({
                     title: tituloCgg_res_tramite,
@@ -3076,7 +3076,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
             }else{
                 flagValidar = true;
             }
-        }
+        }*/
 
         if(inSoloGuardar == undefined){
 
@@ -3224,8 +3224,8 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
             return false;
         }
 
-        Ext.getCmp('miChkEmitirGarantia').checked =inCrtst_data.data.CRTST_APLICA_GARANTIA;
-        Ext.getCmp('miChkEmitirGarantia').setDisabled(!inCrtst_data.data.CRTST_APLICA_GARANTIA);
+       /* Ext.getCmp('miChkEmitirGarantia').checked =inCrtst_data.data.CRTST_APLICA_GARANTIA;
+        Ext.getCmp('miChkEmitirGarantia').setDisabled(!inCrtst_data.data.CRTST_APLICA_GARANTIA);*/
 
         if(inCrtst_data.data.CRTST_NUMERO_DIAS==0){
             numCrtra_dias_permanencia.setValue(0);
@@ -3241,7 +3241,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
             dtCrtra_fecha_salida.setMaxValue(tmpFecha);
         }
 
-        Ext.getCmp('tpFrmCgg_res_tramite24').setDisabled(!inCrtst_data.data.CRTST_APLICA_GARANTIA);
+       // Ext.getCmp('tpFrmCgg_res_tramite24').setDisabled(!inCrtst_data.data.CRTST_APLICA_GARANTIA);
 
 
         if(inCrtst_data.data.CRTST_COMUNICADO_RADIAL == true){
@@ -3940,7 +3940,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
         //tpFrmCgg_res_tramite.setDisabled(!inFlag);
         Ext.getCmp('pnlTpFrmCgg_res_tramite21').setDisabled(!inFlag);
         Ext.getCmp('pnlTpFrmCgg_res_tramite23').setDisabled(!inFlag);
-        Ext.getCmp('pnlTpFrmCgg_res_tramite24').setDisabled(!inFlag);
+        //Ext.getCmp('pnlTpFrmCgg_res_tramite24').setDisabled(!inFlag);
         Ext.getCmp('pnlTpFrmCgg_res_tramite22').setDisabled(!inFlag);
     }
 

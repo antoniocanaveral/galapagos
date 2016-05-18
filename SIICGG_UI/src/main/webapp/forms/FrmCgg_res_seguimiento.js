@@ -1543,7 +1543,8 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
             },
             {
                 iconCls: 'iconBuscar',            
-                tooltip: 'Ver adjunto',
+                tooltip: 'Ver adjunto',                if(inCRADJ_DATA!==null && inCRADJ_DATA.CRADJ_USUARIO_INSERT!==null && inCRADJ_DATA.CRADJ_USUARIO_INSERT.trim().length>=1){
+
                 handler: function(grid, rowIndex, colIndex) {
                     grdCgg_res_seguimiento_requisito.getSelectionModel().selectRow(rowIndex);
                     var rAdjuntoCriterio = grdCgg_res_seguimiento_requisito.getSelectionModel().getSelected();

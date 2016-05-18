@@ -227,10 +227,12 @@ auspiciante</b></legend>
 	<div id='divNacionalidadBeneficiario'></div>
 	</div>
 	<label class="obligatorio">(*)</label></li>
+
 	<li class="form-line"><label class="form-label-left"
 		id="lblFechaNacimiento" for="dtFechaNacimiento"> Fecha de
 	nacimiento </label> <input type="text" id="dtFechaNacimiento"
 		name='dtFechaNacimiento' /> <label class="obligatorio">(*)</label></li>
+
 	<li class="form-line"><label class="form-label-left"
 		id="llblGenero" for="divTipoSolicitudResidencia"> Genero </label> <input
 		type="radio" name="rdbtnGenero" value="0" checked="checked"

@@ -272,8 +272,68 @@ $(function() {
     });
 
     cbxTipoTramite.addEventListener('change', function(e){
+        limpiarTabla();
         codigoTipoTramite=cbxTipoTramite.getRowSelected().CRTT_CODIGO;
         cargarDocumentos(codigoTipoTramite);
+
+        if(codigoTipoTramite=='CRTT2'){
+            var cbxIT=document.getElementById("cbxIslaTramite")
+            cbxIT.disabled=true
+            var cbxTR=document.getElementById("cbxTipoResidenciaPadre")
+            cbxTR.disabled=true
+            var cbxBM=document.getElementById("btnBuscarMotivo")
+            cbxBM.disabled=true
+            var cbxDB=document.getElementById("cbxTipoDocumentoBeneficiario")
+            cbxDB.disabled=true
+            var cbxNB=document.getElementById("txtNumDocBeneficiario")
+            cbxNB.disabled=true
+            var cbxNombreB=document.getElementById("txtNombreBeneficiario")
+            cbxNombreB.disabled=true
+            var cbxAPB=document.getElementById("txtApellidoPaternoBeneficiario")
+            cbxAPB.disabled=true
+            var cbxAMB=document.getElementById("txtApellidoMaternoBeneficiario")
+            cbxAMB.disabled=true
+            var cbxFN=document.getElementById("dtFechaNacimiento")
+            cbxFN.disabled=true
+            var cbxN=document.getElementById("cbxNacionalidad")
+            cbxN.disabled=true
+            var cbxPR=document.getElementById("cbxPaisResidencia")
+            cbxPR.disabled=true
+            var cbxGM=document.getElementById("rdMasculino")
+            cbxGM.disabled=true
+            var cbxGF=document.getElementById("rdFemenino")
+            cbxGF.disabled=true
+
+        }else{
+
+            var cbxIT=document.getElementById("cbxIslaTramite")
+            cbxIT.disabled=false
+            var cbxTR=document.getElementById("cbxTipoResidenciaPadre")
+            cbxTR.disabled=false
+            var cbxBM=document.getElementById("btnBuscarMotivo")
+            cbxBM.disabled=false
+            var cbxDB=document.getElementById("cbxTipoDocumentoBeneficiario")
+            cbxDB.disabled=false
+            var cbxNB=document.getElementById("txtNumDocBeneficiario")
+            cbxNB.disabled=false
+            var cbxNombreB=document.getElementById("txtNombreBeneficiario")
+            cbxNombreB.disabled=false
+            var cbxAPB=document.getElementById("txtApellidoPaternoBeneficiario")
+            cbxAPB.disabled=false
+            var cbxAMB=document.getElementById("txtApellidoMaternoBeneficiario")
+            cbxAMB.disabled=false
+            var cbxFN=document.getElementById("dtFechaNacimiento")
+            cbxFN.disabled=false
+            var cbxN=document.getElementById("cbxNacionalidad")
+            cbxN.disabled=false
+            var cbxPR=document.getElementById("cbxPaisResidencia")
+            cbxPR.disabled=false
+            var cbxGM=document.getElementById("rdMasculino")
+            cbxGM.disabled=false
+            var cbxGF=document.getElementById("rdFemenino")
+            cbxGF.disabled=false
+
+        }
     });
     cbxTipoTramite.reload();
 
@@ -496,10 +556,9 @@ $(function() {
     function cargarDocumentos(crdcslTipo){
 
         function CallBackCgg_res_documentacion_solicitada(r){
-
             var a = eval('('+r+')');
             var tbodyDocumentacionSolicitada = document.getElementById("tblDocumentacion").tBodies[0];
-            tbodyDocumentacionSolicitada.reload();
+            //tbodyDocumentacionSolicitada.reload();
             for(i=0;i<a.dataSet.length;i++){
                 var fila = insertarFila();
                 //Tipo de Contacto
@@ -524,7 +583,7 @@ $(function() {
 
         function insertarFila(){
             var tbodyDocumentacionSolicitada = document.getElementById("tblDocumentacion").tBodies[0];
-            var fila =tbodyDocumentacionSolicitada.insertRow();
+            var fila =tbodyDocumentacionSolicitada.insertRow(-1);
             fila.onclick = function(){
                 filaTablaDocumentacion = this;
                 posicionD = this.sectionRowIndex+1;
@@ -534,6 +593,14 @@ $(function() {
                 this.className="rowSelectTable";
             };
             return fila;
+        }
+
+    }
+
+    function limpiarTabla(){
+        var tbodyDocumentacionSolicitada = document.getElementById("tblDocumentacion").tBodies[0];
+        while(tbodyDocumentacionSolicitada.rows.length > 0) {
+            tbodyDocumentacionSolicitada.deleteRow(0);
         }
     }
 
