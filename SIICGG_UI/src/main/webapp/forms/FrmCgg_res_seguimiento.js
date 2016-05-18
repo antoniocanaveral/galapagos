@@ -1486,7 +1486,7 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
                                             inCradj_codigo:CRADJ_CODIGO
                                         });
                                         var inServiceResponse = SOAPClient.invoke(URL_WS + 'Cgg_res_adjunto', 'delete', scpBorrarAdjunto, false,null);
-                                    }                                                                                                           
+                                    }
                                     gsCgg_res_seguimiento_requisito.reload({
                                         params:{
                                             inCrtst_codigo: inRecordCgg_res_seguimiento.get('CRTST_CODIGO'),
@@ -1494,7 +1494,7 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
                                             format: TypeFormat.JSON
                                         }
                                     });
-                                }                                
+                                }
                             });
                             objSubirAdjunto.show();
                         }
@@ -1542,8 +1542,8 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
                 }
             },
             {
-                iconCls: 'iconBuscar',            
-                tooltip: 'Ver adjunto',                if(inCRADJ_DATA!==null && inCRADJ_DATA.CRADJ_USUARIO_INSERT!==null && inCRADJ_DATA.CRADJ_USUARIO_INSERT.trim().length>=1){
+                iconCls: 'iconBuscar',
+                tooltip: 'Ver adjunto',
 
                 handler: function(grid, rowIndex, colIndex) {
                     grdCgg_res_seguimiento_requisito.getSelectionModel().selectRow(rowIndex);
