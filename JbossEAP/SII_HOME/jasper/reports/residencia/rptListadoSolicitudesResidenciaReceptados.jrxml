@@ -4,9 +4,8 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="ireport.jasperserver.reportUnit" value="/Reports/sii/residencia/rptListadoSolicitudesResidenciaReceptados"/>
-	<property name="ireport.jasperserver.url" value="https://192.168.10.160:8443/jasperserver/services/repository"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["D:\\SII\\REPORTS\\"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["repo:/Resources/sii/"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="P_CUSU_CODIGO" class="java.lang.String"/>
 	<parameter name="P_CRSEC_CODIGO" class="java.lang.String">

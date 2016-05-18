@@ -70,12 +70,13 @@ Ejecutar el comando: `keytool -genkey -alias gobiernogalapagos.gob.ec -keyalg RS
 
 ## Compilación
 
-En la carpeta PROJECT_HOME ejecutamos el comando:<br/>
+En la carpeta PROJECT_HOME ejecutamos el comando:
+
+`mvn clean install -DskipTests=true`
+<br/>
 *Es necesario tener conexión a internet*
 
-> mvn clean install -DskipTests=true
-
-Los proyectos que vamos a instalar en JBOSS, son los generados en la carpeta target de:
+Los proyectos que vamos a instalar en JBOSS, son los que fueron generados en la carpeta target de:
 
 - PROJECT_HOME/SIICGG_UI
 - PROJECT_HOME/siicgg_web

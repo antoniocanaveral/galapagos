@@ -1,4 +1,4 @@
-package com.jaspersoft.jasperserver.rest.sample;
+package com.besixplus.sii.ws;
 
 import com.besixplus.sii.exception.EnvironmentVariableNotDefinedException;
 import com.besixplus.sii.util.Env;
@@ -7,26 +7,36 @@ import com.bmlaurus.jaspersoft.model.ExtraResource;
 import com.bmlaurus.jaspersoft.services.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.junit.Test;
 
+import javax.annotation.Resource;
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
+import javax.xml.ws.WebServiceContext;
 import java.io.File;
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 /**
- * Created by acanaveral on 12/5/16.
+ * Created by acanaveral on 16/5/16.
  */
-public class LocalTests {
+@WebService()
+@SOAPBinding(style= SOAPBinding.Style.RPC)
+public class JasperServerService implements Serializable {
+    private static final long serialVersionUID = -7120354058063274129L;
 
-    @Test
-    public void CreatePath(){
-        System.err.println(validateReport("/Reports/sii/residencia", "rptInformeTecnicoResidencia"));
-    }
+    @Resource
+    WebServiceContext wctx;
 
-
-    private String validateReport(String reportFolder, String reportName){
+    @WebMethod
+    public String validateReport(
+            @WebParam(name="reportFolder") String reportFolder,
+            @WebParam(name="reportName") String reportName
+    ){
         Gson gson = new Gson();
         JasperResponse response = new JasperResponse(true,null,null);
         try {

@@ -17,6 +17,11 @@
 		  <artifactId>sii_ecm_integration</artifactId>
 		  <version>0.0.1-SNAPSHOT</version>
 	  </dependency>
+	  <dependency>
+		  <groupId>com.bmlaurus</groupId>
+		  <artifactId>sii_jasper_api</artifactId>
+		  <version>0.0.1-SNAPSHOT</version>
+	  </dependency>
 	
 	<dependency>
 		<groupId>javax.servlet</groupId>

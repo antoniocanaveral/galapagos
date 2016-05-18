@@ -21,12 +21,14 @@ public class JasperService extends BaseAPI {
         JasperReport result = null;
         if(loginToServer()){
             try {
+                if(parentPath.equals("sii"))
+                    parentPath="";
                 //Buscamos la carpeta
                 HttpGet get = new HttpGet();
                 JasperReport jasper = new JasperReport();
                 get.setHeader(HDR_CONTENT_TYPE,jasper.getConten_type());
                 get.setHeader("Accept", "application/json");
-                httpRes = sendRequest(get, config.getProperty("RESOURCE") + config.getProperty("SII_REPORTS_PATH") + "/" + parentPath + "/" +reportName,null);
+                httpRes = sendRequest(get, config.getProperty("RESOURCE") + config.getProperty("SII_REPORTS_PATH") + "/" + parentPath + (parentPath.isEmpty()?"":"/") +reportName,null);
                 if(validateRequest(httpRes)) {
                     if (httpRes.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
                         releaseConnection(httpRes);
@@ -55,13 +57,13 @@ public class JasperService extends BaseAPI {
             jasper.setLabel(reportName);
             jasper.setDescription(config.getProperty("SII_DESCRIPTION"));
             jasper.setDataSource(new DataSource(config.getProperty("SII_DATASOURCE_PATH") + "/" + config.getProperty("SII_DATASOURCE_NAME")));
-            jasper.setJrxml(new Jrxml(config.getProperty("SII_RESOURCES_PATH") + "/" + parentPath + "/" +reportName + ".jrxml"));
-            jasper.setUri(config.getProperty("SII_REPORTS_PATH")  + "/" + parentPath + "/" +reportName);
+            jasper.setJrxml(new Jrxml(config.getProperty("SII_RESOURCES_PATH") + "/" + parentPath + (parentPath.isEmpty()?"":"/") +reportName + ".jrxml"));
+            jasper.setUri(config.getProperty("RESOURCE") +config.getProperty("SII_REPORTS_PATH")  + "/" + parentPath + (parentPath.isEmpty()?"":"/")+ reportName);
 
             put.setHeader(HDR_CONTENT_TYPE,jasper.getConten_type());
             put.setHeader("Accept", "application/json");
             put.setEntity(new StringEntity(getGsonEngine().getGson().toJson(jasper)));
-            httpRes = sendRequest(put, config.getProperty("RESOURCE") + config.getProperty("SII_REPORTS_PATH") + "/" + parentPath + "/" +reportName,null);
+            httpRes = sendRequest(put, config.getProperty("RESOURCE") + config.getProperty("SII_REPORTS_PATH") + "/" + parentPath + (parentPath.isEmpty()?"":"/") +reportName,null);
             if(validateRequest(httpRes)) {
                 if (httpRes.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED
                         || httpRes.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
