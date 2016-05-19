@@ -52,38 +52,52 @@ public class LocalTests {
                 dataSourceService.getOrCreateDataSource();
 
                 //AGREGAMOS LOS RECURSOS ADICIONALES DEFINIDOS EN EL CONFIG.PROPERTIES
-                Type resoucesListType = new TypeToken<ArrayList<ExtraResource>>() {}.getType();
+                Type resoucesListType = new TypeToken<ArrayList<ExtraResource>>() {
+                }.getType();
+                Type excludesListType = new TypeToken<ArrayList<String>>() {
+                }.getType();
                 List<ExtraResource> resources = (List<ExtraResource>) gson.fromJson(config.getProperty("SII_EXTRA_RESOURCES_PATHS"), resoucesListType);
-                for(ExtraResource resource:resources){
-                    FileService fileService = new FileService();
-                    String lastFolder = resource.getRemoteFolder().substring(resource.getRemoteFolder().lastIndexOf("/") + 1, resource.getRemoteFolder().length());
-                    List<String> filesToUpload = new ArrayList<>();
-                    if(resource.getLocalFile()==null){
-                        File folder = new File(Env.getHomePath() + config.getProperty("SII_LOCAL_REPOSITORY") + "/" +resource.getLocalFolder());
-                        if(folder.exists()){
-                            for(File inFile: folder.listFiles()){
-                                if(inFile.isFile() && !inFile.getName().equals("Thumbs.db"))
-                                    filesToUpload.add(inFile.getName());
+                List<String> excludes = gson.fromJson(config.getProperty("SII_EXCLUDE_RESOURCES"), excludesListType);
+                if(resources!=null){
+                    for (ExtraResource resource : resources) {
+                        FileService fileService = new FileService();
+                        String lastFolder = resource.getRemoteFolder().substring(resource.getRemoteFolder().lastIndexOf("/") + 1, resource.getRemoteFolder().length());
+                        List<String> filesToUpload = new ArrayList<>();
+                        if (resource.getLocalFile() == null) {
+                            File folder = new File(Env.getHomePath() + config.getProperty("SII_LOCAL_REPOSITORY") + "/" + resource.getLocalFolder());
+                            if (folder.exists()) {
+                                File[] folders = folder.listFiles();
+                                if (folders != null) {
+                                    for (File inFile : folders) {
+                                        if (excludes != null) {
+                                            if (inFile.isFile() && !excludes.contains(inFile.getName()))
+                                                filesToUpload.add(inFile.getName());
+                                        } else {
+                                            if (inFile.isFile())
+                                                filesToUpload.add(inFile.getName());
+                                        }
+                                    }
+                                }
                             }
-                        }
-                    }else
-                        filesToUpload.add(resource.getLocalFile());
-                    for(String localFile:filesToUpload) {
-                        if (!fileService.touchFile(resource.getRemoteFolder() + "/" + localFile)) {
-                            folderService = new FolderService();
-                            folderService.getOrCreateFolder(resource.getRemoteFolder(), lastFolder);
+                        } else
+                            filesToUpload.add(resource.getLocalFile());
+                        for (String localFile : filesToUpload) {
+                            if (!fileService.touchFile(resource.getRemoteFolder() + "/" + localFile)) {
+                                folderService = new FolderService();
+                                folderService.getOrCreateFolder(resource.getRemoteFolder(), lastFolder);
 
-                            File f = new File(Env.getHomePath() + config.getProperty("SII_LOCAL_REPOSITORY") + "/" + resource.getLocalFolder() + "/" + localFile);
-                            if (f.exists())
-                                fileService.uploadFile(resource.getRemoteFolder(), localFile, f);
-                            else {
-                                response.setResult(false);
-                                response.setErrorMessage("RECURSOS ADICIONALES: El archivo " + localFile + " NO existe localmente");
+                                File f = new File(Env.getHomePath() + config.getProperty("SII_LOCAL_REPOSITORY") + "/" + resource.getLocalFolder() + "/" + localFile);
+                                if (f.exists())
+                                    fileService.uploadFile(resource.getRemoteFolder(), localFile, f);
+                                else {
+                                    response.setResult(false);
+                                    response.setErrorMessage("RECURSOS ADICIONALES: El archivo " + localFile + " NO existe localmente");
+                                }
                             }
-                        }
-                        if (resource.isReport()) {
-                            JasperService jasperService = new JasperService();
-                            jasperService.getOrCreateJasperReport(lastFolder,localFile.substring(0, localFile.lastIndexOf(".")));
+                            if (resource.isReport()) {
+                                JasperService jasperService = new JasperService();
+                                jasperService.getOrCreateJasperReport(lastFolder, localFile.substring(0, localFile.lastIndexOf(".")));
+                            }
                         }
                     }
                 }
