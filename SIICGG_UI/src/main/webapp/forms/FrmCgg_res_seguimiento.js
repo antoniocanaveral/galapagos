@@ -1573,7 +1573,9 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
                 }
             }
             ]
-        },{
+        }
+//MO
+        /*,{
             dataIndex: 'CRADJ_DATA',
             header: 'Adjuntado por',
             hidden:true,
@@ -1586,7 +1588,9 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
                 }
                 return result;
             }
-        }]);
+        }*/
+//
+    ]);
 
     /**
      * Ext.data.Store Agrupacion de registros de la tabla Cgg_res_seguimiento_requisito por un campo especifico.

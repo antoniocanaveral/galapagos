@@ -1209,7 +1209,7 @@ public class Cgg_res_persona implements Serializable{
 	){
 		ArrayList<LinkedHashMap<String,Object>> outCgg_res_persona = new ArrayList<LinkedHashMap<String,Object>>();
 		try{
-			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_PERSONA_SELECT_LITE(?,?,?,?,?,?,?,?) }");
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_PERSONA_SELECT_LITE(?,?,?,?,?,?,?,?,?) }");
 			stmSelect.registerOutParameter(1, Types.OTHER);
 			stmSelect.setString(2, inUserName);
 			stmSelect.setInt(3, inStart);
@@ -1219,6 +1219,7 @@ public class Cgg_res_persona implements Serializable{
 			stmSelect.setString(7, inKeyword);
 			stmSelect.setString(8, inCrtst_codigo);
 			stmSelect.setBoolean(9, inCarnet);
+			stmSelect.setString(10, inIdentificacion);
 			stmSelect.execute();
 			ResultSet results = (ResultSet) stmSelect.getObject(1);
 			int tmpColumnCount = results.getMetaData().getColumnCount();
@@ -1255,11 +1256,12 @@ public class Cgg_res_persona implements Serializable{
 	){
 		BigDecimal outCount = new BigDecimal(0);
 		try{
-			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_PERSONA_COUNT_LITE(?,?,?) }");
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_PERSONA_COUNT_LITE(?,?,?,?) }");
 			stmSelect.registerOutParameter(1, Types.NUMERIC);
 			stmSelect.setString(2, inKeyword);
 			stmSelect.setString(3, inCrtst_codigo);
 			stmSelect.setBoolean(4, inCarnet);
+			stmSelect.setString(5, inIdentificacion);
 			stmSelect.execute();
 			outCount = stmSelect.getBigDecimal(1);
 			stmSelect.close();
@@ -1318,7 +1320,7 @@ public class Cgg_res_persona implements Serializable{
 	}
 
 	/**
-	/* ACTUALIZA UN REGISTRO DE LA TABLA Cgg_res_persona.
+	 /* ACTUALIZA UN REGISTRO DE LA TABLA Cgg_res_persona.
 	 * @param inConnection CONEXION A LA BASE DE DATOS.
 	 * @return String <code>true</code> SI SE ACTUALIZO EL REGISTRO, CASO CONTRARIO <code>false</code>.
 	 */
@@ -1337,7 +1339,7 @@ public class Cgg_res_persona implements Serializable{
 			stmUpdate.setString(7, this.getCgg_res_persona().getCCTN_CODIGO());
 			stmUpdate.setString(8, this.getCgg_res_persona().getCGG_CCTN_CODIGO());
 			stmUpdate.setString(9, this.getCgg_res_persona().getCPAIS_CODIGO());
-			stmUpdate.setString(10, this.getCgg_res_persona().getCGG_CPAIS_CODIGO());	
+			stmUpdate.setString(10, this.getCgg_res_persona().getCGG_CPAIS_CODIGO());
 			stmUpdate.setString(11, this.getCgg_res_persona().getCRPER_NOMBRES());
 			stmUpdate.setString(12, this.getCgg_res_persona().getCRPER_APELLIDO_PATERNO());
 			stmUpdate.setString(13, this.getCgg_res_persona().getCRPER_APELLIDO_MATERNO());
@@ -1346,7 +1348,7 @@ public class Cgg_res_persona implements Serializable{
 			stmUpdate.setString(16, this.getCgg_res_persona().getCRPER_LUGAR_NACIMIENTO());
 			stmUpdate.setInt(17, this.getCgg_res_persona().getCRPER_GENERO());
 			stmUpdate.setString(18, this.getCgg_res_persona().getCRPER_OBSERVACIONES());
-			stmUpdate.setString(19, this.getCgg_res_persona().getCRPER_NUMERO_RESIDENCIA());	
+			stmUpdate.setString(19, this.getCgg_res_persona().getCRPER_NUMERO_RESIDENCIA());
 			stmUpdate.setBoolean(20, this.getCgg_res_persona().getCRPER_AUTORIZADO());
 			stmUpdate.setString(21, this.getCgg_res_persona().getCRPER_NUMERO_EXPEDIENTE());
 			stmUpdate.setTimestamp(22, this.getCgg_res_persona().getCRPER_FECHA_ARCHIVO()==null?null:new java.sql.Timestamp(this.getCgg_res_persona().getCRPER_FECHA_ARCHIVO().getTime()));
@@ -1361,7 +1363,7 @@ public class Cgg_res_persona implements Serializable{
 			stmUpdate.setInt(31, this.getCgg_res_persona().getCRPER_TIPO());
 			stmUpdate.setBoolean(32, this.getCgg_res_persona().getCRPER_ATENCION_CLIENTE());
 			stmUpdate.setBoolean(33, this.getCgg_res_persona().getCRPER_ESTADO());
-			stmUpdate.setString(34, this.getCgg_res_persona().getCRPER_USUARIO_UPDATE());	
+			stmUpdate.setString(34, this.getCgg_res_persona().getCRPER_USUARIO_UPDATE());
 			stmUpdate.executeUpdate();
 			stmUpdate.close();
 		}catch(SQLException e){
@@ -1615,9 +1617,9 @@ public class Cgg_res_persona implements Serializable{
 	 * OBTIENE TODOS LOS REGISTROS DE LA TABLA Cgg_res_prestamo QUE CUMPLEN CON EL CRITERIO DE BUSQUEDA.
 	 * @param inConnection CONEXION A LA BASE DE DATOS.
 	 * @return ArrayList<com.besixplus.sii.objects.Cgg_res_seguimiento> VECTOR DE OBJETOS EQUIVALENTE A LOS REGISTROS DE LA TABLA.
-	 */		
+	 */
 	public ArrayList<com.besixplus.sii.objects.Cgg_res_prestamo_expediente> selectPrestamo(
-			java.sql.Connection inConnection			
+			java.sql.Connection inConnection
 	){
 		ArrayList<com.besixplus.sii.objects.Cgg_res_prestamo_expediente> outCgg_res_prestamo_consulta= new ArrayList<com.besixplus.sii.objects.Cgg_res_prestamo_expediente>();
 		try{
@@ -1909,8 +1911,8 @@ public class Cgg_res_persona implements Serializable{
 			int tmpColumnCount = results.getMetaData().getColumnCount();
 			while (results.next()) {
 				HashMap<String,Object> tmpObj = new HashMap<String,Object>();
-				for (int i = 1 ; i <= tmpColumnCount; i++)					
-						tmpObj.put(results.getMetaData().getColumnName(i).toUpperCase(), results.getObject(i));
+				for (int i = 1 ; i <= tmpColumnCount; i++)
+					tmpObj.put(results.getMetaData().getColumnName(i).toUpperCase(), results.getObject(i));
 				outCgg_res_notificacion.add(tmpObj);
 			}
 			results.close();
@@ -2079,7 +2081,7 @@ public class Cgg_res_persona implements Serializable{
 	 * CONTABILIZA CUANTOS REGISTROS CUMPLEN CON EL CRITERIO DE BUSQUEDA.
 	 * @param inConnection CONEXION A LA BASE DE DATOS.
 	 * @param inKeyword CRITERIO DE BUSQUEDA.
-	 * @param inCrper_codigo 
+	 * @param inCrper_codigo
 	 * @return int NUMERO DE REGISTROS.
 	 */
 	public static int selectMovilidadGeneralCount(
@@ -2348,7 +2350,7 @@ public class Cgg_res_persona implements Serializable{
 			String inIdentificacion
 	){
 		int outCount = 0;
-		
+
 		try{
 			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.f_cgg_res_persona_count(?) }");
 			stmSelect.registerOutParameter(1, Types.INTEGER);
@@ -2361,7 +2363,7 @@ public class Cgg_res_persona implements Serializable{
 		}
 		return outCount;
 	}
-	
+
 	/**
 	 * INSERTA UN REGISTRO EN LA TABLA Cgg_res_persona.
 	 * @param inConnection CONEXION A LA BASE DE DATOS.
@@ -2375,13 +2377,13 @@ public class Cgg_res_persona implements Serializable{
 		try{
 			CallableStatement stmInsert = inConnection.prepareCall("{ ? = call sii.F_CGG_TCT_REGISTRO_PERSONA_INSERT(?, ?, ?, ?, ?, ?, ?,?::smallint,?,  ?, ?, ?) }");
 			stmInsert.registerOutParameter(1, java.sql.Types.VARCHAR);
-			stmInsert.setString(2, this.getCgg_res_persona().getCRPER_CODIGO());			
-			stmInsert.setString(3, this.getCgg_res_persona().getCRDID_CODIGO());			
-			stmInsert.setString(4, this.getCgg_res_persona().getCGNCN_CODIGO());			
+			stmInsert.setString(2, this.getCgg_res_persona().getCRPER_CODIGO());
+			stmInsert.setString(3, this.getCgg_res_persona().getCRDID_CODIGO());
+			stmInsert.setString(4, this.getCgg_res_persona().getCGNCN_CODIGO());
 			stmInsert.setString(5, this.getCgg_res_persona().getCRPER_NOMBRES());
-			stmInsert.setString(6, this.getCgg_res_persona().getCRPER_APELLIDO_PATERNO());			
+			stmInsert.setString(6, this.getCgg_res_persona().getCRPER_APELLIDO_PATERNO());
 			stmInsert.setString(7, this.getCgg_res_persona().getCRPER_NUM_DOC_IDENTIFIC());
-			stmInsert.setTimestamp(8, this.getCgg_res_persona().getCRPER_FECHA_NACIMIENTO()==null?null:new java.sql.Timestamp(this.getCgg_res_persona().getCRPER_FECHA_NACIMIENTO().getTime()));			
+			stmInsert.setTimestamp(8, this.getCgg_res_persona().getCRPER_FECHA_NACIMIENTO()==null?null:new java.sql.Timestamp(this.getCgg_res_persona().getCRPER_FECHA_NACIMIENTO().getTime()));
 			stmInsert.setInt(9, this.getCgg_res_persona().getCRPER_GENERO());
 			stmInsert.setString(10, this.getCgg_res_persona().getCGG_CPAIS_CODIGO());
 			stmInsert.setBoolean(11, this.getCgg_res_persona().getCRPER_ESTADO());
@@ -2397,7 +2399,7 @@ public class Cgg_res_persona implements Serializable{
 		return outResult;
 	}
 	/**
-	/* ACTUALIZA UN REGISTRO DE LA TABLA Cgg_res_persona.
+	 /* ACTUALIZA UN REGISTRO DE LA TABLA Cgg_res_persona.
 	 * @param inConnection CONEXION A LA BASE DE DATOS.
 	 * @return String <code>true</code> SI SE ACTUALIZO EL REGISTRO, CASO CONTRARIO <code>false</code>.
 	 */
@@ -2408,17 +2410,17 @@ public class Cgg_res_persona implements Serializable{
 		String outResult = "true";
 		try{
 			CallableStatement stmUpdate = inConnection.prepareCall("{ call sii.F_CGG_TCT_REGISTRO_PERSONA_UPDATE(?, ?, ?, ?, ?, ?, ?,?::smallint, ?, ?, ?) }");
-			stmUpdate.setString(1, this.getCgg_res_persona().getCRPER_CODIGO());			
-			stmUpdate.setString(2, this.getCgg_res_persona().getCRDID_CODIGO());			
-			stmUpdate.setString(3, this.getCgg_res_persona().getCGNCN_CODIGO());			
+			stmUpdate.setString(1, this.getCgg_res_persona().getCRPER_CODIGO());
+			stmUpdate.setString(2, this.getCgg_res_persona().getCRDID_CODIGO());
+			stmUpdate.setString(3, this.getCgg_res_persona().getCGNCN_CODIGO());
 			stmUpdate.setString(4, this.getCgg_res_persona().getCRPER_NOMBRES());
-			stmUpdate.setString(5, this.getCgg_res_persona().getCRPER_APELLIDO_PATERNO());			
+			stmUpdate.setString(5, this.getCgg_res_persona().getCRPER_APELLIDO_PATERNO());
 			stmUpdate.setString(6, this.getCgg_res_persona().getCRPER_NUM_DOC_IDENTIFIC());
-			stmUpdate.setTimestamp(7, this.getCgg_res_persona().getCRPER_FECHA_NACIMIENTO()==null?null:new java.sql.Timestamp(this.getCgg_res_persona().getCRPER_FECHA_NACIMIENTO().getTime()));			
+			stmUpdate.setTimestamp(7, this.getCgg_res_persona().getCRPER_FECHA_NACIMIENTO()==null?null:new java.sql.Timestamp(this.getCgg_res_persona().getCRPER_FECHA_NACIMIENTO().getTime()));
 			stmUpdate.setInt(8, this.getCgg_res_persona().getCRPER_GENERO());
 			stmUpdate.setString(9, this.getCgg_res_persona().getCGG_CPAIS_CODIGO());
-			stmUpdate.setBoolean(10, this.getCgg_res_persona().getCRPER_ESTADO());			
-			stmUpdate.setString(11,this.getCgg_res_persona().getCRPER_USUARIO_UPDATE());				
+			stmUpdate.setBoolean(10, this.getCgg_res_persona().getCRPER_ESTADO());
+			stmUpdate.setString(11,this.getCgg_res_persona().getCRPER_USUARIO_UPDATE());
 			stmUpdate.executeUpdate();
 			stmUpdate.close();
 		}catch(SQLException e){
@@ -2441,7 +2443,7 @@ public class Cgg_res_persona implements Serializable{
 		try{
 			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_DATOS_PERSONALES_BYID(?) }");
 			stmSelect.registerOutParameter(1, Types.OTHER);
-			stmSelect.setString(2, inCrper_codigo);			
+			stmSelect.setString(2, inCrper_codigo);
 			stmSelect.execute();
 			ResultSet results = (ResultSet) stmSelect.getObject(1);
 			int tmpColumnCount = results.getMetaData().getColumnCount();
@@ -2473,7 +2475,7 @@ public class Cgg_res_persona implements Serializable{
 		try{
 			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_PERSONA_SELECTFOTOBYID(?) }");
 			stmSelect.registerOutParameter(1, Types.OTHER);
-			stmSelect.setString(2, inCrper_codigo);			
+			stmSelect.setString(2, inCrper_codigo);
 			stmSelect.execute();
 			ResultSet results = (ResultSet) stmSelect.getObject(1);
 			int tmpColumnCount = results.getMetaData().getColumnCount();
@@ -2495,7 +2497,7 @@ public class Cgg_res_persona implements Serializable{
 	/**
 	 * OBTIENE TODOS LOS REGISTROS DE LA TABLA Cgg_res_persona QUE TENGAN REGISTRADO UNA HUELLA DACTILAR.
 	 * @param inConnection CONEXION A LA BASE DE DATOS.
-	 * @return 
+	 * @return
 	 */
 	public static ArrayList<HashMap<String,Object>> selectHuellas(
 			java.sql.Connection inConnection
@@ -2503,7 +2505,7 @@ public class Cgg_res_persona implements Serializable{
 		ArrayList<HashMap<String,Object>> outCgg_res_persona = new ArrayList<HashMap<String,Object>>();
 		try{
 			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_PERSONA_SELECT_HUELLAS() }");
-			stmSelect.registerOutParameter(1, Types.OTHER);			
+			stmSelect.registerOutParameter(1, Types.OTHER);
 			stmSelect.execute();
 			ResultSet results = (ResultSet) stmSelect.getObject(1);
 			int tmpColumnCount = results.getMetaData().getColumnCount();
@@ -2526,7 +2528,7 @@ public class Cgg_res_persona implements Serializable{
 	 * OBTIENE TODOS LOS REGISTROS DE LA TABLA Cgg_res_persona QUE TENGAN REGISTRADO UNA HUELLA DACTILAR.
 	 * @param inConnection CONEXION A LA BASE DE DATOS.
 	 * @param inCRPER_NUMERO_DOC NUMERO DE RESIDENCIA O DOCUMENTO DE IDENTIFICACION.
-	 * @return 
+	 * @return
 	 */
 	public static ArrayList<HashMap<String,Object>> selectHuellas(
 			java.sql.Connection inConnection,
@@ -2607,14 +2609,14 @@ public class Cgg_res_persona implements Serializable{
 		try{
 			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_PERSONA_SELECT_ADJUNTOS_IDENTIFICACION_BYID(?) }");
 			stmSelect.registerOutParameter(1, Types.OTHER);
-			stmSelect.setString(2, inCrper_codigo);			
+			stmSelect.setString(2, inCrper_codigo);
 			stmSelect.execute();
 			ResultSet results = (ResultSet) stmSelect.getObject(1);
 			int tmpColumnCount = results.getMetaData().getColumnCount();
 			while (results.next()) {
 				HashMap<String,Object> tmpObj = new HashMap<String,Object>();
-				for (int i = 1 ; i <= tmpColumnCount; i++)					
-						tmpObj.put(results.getMetaData().getColumnName(i).toUpperCase(), results.getObject(i));
+				for (int i = 1 ; i <= tmpColumnCount; i++)
+					tmpObj.put(results.getMetaData().getColumnName(i).toUpperCase(), results.getObject(i));
 				outCgg_res_persona.add(tmpObj);
 			}
 			results.close();
@@ -2659,8 +2661,8 @@ public class Cgg_res_persona implements Serializable{
 		String outResult = "true";
 		try{
 			CallableStatement stmUpdate = inConnection.prepareCall("{ call sii.F_ACTUALIZAR_NUMERO_RESIDENCIA(?, ?, ?) }");
-			stmUpdate.setString(1, this.getCgg_res_persona().getCRPER_CODIGO());				
-			stmUpdate.setString(2, this.getCgg_res_persona().getCRPER_NUMERO_RESIDENCIA());								
+			stmUpdate.setString(1, this.getCgg_res_persona().getCRPER_CODIGO());
+			stmUpdate.setString(2, this.getCgg_res_persona().getCRPER_NUMERO_RESIDENCIA());
 			stmUpdate.setString(3, this.getCgg_res_persona().getCRPER_USUARIO_UPDATE());
 			stmUpdate.executeUpdate();
 			stmUpdate.close();
@@ -2743,7 +2745,7 @@ public class Cgg_res_persona implements Serializable{
 		try{
 			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call SII.F_CGG_RES_PERSONA_SELECT_DATOS_AUSPICIANTE(?) }");
 			stmSelect.registerOutParameter(1, Types.OTHER);
-			stmSelect.setString(2, inUserName);			
+			stmSelect.setString(2, inUserName);
 			stmSelect.execute();
 			ResultSet results = (ResultSet) stmSelect.getObject(1);
 			int tmpColumnCount = results.getMetaData().getColumnCount();

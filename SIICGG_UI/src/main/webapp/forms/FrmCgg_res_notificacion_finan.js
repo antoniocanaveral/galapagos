@@ -507,6 +507,7 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
      */
     var cbxCprr_codigo = new Ext.form.ComboBox({
         id:'cbxCprr_codigo',
+        disabled: true,
         name:'cbxCprr_codigo',
         fieldLabel :'Parroquia',
         anchor:'98%',
@@ -528,6 +529,7 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
      */
     var cbxCctn_nombre_nacimiento = new Ext.form.ComboBox({
         id:'cbxCctn_nombre_nacimiento',
+        disabled: true,
         name:'cbxCctn_nombre_nacimiento',
         fieldLabel :'Ciudad',
         anchor:'98%',
@@ -614,6 +616,7 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
      */
     var cbxCctn_nombre_residencia = new Ext.form.ComboBox({
         id:'cbxCctn_nombre_residencia',
+        disabled: true,
         name:'cbxCctn_nombre_residencia',
         fieldLabel :'Ciudad',
         anchor:'98%',
@@ -640,6 +643,7 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
      */
     var cbxCgprv_nombre_residencia = new Ext.form.ComboBox({
         id:'cbxCgprv_nombre_residencia',
+        disabled: true,
         name:'cbxCgprv_nombre_residencia',
         fieldLabel :'Provincia',
         anchor:'98%',
@@ -670,6 +674,7 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
      */
     var cbxCpais_nombre_residencia = new Ext.form.ComboBox({
         id:'cbxCpais_nombre_residencia',
+        disabled: true,
         name:'cbxCpais_nombre_residencia',
         fieldLabel :'Pais',
         anchor:'98%',
@@ -702,6 +707,7 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
      */
     var cbxCctn_nombre_res_anterior = new Ext.form.ComboBox({
         id:'cbxCctn_nombre_res_anterior',
+        disabled: true,
         name:'cbxCctn_nombre_res_anterior',
         fieldLabel :'Ciudad',
         anchor:'98%',
@@ -722,6 +728,7 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
      */
     var cbxCgprv_nombre_res_anterior = new Ext.form.ComboBox({
         id:'cbxCgprv_nombre_res_anterior',
+        disabled: true,
         name:'cbxCgprv_nombre_res_anterior',
         fieldLabel :'Provincia',
         anchor:'98%',
@@ -1211,8 +1218,8 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
      */
     var btnGuardarCgg_res_persona = new Ext.Button({
         id:'btnGuardarCgg_res_persona',
-        text:'Guardar',
-        iconCls:'iconGuardar',
+        text:'Enviar',
+        //iconCls:'iconGuardar',
         tooltip:TypeTooltip.GUARDAR,
         listeners:{
             click:function(){
@@ -3103,15 +3110,16 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
         cbxCprr_codigo.setDisabled(estado);
         cbxCctn_nombre_residencia.setDisabled(estado);
         cbxCctn_nombre_res_anterior.setDisabled(estado);
-        txtCrper_nombres.setDisabled(estado);
-        txtCrper_apellido_paterno.setDisabled(estado);
-        txtCrper_apellido_materno.setDisabled(estado);
-        txtCrper_num_doc_identific.setDisabled(estado);
+        txtCrper_nombres.setDisabled(true);
+        txtCrper_apellido_paterno.setDisabled(true);
+        txtCrper_apellido_materno.setDisabled(true);
+        txtCrper_num_doc_identific.setDisabled(true);
         dtCrper_fecha_nacimiento.setDisabled(estado);
         txtCrper_lugar_nacimiento.setDisabled(estado);
         numCrper_genero.setDisabled(estado);
         txtCrper_observaciones.setDisabled(estado);
-        txtCrper_numero_residencia.setDisabled(estado);
+        txtCrper_numero_residencia.setDisabled(true);
+        txtCrper_cobro.setDisabled(true);
         //chkCrper_autorizado.setDisabled(estado);
         txtCrper_numero_expediente.setDisabled(estado);
         dtCrper_fecha_archivo.setDisabled(estado);
