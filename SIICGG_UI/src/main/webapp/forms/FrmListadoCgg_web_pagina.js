@@ -5,7 +5,7 @@
 */
 function FrmListadoCgg_web_pagina(inDesktop){
 	var optMenu = 'Configuraci\u00F3n/Sitio Web/Administraci\u00F3n de p\u00E1ginas';
-	var urlListadoCgg_web_pagina=URL_WS+"PublicWS/Cgg_web_pagina";
+	var urlListadoCgg_web_pagina=URL_WS+"Cgg_web_pagina";
 	var tituloListadoCgg_web_pagina='Sitio Web';
 	var descListadoCgg_web_pagina='El formulario permite administrar informaci\u00f3n de sobre el contenido del sitio web';
 	/**

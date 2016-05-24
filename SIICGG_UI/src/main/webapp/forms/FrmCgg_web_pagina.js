@@ -9,7 +9,7 @@
 function FrmCgg_web_pagina(IN_SENTENCIA_CGG_WEB_PAGINA,IN_RECORD_CGG_WEB_PAGINA){
 	var inSentenciaCgg_web_pagina = IN_SENTENCIA_CGG_WEB_PAGINA;
 	var inRecordCgg_web_pagina=IN_RECORD_CGG_WEB_PAGINA;
-	var urlCgg_web_pagina=URL_WS+"PublicWS/Cgg_web_pagina";
+	var urlCgg_web_pagina=URL_WS+"Cgg_web_pagina";
 	var tituloCgg_web_pagina='Sitio web';
 	var descCgg_web_pagina='El formulario permite administrar la informaci\u00f3n sobre el sitio web';
 	var isEdit = false;

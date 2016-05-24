@@ -42,8 +42,38 @@ Gal&aacute;pagos</div>
 	style="width: 100%; height: 100%"></div>
 <table style="width: 700;" align="center">
 	<tbody>
+
+		<tr>
+
+			<td width="20%" valign="top">
+
+			<fieldset style="font-size: 11px">
+
+				<legend><b> </b> </legend>
+				<table width="100%" height="170" style="font-size: 11px">
+					<tbody>
+					<tr>
+						<td width="50">Categoria:</td>
+						<td id="tdCategoria"></td>
+					</tr>
+					<tr>
+						<td width="50">Tipo de registro:</td>
+						<td id="tdTipoRegistro"></td>
+					</tr>
+
+
+			</fieldset>
+
+			</td>
+
+		</tr>
+
+
 		<tr>
 			<td width="34%" valign="top">
+
+
+
 			<fieldset style="font-size: 11px"><legend><b>Datos
 			de entrada </b> </legend>
 			<table width="100%" height="170" style="font-size: 11px">
