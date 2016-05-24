@@ -467,10 +467,10 @@ function loadIngresoTCT(){
 	var cbxTipoRegistro = new bsxComboBox({
 		id:"cbxTipoRegistro",
 		renderTo:"tdTipoRegistro",
-		displayField:"CRALN_NOMBRE",
-		valueField:"CRALN_CODIGO",
+		displayField:"TCTTR_NOMBRE",
+		valueField:"TCTTR_CODIGO",
 		webService:{
-			url:URL_WS+"Cgg_res_aerolinea",
+			url:URL_WS+"Cgg_tct_tipo_registro",
 			method:"selectAll",
 			params:[
 				{name:"format",value:"JSON"}
