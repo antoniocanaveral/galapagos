@@ -163,17 +163,17 @@ public abstract class BasePublicAPI {
         return obj;
     }
 
-    public List<CmisObject> getObjectsByPath(String path){
+    public List<CmisObject> getObjectsById(String id){
         List<CmisObject> objs = null;
         Session cmisSession = getCmisSession();
         try{
             String rootFolderId = getRootFolderId(getSite());
             Folder rootFolder = (Folder) cmisSession.getObject(rootFolderId);
 
-            CmisObject obj = cmisSession.getObjectByPath(rootFolder.getPath()+"/"+path);
+            CmisObject obj = cmisSession.getObject(id);
             objs = new ArrayList<>();
             if(obj instanceof Document)
-                throw new CmisObjectNotFoundException("Path: "+ path +" must be a Folder");
+                throw new CmisObjectNotFoundException("Path: "+ ((Document) obj).getPaths().toArray() +" must be a Folder");
             for(CmisObject child :((Folder) obj).getChildren()){
                 objs.add(child);
             }
