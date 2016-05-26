@@ -76,7 +76,7 @@ function JasperServer(){
 		param.add('reportName', this.myReportName);
 		var jasperResponse = SOAPClient.invoke(URL_WS+'JasperServerService', "validateReport", param, false, null);
 		if(jasperResponse) {
-			jasperResponse = JSON.toJSON(jasperResponse);
+			jasperResponse = eval("(" + jasperResponse + ')');
 			if (jasperResponse.result == true) {
 				for (var tmpParamName in this.myParams) {
 					if (typeof(this.myParams[tmpParamName]) == 'function')

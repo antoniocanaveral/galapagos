@@ -11,6 +11,8 @@ Nuevo Branch de Desarrollo a partir de aqui.
 
 ### V2
 [Scripts]: ./Update/Scripts/Readme.md "Scripts"
+[Componente]: ./doc/alfresco/Usage.md "Componentes para SII"
+
 - Se creó la carpeta Update en la raíz del proyecto, para registrar los [Scripts][] de base de datos
 - Separación de los componentes comunes en el proyecto **sii_commons** utilizado por los 3 proyectos originales
 - Proyecto de Servicios de integración con Alfresco **sii_ecm_integration**
@@ -20,3 +22,4 @@ Nuevo Branch de Desarrollo a partir de aqui.
 - Inclusion de archivo de configuracion de JasperServer en SII_HOME/jasper
 - Se movieron los reportes a SII_HOME/jasper
 - Servicio de Inicialización de JasperServer controlado desde el archivo de configuración
+- Fácil integración del componente de Alfresco con SII [Componente][].

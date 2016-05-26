@@ -69,3 +69,7 @@ Reinicie los servicios.
 [Instalador]: ../Install.md "Guía de Instalación"
 Una vez instalado su servidor de SII según el manual [Instalador][], en la carpeta SII_HOME de su JBOSS EAP, existe una carpeta
 llamada alfresco. Dentro está el archivo config.properties, que le proveerá de información para los parámetros de conexión.
+
+## Uso del componente en SII
+[Componente]: ./Usage.md "Componentes para SII"
+[Componente][]

@@ -1,6 +1,6 @@
 package com.besixplus.sii.util;
 
-import com.besixplus.sii.exception.EnvironmentVariableNotDefinedException;
+import com.bmlaurus.exception.EnvironmentVariableNotDefinedException;
 
 import java.io.File;
 import java.io.FileInputStream;

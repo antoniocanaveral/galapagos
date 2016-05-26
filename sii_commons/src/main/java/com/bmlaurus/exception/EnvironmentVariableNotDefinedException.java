@@ -1,4 +1,4 @@
-package com.besixplus.sii.exception;
+package com.bmlaurus.exception;
 
 /**
  * Created by acanaveral on 28/4/16.

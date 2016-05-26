@@ -1,6 +1,6 @@
 package com.besixplus.sii.ws;
 
-import com.besixplus.sii.exception.EnvironmentVariableNotDefinedException;
+import com.bmlaurus.exception.EnvironmentVariableNotDefinedException;
 import com.besixplus.sii.util.Env;
 import com.bmlaurus.jasper.JasperResponse;
 import com.bmlaurus.jaspersoft.model.ExtraResource;

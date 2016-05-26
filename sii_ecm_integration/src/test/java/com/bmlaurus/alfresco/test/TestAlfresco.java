@@ -94,10 +94,16 @@ public class TestAlfresco {
         System.setProperty("sii.home","/Users/acanaveral/Desarrollo/Advance/fuentes/galapagos_ws/galapagos/SII_HOME");
         BaseAPI cmis = new BaseAPI();
         StringBuffer objs = new StringBuffer();
-        for(CmisObject obj:cmis.getObjectsByPath("res/casos/123456789")){
-            objs.append("Type: "+obj.getType().getDisplayName()+ " - Name: "+ obj.getName()+ " - Id: " + obj.getId() + "\n");
-        }
+        CmisObject folder = null;
+        try {
+            folder = cmis.getObjectByPath("res/casos/123456789");
+            for(CmisObject obj:cmis.getObjectsById(folder.getId())){
+                objs.append("Type: "+obj.getType().getDisplayName()+ " - Name: "+ obj.getName()+ " - Id: " + obj.getId() + "\n");
+            }
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         System.out.println(objs.toString());
     }
 
