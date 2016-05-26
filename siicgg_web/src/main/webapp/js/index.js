@@ -73,7 +73,7 @@ function loadInit(){
 		}	
 		var param = new SOAPClientParameters(); 		
 		param.add('inCusu_codigo',codigoUsuario);		
-		SOAPClient.invoke(URL_WS_PUBLIC+"Cgg_atc_gestion_empleo", "selectEstadistica", param, true, CallBackIndicador);	
+		SOAPClient.invoke(URL_WS+"Cgg_atc_gestion_empleo", "selectEstadistica", param, true, CallBackIndicador);
 				
 		
 		lnkAccesoLogin.innerHTML="Salir";

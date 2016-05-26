@@ -53,14 +53,13 @@ Gal&aacute;pagos</div>
 				<table width="100%" height="170" style="font-size: 11px">
 					<tbody>
 					<tr>
-						<td width="50">Categoria:</td>
+						<td width="10">Categoria:</td>
 						<td id="tdCategoria"></td>
 					</tr>
 					<tr>
-						<td width="50">Tipo de registro:</td>
+						<td width="10">Tipo de registro:</td>
 						<td id="tdTipoRegistro"></td>
 					</tr>
-
 
 			</fieldset>
 
@@ -72,15 +71,19 @@ Gal&aacute;pagos</div>
 		<tr>
 			<td width="34%" valign="top">
 
-
-
 			<fieldset style="font-size: 11px"><legend><b>Datos
 			de entrada </b> </legend>
 			<table width="100%" height="170" style="font-size: 11px">
 				<tbody>
 					<tr>
-						<td width="50">Aerolinea:</td>
+						<td width="30">Aerolinea:</td>
 						<td id="tdAereolinea"></td>
+					</tr>
+
+					<tr>
+						<td width="30">Nro. de vuelo:</td>
+						<td><input name="txtNroVuelo" type="text"
+								   id="txtNroVuelo" width="150" readonly="true" /></td>
 					</tr>
 					<tr>
 						<td>Origen:</td>
@@ -114,6 +117,7 @@ Gal&aacute;pagos</div>
 			</table>
 			</fieldset>
 			</td>
+
 			<td width="33%" valign="top">
 			<fieldset style="font-size: 11px"><legend><b>Hospedaje</b></legend>
 			<table height="170" style="font-size: 11px" width="100%" border="0"
@@ -124,6 +128,36 @@ Gal&aacute;pagos</div>
 			</fieldset>
 			</td>
 		</tr>
+
+		<tr>
+			<td colspan="3">
+				<fieldset style="font-size: 11px"><legend><b>Hospedaje/s</b></legend>
+					<table width="100%" height="170" style="font-size: 11px">
+						<tbody>
+
+						<tr>
+							<td width="150">Isla de hospedaje:</td>
+							<td id="divIslaHospedaje"></td>
+						</tr>
+
+						<tr>
+							<td width="150">Tipo de hospedaje:</td>
+							<td id="divTipoHospedaje"></td>
+						</tr>
+
+						<tr>
+							<td width="150">Nombre del sitio de hospedaje:</td>
+							<td id="divNombreHospedaje"></td>
+						</tr>
+
+
+						</tbody>
+					</table>
+				</fieldset>
+			</td>
+		</tr>
+
+
 		<tr>
 			<td colspan="3">
 			<fieldset style="font-size: 11px"><legend><b>Listado
@@ -209,33 +243,64 @@ Gal&aacute;pagos</div>
 						</form>
 						</td>
 					</tr>
-					<tr>
-						<td>
-						<table style="font-size: 11px; border: 1px solid transparent"
-							border="0" cellspacing="0">
-							<tbody>
-								<tr>
-									<button type='button' id="btnGuardarTTC"><img
-										src="css/icon/save.png" alt="save" />Guardar</button>
-								</tr>
-							</tbody>
-						</table>
-						</td>
-					</tr>
+
 				</tbody>
 			</table>
 			</fieldset>
 			</td>
 		</tr>
+
+
+		<tr>
+			<td colspan="3">
+				<fieldset style="font-size: 11px"><legend><b>Informacion  del viaje</b></legend>
+					<table width="100%" height="170" style="font-size: 11px">
+						<tbody>
+
+						<tr>
+							<td width="150">¿Usted esta viajando?</td>
+							<td id="divIslaHospedaje"></td>
+						</tr>
+
+						<tr>
+							<td width="150">¿Que motiva su viaje a Galapagos?</td>
+							<td id="divTipoHospedaje"></td>
+						</tr>
+
+						<tr>
+							<td width="150">¿De donde se informa de las actividades que realizara en Galapagos?</td>
+							<td id="divNombreHospedaje"></td>
+						</tr>
+
+
+						</tbody>
+					</table>
+				</fieldset>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<table style="font-size: 11px; border: 1px solid transparent"
+					   border="0" cellspacing="0">
+					<tbody>
+					<tr>
+						<button type='button' id="btnGuardarTTC"><img
+								src="css/icon/save.png" alt="save" />Guardar</button>
+					</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+
 	</tbody>
 </table>
 <!--class="componetHide"-->
 <div id="FrmIngresoPersona" class="componetHide"
-	style="position: fixed; left: 150; top: 45; background-color: #fff;">
+	style="position: fixed; left: 130; top: 50; background-color: #fff;">
 <div class="cssFormularioBorde"><span class="cssFormularioTitulo"><b>Datos
 de la persona</b></span>
 <form action="" id="frmPersona" method="get">
-<table width="400" height="349" border="0" class="cssForularioInterno">
+<table width="450" height="400" border="0" class="cssForularioInterno">
 	<tr>
 		<th colspan=2 style="color: #039BD7">Usted se esta
 		pre-registrando como <b>TURISTA</b> <input name="txtTipo"
@@ -273,6 +338,17 @@ de la persona</b></span>
 		23/01/1989</td>
 	</tr>
 	<tr>
+		<th>Estado Civil:</th>
+		<td><select id="cbmEstadoCivil" name="cbmEstadoCivil" disabled="disabled">
+			<option value="0">Soltero/a</option>
+			<option value="1">Casado/a</option>
+			<option value="2">Divorsiado/a</option>
+			<option value="3">Viudo/a</option>
+			<option value="4">Union Libre</option>
+			<option value="5">Se ignora</option>
+		</select></td>
+	</tr>
+	<tr>
 		<th>G&eacute;nero:</th>
 		<td><select id="cbmGenero" name="cbmGenero" disabled="disabled">
 			<option value="0">Masculino</option>
@@ -284,9 +360,41 @@ de la persona</b></span>
 		<td id="tdPaisResidencia"></td>
 	</tr>
 	<tr>
+		<th>Ciudad de residencia:</th>
+		<td id="tdCiudadResidencia"></td>
+	</tr>
+	<tr>
+		<th>C&oacute;digo Postal:</th>
+		<td><input name="txtCodigoPostal" type="text"
+				   id="txtCodigoPostal" width="150" readonly="true" /></td>
+	</tr>
+	<tr>
 		<th>Nacionalidad:</th>
 		<td id="tdNacionalidad"></td>
 	</tr>
+
+	<tr>
+		<th>Estudios:</th>
+		<td><select id="cbmEstudios" name="cbmEstudios" disabled="disabled">
+			<option value="0">Primarioa</option>
+			<option value="1">Secuandaria</option>
+			<option value="1">Superior</option>
+			<option value="1">Otros</option>
+		</select></td>
+	</tr>
+
+	<tr>
+		<th>Correo Electr&oacute;nico:</th>
+		<td><input name="txtCorreoElectronico" type="text"
+				   id="txtCorreoElectronico" width="150" readonly="true" /></td>
+	</tr>
+
+	<tr>
+		<th>Confirmaci&oacute;n Correo Electr&oacute;nico:</th>
+		<td><input name="txtConfirCorreoElectronico" type="text"
+				   id="txtConfirCorreoElectronico" width="150" readonly="true" /></td>
+	</tr>
+
 	<tr class="Invisible">
 		<th>Tipo de especie:</th>
 		<td id="tdEspecies"><input name="txtTipoEspecie" type="text"

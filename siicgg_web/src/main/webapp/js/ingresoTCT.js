@@ -633,6 +633,87 @@ function loadIngresoTCT(){
 		}
 	});	
 	cbxConfiguracion.reload();
+
+	/*
+	 *Creacion de un combobox para la isla de hospedaje
+	 */
+
+	var cbxIslaHospedaje = new bsxComboBox({
+		id:"cbxIslaHospedaje",
+		renderTo:"divIslaHospedaje",
+		displayField:"CISLA_NOMBRE",
+		valueField:"CISLA_CODIGO",
+		webService:{
+			url:URL_WS+"Cgg_isla",
+			method:"selectAllAtencionCliente",
+			params:[
+				{name:"format",value:"JSON"}
+			]
+		},
+		events:{
+			load:function(v){
+				$('#cbxIslaHospedaje').prepend("<option value=></option>");
+				$("#cbxIslaHospedaje").val(0);
+
+			}
+		}
+	});
+	cbxIslaHospedaje.reload();
+
+	/*
+	 *Creacion de un combobox para el tipo de hospedaje
+	 */
+
+	var cbxTipoHospedaje = new bsxComboBox({
+		id:"cbxTipoHospedaje",
+		renderTo:"divTipoHospedaje",
+		displayField:"CTTHJ_NOMBRE",
+		valueField:"CTTHJ_CODIGO",
+		webService:{
+			url:URL_WS+"Cgg_tct_tipo_hospedaje",
+			method:"selectAll",
+			params:[
+				{name:"format",value:"JSON"}
+			]
+		},
+		events:{
+			load:function(v){
+				$('#cbxTipoHospedaje').prepend("<option value=></option>");
+				$("#cbxTipoHospedaje").val(0);
+
+			}
+		}
+	});
+	cbxTipoHospedaje.reload();
+
+	/*
+	 *Creacion de un combobox para el nombre de hospedaje
+	 */
+
+	var cbxNombreHospedaje = new bsxComboBox({
+		id:"cbxNombreHospedaje",
+		renderTo:"divNombreHospedaje",
+		displayField:"CISLA_NOMBRE",
+		valueField:"CISLA_CODIGO",
+		webService:{
+			url:URL_WS+"Cgg_isla",
+			method:"selectAllAtencionCliente",
+			params:[
+				{name:"format",value:"JSON"}
+			]
+		},
+		events:{
+			load:function(v){
+				$('#cbxNombreHospedaje').prepend("<option value=></option>");
+				$("#cbxNombreHospedaje").val(0);
+
+			}
+		}
+	});
+	cbxNombreHospedaje.reload();
+
+
+
 	function fnHabilitarControles(estado){
 		txtNombrePersona.readOnly = estado;
 		txtApellidoPersona.readOnly = estado;
