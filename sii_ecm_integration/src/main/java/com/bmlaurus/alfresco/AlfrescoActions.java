@@ -51,13 +51,16 @@ public class AlfrescoActions {
 
         try {
             folderBase = (FolderImpl) cmis.getObjectByPath(path);
-            result.setId(folderBase.getId());
-            result.setName(folderBase.getName());
-            result.setRemotePath(folderBase.getPath());
-            for(CmisObject obj:cmis.getObjectsById(folderBase.getId())){
-                SiiFileResult file = new SiiFileResult(obj.getType().getDisplayName(),obj.getName(),obj.getId());
-                result.addFileResult(file);
-            }
+            if(folderBase!=null) {
+                result.setId(folderBase.getId());
+                result.setName(folderBase.getName());
+                result.setRemotePath(folderBase.getPath());
+                for (CmisObject obj : cmis.getObjectsById(folderBase.getId())) {
+                    SiiFileResult file = new SiiFileResult(obj.getType().getDisplayName(), obj.getName(), obj.getId());
+                    result.addFileResult(file);
+                }
+            }else
+                result=null;
         } catch (IOException e) {
             e.printStackTrace();
         }

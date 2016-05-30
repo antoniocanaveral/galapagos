@@ -68,10 +68,10 @@ public class TestAlfresco {
     public void UploadFileToFolder(){
         System.setProperty("sii.home","/Users/acanaveral/Desarrollo/Advance/fuentes/galapagos_ws/galapagos/SII_HOME");
         BaseAPI cmis = new BaseAPI();
-        File file = new File("/Users/antonio/Downloads/test.pdf");
+        File file = new File("/Users/antonio/Downloads/cedula.pdf");
         try {
             //Obtenemos el Objeto
-            CmisObject obj = cmis.getObjectByPath("res/casos/123456789" + "/" + "test.pdf");
+            CmisObject obj = cmis.getObjectByPath("test/listas/carpeta_usuario" + "/" + "cedula.pdf");
             if(obj != null) {
                 if (obj instanceof Document) {
                     cmis.updateDocument((Document) obj,file, null);
@@ -81,7 +81,7 @@ public class TestAlfresco {
             }else{
                 String rootFolderId = cmis.getRootFolderId(cmis.getSite());
                 // Create a new folder in the root folder
-                List<Folder> subFolder = cmis.createFoldersByPath(rootFolderId, "res/casos/123456789");
+                List<Folder> subFolder = cmis.createFoldersByPath(rootFolderId, "test/listas/carpeta_usuario");
                 cmis.createDocument(subFolder.get(subFolder.size() - 1), file, "application/pdf", null);
             }
         } catch (IOException e) {
@@ -112,7 +112,7 @@ public class TestAlfresco {
         System.setProperty("sii.home","/Users/acanaveral/Desarrollo/Advance/fuentes/galapagos_ws/galapagos/SII_HOME");
         BaseAPI cmis = new BaseAPI();
 
-        File file = new File("/Users/antonio/Downloads/test.pdf");
+        File file = new File("/Users/antonio/Downloads/cedula.pdf");
 
         //Generamos el documento y los aspectos necesarios. Pueden ser varios.
         SiiPersonalesDocument doc = new SiiPersonalesDocument("1710679968");
@@ -122,7 +122,7 @@ public class TestAlfresco {
 
         try {
             //Obtenemos el Objeto
-            CmisObject obj = cmis.getObjectByPath("res/casos/123456789" + "/" + "test.pdf");
+            CmisObject obj = cmis.getObjectByPath("test/listas/carpeta_usuario" + "/" + "cedula.pdf");
             if(obj != null) {
                 if (obj instanceof Document) {
                     cmis.updateDocument((Document) obj,file, doc);
@@ -132,7 +132,7 @@ public class TestAlfresco {
             }else{
                 String rootFolderId = cmis.getRootFolderId(cmis.getSite());
                 // Create a new folder in the root folder
-                List<Folder> subFolder = cmis.createFoldersByPath(rootFolderId, "res/casos/123456789");
+                List<Folder> subFolder = cmis.createFoldersByPath(rootFolderId, "test/listas/carpeta_usuario");
                 cmis.createDocument(subFolder.get(subFolder.size() - 1), file, "application/pdf", doc);
             }
         } catch (IOException e) {
