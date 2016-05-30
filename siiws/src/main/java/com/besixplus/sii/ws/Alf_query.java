@@ -1,8 +1,12 @@
 package com.besixplus.sii.ws;
 
+import com.besixplus.sii.db.ManagerConnection;
 import com.bmlaurus.alfresco.AlfrescoActions;
+import com.bmlaurus.alfresco.db.SiiDataLoader;
 import com.bmlaurus.alfresco.integration.SiiFileResult;
 import com.bmlaurus.alfresco.integration.SiiFolderResult;
+import com.bmlaurus.alfresco.model.SiiModelFile;
+import com.bmlaurus.alfresco.model.SiiModelMetadata;
 import com.google.gson.Gson;
 
 import javax.activation.DataHandler;
@@ -14,6 +18,9 @@ import javax.jws.soap.SOAPBinding;
 import javax.xml.bind.annotation.XmlMimeType;
 import javax.xml.ws.WebServiceContext;
 import java.io.Serializable;
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Clase Alf_query: Contiene los metodos necesarios para consultar y extraer datos de Alfresco.
@@ -86,7 +93,34 @@ public class Alf_query implements Serializable {
             @WebParam(name = "filter") String filter
     ){
         String json = null;
+        Connection con = ManagerConnection.getConnection();
+        SiiModelMetadata modelMetadata = SiiDataLoader.getAlfrescoMetadata(con,tableName,recordID,filter);
+        if(modelMetadata!=null){
+            //Si es de subida libre, obtenemos los archivos del repositorio
+            if(!modelMetadata.isList()){
+                SiiFolderResult result = AlfrescoActions.getFolderContent(modelMetadata.getFilesRepository());
+                modelMetadata.setFolderResult(result);
+            }else{//Si es lista de archivos, vamos poniendo los datos de los archivos en cada sitio
+                Map<String,SiiFolderResult> remotePaths = new HashMap<>();
+                for(SiiModelFile file:modelMetadata.getFileList()){
+                    if(!remotePaths.containsKey(file.getFileRepository())){
+                        SiiFolderResult result = AlfrescoActions.getFolderContent(file.getFileRepository());
+                        remotePaths.put(file.getFileRepository(),result);
+                    }
+                    if(remotePaths.size()>0) {
+                        SiiFolderResult fileFolder = remotePaths.get(file.getFileRepository());
+                        if (fileFolder != null) {
+                            for (SiiFileResult fileResult : fileFolder.getFiles()) {
+                                if (fileResult.getName().contains(file.getFileName()))
+                                    file.setFileResult(fileResult);
+                            }
+                        }
+                    }
+                }
 
+            }
+            json = gson.toJson(modelMetadata);
+        }
         return json;
     }
 

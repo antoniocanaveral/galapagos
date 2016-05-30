@@ -547,3 +547,11 @@
     color: #3333ff;
     font-weight: bold;
 }
+/*Alfresco*/
+.ecmTransparentBtn .x-btn td {background-image: none}
+.ecmDownload{background-image:url(../images/ecm/16x16/ecm-download.png); !important;}
+.ecmDownload:hover{background-color: #ffeeee}
+.ecmUpload{background-image:url(../images/ecm/16x16/ecm-upload.png); !important;}
+.ecmUpload:hover{background-color: #ffeeee}
+.ecmRefresh{background-image:url(../images/ecm/16x16/ecm-refresh.png); !important;}
+.ecmRefresh:hover{background-color: #ffeeee}
