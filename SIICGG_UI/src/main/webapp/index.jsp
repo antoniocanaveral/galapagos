@@ -99,6 +99,8 @@
         <script type="text/javascript" src="lib/extjs/WsdlContainer.js"></script>        
         <script type="text/javascript" src="lib/extjs/MsgPopup.js"></script>
         <script type="text/javascript" src="lib/extjs/ux-DataViewTransition.js"></script>
+        <script type="text/javascript" src="lib/extjs/attachment.js"></script>
+        <script type="text/javascript" src="lib/extjs/AlfrescoMng.js"></script>
         <%
                     java.io.File tmpFilesDeps = new java.io.File(request.getSession().getServletContext().getRealPath("/") + "lib" + java.io.File.separatorChar + "dep");
                     java.util.ArrayList<String> tmpJSLines = new java.util.ArrayList<String>();

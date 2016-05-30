@@ -1394,6 +1394,22 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
         header: 'Requerido',
         width: 90
     });
+
+    //PRUEBA ADJUNTO
+
+    var adjunto = new Ext.ux.form.AlfrescoFM({
+        id:'identificador_componente',  //(opcional)
+        name:'nombre_componente',       //(opcional)
+        fieldLabel :'Adjuntos',         //(opcional -> Despliega la etiqueta del comoponente. Si no se define, aparece solo el botón)
+        text: 'Adjunto',                //(opcional -> Texto del botón)
+        tableName : 'CGG_TABLA_DE REFERENCIA',
+        recordID : 'RECORD_ID',
+        filter: 'FILTRO_PARA_EL_MODELO' //(opcional)
+    });
+
+    //
+
+
     /**
      * Ext.grid.ColumnModel Define el modelo de columnas para el objeto cgg_res_seguimiento_requisito.
      */
@@ -1437,13 +1453,13 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
                 }
                 return result;
             }
-        },ccCRSRQ_REQUERIDO, cbcCRRQT_CUMPLE, {
+        },ccCRSRQ_REQUERIDO, cbcCRRQT_CUMPLE,{
             dataIndex: 'CRRQT_OBSERVACION',
             header: 'Observaci\u00F3n',
             width: 200,
             sortable: true
-        },{
-            xtype: 'actioncolumn',
+        },
+           {xtype: 'actioncolumn',
             width: 90,
             header:'Adjunto',
             id:'cradj_data',

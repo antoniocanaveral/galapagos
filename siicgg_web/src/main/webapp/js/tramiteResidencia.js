@@ -85,6 +85,21 @@ $(function() {
         prevText: 'Anterior'
     });
 
+    //PRUEBA ADJUNTO
+
+   /* var adjunto = new Ext.ux.form.AlfrescoFM({
+        id:'identificador_componente',  //(opcional)
+        name:'nombre_componente',       //(opcional)
+        fieldLabel :'Adjuntos',         //(opcional -> Despliega la etiqueta del comoponente. Si no se define, aparece solo el botón)
+        text: 'Adjunto',                //(opcional -> Texto del botón)
+        tableName : 'CGG_TABLA_DE REFERENCIA',
+        recordID : 'RECORD_ID',
+        filter: 'FILTRO_PARA_EL_MODELO' //(opcional)
+    });*/
+
+
+    //
+
 
 
     var cbxPaisResidencia = new bsxComboBox({
@@ -561,11 +576,15 @@ $(function() {
             //tbodyDocumentacionSolicitada.reload();
             for(i=0;i<a.dataSet.length;i++){
                 var fila = insertarFila();
-                //Tipo de Contacto
+                //Tipo de Documento
                 var celda= fila.insertCell(0);
                 celda.id = a.dataSet[i].CRDCSL_CODIGO;
                 celda.innerHTML = a.dataSet[i].CRDCSL_DESCRIPCION;
                 celda.width = 225;
+
+                //Adjunto
+
+
             }
 
         }

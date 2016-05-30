@@ -84,6 +84,9 @@ function loadInit(){
 		}
 	}
 	divCargando.style.visibility="hidden";
+
+
+
 }
 function loadFecha(){
 	var fecha = new Date();
