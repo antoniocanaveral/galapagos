@@ -34,7 +34,6 @@ CREATE TABLE sii.CGG_ECM_METADATA
 (
    CODE character varying NOT NULL PRIMARY KEY,
    TABLE_NAME character varying NOT NULL,
-   RECORD_ID character varying NOT NULL,
    FILTER character varying,
    FILES_REPOSITORY character varying,
    IS_LIST boolean DEFAULT FALSE,
@@ -42,7 +41,7 @@ CREATE TABLE sii.CGG_ECM_METADATA
    USUARIO_INSERT character varying NOT NULL,
    USUARIO_UPDATE character varying NOT NULL
 );
-ALTER TABLE sii.CGG_ECM_METADATA ADD CONSTRAINT CGG_ECM_METADATA_UNIQUE UNIQUE (table_name, record_id, filter);
+ALTER TABLE sii.CGG_ECM_METADATA ADD CONSTRAINT CGG_ECM_METADATA_UNIQUE UNIQUE (table_name, filter);
 
 
 CREATE TABLE sii.CGG_ECM_FILE
@@ -51,6 +50,7 @@ CREATE TABLE sii.CGG_ECM_FILE
    CGG_ECM_METADATA_CODE character varying NOT NULL,
    FILE_NAME character varying NOT NULL,
    FILE_DESCRIPTION character varying,
+   DOCUMENT_TYPE character varying NOT NULL DEFAULT 'D:sii:respaldo',
    FILE_REPOSITORY character varying NOT NULL,
    OVERRIDE_NAME boolean DEFAULT FALSE,
    ESTADO boolean DEFAULT TRUE,
@@ -86,18 +86,20 @@ INSERT INTO sii.cgg_ecm_index_definition(
 INSERT INTO sii.cgg_ecm_index_item(
             code, cgg_ecm_index_definition_code, item_name, item_aspect, item_data_type,
             item_label, is_mandatory, estado, usuario_insert, usuario_update)
-    VALUES ('ITEM_CAJA', 'IDX_ALM', 'CAJA_NAME', 'sii:caja', 'STRING',
-            'Número de Caja', true, true, 'ADMIN', 'ADMIN');
+    VALUES ('ITEM_DESCRIPCION', 'IDX_ALM', 'DESCRIPCION_NAME', 'sii:descripcion', 'TEXT',
+            'Descripción del Almacenamiento', false, true, 'ADMIN', 'ADMIN');
+
 INSERT INTO sii.cgg_ecm_index_item(
             code, cgg_ecm_index_definition_code, item_name, item_aspect, item_data_type,
             item_label, is_mandatory, estado, usuario_insert, usuario_update)
     VALUES ('ITEM_CARPETA', 'IDX_ALM', 'CARPETA_NAME', 'sii:carpeta', 'STRING',
             'Número de Carpeta', true, true, 'ADMIN', 'ADMIN');
+
 INSERT INTO sii.cgg_ecm_index_item(
             code, cgg_ecm_index_definition_code, item_name, item_aspect, item_data_type,
             item_label, is_mandatory, estado, usuario_insert, usuario_update)
-    VALUES ('ITEM_DESCRIPCION', 'IDX_ALM', 'DESCRIPCION_NAME', 'sii:descripcion', 'STRING',
-            'Descripción del Almacenamiento', false, true, 'ADMIN', 'ADMIN');
+    VALUES ('ITEM_CAJA', 'IDX_ALM', 'CAJA_NAME', 'sii:caja', 'STRING',
+            'Número de Caja', true, true, 'ADMIN', 'ADMIN');
 
 -->CADUCABLE
 INSERT INTO sii.cgg_ecm_index_definition(
@@ -120,33 +122,32 @@ INSERT INTO sii.cgg_ecm_index_definition(
 INSERT INTO sii.cgg_ecm_index_item(
             code, cgg_ecm_index_definition_code, item_name, item_aspect, item_data_type,
             item_label, is_mandatory, internal, estado, usuario_insert, usuario_update)
-    VALUES ('ITEM_TABLA', 'IDX_IDN', 'TABLE_NAME_NAME', 'sii:table_name', 'STRING',
-            'Nombre de la Tabla SII', true, true, true, 'ADMIN', 'ADMIN');
+    VALUES ('ITEM_RECORD_ID', 'IDX_IDN', 'RECORD_ID_NAME', 'sii:record_id', 'STRING',
+            'Identificador del Registro', true, true, true, 'ADMIN', 'ADMIN');
 INSERT INTO sii.cgg_ecm_index_item(
             code, cgg_ecm_index_definition_code, item_name, item_aspect, item_data_type,
             item_label, is_mandatory, internal, estado, usuario_insert, usuario_update)
-    VALUES ('ITEM_RECORD_ID', 'IDX_IDN', 'RECORD_ID_NAME', 'sii:record_id', 'STRING',
-            'Identificador del Registro', true, true, true, 'ADMIN', 'ADMIN');
-
+    VALUES ('ITEM_TABLA', 'IDX_IDN', 'TABLE_NAME_NAME', 'sii:table_name', 'STRING',
+            'Nombre de la Tabla SII', true, true, true, 'ADMIN', 'ADMIN');
 
 --///TEST DATA
 --//EJEMPLO PARA LISTAS DE ARCHIVOS
 INSERT INTO sii.cgg_ecm_metadata(
-            code, table_name, record_id, filter, files_repository, is_list,
+            code, table_name, filter, files_repository, is_list,
             estado, usuario_insert, usuario_update)
-    VALUES ('TEST1', 'TABLA_PRUEBA', 'CREG_01', null, null, true,
+    VALUES ('TEST1', 'TABLA_PRUEBA', null, null, true,
             true, 'ADMIN', 'ADMIN');
 
 INSERT INTO sii.cgg_ecm_file(
-            code, cgg_ecm_metadata_code, file_name, file_description, file_repository,
+            code, cgg_ecm_metadata_code, file_name, file_description, document_type, file_repository,
             override_name, estado, usuario_insert, usuario_update)
-    VALUES ('FILE_TEST1', 'TEST1', 'cedula', 'Documento de Identidad', 'test/listas/carpeta_usuario',
+    VALUES ('FILE_TEST1', 'TEST1', 'cedula', 'Documento de Identidad', 'D:sii:respaldo','test/listas/carpeta_usuario',
             true, true, 'ADMIN', 'ADMIN');
 
 INSERT INTO sii.cgg_ecm_file(
-            code, cgg_ecm_metadata_code, file_name, file_description, file_repository,
+            code, cgg_ecm_metadata_code, file_name, file_description, document_type, file_repository,
             override_name, estado, usuario_insert, usuario_update)
-    VALUES ('FILE_TEST2', 'TEST1', 'papeleta', 'Documento de Votación', 'test/listas/carpeta_usuario',
+    VALUES ('FILE_TEST2', 'TEST1', 'papeleta', 'Documento de Votación', 'D:sii:personales', 'test/listas/carpeta_usuario',
             true, true, 'ADMIN', 'ADMIN');
 
 
@@ -168,9 +169,9 @@ INSERT INTO sii.cgg_ecm_file_index(
 
 --//EJEMPLO PARA SUBIDA LIBRE
 INSERT INTO sii.cgg_ecm_metadata(
-            code, table_name, record_id, filter, files_repository, is_list,
+            code, table_name, filter, files_repository, is_list,
             estado, usuario_insert, usuario_update)
-    VALUES ('TEST2', 'TABLA_PRUEBA_2', 'CREG_02', null, 'test/libre/carpeta_usuario', false,
+    VALUES ('TEST2', 'TABLA_PRUEBA_2', null, 'test/libre/carpeta_usuario', false,
             true, 'ADMIN', 'ADMIN');
 
 --> MIGRATION SCRIPT CONTROLLER <--

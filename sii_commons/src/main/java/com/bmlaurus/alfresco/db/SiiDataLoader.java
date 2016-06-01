@@ -17,10 +17,10 @@ import java.util.List;
 public class SiiDataLoader {
     private static List<SiiModelIndexDefinition> indexDefinitions;
 
-    public static SiiModelMetadata getAlfrescoMetadata(java.sql.Connection inConnection, String tableName, String recordId, String filter){
+    public static SiiModelMetadata getAlfrescoMetadata(java.sql.Connection inConnection, String tableName, String filter){
         SiiModelMetadata modelMetadata = null;
-        if (tableName!=null && recordId!=null) {
-            String strSql = "SELECT * FROM CGG_ECM_METADATA WHERE TABLE_NAME=? AND RECORD_ID=? ";
+        if (tableName!=null) {
+            String strSql = "SELECT * FROM CGG_ECM_METADATA WHERE TABLE_NAME=?";
             if(filter!=null && !filter.isEmpty())
                 strSql += " AND FILTER=?";
 
@@ -29,7 +29,6 @@ public class SiiDataLoader {
             try {
                 stmt = inConnection.prepareStatement(strSql);
                 stmt.setString(1,tableName);
-                stmt.setString(2,recordId);
                 if(filter!=null && !filter.isEmpty())
                     stmt.setString(3,filter);
 
@@ -37,7 +36,7 @@ public class SiiDataLoader {
                 //Debería devolver solamente 1
                 results.next();
 
-                modelMetadata=new SiiModelMetadata(results.getString("CODE"),results.getString("TABLE_NAME"),results.getString("RECORD_ID"),results.getString("FILTER"),
+                modelMetadata=new SiiModelMetadata(results.getString("CODE"),results.getString("TABLE_NAME"),results.getString("FILTER"),
                         results.getString("FILES_REPOSITORY"), results.getBoolean("IS_LIST"), results.getBoolean("ESTADO"),
                         results.getString("USUARIO_INSERT"), results.getString("USUARIO_UPDATE"));
 
@@ -68,7 +67,7 @@ public class SiiDataLoader {
 
             while (results.next()){
                 SiiModelFile modelFile = new SiiModelFile(results.getString("CODE"),results.getString("FILE_NAME"),results.getString("FILE_DESCRIPTION"),
-                        results.getString("FILE_REPOSITORY"),results.getBoolean("OVERRIDE_NAME"),results.getBoolean("ESTADO"),
+                        results.getString("DOCUMENT_TYPE"),results.getString("FILE_REPOSITORY"),results.getBoolean("OVERRIDE_NAME"),results.getBoolean("ESTADO"),
                         results.getString("USUARIO_INSERT"), results.getString("USUARIO_UPDATE"));
                 if(files==null)
                     files = new ArrayList<>();

@@ -1,8 +1,3 @@
-
-
-/////// OJO!!!
-//#####ESTE ARCHIVO ESTA DEPRECADO. LOS PARAMETROS GLOBALES SE ENCUENTRAN EN SII_HOME/siicgg_ui
-
 Ext.BLANK_IMAGE_URL='lib/extjs/resources/images/default/s.gif';
 var URL_SERVER= document.URL.split('/')[2];
 var URL_WS = "/siiws/";

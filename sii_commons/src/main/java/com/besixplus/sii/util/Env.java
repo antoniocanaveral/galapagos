@@ -2,10 +2,7 @@ package com.besixplus.sii.util;
 
 import com.bmlaurus.exception.EnvironmentVariableNotDefinedException;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.Properties;
 
 /**
@@ -49,5 +46,40 @@ public class Env {
         }
 
         return props;
+    }
+
+    public static String loadExternalScripts(String resourcePath){
+        StringBuffer script = new StringBuffer();
+        Properties lister = getExternalProperties(resourcePath);
+        if(lister!=null){
+            String scripts_to_load = lister.getProperty("index_javascript");
+            String [] loader;
+            if(scripts_to_load.contains(",")){
+                loader = scripts_to_load.split(",");
+            }else{
+                loader = new String[]{scripts_to_load};
+            }
+            script.append("<script type=\"text/javascript\">\n");
+            for(String file:loader){
+                try {
+                    FileInputStream resource = getExternalResource(file);
+
+                    BufferedReader tmpBR = new BufferedReader(new InputStreamReader(resource));
+                    String tmpLine = null;
+                    while ((tmpLine = tmpBR.readLine()) != null) {
+                        script.append(tmpLine+"\n");
+                    }
+                    tmpBR.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (EnvironmentVariableNotDefinedException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            script.append("</script>");
+        }
+        return script.toString();
     }
 }

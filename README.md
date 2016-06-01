@@ -23,3 +23,4 @@ Nuevo Branch de Desarrollo a partir de aqui.
 - Se movieron los reportes a SII_HOME/jasper
 - Servicio de Inicialización de JasperServer controlado desde el archivo de configuración
 - Fácil integración del componente de Alfresco con SII [Componente][].
+- bsxExtras.js ahora se puede editar en caliente desde SII_HOME/siicgg_ui.

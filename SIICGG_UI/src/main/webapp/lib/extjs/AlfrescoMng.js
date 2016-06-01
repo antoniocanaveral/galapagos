@@ -32,7 +32,7 @@ function AlfrescoMng(_tableName, _recordID, _filter){
             LoadJs("lib/pipwerks/pdfobject.min.js");
             LoadJs("lib/extjs/AlfrescoUploader.js");
 
-            var tituloAlfrescoMng = 'Administración de Adjuntos';
+            var tituloAlfrescoMng = 'Administraci&oacute;n de Adjuntos';
             var descAlfrescoMng = 'El formulario permite administrar sus adjuntos con el repositorio de Alfresco';
 
             var comps=[]; //variable donde pondremos los componentes
@@ -280,13 +280,11 @@ function LoadJs(url){
 }
 
 function freeUpload(_this, e){
-    console.log(JSON.stringify(_this.fileObj));
     if(_this.fileObj){
         var uploader = new AlfrescoUploader(_this.fileObj,tableName,recordID);
         uploader.show();
     }
     //alert(_this.fileName);
-    console.log("freeUpload");
 }
 
 function fileDownload(_this, e){

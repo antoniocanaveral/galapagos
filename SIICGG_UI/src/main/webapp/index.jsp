@@ -9,7 +9,9 @@
 <%@page import="java.io.FileInputStream"%>
 <%@page import="java.io.BufferedReader"%>
 <%@page import="java.io.FileReader"%>
-<%@page import="java.io.FileFilter"%><html>
+<%@page import="java.io.FileFilter"%>
+<%@ page import="com.besixplus.sii.util.Env" %>
+<html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <title>Sistema inform&aacute;tico integral</title>
@@ -158,7 +160,8 @@
         <script type="text/javascript" src="forms/FrmCriterioReporte.js"></script>
         <script type="text/javascript" src="forms/FrmAcercade.js"></script>
         <script type="text/javascript" src="forms/DlgIngresoFecha.js"></script>
-        <script type="text/javascript" src="forms/bsxExtras.js"></script>
+        <%out.println(Env.loadExternalScripts("siicgg_ui/javascripts.properties"));%>
+        <!--script type="text/javascript" src="forms/bsxExtras.js"></script-->
         <script type="text/javascript" src="forms/DlgBusqueda.js"></script>
         <script type="text/javascript" src="forms/DlgBusquedaNoPaginado.js"></script>
         <script type="text/javascript" src="forms/DlgSeleccionDespacho.js"></script>
@@ -193,6 +196,10 @@
                     }
         %>
         <script type="text/javascript" src="lib/reports.js"></script>
+
+        <!-- ALFRESCO MNG-->
+        <script type="text/javascript" src="lib/extjs/attachment.js"></script>
+        <script type="text/javascript" src="lib/extjs/AlfrescoMng.js"></script>
     </head>
     <body scroll="no" id="body">
         <div id="x-desktop">

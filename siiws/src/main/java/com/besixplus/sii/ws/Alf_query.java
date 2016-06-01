@@ -94,7 +94,7 @@ public class Alf_query implements Serializable {
     ){
         String json = null;
         Connection con = ManagerConnection.getConnection();
-        SiiModelMetadata modelMetadata = SiiDataLoader.getAlfrescoMetadata(con,tableName,recordID,filter);
+        SiiModelMetadata modelMetadata = SiiDataLoader.getAlfrescoMetadata(con,tableName,filter);
         if(modelMetadata!=null){
             //Si es de subida libre, obtenemos los archivos del repositorio
             if(!modelMetadata.isList()){
