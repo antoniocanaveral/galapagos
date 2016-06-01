@@ -12,9 +12,13 @@ public class SiiModelFile implements Serializable{
 
     private static final long serialVersionUID = 4847214993952598944L;
 
+    public static final String DOCUMENT_TYPE_PERSONALES = "D:sii:personales";
+    public static final String DOCUMENT_TYPE_RESPALDO = "D:sii:respaldo";
+
     private String code;
     private String fileName;
     private String fileDescription;
+    private String documentType;
     private String fileRepository;
     private boolean overrideName;
     private List<SiiModelIndexDefinition> indexDefinitionList;
@@ -26,10 +30,11 @@ public class SiiModelFile implements Serializable{
     //Contenido
     private SiiFileResult fileResult;
 
-    public SiiModelFile(String code, String fileName, String fileDescription, String fileRepository, boolean overrideName, boolean estado, String usuario_insert, String usuario_update) {
+    public SiiModelFile(String code, String fileName, String fileDescription, String documentType, String fileRepository, boolean overrideName, boolean estado, String usuario_insert, String usuario_update) {
         this.code = code;
         this.fileName = fileName;
         this.fileDescription = fileDescription;
+        this.documentType = documentType;
         this.fileRepository = fileRepository;
         this.overrideName = overrideName;
         this.estado = estado;
@@ -59,6 +64,14 @@ public class SiiModelFile implements Serializable{
 
     public void setFileDescription(String fileDescription) {
         this.fileDescription = fileDescription;
+    }
+
+    public String getDocumentType() {
+        return documentType;
+    }
+
+    public void setDocumentType(String documentType) {
+        this.documentType = documentType;
     }
 
     public String getFileRepository() {

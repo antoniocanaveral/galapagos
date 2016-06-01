@@ -29,10 +29,9 @@ public class SiiModelMetadata implements Serializable{
     private SiiFolderResult folderResult;
 
 
-    public SiiModelMetadata(String code, String tableName, String recordID, String filter, String filesRepository, boolean isList, boolean estado, String usuario_insert, String usuario_update) {
+    public SiiModelMetadata(String code, String tableName, String filter, String filesRepository, boolean isList, boolean estado, String usuario_insert, String usuario_update) {
         this.code = code;
         this.tableName = tableName;
-        this.recordID = recordID;
         this.filter = filter;
         this.filesRepository = filesRepository;
         this.isList = isList;
