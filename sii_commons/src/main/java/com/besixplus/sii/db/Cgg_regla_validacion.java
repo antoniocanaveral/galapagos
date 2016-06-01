@@ -857,7 +857,7 @@ public class Cgg_regla_validacion implements Serializable{
 
 			}
 			stmSelect.setString(contador+1,inJSONRegla.getString("CRVAL_OPERADOR_COMPARADOR"));
-			if(!inJSONRegla.getString("CGCNF_CODIGO").trim().isEmpty()&& !inJSONRegla.getString("CGCNF_CODIGO").equals("null"))
+			if(!inJSONRegla.getString("CGCNF_CODIGO").trim().isEmpty() && !inJSONRegla.getString("CGCNF_CODIGO").equals("null"))
 			{
 				stmSelect.setString(contador+2,inJSONRegla.getString("CGCNF_CODIGO"));
 			}
