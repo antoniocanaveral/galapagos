@@ -9,9 +9,19 @@ import java.io.*;
  */
 public class InputStreamDataSource implements DataSource{
     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-    private final String name;
+    private String name;
+    private String mime;
+
+    public InputStreamDataSource(InputStream inputStream, String name, String mimeType) {
+        consturctor(inputStream,name);
+        this.mime = mimeType;
+    }
 
     public InputStreamDataSource(InputStream inputStream, String name) {
+        consturctor(inputStream,name);
+    }
+
+    private void consturctor(InputStream inputStream, String name){
         this.name = name;
         try {
             int nRead;
@@ -25,12 +35,16 @@ public class InputStreamDataSource implements DataSource{
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
     public String getContentType() {
-        return new MimetypesFileTypeMap().getContentType(name);
+        if(mime != null)
+            return mime;
+        MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
+        mimeTypesMap.addMimeTypes("text/plain txt");
+        mimeTypesMap.addMimeTypes("application/pdf pdf");
+        return mimeTypesMap.getContentType(name);
     }
 
     @Override

@@ -56,12 +56,16 @@ public class AlfrescoUploader extends HttpServlet implements Serializable {
                 //Bytes Archivo
                 DataHandler dh = null;
 
+                String filesRepository = null;
+
                 //Aqui hay que armar el objeto que recibe los datos, para pasarselo al Alfresco.
                 SiiModelFile modelFile = null;
                 Map<String,String> identity = null;
                 for(FileItem item : items){
                     if (item.isFormField()) {//Viene en el formulario
-                        if(item.getFieldName().equals("fileDefinition")){
+                        if(item.getFieldName().equals("filesRepository")){
+                            filesRepository = item.getString();
+                        }else if(item.getFieldName().equals("fileDefinition")){
                             modelFile = gson.fromJson(item.getString().replace("\\","").replace("\"[{","[{").replace("}]\"", "}]"),SiiModelFile.class);
                         }else if(item.getFieldName().equals("identificable")) {
                             identity = gson.fromJson(item.getString().replace("\\", "").replace("\"[{","[{").replace("}]\"", "}]"), Map.class);
@@ -86,18 +90,32 @@ public class AlfrescoUploader extends HttpServlet implements Serializable {
                             System.out.println("NOT SUPPORTED: "+item.getFieldName() + " = " + item.getString());
                     }else{ // es un archivo
                         System.out.print("Es un archivo");
-                        dh = new DataHandler(new InputStreamDataSource(item.getInputStream(),item.getName()));
+                        String fileName = item.getFieldName();
+                        if(modelFile!=null && modelFile.getFileName()!=null) {
+                            String ext = item.getName().substring(item.getName().lastIndexOf("."));
+                            fileName = modelFile.getFileName()+ext;
+                        }
+                        dh = new DataHandler(new InputStreamDataSource(item.getInputStream(),fileName));
                         //Agregamos nombre del archivo y propiedades
-                        document.setPath(modelFile.getFileRepository());
-                        document.setFileName(item.getName());
+                        if(document==null && filesRepository!=null){
+                            document = new SiiRespaldoDocument("FreeUploader");
+                            document.setPath(filesRepository);
+                        }else
+                            document.setPath(modelFile.getFileRepository());
+
+                        if(document!=null)
+                            document.setFileName(item.getName());
                     }
                 }
                 if(document!=null && dh!=null){
                     //Agregamos Aspectos
+                    //Identificable lo ponemos fijo para que todos lo tengan
+                    table_name = table_name!=null?table_name:identity.get("tableName");
+                    record_id = record_id!=null?record_id:identity.get("recordId");
+                    document.addAspect(new SiiIdentificable(table_name,record_id));
+                    //Luego los aspectos opcionales
                     if(caja!=null || carpeta!=null || descripcion!=null)
                         document.addAspect(new SiiAlmacenable(caja,carpeta,descripcion));
-                    if(table_name!=null && record_id!=null)
-                        document.addAspect(new SiiIdentificable(table_name,record_id));
                     if(caducidad != null)
                         document.addAspect(new SiiCaducable(caducidad));
 

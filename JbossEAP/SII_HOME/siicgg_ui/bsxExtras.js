@@ -22,6 +22,9 @@ var defaultInRowsPerPage=1;
 
 var stDiagramaHistorial = null;
 
+//PARAMETROS ALFRESCO
+var ALF_VIEWER_TIMER=10000; //Timer para cargar el documento.
+
 /*
 * TIPO DE FORMATOS DE FECHA
 */

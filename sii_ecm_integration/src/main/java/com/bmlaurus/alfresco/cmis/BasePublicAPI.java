@@ -5,6 +5,7 @@ import com.bmlaurus.alfresco.model.ContainerEntry;
 import com.bmlaurus.alfresco.model.ContainerList;
 import com.bmlaurus.alfresco.model.NetworkEntry;
 import com.bmlaurus.alfresco.model.NetworkList;
+import com.bmlaurus.alfresco.utils.InputStreamDataSource;
 import com.bmlaurus.utils.Config;
 import com.google.api.client.http.*;
 import com.bmlaurus.alfresco.aspects.Aspect;
@@ -146,8 +147,8 @@ public abstract class BasePublicAPI {
 
     public DataHandler getDocument(String fileId){
         Document document = (Document) getObjectById(fileId);
-        DataHandler retFile = new DataHandler(document.getContentStream(),document.getContentStream().getMimeType());
-        return  retFile;
+        DataHandler _retFile = new DataHandler(new InputStreamDataSource(document.getContentStream().getStream(),document.getContentStream().getFileName(), document.getContentStream().getMimeType()));
+        return  _retFile;
     }
 
     public CmisObject getObjectByPath(String path) throws IOException {

@@ -3,16 +3,19 @@
  */
 
 var activityIndicator = undefined;
-var selectedItem = undefined;
 
 var tableName;
 var recordID;
+var filter;
+var alfrescoResponse = undefined;
+//Panel de Propiedades
+var east;
 
 function AlfrescoMng(_tableName, _recordID, _filter){
 
     tableName = _tableName;
     recordID = _recordID;
-    var filter = _filter;
+    filter = _filter;
 
     if(tableName && recordID) {
         activityIndicator = new Ext.LoadMask(Ext.getBody(), {msg:"Cargando..."});
@@ -23,10 +26,12 @@ function AlfrescoMng(_tableName, _recordID, _filter){
         param.add('tableName', tableName);
         param.add('recordID', recordID);
         param.add('filter', filter);
-        //var alfrescoResponse = {"code":"TEST1","tableName":"TABLA_PRUEBA","recordID":"CREG_01","isList":true,"fileList":[{"code":"FILE_TEST1","fileName":"cedula","fileDescription":"Documento de Identidad","fileRepository":"test/listas/carpeta_usuario","overrideName":true,"indexDefinitionList":[{"code":"IDX_ALM","name":"Almacenable","description":"Permite relacionar el adjunto con el archivo físico","itemList":[{"code":"ITEM_DESCRIPCION","itemName":"DESCRIPCION_NAME","itemDataType":"STRING","itemLabel":"Descripción del Almacenamiento","isMandatory":false,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"},{"code":"ITEM_CARPETA","itemName":"CARPETA_NAME","itemDataType":"STRING","itemLabel":"Número de Carpeta","isMandatory":true,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"},{"code":"ITEM_CAJA","itemName":"CAJA_NAME","itemDataType":"STRING","itemLabel":"Número de Caja","isMandatory":true,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"}],"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"},{"code":"IDX_IDN","name":"Identificable","description":"Relaciona el adjunto en Alfresco, con la base de datos de SII","itemList":[{"code":"ITEM_RECORD_ID","itemName":"RECORD_ID_NAME","itemDataType":"STRING","itemLabel":"Identificador del Registro","isMandatory":true,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"},{"code":"ITEM_TABLA","itemName":"TABLE_NAME_NAME","itemDataType":"STRING","itemLabel":"Nombre de la Tabla SII","isMandatory":true,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"}],"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"},{"code":"IDX_CAD","name":"Caducable","description":"Añade una fecha de caducidad del adjunto","itemList":[{"code":"ITEM_FECHA","itemName":"CADUCIDAD_NAME","itemDataType":"DATE","itemLabel":"Fecha de Caducidad del Documento","isMandatory":true,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"}],"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"}],"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"},{"code":"FILE_TEST2","fileName":"papeleta","fileDescription":"Documento de Votación","fileRepository":"test/listas/carpeta_usuario","overrideName":true,"indexDefinitionList":[{"code":"IDX_ALM","name":"Almacenable","description":"Permite relacionar el adjunto con el archivo físico","itemList":[{"code":"ITEM_DESCRIPCION","itemName":"DESCRIPCION_NAME","itemDataType":"STRING","itemLabel":"Descripción del Almacenamiento","isMandatory":false,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"},{"code":"ITEM_CARPETA","itemName":"CARPETA_NAME","itemDataType":"STRING","itemLabel":"Número de Carpeta","isMandatory":true,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"},{"code":"ITEM_CAJA","itemName":"CAJA_NAME","itemDataType":"STRING","itemLabel":"Número de Caja","isMandatory":true,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"}],"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"}],"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"}],"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"};
-        var alfrescoResponse = SOAPClient.invoke(URL_WS + 'Alf_query', "getAttachmentMetadata", param, false, null);
+        //alfrescoResponse = {"code":"TEST1","tableName":"TABLA_PRUEBA","isList":true,"fileList":[{"code":"FILE_TEST2","fileName":"papeleta","fileDescription":"Documento de Votación","documentType":"D:sii:personales","fileRepository":"test/listas/carpeta_usuario","overrideName":true,"indexDefinitionList":[{"code":"IDX_ALM","name":"Almacenable","description":"Permite relacionar el adjunto con el archivo físico","itemList":[{"code":"ITEM_CAJA","itemName":"CAJA_NAME","itemDataType":"STRING","itemLabel":"Número de Caja","isMandatory":true,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"},{"code":"ITEM_CARPETA","itemName":"CARPETA_NAME","itemDataType":"STRING","itemLabel":"Número de Carpeta","isMandatory":true,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"},{"code":"ITEM_DESCRIPCION","itemName":"DESCRIPCION_NAME","itemDataType":"TEXT","itemLabel":"Descripción del Almacenamiento","isMandatory":false,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"}],"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"}],"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"},{"code":"FILE_TEST1","fileName":"cedula","fileDescription":"Documento de Identidad","documentType":"D:sii:respaldo","fileRepository":"test/listas/carpeta_usuario","overrideName":true,"indexDefinitionList":[{"code":"IDX_ALM","name":"Almacenable","description":"Permite relacionar el adjunto con el archivo físico","itemList":[{"code":"ITEM_CAJA","itemName":"CAJA_NAME","itemDataType":"STRING","itemLabel":"Número de Caja","isMandatory":true,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"},{"code":"ITEM_CARPETA","itemName":"CARPETA_NAME","itemDataType":"STRING","itemLabel":"Número de Carpeta","isMandatory":true,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"},{"code":"ITEM_DESCRIPCION","itemName":"DESCRIPCION_NAME","itemDataType":"TEXT","itemLabel":"Descripción del Almacenamiento","isMandatory":false,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"}],"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"},{"code":"IDX_IDN","name":"Identificable","description":"Relaciona el adjunto en Alfresco, con la base de datos de SII","itemList":[{"code":"ITEM_TABLA","itemName":"TABLE_NAME_NAME","itemDataType":"STRING","itemLabel":"Nombre de la Tabla SII","isMandatory":true,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"},{"code":"ITEM_RECORD_ID","itemName":"RECORD_ID_NAME","itemDataType":"STRING","itemLabel":"Identificador del Registro","isMandatory":true,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"}],"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"},{"code":"IDX_CAD","name":"Caducable","description":"Añade una fecha de caducidad del adjunto","itemList":[{"code":"ITEM_FECHA","itemName":"CADUCIDAD_NAME","itemDataType":"DATE","itemLabel":"Fecha de Caducidad del Documento","isMandatory":true,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"}],"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"}],"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN","fileResult":{"displayName":"Documentos Personales SII","name":"cedula.pdf","id":"64011ae2-1a0e-4747-93c2-508a908dd4c7;1.0"}}],"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"};
+        if(alfrescoResponse==undefined)
+            alfrescoResponse = SOAPClient.invoke(URL_WS + 'Alf_query', "getAttachmentMetadata", param, false, null);
         if (alfrescoResponse) {
-            alfrescoResponse = eval("(" + alfrescoResponse + ')'); //Convierte string a Objeto JSON
+            if(alfrescoResponse !== null && typeof alfrescoResponse !== 'object')
+                alfrescoResponse = eval("(" + alfrescoResponse + ')'); //Convierte string a Objeto JSON
             //-->>INI
             //Agregamos la libreria de visualizacion de PDFs
             LoadJs("lib/pipwerks/pdfobject.min.js");
@@ -84,24 +89,28 @@ function AlfrescoMng(_tableName, _recordID, _filter){
                     var fileName = new Ext.Button({
                         xtype: 'button',
                         text:files[i].fileDescription,
+                        fileObj: files[i],
                         prentPanelId:"tarjet_"+i,
                         width: 120,
                         height:30
                     });
+                    fileName.on('click',fileSelected);
                     var btnAction;
                     if(files[i].fileResult){
                         btnAction = new Ext.Button({
                             iconCls:'ecmRefresh',
                             fileObj: files[i],
+                            fileContainer:fileName,
                             fileName:files[i].fileName,
                             margins: '0 0 5 15',
                             listeners:{click:freeUpload}
                         });
-                        fileName.on('click',fileSelected);
                     }else{
                         btnAction = new Ext.Button({
                             iconCls:'ecmUpload',
                             fileObj: files[i],
+                            fileContainer:fileName,
+                            fileRecord:fileRecord,
                             fileName:files[i].fileName,
                             margins: '0 0 5 15',
                             listeners:{click:freeUpload}
@@ -134,7 +143,7 @@ function AlfrescoMng(_tableName, _recordID, _filter){
                 items: comps
             });
 
-            var east = new Ext.Panel({
+            east = new Ext.Panel({
                 title: 'Propiedades',
                 region: 'east',     // position for region
                 width: 200,
@@ -172,7 +181,11 @@ function AlfrescoMng(_tableName, _recordID, _filter){
                 //width:400,
                 //minWidth:400,
                 constrain:true,
-                modal:true
+                modal:true,
+                resizable   :false,
+                maximizable :false,
+                minimizable :false,
+                closable    : true
                 //bbar:[btnGuardarCgg_res_adjunto,'->',btnCerrarCgg_res_adjunto]
             });
 
@@ -186,45 +199,60 @@ function AlfrescoMng(_tableName, _recordID, _filter){
                 return winFrmSubirAdjunto;
             };
 
-            function fileSelected(_this, e){
+            this.getWindow().on('close',this.beforeClose);
+
+            function fileSelected(_this, e) {
                 var pnl = _this;
-                if(pnl.fileObj){
+                if (pnl.fileObj && pnl.fileObj.fileResult) {
                     //traemos las propiedades
-                    
+                    activityIndicator = new Ext.LoadMask(Ext.getBody(), {msg: "Cargando Propiedades..."});
+                    activityIndicator.show();
                     var param = new SOAPClientParameters();
-                    param.add('fileId', fileObj.fileResult.id);
-                    param.add('versionInfo', true);
+                    param.add('fileId', pnl.fileObj.fileResult.id);
+                    param.add('versionInfo', false);
                     var fileProperties = SOAPClient.invoke(URL_WS + 'Alf_query', "getFullFileInfo", param, false, null);
                     if (fileProperties) {
                         fileProperties = eval("(" + fileProperties + ')'); //Convierte string a Objeto JSON
+                        buildFileProperties(fileProperties);
                     }
-                }
-
-                if(lastSelected!=undefined)
-                    lastSelected.class= 'x-panel';
-                lastSelected = pnl;
-                lastSelected.class= 'x-panel selected-file-record';
-                var oldPdfViewer = document.getElementById('pdf_viewer');
-                if(oldPdfViewer){
-                    var viewer = document.getElementById("pdf_viewer");
-                    viewer.parentNode.removeChild(viewer);
-                }
-
-                var options = {
-                    id:'pdf_viewer',
-                    fallbackLink: '<p>Su navegador no soporta visualización de PDFs en línea. Descargue el archivo para visualizarlo: <a href="[url]">Descargar PDF</a></p>'
-                };
-
-                //Mostrar cargador
-                activityIndicator = new Ext.LoadMask(Ext.getBody(), {msg:"Cargando Archivo..."});
-                activityIndicator.show();
-                PDFObject.embed("file:///Users/acanaveral/Downloads/ficha-carnivalR.pdf", '#'+Ext.getCmp('alfresco_center_pdf_viewer').getEl().dom.lastChild.lastChild.id, options);
-                var pdfViewer = document.getElementById('pdf_viewer');
-                pdfViewer.onload = function(state) {
-                    console.log('file loaded');
-                    if(activityIndicator)
-                        activityIndicator.hide();
+                    activityIndicator.hide();
                     activityIndicator = null;
+
+                    if (lastSelected != undefined)
+                        lastSelected.class = 'x-panel';
+                    lastSelected = pnl;
+                    lastSelected.class = 'x-panel selected-file-record';
+                    var oldPdfViewer = document.getElementById('pdf_viewer');
+                    if (oldPdfViewer) {
+                        var viewer = document.getElementById("pdf_viewer");
+                        viewer.parentNode.removeChild(viewer);
+                    }
+
+                    var options = {
+                        id: 'pdf_viewer',
+                        fallbackLink: '<p>Su navegador no soporta visualización de PDFs en línea. Descargue el archivo para visualizarlo: <a href="[url]">Descargar PDF</a></p>'
+                    };
+
+                    //Mostrar cargador
+                    activityIndicator = new Ext.LoadMask(Ext.getBody(), {msg: "Cargando Archivo..."});
+                    activityIndicator.show();
+                    //Timer para que no se quede eternamente pensando
+                    setTimeout(function(){
+                        if(activityIndicator){
+                            Ext.MsgPopup.msg(tituloAlfrescoMng, "Tiempo de espera agotado. Puede que no exista el documento.",MsgPopup.INFO);
+                            activityIndicator.hide();
+                            activityIndicator=null;
+                        }
+                    }, ALF_VIEWER_TIMER?ALF_VIEWER_TIMER:5000);
+                    PDFObject.embed(URL_WS+"AlfrescoDownloaderSVR?documentID="+pnl.fileObj.fileResult.id, '#'+Ext.getCmp('alfresco_center_pdf_viewer').getEl().dom.lastChild.lastChild.id, options);
+                    //PDFObject.embed("https://localhost:8443/siiws/AlfrescoDownloaderSVR?documentID=" + pnl.fileObj.fileResult.id, '#' + Ext.getCmp('alfresco_center_pdf_viewer').getEl().dom.lastChild.lastChild.id, options);
+                    var pdfViewer = document.getElementById('pdf_viewer');
+                    pdfViewer.onload = function (state) {
+                        console.log('file loaded');
+                        if (activityIndicator)
+                            activityIndicator.hide();
+                        activityIndicator = null;
+                    }
                 }
             }
 
@@ -248,10 +276,19 @@ AlfrescoMng.prototype.show = function(){
     if(this.getWindow())
         this.getWindow().show();
 };
+
+AlfrescoMng.prototype.beforeClose = function(){
+    activityIndicator = undefined;
+    tableName = undefined;
+    recordID = undefined;
+    filter = undefined;
+    alfrescoResponse = undefined;
+};
 /**
  *Funcion prototipo. Permite cerrar la ventana AlfrescoMng desde una instancia.
  */
 AlfrescoMng.prototype.close = function(){
+    this.beforeClose();
     this.getWindow().close();
 };
 /**
@@ -280,8 +317,21 @@ function LoadJs(url){
 }
 
 function freeUpload(_this, e){
-    if(_this.fileObj){
+    var btnUpload = _this;
+    if(btnUpload.fileObj){
         var uploader = new AlfrescoUploader(_this.fileObj,tableName,recordID);
+        uploader.on('hide',function(_that){
+            var result = uploader.result();
+            console.log("HIDE: "+result);
+            if(btnUpload.fileContainer){
+                btnUpload.setIconClass('ecmRefresh');
+                btnUpload.fileContainer.fileObj.fileResult = result;
+            }
+            uploader.destroy();
+        });
+        uploader.on('close',function(p){
+            console.log("CLOSE!!");
+        });
         uploader.show();
     }
     //alert(_this.fileName);
@@ -290,4 +340,62 @@ function freeUpload(_this, e){
 function fileDownload(_this, e){
     alert(_this.fileName);
     console.log("fileDownload");
+}
+
+function buildFileProperties(properties){
+    if(east){
+        east.removeAll();
+        //Construimos las propiedades generales:
+        if(properties){
+            var propData = [];
+            propData.push(["Nombre de Despliegue",  properties.displayName]);
+            propData.push(["Nombre",                properties.name]);
+            propData.push(["Identificador",      properties.id]);
+            propData.push(["Versión",      properties.versionLabel]);
+
+            for(var i=0;i<properties.aspects.length;i++){
+                var aspect = properties.aspects[i];
+                for (var property in aspect) {
+                    if (aspect.hasOwnProperty(property)) {
+                        propData.push([property, aspect[property]]);
+                    }
+                }
+            }
+            // create the data store
+            var store = new Ext.data.ArrayStore({
+                fields: [
+                    {name: 'propiedad'},
+                    {name: 'valor'}
+                ]
+            });
+            // manually load local data
+            store.loadData(propData);
+            var grid = new Ext.grid.GridPanel({
+                store: store,
+                columns: [
+                    {
+                        id       :'propiedad',
+                        header   : 'Propiedad',
+                        width    : 100,
+                        sortable : false,
+                        dataIndex: 'propiedad'
+                    },
+                    {
+                        header   : 'Valor',
+                        width    : 100,
+                        sortable : false,
+                        dataIndex: 'valor'
+                    }
+                ],
+                stripeRows: true,
+                autoExpandColumn: 'propiedad',
+                height: 500,
+                // config options for stateful behavior
+                stateful: true,
+                stateId: 'grid'
+            });
+            east.add(grid);
+            east.doLayout();
+        }
+    }
 }
