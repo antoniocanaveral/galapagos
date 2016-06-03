@@ -24,6 +24,15 @@ var stDiagramaHistorial = null;
 
 //PARAMETROS ALFRESCO
 var ALF_VIEWER_TIMER=10000; //Timer para cargar el documento.
+Ext.util.Format.capitalize = (function(){
+    var re = /(^|[^\w])([a-z])/g,
+        fn = function(m, a, b) {
+            return a + b.toUpperCase();
+        };
+    return function(v){
+        return v.toLowerCase().replace(re, fn);
+    }
+})();
 
 /*
 * TIPO DE FORMATOS DE FECHA

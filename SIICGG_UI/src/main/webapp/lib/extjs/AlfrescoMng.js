@@ -348,51 +348,62 @@ function buildFileProperties(properties){
         //Construimos las propiedades generales:
         if(properties){
             var propData = [];
-            propData.push(["Nombre de Despliegue",  properties.displayName]);
-            propData.push(["Nombre",                properties.name]);
-            propData.push(["Identificador",      properties.id]);
-            propData.push(["Versión",      properties.versionLabel]);
+            propData.push(["Nombre de Despliegue",  properties.displayName, "General"]);
+            propData.push(["Nombre",                properties.name, "General"]);
+            propData.push(["Identificador",      properties.id, "General"]);
+            propData.push(["Versi&oacute;n",      properties.versionLabel, "General"]);
 
             for(var i=0;i<properties.aspects.length;i++){
                 var aspect = properties.aspects[i];
                 for (var property in aspect) {
-                    if (aspect.hasOwnProperty(property)) {
-                        propData.push([property, aspect[property]]);
+                    if (aspect.hasOwnProperty(property) && property!="prefix" && !property.toString().endsWith("NAME")) {
+                        propData.push([Ext.util.Format.capitalize(property), aspect[property], "Idx. "+Ext.util.Format.capitalize(aspect.ASPECT_NAME.toString().replace("P:sii:",""))]);
                     }
                 }
             }
-            // create the data store
-            var store = new Ext.data.ArrayStore({
-                fields: [
-                    {name: 'propiedad'},
-                    {name: 'valor'}
-                ]
+
+            // shared reader
+            var reader = new Ext.data.ArrayReader({}, [
+                {name: 'propiedad'},
+                {name: 'valor'},
+                {name: 'tipo'}
+            ]);
+
+            var store = new Ext.data.GroupingStore({
+                reader: reader,
+                data: propData,
+                groupField:'tipo'
             });
-            // manually load local data
-            store.loadData(propData);
+
             var grid = new Ext.grid.GridPanel({
                 store: store,
                 columns: [
                     {
                         id       :'propiedad',
                         header   : 'Propiedad',
-                        width    : 100,
+                        flex     : 2,
                         sortable : false,
                         dataIndex: 'propiedad'
                     },
                     {
                         header   : 'Valor',
-                        width    : 100,
+                        flex     : 2,
                         sortable : false,
                         dataIndex: 'valor'
+                    },
+                    {
+                        header   : 'Tipo',
+                        sortable : false,
+                        dataIndex: 'tipo',
+                        hidden   : true
                     }
                 ],
-                stripeRows: true,
-                autoExpandColumn: 'propiedad',
+                view: new Ext.grid.GroupingView({
+                    showGroupName:false,
+                    groupTextTpl: '{text}'
+                }),
                 height: 500,
-                // config options for stateful behavior
-                stateful: true,
-                stateId: 'grid'
+                flex:4
             });
             east.add(grid);
             east.doLayout();
