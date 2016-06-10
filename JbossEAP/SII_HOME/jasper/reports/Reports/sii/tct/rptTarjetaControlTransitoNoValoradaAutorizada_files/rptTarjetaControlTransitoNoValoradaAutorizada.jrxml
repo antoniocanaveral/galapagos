@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptTarjetaControlTransito" language="groovy" pageWidth="354" pageHeight="822" columnWidth="354" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.6105100000000172"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="96"/>
+	<property name="net.sf.jasperreports.export.html.size.unit" value="cm"/>
+	<parameter name="P_CTREG_CODIGO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CTGTR_CODIGO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_PREVIEW" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CKESP_CODIGO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT DISTINCT
+PER.CRPER_NOMBRES AS CRPER_NOMBRES,
+COALESCE(PER.CRPER_APELLIDO_PATERNO,'')||' '||COALESCE(PER.CRPER_APELLIDO_MATERNO,'') AS CRPER_APELLIDOS,
+PER.CRPER_NUM_DOC_IDENTIFIC  AS CRPER_NUM_DOC_IDENTIFIC,
+(SELECT NAC.CGNCN_NACIONALIDAD FROM SII.CGG_NACIONALIDAD NAC WHERE NAC.CGNCN_CODIGO=PER.CGNCN_CODIGO) AS CGNCN_NACIONALIDAD,
+(SELECT PAI.CPAIS_NOMBRE FROM SII.CGG_PAIS PAI WHERE PAI.CPAIS_CODIGO=PER.CGG_CPAIS_CODIGO) AS CPAIS_NOMBRE,
+PER.CRPER_GENERO AS CRPER_SEXO,
+PER.CRPER_FECHA_NACIMIENTO AS CRPER_FECHA_NACIMIENTO,
+TREG.CTREG_FECHA_INGRESO,
+TREG.CTREG_FECHA_SALIDA,
+(SELECT CRA.CRALN_NOMBRE FROM SII.CGG_RES_AEROLINEA CRA WHERE CRA.CRALN_CODIGO=TREG.CRALN_CODIGO) AS CRALN_NOMBRE,
+(SELECT AER.CARPT_NOMBRE FROM SII.CGG_RES_AEROPUERTO AER WHERE AER.CARPT_CODIGO=TREG.CGG_CARPT_CODIGO) AS CARPT_NOMBRE,
+(SELECT THO.CTTHJ_NOMBRE FROM SII.CGG_TCT_TIPO_HOSPEDAJE THO WHERE TGRH.CTTHJ_CODIGO=THO.CTTHJ_CODIGO ) AS CTTHJ_NOMBRE,
+CASE
+   WHEN TREG.CRTRA_CODIGO IS NULL THEN FALSE
+   WHEN TREG.CRTRA_CODIGO IS NOT NULL THEN TRUE
+END AS CRTRA_CATEGORIA,
+ARRAY_TO_STRING(ARRAY(SELECT TACT.CTACT_NOMBRE FROM SII.CGG_TCT_ACTIVIDAD TACT INNER JOIN SII.CGG_TCT_GRUPO_ACTIVIDAD TGRA ON( TGRA.CTACT_CODIGO=TACT.CTACT_CODIGO)  WHERE TGRA.CTGTR_CODIGO=TGRT.CTGTR_CODIGO),',') AS CTACT_NOMBRE,
+TREG.CTREG_CODIGO_BARRAS
+FROM SII.CGG_TCT_REGISTRO TREG
+INNER JOIN SII.CGG_TCT_GRUPO_TURISTA TGRT ON(TGRT.CTGTR_CODIGO=TREG.CTGTR_CODIGO)
+INNER JOIN SII.CGG_RES_PERSONA PER ON(PER.CRPER_CODIGO=TREG.CRPER_CODIGO)
+INNER JOIN CGG_TCT_GRUPO_HOSPEDAJE TGRH ON(TGRH.CTGTR_CODIGO=TGRT.CTGTR_CODIGO)
+INNER JOIN SII.CGG_KDX_VENTA_DETALLE VD ON VD.CTREG_CODIGO = TREG.CTREG_CODIGO AND VD.CKESP_CODIGO = $P{P_CKESP_CODIGO}
+WHERE (LENGTH($P{P_CTREG_CODIGO}) = 0 OR TREG.CTREG_CODIGO = ANY (string_to_array($P{P_CTREG_CODIGO},',')) ) AND (LENGTH($P{P_CTGTR_CODIGO}) = 0 OR TGRT.CTGTR_CODIGO = $P{P_CTGTR_CODIGO})]]>
+	</queryString>
+	<field name="crper_nombres" class="java.lang.String"/>
+	<field name="crper_apellidos" class="java.lang.String"/>
+	<field name="crper_num_doc_identific" class="java.lang.String"/>
+	<field name="cgncn_nacionalidad" class="java.lang.String"/>
+	<field name="cpais_nombre" class="java.lang.String"/>
+	<field name="crper_sexo" class="java.lang.Integer"/>
+	<field name="crper_fecha_nacimiento" class="java.sql.Timestamp"/>
+	<field name="ctreg_fecha_ingreso" class="java.sql.Timestamp"/>
+	<field name="ctreg_fecha_salida" class="java.sql.Timestamp"/>
+	<field name="craln_nombre" class="java.lang.String"/>
+	<field name="carpt_nombre" class="java.lang.String"/>
+	<field name="ctthj_nombre" class="java.lang.String"/>
+	<field name="crtra_categoria" class="java.lang.Boolean"/>
+	<field name="ctact_nombre" class="java.lang.String"/>
+	<field name="ctreg_codigo_barras" class="java.lang.String"/>
+	<detail>
+		<band height="822" splitType="Stretch">
+			<image>
+				<reportElement x="59" y="145" width="243" height="237">
+					<printWhenExpression><![CDATA[$P{P_PREVIEW} == 1]]></printWhenExpression>
+				</reportElement>
+				<imageExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/images/VistaPreliminar"]]></imageExpression>
+			</image>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="22" y="97" width="160" height="20" forecolor="#000000"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_apellidos}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="21" y="122" width="161" height="20" forecolor="#000000"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_num_doc_identific}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="207" y="122" width="111" height="20" forecolor="#000000"/>
+				<textElement verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cgncn_nacionalidad}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="234" y="173" width="100" height="20" forecolor="#000000"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cpais_nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="230" width="16" height="20" forecolor="#000000">
+					<printWhenExpression><![CDATA[( $F{crper_sexo}.intValue()==0 ? true : false )]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["X"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="44" y="230" width="16" height="20" forecolor="#000000">
+					<printWhenExpression><![CDATA[( $F{crper_sexo}.intValue()==1 ? true : false )]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["X"]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="79" y="230" width="94" height="20" forecolor="#000000"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{crper_fecha_nacimiento}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="182" y="230" width="87" height="20" forecolor="#000000"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{ctreg_fecha_ingreso}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="282" y="232" width="76" height="20" forecolor="#000000"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{ctreg_fecha_salida}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="222" y="257" width="16" height="20" forecolor="#000000">
+					<printWhenExpression><![CDATA[( $F{carpt_nombre}.equalsIgnoreCase( "baltra" )==true ? true : false )]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["X"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="23" y="256" width="100" height="20" forecolor="#000000"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{craln_nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="287" y="257" width="16" height="20" forecolor="#000000">
+					<printWhenExpression><![CDATA[( $F{carpt_nombre}.equalsIgnoreCase( "san cristobal" )==true ? true : false )]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["X"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="333" y="257" width="16" height="20" forecolor="#000000">
+					<printWhenExpression><![CDATA[( $F{carpt_nombre}.equalsIgnoreCase( "isabela" )==true ? true : false )]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["X"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="32" y="317" width="16" height="20" forecolor="#000000">
+					<printWhenExpression><![CDATA[( $F{ctthj_nombre}.equalsIgnoreCase( "hotel" )==true ? true : false )]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["X"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="124" y="318" width="16" height="20" forecolor="#000000">
+					<printWhenExpression><![CDATA[( $F{ctthj_nombre}.equalsIgnoreCase( "Embarcacion" )==true ? true : false )]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["X"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="226" y="320" width="16" height="20" forecolor="#000000">
+					<printWhenExpression><![CDATA[( $F{ctthj_nombre}.equalsIgnoreCase( "domicilio" )==true ? true : false )]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["X"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="333" y="320" width="16" height="20" forecolor="#000000">
+					<printWhenExpression><![CDATA[( $F{ctthj_nombre}.equalsIgnoreCase( "residencia colectiva" )==true ? true : false )]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["X"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="93" y="400" width="16" height="20" forecolor="#000000">
+					<printWhenExpression><![CDATA[( $F{crtra_categoria}.booleanValue()==false ? true : false )]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["X"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="162" y="402" width="16" height="20" forecolor="#000000">
+					<printWhenExpression><![CDATA[( $F{crtra_categoria}.booleanValue()==true ? true : false )]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["X"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="59" y="437" width="16" height="20" forecolor="#000000">
+					<printWhenExpression><![CDATA[( $F{ctact_nombre}.equalsIgnoreCase( "visitas a areas del png y rmg" )==true ? true : false )]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["X"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="141" y="437" width="16" height="20" forecolor="#000000">
+					<printWhenExpression><![CDATA[( $F{ctact_nombre}.equalsIgnoreCase( "permanecer en zonas urbanas" )==true ? true : false )]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["X"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="206" y="439" width="16" height="20" forecolor="#000000">
+					<printWhenExpression><![CDATA[( $F{ctact_nombre}.equalsIgnoreCase( "negocios, actividad de trabajo" )==true ? true : false )]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["X"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="266" y="437" width="16" height="20" forecolor="#000000">
+					<printWhenExpression><![CDATA[( $F{ctact_nombre}.equalsIgnoreCase( "contrato de trabajo" )==true ? true : false )]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["X"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="332" y="438" width="16" height="20" forecolor="#000000">
+					<printWhenExpression><![CDATA[( $F{ctact_nombre}.equalsIgnoreCase( "visita familiar, o amigos" )==true ? true : false )]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["X"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="126" y="659" width="16" height="20" forecolor="#000000">
+					<printWhenExpression><![CDATA[( $F{crtra_categoria}.booleanValue()==false ? true : false )]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["X"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="659" width="16" height="20" forecolor="#000000">
+					<printWhenExpression><![CDATA[( $F{crtra_categoria}.booleanValue()==true ? true : false )]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["X"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="250" y="661" width="104" height="12" forecolor="#000000"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{ctreg_fecha_salida}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="23" y="687" width="126" height="12" forecolor="#000000"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_num_doc_identific}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="69" y="71" width="190" height="20" forecolor="#000000"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_nombres}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="250" y="679" width="98" height="20"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="2of7" drawText="false" checksumRequired="false">
+					<jr:codeExpression><![CDATA[$F{ctreg_codigo_barras}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="250" y="696" width="98" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ctreg_codigo_barras}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="250" y="607" width="98" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ctreg_codigo_barras}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="250" y="590" width="98" height="20"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="2of7" drawText="false" checksumRequired="false">
+					<jr:codeExpression><![CDATA[$F{ctreg_codigo_barras}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+		</band>
+	</detail>
+</jasperReport>

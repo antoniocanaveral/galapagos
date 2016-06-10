@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="0.9090909090909105"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["E:\\CGG\\APP\\REPORTS\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CSCTP_CODIGO" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_FECHA_INICIAL" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_FECHA_FINAL" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT DISTINCT
+SPR.CSCTP_NOMBRE,
+COALESCE(ISL.CISLA_NOMBRE,'NO ASIGNADO O NO TRAMITE') CISLA_NOMBRE,
+CASE
+ WHEN HIS.CRPER_CODIGO IS NOT NULL AND HIS.CRPJR_CODIGO IS NULL THEN 'Particular'
+ WHEN HIS.CRPER_CODIGO IS NULL AND HIS.CRPJR_CODIGO IS NOT NULL THEN 'Insitucional'
+END AS CVVEH_INSTITUCION_PERSONA,
+SEC.CVSCT_NOMBRE,
+CASE
+ WHEN HIS.CRPER_CODIGO IS NOT NULL AND HIS.CRPJR_CODIGO IS NULL THEN SII.F_CGG_RES_PERSONA_SELECT_NOMBRES(HIS.CRPER_CODIGO)
+ WHEN HIS.CRPER_CODIGO IS NULL AND HIS.CRPJR_CODIGO IS NOT NULL THEN (SELECT PEJ.CRPJR_RAZON_SOCIAL FROM SII.CGG_RES_PERSONA_JURIDICA PEJ WHERE PEJ.CRPJR_CODIGO= HIS.CRPJR_CODIGO)
+END AS CRPER_NOMBRES,
+CASE
+ WHEN HIS.CRPER_CODIGO IS NOT NULL AND HIS.CRPJR_CODIGO IS NULL THEN (SELECT PER.CRPER_NUM_DOC_IDENTIFIC FROM SII.CGG_RES_PERSONA PER WHERE PER.CRPER_CODIGO=HIS.CRPER_CODIGO)
+ WHEN HIS.CRPER_CODIGO IS NULL AND HIS.CRPJR_CODIGO IS NOT NULL THEN (SELECT PEJ.CRPJR_NUMERO_IDENTIFICACION FROM SII.CGG_RES_PERSONA_JURIDICA PEJ WHERE PEJ.CRPJR_CODIGO= HIS.CRPJR_CODIGO)
+END AS CRPER_IDENTIFICACION,
+
+CASE
+ WHEN VEH.CVVEH_TIPO = 0 THEN 'Terrestre'
+ WHEN VEH.CVVEH_TIPO = 1 THEN 'Maritimo'
+ WHEN VEH.CVVEH_TIPO = 2 THEN 'Aereo'
+END  AS CVVEH_TIPO,
+SII.F_RPT_VEHICULO_CATEGORIAS(VEH.CVCTG_CODIGO) AS CVCTG_NOMBRE,
+CASE
+ WHEN VEH.CVVEH_TIPO = 0 THEN (SELECT MAR.CVMRC_NOMBRE FROM SII.CGG_VEH_MARCA MAR WHERE MAR.CVMRC_CODIGO = VEH.CVMRC_CODIGO)
+ WHEN VEH.CVVEH_TIPO = 1 THEN VEH.CVVEH_NOMBRE
+ WHEN VEH.CVVEH_TIPO = 2 THEN (SELECT MAR.CVMRC_NOMBRE FROM SII.CGG_VEH_MARCA MAR WHERE MAR.CVMRC_CODIGO = VEH.CVMRC_CODIGO)
+END AS CVVEH_NOMBRE_MARCA,
+ARRAY_TO_STRING(ARRAY((SELECT DISTINCT MOT.CVMTR_SERIE FROM SII.CGG_VEH_VEHICULO_MOTOR VMO INNER JOIN SII.CGG_VEH_MOTOR MOT ON (VMO.CVMTR_CODIGO = MOT.CVMTR_CODIGO) WHERE VEH.CVVEH_CODIGO=VMO.CVVEH_CODIGO)),', ') AS CVMTR_SERIE,
+VEH.CVVEH_ANIO_PRODUCCION,
+CASE
+ WHEN VEH.CVCLR_CODIGO IS NOT NULL AND VEH.CGG_CVCLR_CODIGO IS NULL THEN (SELECT CVCLR_NOMBRE FROM CGG_VEH_COLOR COL WHERE COL.CVCLR_CODIGO=VEH.CVCLR_CODIGO OR COL.CVCLR_CODIGO=VEH.CVCLR_CODIGO)
+ WHEN VEH.CGG_CVCLR_CODIGO IS NOT NULL AND VEH.CVCLR_CODIGO IS NULL THEN (SELECT CVCLR_NOMBRE FROM CGG_VEH_COLOR COL WHERE COL.CVCLR_CODIGO=VEH.CVCLR_CODIGO OR COL.CVCLR_CODIGO=VEH.CGG_CVCLR_CODIGO)
+ WHEN VEH.CVCLR_CODIGO IS NOT NULL AND VEH.CGG_CVCLR_CODIGO IS NOT NULL THEN
+ CASE
+	WHEN VEH.CVCLR_CODIGO <> VEH.CGG_CVCLR_CODIGO THEN(SELECT CVCLR_NOMBRE FROM CGG_VEH_COLOR COL WHERE COL.CVCLR_CODIGO=VEH.CVCLR_CODIGO) ||' y '||(SELECT CVCLR_NOMBRE FROM CGG_VEH_COLOR COL WHERE COL.CVCLR_CODIGO=VEH.CGG_CVCLR_CODIGO)
+	WHEN VEH.CVCLR_CODIGO = VEH.CGG_CVCLR_CODIGO THEN(SELECT CVCLR_NOMBRE FROM CGG_VEH_COLOR COL WHERE COL.CVCLR_CODIGO=VEH.CVCLR_CODIGO OR COL.CVCLR_CODIGO=VEH.CGG_CVCLR_CODIGO)
+ END
+END AS CVCLR_COLORES,
+CASE
+ WHEN VEH.CVVEH_TIPO = 0 THEN 'Chasis : '||VEH.CVVEH_CHASIS||'<br> Placa : '||VEH.CVVEH_PLACA
+ WHEN VEH.CVVEH_TIPO = 1 THEN 'Eslora: '||VEH.CVVEH_ESLORA::VARCHAR||' m.'||'<br>Manga: '||VEH.CVVEH_MANGA::VARCHAR||' m.'||'<br>Puntal: '||VEH.CVVEH_PUNTAL::VARCHAR||' m.'||'<br>Material: '||VEH.CVVEH_MATERIAL
+ WHEN VEH.CVVEH_TIPO = 2 THEN 'Chasis : '||VEH.CVVEH_CHASIS||'<br> Placa : '||VEH.CVVEH_PLACA
+END  AS CVVEH_CARACTERISTICAS,
+(SELECT COM.CVCMB_NOMBRE FROM SII.CGG_VEH_COMBUSTIBLE COM INNER JOIN SII.CGG_VEH_MOTOR MOT ON(COM.CVCMB_CODIGO=MOT.CVCMB_CODIGO) INNER JOIN SII.CGG_VEH_VEHICULO_MOTOR VMO ON (VMO.CVMTR_CODIGO = MOT.CVMTR_CODIGO) WHERE VEH.CVVEH_CODIGO=VMO.CVVEH_CODIGO) AS CVCMB_NOMBRE
+FROM SII.CGG_VEH_VEHICULO VEH
+INNER JOIN SII.CGG_VEH_HISTORIAL HIS ON(VEH.CVVEH_CODIGO=HIS.CVVEH_CODIGO)
+LEFT JOIN SII.CGG_RES_TRAMITE TRA ON (TRA.CVVEH_CODIGO=VEH.CVVEH_CODIGO)
+LEFT JOIN SII.CGG_ISLA ISL ON (ISL.CISLA_CODIGO=TRA.CISLA_CODIGO)
+LEFT JOIN SII.CGG_VEH_SECTOR SEC ON(SEC.CVSCT_CODIGO=VEH.CVSCT_CODIGO)
+LEFT JOIN SII.CGG_SECTOR_PRODUCTIVO SPR ON(SPR.CSCTP_CODIGO=VEH.CSCTP_CODIGO)
+WHERE VEH.CVVEH_ESTADO
+AND VEH.CVVEH_INGRESO = TRUE
+AND (LENGTH($P{P_CSCTP_CODIGO})=0 OR SPR.CSCTP_CODIGO=$P{P_CSCTP_CODIGO})
+AND VEH.CVVEH_FECHA_INGRESO::DATE BETWEEN $P{P_FECHA_INICIAL} AND $P{P_FECHA_FINAL}
+ORDER BY CSCTP_NOMBRE,CVSCT_NOMBRE, CRPER_NOMBRES ASC]]>
+	</queryString>
+	<field name="csctp_nombre" class="java.lang.String"/>
+	<field name="cisla_nombre" class="java.lang.String"/>
+	<field name="cvveh_institucion_persona" class="java.lang.String"/>
+	<field name="cvsct_nombre" class="java.lang.String"/>
+	<field name="crper_nombres" class="java.lang.String"/>
+	<field name="crper_identificacion" class="java.lang.String"/>
+	<field name="cvveh_tipo" class="java.lang.String"/>
+	<field name="cvctg_nombre" class="java.lang.String"/>
+	<field name="cvveh_nombre_marca" class="java.lang.String"/>
+	<field name="cvmtr_serie" class="java.lang.String"/>
+	<field name="cvveh_anio_produccion" class="java.lang.Long"/>
+	<field name="cvclr_colores" class="java.lang.String"/>
+	<field name="cvveh_caracteristicas" class="java.lang.String"/>
+	<field name="cvcmb_nombre" class="java.lang.String"/>
+	<variable name="V_FILA" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[new BigDecimal($V{V_FILA}.intValue()+1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<variable name="V_FECHA_ACTUAL" class="java.util.Date">
+		<variableExpression><![CDATA[new Date()]]></variableExpression>
+	</variable>
+	<variable name="V_TOTAL_REGISTROS" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{crper_nombres}]]></variableExpression>
+	</variable>
+	<group name="gSectorProductivo">
+		<groupExpression><![CDATA[$F{csctp_nombre}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<staticText>
+					<reportElement x="0" y="3" width="100" height="17"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Sector Productivo:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="100" y="3" width="675" height="17" isPrintWhenDetailOverflows="true"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{csctp_nombre}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="gIsla">
+		<groupExpression><![CDATA[$F{cvveh_tipo}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<staticText>
+					<reportElement x="2" y="0" width="29" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Isla:]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="31" y="0" width="263" height="20" isPrintWhenDetailOverflows="true"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12" isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{cisla_nombre}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="gInstitucionPersona">
+		<groupExpression><![CDATA[$F{cvveh_institucion_persona}]]></groupExpression>
+		<groupHeader>
+			<band height="51">
+				<staticText>
+					<reportElement x="100" y="16" width="194" height="20"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[Propietario:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="294" y="16" width="505" height="20"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[Vehículo:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="16" width="100" height="20"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[General:]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="31" y="0" width="124" height="12"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{cvveh_institucion_persona}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="2" y="0" width="29" height="12"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Tipo:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="17" y="36" width="83" height="15"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Sector:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="100" y="36" width="64" height="15"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Identificación:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="164" y="36" width="130" height="15"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Nombres:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="294" y="36" width="100" height="15"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Categoría:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="394" y="36" width="76" height="15"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Tipo:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="470" y="36" width="73" height="15"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Nombre/Marca:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="543" y="36" width="86" height="15"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Motor:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="629" y="36" width="20" height="15"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Año:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="649" y="36" width="34" height="15"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Color:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="683" y="36" width="116" height="15"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Caracterísitcas:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="36" width="17" height="15"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nº]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="20" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="802" height="20"/>
+				<subreportParameter name="SUBREPORT_DIR"/>
+				<subreportParameter name="P_SUBTITULO_2">
+					<subreportParameterExpression><![CDATA["Desde " + new java.text.SimpleDateFormat("dd/MM/yyyy").format($P{P_FECHA_INICIAL})+ " hasta " + new java.text.SimpleDateFormat("dd/MM/yyyy").format($P{P_FECHA_FINAL})]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="P_SUBTITULO_1">
+					<subreportParameterExpression><![CDATA["Listado de Vehículos por Sector Productivo en Galápagos"]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptEncabezadoHor"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="19" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="17" y="0" width="83" height="17" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cvsct_nombre}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="100" y="0" width="64" height="17" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_identificacion}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="163" y="0" width="131" height="17" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_nombres}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="294" y="0" width="100" height="17" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cvctg_nombre}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="394" y="0" width="76" height="17" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cvveh_tipo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="470" y="0" width="73" height="17" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cvveh_nombre_marca}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="543" y="0" width="86" height="17" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cvmtr_serie}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="629" y="0" width="20" height="17" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{cvveh_anio_produccion}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="649" y="0" width="34" height="17" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cvclr_colores}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="683" y="0" width="116" height="17" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cvveh_caracteristicas}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="17" height="17" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="43" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="18" width="802" height="25"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptPieHor"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement x="757" y="3" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="734" y="3" width="23" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Pág.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="770" y="3" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[de ]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="4" y="3" width="120" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="2" y="1" width="800" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="782" y="3" width="17" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="20">
+			<textField>
+				<reportElement x="693" y="0" width="76" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Total de Registros: "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="769" y="0" width="35" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{V_TOTAL_REGISTROS}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

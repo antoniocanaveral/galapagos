@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.2100000000000002"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="ireport.jasperserver.reportUnit" value="/Reports/sii/tct/rptListadodeTuristasTranseuntesNacionalesExtranjeros"/>
+	<property name="ireport.jasperserver.url" value="http://190.95.187.82:8081/jasperserver/services/repository"/>
+	<parameter name="P_FECHA_INICIAL" class="java.util.Date">
+		<defaultValueExpression><![CDATA[new java.util.Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_FECHA_FINAL" class="java.util.Date">
+		<defaultValueExpression><![CDATA[new java.util.Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CRTST_CODIGO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CRMOV_TIPO_OPERACION" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CARPT_CODIGO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CRMOV_NUMERO_VUELO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CUSU_CODIGO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT prs.CRPER_CODIGO, COALESCE(PRS.CRPER_NOMBRES,'')||' '||COALESCE(PRS.CRPER_APELLIDO_PATERNO,'')||' '||COALESCE(PRS.CRPER_APELLIDO_MATERNO,'') NOMBRES,
+	CASE  CRPER_GENERO
+	WHEN 0 THEN
+	'M'
+	ELSE
+	'F'
+	END CRPER_GENERO ,
+	CRPER_NUM_DOC_IDENTIFIC,
+	NCN.CGNCN_NACIONALIDAD NACIONALIDAD,
+	CASE WHEN (SELECT CGCNF_VALOR_CADENA FROM SII.CGG_CONFIGURACION WHERE CGCNF_CODIGO = 'CONF36') = PRS.CGNCN_CODIGO THEN 'Nacional' ELSE 'Extranjero' END TIPO,
+	SII.F_TRAMITE_TIPO(RSD.CRTST_CODIGO) AS TIPO_PERSONA,
+	CASE WHEN MOV.CRMOV_TIPO_OPERACION = 0 THEN 'Ingreso' ELSE 'Salida' END AS ENTSAL,
+	CASE WHEN MOV.CRMOV_TIPO_OPERACION = 0 THEN ARPI.CARPT_NOMBRE ELSE ARPS.CARPT_NOMBRE END AS AEROPUERTO,
+	CASE WHEN MOV.CRMOV_TIPO_OPERACION = 0 THEN ARPS.CARPT_NOMBRE ELSE ARPI.CARPT_NOMBRE END AS AEROPUERTO_SALIDA,
+	MOV.CRMOV_FECHA_VIAJE,
+	ARL.CRALN_NOMBRE AS AEROLINEA,
+	MOV.CRMOV_NUMERO_VUELO AS VUELO,
+	MOV.CRMOV_USUARIO_INSERT AS USUARIO,
+	ARRAY_TO_STRING(ARRAY((SELECT ACT.CTACT_NOMBRE FROM SII.CGG_TCT_MOVILIDAD_ACTIVIDAD MCT
+	INNER JOIN SII.CGG_TCT_ACTIVIDAD ACT ON ACT.CTACT_CODIGO = MCT.CTACT_CODIGO
+	WHERE MCT.CRMOV_CODIGO=MOV.CRMOV_CODIGO)), ', ') ACTIVIDADES,
+	ARRAY_TO_STRING(ARRAY((SELECT HSP.CTTHJ_NOMBRE FROM SII.CGG_TCT_MOVILIDAD_HOSPEDAJE MHS
+	INNER JOIN SII.CGG_TCT_TIPO_HOSPEDAJE HSP ON HSP.CTTHJ_CODIGO = MHS.CTTHJ_CODIGO
+	WHERE MHS.CRMOV_CODIGO=MOV.CRMOV_CODIGO)), ', ') HOSPEDAJES,
+	MOV.CRMOV_SOPORTE,
+	SII.F_CGG_RES_PERSONA_SELECT_NOMBRES(USU.CRPER_CODIGO) CRPER_USUARIO,
+	USU.CUSU_NOMBRE_USUARIO
+FROM SII.CGG_RES_PERSONA PRS
+INNER JOIN SII.CGG_NACIONALIDAD NCN ON NCN.CGNCN_CODIGO = PRS.CGNCN_CODIGO
+INNER JOIN SII.CGG_RES_MOVILIDAD MOV ON MOV.CRPER_CODIGO = PRS.CRPER_CODIGO
+INNER JOIN SII.CGG_RES_RESIDENCIA RSD ON RSD.CRRSD_CODIGO = MOV.CRRSD_CODIGO
+INNER JOIN SII.CGG_RES_AEROLINEA ARL ON ARL.CRALN_CODIGO = MOV.CRALN_CODIGO
+INNER JOIN SII.CGG_USUARIO USU ON(USU.CUSU_NOMBRE_USUARIO=MOV.CRMOV_USUARIO_INSERT)
+LEFT JOIN SII.CGG_RES_AEROPUERTO ARPI ON ARPI.CARPT_CODIGO = MOV.CGG_CARPT_CODIGO
+LEFT JOIN SII.CGG_RES_AEROPUERTO ARPS ON ARPS.CARPT_CODIGO = MOV.CARPT_CODIGO
+WHERE ( (MOV.CGG_CARPT_CODIGO IS NULL AND MOV.CRMOV_TIPO_OPERACION = 1 OR  MOV.CGG_CARPT_CODIGO IS NOT NULL AND MOV.CRMOV_TIPO_OPERACION = 0) OR
+	(MOV.CTREG_CODIGO IS NULL AND MOV.CRMOV_TIPO_OPERACION = 0 AND MOV.CGG_CARPT_CODIGO IS NOT NULL OR
+	MOV.CTREG_CODIGO IS NULL AND MOV.CRMOV_TIPO_OPERACION = 1 AND MOV.CARPT_CODIGO IS NOT NULL) ) AND
+	MOV.CRMOV_FECHA_VIAJE::DATE BETWEEN $P{P_FECHA_INICIAL}::DATE AND $P{P_FECHA_FINAL}::DATE AND
+	($P{P_CRMOV_TIPO_OPERACION} IS NULL  OR MOV.CRMOV_TIPO_OPERACION IS NOT NULL) AND
+	( LENGTH($P{P_CRTST_CODIGO}) = 0 OR
+	RSD.CRTST_CODIGO IN (WITH RECURSIVE TIPO(CRTST_CODIGO, CGG_CRTST_CODIGO, CRTST_DESCRIPCION)AS(
+	SELECT CRTST_CODIGO, CGG_CRTST_CODIGO, CRTST_DESCRIPCION FROM CGG_RES_TIPO_SOLICITUD_TRAMITE WHERE (CRTST_CODIGO = $P{P_CRTST_CODIGO})
+	UNION SELECT TST.CRTST_CODIGO, TST.CGG_CRTST_CODIGO, TP.CRTST_DESCRIPCION FROM SII.CGG_RES_TIPO_SOLICITUD_TRAMITE TST, TIPO TP
+	WHERE TST.CGG_CRTST_CODIGO = TP.CRTST_CODIGO
+	) SELECT CRTST_CODIGO  FROM TIPO)) AND
+	(LENGTH($P{P_CARPT_CODIGO}) = 0 OR ARPI.CARPT_CODIGO = $P{P_CARPT_CODIGO} OR ARPS.CARPT_CODIGO = $P{P_CARPT_CODIGO}  ) AND
+	(LENGTH($P{P_CRMOV_NUMERO_VUELO}) = 0 OR MOV.CRMOV_NUMERO_VUELO = $P{P_CRMOV_NUMERO_VUELO} )
+AND ((LENGTH($P{P_CUSU_CODIGO}))=0 OR USU.CUSU_CODIGO = $P{P_CUSU_CODIGO})
+AND $P{P_CRMOV_TIPO_OPERACION}=MOV.CRMOV_TIPO_OPERACION
+AND MOV.CRMOV_SOPORTE=FALSE
+ORDER BY CRPER_USUARIO,MOV.CRMOV_TIPO_OPERACION,TIPO_PERSONA,TIPO,AEROPUERTO,PRS.CRPER_NOMBRES]]>
+	</queryString>
+	<field name="crper_codigo" class="java.lang.String"/>
+	<field name="nombres" class="java.lang.String"/>
+	<field name="crper_genero" class="java.lang.String"/>
+	<field name="crper_num_doc_identific" class="java.lang.String"/>
+	<field name="nacionalidad" class="java.lang.String"/>
+	<field name="tipo" class="java.lang.String"/>
+	<field name="tipo_persona" class="java.lang.String"/>
+	<field name="entsal" class="java.lang.String"/>
+	<field name="aeropuerto" class="java.lang.String"/>
+	<field name="aeropuerto_salida" class="java.lang.String"/>
+	<field name="crmov_fecha_viaje" class="java.sql.Timestamp"/>
+	<field name="aerolinea" class="java.lang.String"/>
+	<field name="vuelo" class="java.lang.String"/>
+	<field name="usuario" class="java.lang.String"/>
+	<field name="actividades" class="java.lang.String"/>
+	<field name="hospedajes" class="java.lang.String"/>
+	<field name="crmov_soporte" class="java.lang.Boolean"/>
+	<field name="crper_usuario" class="java.lang.String"/>
+	<field name="cusu_nombre_usuario" class="java.lang.String"/>
+	<variable name="V_FECHA_ACTUAL" class="java.util.Date">
+		<variableExpression><![CDATA[new Date()]]></variableExpression>
+	</variable>
+	<variable name="vTotal" class="java.lang.Integer" resetType="Group" resetGroup="Categoria" calculation="Count">
+		<variableExpression><![CDATA[$F{nombres}]]></variableExpression>
+	</variable>
+	<variable name="V_FILA" class="java.math.BigDecimal" resetType="Group" resetGroup="grpAeropuerto" incrementType="Report" calculation="Sum">
+		<variableExpression><![CDATA[new BigDecimal($V{V_FILA}.intValue()+1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<group name="USUARIO" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{crper_usuario}]]></groupExpression>
+		<groupHeader>
+			<band height="27">
+				<textField>
+					<reportElement x="56" y="4" width="402" height="23"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_usuario}+"("+$F{cusu_nombre_usuario}+")"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="4" width="56" height="23"/>
+					<box leftPadding="3">
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Usuario:]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<group name="grpMovimiento">
+		<groupExpression><![CDATA[$F{entsal}]]></groupExpression>
+		<groupHeader>
+			<band height="18">
+				<line>
+					<reportElement x="0" y="16" width="802" height="1"/>
+				</line>
+				<textField>
+					<reportElement x="0" y="1" width="802" height="14"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{entsal}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="TipoResidencia">
+		<groupExpression><![CDATA[$F{tipo_persona}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<textField evaluationTime="Group" evaluationGroup="TipoResidencia">
+					<reportElement x="13" y="1" width="526" height="19"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{tipo_persona}+" ("+$V{TipoResidencia_COUNT}.toString()+")"]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<group name="Categoria">
+		<groupExpression><![CDATA[$F{tipo}]]></groupExpression>
+		<groupHeader>
+			<band height="16">
+				<staticText>
+					<reportElement x="20" y="2" width="89" height="14"/>
+					<box leftPadding="3">
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nacionalidad:]]></text>
+				</staticText>
+				<textField evaluationTime="Group" evaluationGroup="Categoria">
+					<reportElement x="109" y="2" width="246" height="14"/>
+					<box leftPadding="3"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{tipo}+" ("+$V{Categoria_COUNT}.toString()+")"]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="grpAeropuerto">
+		<groupExpression><![CDATA[$F{aeropuerto}]]></groupExpression>
+		<groupHeader>
+			<band height="29">
+				<textField evaluationTime="Group" evaluationGroup="grpAeropuerto" pattern="">
+					<reportElement x="124" y="0" width="383" height="14"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{aeropuerto}+" ("+$V{grpAeropuerto_COUNT}.toString()+")"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="46" y="0" width="76" height="14"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Aeropuerto:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="282" y="15" width="80" height="14"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[ Nacionalidad]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="362" y="15" width="70" height="14"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[ Identificación]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="432" y="15" width="151" height="14"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[ Nombres]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="15" width="20" height="14"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nº:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="762" y="15" width="40" height="14"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Vuelo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="20" y="15" width="50" height="14"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Fecha]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="702" y="15" width="60" height="14"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Aerolínea]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="614" y="15" width="88" height="14"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Aeropuerto]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="70" y="15" width="112" height="14"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Actividades]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="182" y="15" width="100" height="14"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Hospedajes]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="583" y="15" width="31" height="14"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Género]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<title>
+		<band height="49" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement positionType="Float" x="633" y="30" width="65" height="14"/>
+				<box leftPadding="0"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$P{P_FECHA_INICIAL}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement positionType="Float" x="737" y="30" width="65" height="14"/>
+				<box leftPadding="0"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$P{P_FECHA_FINAL}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="583" y="30" width="50" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Desde:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="698" y="30" width="39" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[hasta:]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="0" y="0" width="802" height="28"/>
+				<subreportParameter name="SUBREPORT_DIR"/>
+				<subreportParameter name="P_SUBTITULO_2">
+					<subreportParameterExpression><![CDATA[""]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="P_SUBTITULO_1">
+					<subreportParameterExpression><![CDATA["Listado de "+$F{entsal}+" de "+( $P{P_CRTST_CODIGO} !=""  ? $F{tipo_persona} : "todas las residencias" )+" en el Aeropuerto "+( $P{P_CARPT_CODIGO} !="" ?   $F{aeropuerto} : " " )]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptEncabezadoHor"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="282" y="0" width="80" height="14" isPrintWhenDetailOverflows="true"/>
+				<box leftPadding="5">
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nacionalidad}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="362" y="0" width="70" height="14" isPrintWhenDetailOverflows="true"/>
+				<box leftPadding="5">
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_num_doc_identific}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="432" y="0" width="151" height="14" isPrintWhenDetailOverflows="true"/>
+				<box leftPadding="5">
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nombres}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="20" height="14"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[($F{crmov_soporte}?"(*)":"")+$V{V_FILA}.toString()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="762" y="0" width="40" height="14"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{vuelo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="20" y="0" width="50" height="14"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{crmov_fecha_viaje}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="702" y="0" width="60" height="14"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{aerolinea}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="614" y="0" width="88" height="14"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{aeropuerto_salida}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="70" y="0" width="112" height="14"/>
+				<box leftPadding="3">
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{actividades}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="182" y="0" width="100" height="14"/>
+				<box leftPadding="3">
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{hospedajes}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="583" y="0" width="31" height="14"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_genero}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="45" splitType="Stretch">
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="3" y="3" width="120" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="1" width="802" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="682" y="2" width="80" height="15"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Pag. "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="762" y="2" width="40" height="15"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="0" y="18" width="802" height="13"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptPieHor"]]></subreportExpression>
+			</subreport>
+		</band>
+	</pageFooter>
+</jasperReport>

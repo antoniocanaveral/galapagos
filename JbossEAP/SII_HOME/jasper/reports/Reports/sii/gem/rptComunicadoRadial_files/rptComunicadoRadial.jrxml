@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="595" pageHeight="841" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.2396694214876032"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="90"/>
+	<property name="ireport.jasperserver.reportUnit" value="/Reports/sii/gem/rptComunicadoRadial"/>
+	<property name="ireport.jasperserver.url" value="http://190.95.187.82:8081/jasperserver/services/repository"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["E:\\CGG\\APP\\REPORTS\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CGVCN_CODIGO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+VAC.CGVCN_NUMERO_COMUNICADO,
+CISLA_NOMBRE,
+VAC.CGVCN_FECHA_PUBLICACION,
+'<b>'||SII.F_RPT_NOMBRE_OFERTANTE(VAC.CUSU_CODIGO)||'</b>'  AS CGVCN_OFERTANTE,
+'<b>'||CGVCN_NUMERO_VACANTES::VARCHAR||'</b>' AS CGVCN_NUMERO_VACANTES,
+(SELECT '<b>'||CV.CGCRG_NOMBRE||'</b>' FROM SII.CGG_GEM_CARGO CV WHERE VAC.CGCRG_CODIGO = CV.CGCRG_CODIGO) AS CGCRG_NOMBRE,
+VAC.CGVCN_TITULO,
+'<b>'||VAC.CGVCN_DIRECCION||'</b>' AS CGVCN_DIRECCION ,
+VAC.CGVCN_DURACION_OFERTA,
+SII.F_RPT_NOMBRE_OFERTANTE(VAC.CGVCN_USUARIO_INSERT,1) AS CUSU_RESPONSABLE,
+CASE
+ WHEN SII.F_RPT_PERSONA_TIPO(VAC.CUSU_CODIGO)::BOOLEAN = FALSE THEN SII.F_RPT_NOMBRE_OFERTANTE(VAC.CUSU_CODIGO)
+ WHEN SII.F_RPT_PERSONA_TIPO(VAC.CUSU_CODIGO)::BOOLEAN = TRUE THEN VAC.CGVCN_DESCRIPCION
+END AS CGVCN_DESCRIPCION_TRABAJO,
+VAC.CGVCN_SALARIO,
+TSA.CGTSA_NOMBRE
+FROM SII.CGG_GEM_VACANTE VAC
+INNER JOIN SII.CGG_ISLA ISL ON ISL.CISLA_CODIGO = VAC.CISLA_CODIGO
+INNER JOIN SII.CGG_GEM_TIPO_SALARIO TSA ON TSA.CGTSA_CODIGO = VAC.CGTSA_CODIGO
+WHERE VAC.CGVCN_ESTADO = TRUE
+AND VAC.CGVCN_NUMERO_COMUNICADO IS NOT NULL
+AND VAC.CGVCN_CODIGO = $P{P_CGVCN_CODIGO}]]>
+	</queryString>
+	<field name="cgvcn_numero_comunicado" class="java.lang.String"/>
+	<field name="cisla_nombre" class="java.lang.String"/>
+	<field name="cgvcn_fecha_publicacion" class="java.sql.Timestamp"/>
+	<field name="cgvcn_ofertante" class="java.lang.String"/>
+	<field name="cgvcn_numero_vacantes" class="java.lang.String"/>
+	<field name="cgcrg_nombre" class="java.lang.String"/>
+	<field name="cgvcn_titulo" class="java.lang.String"/>
+	<field name="cgvcn_direccion" class="java.lang.String"/>
+	<field name="cgvcn_duracion_oferta" class="java.lang.Integer"/>
+	<field name="cusu_responsable" class="java.lang.String"/>
+	<field name="cgvcn_descripcion_trabajo" class="java.lang.String"/>
+	<field name="cgvcn_salario" class="java.math.BigDecimal"/>
+	<field name="cgtsa_nombre" class="java.lang.String"/>
+	<variable name="V_FILA" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[new BigDecimal($V{V_FILA}.intValue()+1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<variable name="V_FECHA_ACTUAL" class="java.util.Date">
+		<variableExpression><![CDATA[new Date()]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="33" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="33"/>
+				<subreportParameter name="SUBREPORT_DIR"/>
+				<subreportParameter name="P_SUBTITULO_2">
+					<subreportParameterExpression><![CDATA[""]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="P_SUBTITULO_1">
+					<subreportParameterExpression><![CDATA[""]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptEncabezado"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="3" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="232" splitType="Stretch">
+			<textField pattern="">
+				<reportElement x="18" y="30" width="314" height="20"/>
+				<textElement markup="html">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cisla_nombre}+" "+new java.text.SimpleDateFormat("EEEEE, dd MMMMM yyyy").format($F{cgvcn_fecha_publicacion})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="110" y="0" width="155" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COMUNICADO No.]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="18" y="145" width="519" height="30" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Se comunica a los residentes permanentes, que "+$F{cgvcn_ofertante}.toUpperCase()+ " desea contratar los servicios de "+$F{cgvcn_numero_vacantes}+" "+$F{cgcrg_nombre}.toUpperCase()+"<b>, PARA TRABAJAR EN: \" "+$F{cgvcn_descripcion_trabajo}.toUpperCase()+" EN LA PROVINCIA DE GALÁPAGOS -</b> " +$F{cgvcn_direccion}.toUpperCase()+" \", con un salario de "+$F{cgvcn_salario}+" dólares "+$F{cgtsa_nombre}+"."]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement positionType="Float" x="17" y="175" width="519" height="9"/>
+				<subreportParameter name="P_CGVCN_CODIGO">
+					<subreportParameterExpression><![CDATA[$P{P_CGVCN_CODIGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:rptRequisitosComunicadoRadial"]]></subreportExpression>
+			</subreport>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="18" y="184" width="519" height="45"/>
+				<textElement textAlignment="Justified">
+					<font size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Los interesados deberán presentar sus carpetas en la Unidad de Calificación y Control de Residencia del Consejo de Gobierno de Galápagos, en la oficina de Gestión y Control de Empleo. El plazo de presentación fenecerá "+$F{cgvcn_duracion_oferta}+" días después de la presente fecha."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="269" y="0" width="220" height="20"/>
+				<textElement verticalAlignment="Top">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cgvcn_numero_comunicado}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="18" y="61" width="519" height="83" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Justified">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Cumpliendo con lo estipulado en el tercer párrafo del Art.  28  de la LOREG,  Art. 16  del Reglamento Especial de Calificación y Control de Residencia y resolución 206-CCCRI-12-03-2003 del 12 de marzo del 2003,  del Comité de Calificación y Control de Residencia,  se indica que las convocatorias para la comprobación de la deficiencia laboral en Galápagos,  se les realice por lo medios de comunicación a nivel provincial; y sean realizados por la Secretaría Técnica por lo expuesto:]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="63" splitType="Stretch">
+			<subreport>
+				<reportElement x="1" y="18" width="554" height="45"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptPie"]]></subreportExpression>
+			</subreport>
+			<textField evaluationTime="Page" pattern="EEEEE dd MMMMM yyyy HH:mm:ss">
+				<reportElement x="3" y="3" width="243" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="2" y="1" width="552" height="1"/>
+			</line>
+			<textField evaluationTime="Report">
+				<reportElement x="514" y="4" width="17" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="466" y="3" width="23" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Pág.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="489" y="3" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="502" y="3" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[de ]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="180">
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement positionType="FixRelativeToBottom" x="18" y="0" width="519" height="16" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center" markup="html">
+					<font size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Atentamente,"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement positionType="FixRelativeToBottom" x="20" y="62" width="517" height="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cusu_responsable}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement positionType="FixRelativeToBottom" isPrintRepeatedValues="false" x="153" y="76" width="250" height="29"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" markup="html">
+					<font size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["COORDINADOR(A) DEL SISTEMA DE GESTION DE EMPLEO DE "+$F{cisla_nombre}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="-1" y="135" width="554" height="45"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptPie"]]></subreportExpression>
+			</subreport>
+			<line>
+				<reportElement x="0" y="112" width="552" height="1"/>
+			</line>
+			<textField evaluationTime="Page" pattern="EEEEE dd MMMMM yyyy HH:mm:ss">
+				<reportElement x="1" y="114" width="245" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="514" y="115" width="17" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="466" y="114" width="23" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Pág.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="489" y="114" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="502" y="114" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[de ]]></text>
+			</staticText>
+		</band>
+	</lastPageFooter>
+</jasperReport>

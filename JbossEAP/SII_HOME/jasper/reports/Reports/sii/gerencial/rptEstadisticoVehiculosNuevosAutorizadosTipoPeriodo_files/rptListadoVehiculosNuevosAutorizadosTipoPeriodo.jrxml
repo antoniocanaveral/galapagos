@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptListadoVehiculosNuevosAutorizadosTipoPeriodo." language="groovy" pageWidth="595" pageHeight="842" columnWidth="585" leftMargin="5" rightMargin="5" topMargin="5" bottomMargin="5">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="P_FECHA_INICIAL" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_FECHA_FINAL" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CVVEH_TIPO" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+C1.FECHA,
+C1.TIPO_VEHICULO,
+C1.CVCMB_NOMBRE,
+C1.CVVEH_PLACA,
+COALESCE(C1.MARCA,'')||' '||COALESCE(C1.CVVEH_MODELO,'')MODELO,
+CASE
+	WHEN C1.CRPER_NOMBRES IS NOT NULL AND C1.CRPER_JURIDICA IS NULL THEN CRPER_NOMBRES
+	WHEN C1.CRPER_JURIDICA IS NOT NULL AND C1.CRPER_NOMBRES IS NULL THEN CRPER_JURIDICA
+END AS PROPIETARIO
+FROM
+(
+SELECT
+(SELECT MAX(HIS.CVHST_FECHA_TRASPASO::DATE) FROM SII.CGG_VEH_HISTORIAL HIS WHERE HIS.CVVEH_CODIGO=VEH.CVVEH_CODIGO AND CVHST_PROPIETARIO) FECHA,
+(SELECT COALESCE(P.CRPER_NOMBRES,'')||' '||COALESCE(P.CRPER_APELLIDO_PATERNO)||' '||COALESCE(P.CRPER_APELLIDO_MATERNO)
+		FROM SII.CGG_VEH_HISTORIAL HIS2
+		INNER JOIN CGG_RES_PERSONA P ON(P.CRPER_CODIGO=HIS2.CRPER_CODIGO)
+		WHERE HIS2.CVVEH_CODIGO=VEH.CVVEH_CODIGO AND HIS2.CVHST_PROPIETARIO ) AS CRPER_NOMBRES,
+	(SELECT PJ.CRPJR_RAZON_SOCIAL DATE
+		FROM SII.CGG_VEH_HISTORIAL HIS2
+		INNER JOIN CGG_RES_PERSONA_JURIDICA PJ ON(PJ.CRPJR_CODIGO=HIS2.CRPJR_CODIGO)
+		WHERE HIS2.CVVEH_CODIGO=VEH.CVVEH_CODIGO AND HIS2.CVHST_PROPIETARIO ) AS CRPER_JURIDICA,
+	(SELECT VM.CVMRC_NOMBRE
+		FROM SII.CGG_VEH_MARCA VM
+		WHERE VM.CVMRC_CODIGO=VEH.CVMRC_CODIGO) MARCA,
+	VEH.CVVEH_PLACA,
+	VEH.CVVEH_MODELO,
+	COM.CVCMB_NOMBRE,
+	VMT.CVVEH_CODIGO,
+    CASE
+	WHEN VEH.CVVEH_TIPO = 0 THEN 'Terrestres'
+	WHEN VEH.CVVEH_TIPO = 1 THEN 'Marítimos'
+	WHEN VEH.CVVEH_TIPO = 2 THEN 'Aéreos'
+    END AS TIPO_VEHICULO
+
+FROM SII.CGG_VEH_COMBUSTIBLE COM
+	INNER JOIN SII.CGG_VEH_MOTOR MOT ON (MOT.CVCMB_CODIGO=COM.CVCMB_CODIGO)
+	INNER JOIN SII.CGG_VEH_VEHICULO_MOTOR VMT ON (VMT.CVMTR_CODIGO=MOT.CVMTR_CODIGO)
+	INNER JOIN SII.CGG_VEH_VEHICULO VEH ON(VEH.CVVEH_CODIGO=VMT.CVVEH_CODIGO)
+	WHERE VEH.CVVEH_ESTADO
+	AND (3=$P{P_CVVEH_TIPO} OR VEH.CVVEH_TIPO = $P{P_CVVEH_TIPO})
+	AND (SELECT COUNT(CVHST_CODIGO) FROM SII.CGG_VEH_HISTORIAL WHERE CVVEH_CODIGO=VEH.CVVEH_CODIGO AND CVHST_PROPIETARIO ) = 1
+) C1
+WHERE C1.FECHA BETWEEN $P{P_FECHA_INICIAL} AND $P{P_FECHA_FINAL}
+ORDER BY TIPO_VEHICULO,FECHA]]>
+	</queryString>
+	<field name="fecha" class="java.sql.Date"/>
+	<field name="tipo_vehiculo" class="java.lang.String"/>
+	<field name="cvcmb_nombre" class="java.lang.String"/>
+	<field name="cvveh_placa" class="java.lang.String"/>
+	<field name="modelo" class="java.lang.String"/>
+	<field name="propietario" class="java.lang.String"/>
+	<variable name="V_FILA" class="java.math.BigDecimal" resetType="Group" resetGroup="Combustible">
+		<variableExpression><![CDATA[new BigDecimal($V{V_FILA}.intValue()+1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<variable name="vTipoVehiculo" class="java.lang.Integer" resetType="Group" resetGroup="TIPO" calculation="Count">
+		<variableExpression><![CDATA[new BigDecimal($V{V_FILA}.intValue()+1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<group name="TIPO">
+		<groupExpression><![CDATA[$F{tipo_vehiculo}]]></groupExpression>
+		<groupHeader>
+			<band height="15">
+				<textField>
+					<reportElement x="28" y="0" width="189" height="15"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{tipo_vehiculo}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="0" width="27" height="15"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Tipo:]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20">
+				<staticText>
+					<reportElement x="389" y="0" width="59" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[TOTAL:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="448" y="0" width="54" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{vTipoVehiculo}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Combustible">
+		<groupExpression><![CDATA[$F{cvcmb_nombre}]]></groupExpression>
+		<groupHeader>
+			<band height="40">
+				<staticText>
+					<reportElement x="91" y="20" width="168" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Propietario]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="64" y="20" width="27" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[N°]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="259" y="20" width="100" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Modelo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="359" y="20" width="78" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Placa]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="437" y="20" width="65" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Fecha]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="28" y="0" width="63" height="20"/>
+					<box>
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Combustible:]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="91" y="0" width="147" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{cvcmb_nombre}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="26">
+				<textField>
+					<reportElement x="448" y="5" width="54" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{V_FILA}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="389" y="5" width="59" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[SUBTOTAL:]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="64" y="0" width="25" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{V_FILA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="269" y="0" width="90" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{modelo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="437" y="0" width="65" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="359" y="0" width="78" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cvveh_placa}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="91" y="0" width="168" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{propietario}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="64" y="19" width="438" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

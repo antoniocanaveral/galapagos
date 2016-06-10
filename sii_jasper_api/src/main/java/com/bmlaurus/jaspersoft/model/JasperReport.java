@@ -1,6 +1,7 @@
 package com.bmlaurus.jaspersoft.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class JasperReport extends  BaseRestModel implements Serializable {
     private Query query;
     private Jrxml jrxml;
     private List<InputControl> inputControls;
-    private List<Resource> resources;
+    private Resource resources;
 
     public JasperReport() {
         super("application/repository.reportUnit+json");
@@ -158,11 +159,11 @@ public class JasperReport extends  BaseRestModel implements Serializable {
         this.inputControls = inputControls;
     }
 
-    public List<Resource> getResources() {
+    public Resource getResources() {
         return resources;
     }
 
-    public void setResources(List<Resource> resources) {
+    public void setResources(Resource resources) {
         this.resources = resources;
     }
 
@@ -239,27 +240,16 @@ public class JasperReport extends  BaseRestModel implements Serializable {
     }
 
     public static class Resource implements Serializable{
+        private List<JasperReportResource> resource;
 
-        private FileResource resource;
-
-
-
-        private class FileResource implements Serializable{
-            private String name;
-            private FileReference fileReference;
-
-            public FileResource(String name, String uri) {
-                this.name = name;
-                this.fileReference = new FileReference(uri);
-            }
+        public void addResource(JasperReportResource jasperResource){
+            if(resource==null)
+                resource= new ArrayList<>();
+            resource.add(jasperResource);
         }
 
-        private class FileReference implements Serializable{
-            private String uri;
-
-            public FileReference(String uri) {
-                this.uri = uri;
-            }
+        public void addResources(List<JasperReportResource> resources){
+            resource = resources;
         }
     }
 

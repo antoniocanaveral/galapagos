@@ -27,7 +27,7 @@ public class GsonEngineImp implements GsonEngine{
         if (typeAdapters != null) {
             for (Map.Entry<String, Object> entry : typeAdapters.entrySet()) {
                 try {
-                    Class<?> interceptedClass = Class.forName(entry.getKey());
+                    Class<?> interceptedClass = Thread.currentThread().getContextClassLoader().loadClass(entry.getKey());
                     if (entry.getValue() instanceof JsonDeserializer
                             || entry.getValue() instanceof JsonSerializer) {
                         gsonBuilder.registerTypeAdapter(interceptedClass,

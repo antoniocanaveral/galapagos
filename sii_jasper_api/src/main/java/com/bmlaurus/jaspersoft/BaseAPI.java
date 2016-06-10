@@ -10,6 +10,8 @@ import org.apache.http.HttpStatus;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by acanaveral on 12/5/16.
@@ -21,6 +23,7 @@ public class BaseAPI extends BasePublicAPI {
     private GsonEngine gsonEngine;
 
     public BaseAPI() {
+        Map<String,Object> typeAdapters = new HashMap<>();
         gsonEngine = new GsonEngineImp(null, JASPER_DATE_FORMAT);
     }
 

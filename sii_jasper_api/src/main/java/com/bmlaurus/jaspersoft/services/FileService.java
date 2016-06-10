@@ -16,6 +16,8 @@ import java.io.File;
 public class FileService extends BaseAPI {
 
     public boolean touchFile(String filePath){
+        if(filePath!=null && filePath.contains("-"))
+            filePath=filePath.replaceAll("-","_");
         HttpResponse httpRes = null;
         boolean res = false;
         if(loginToServer()){

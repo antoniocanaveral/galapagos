@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["E:\\CGG\\APP\\REPORTS\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CRMOV_TIPO_OPERACION" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[2]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CCTN_CODIGO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CRALN_CODIGO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_FECHA_INICIAL" class="java.util.Date">
+		<defaultValueExpression><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_FECHA_FINAL" class="java.util.Date">
+		<defaultValueExpression><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+CASE MOV.CRMOV_TIPO_OPERACION
+ WHEN 0 THEN (SELECT CAN.CCTN_NOMBRE FROM SII.CGG_CANTON CAN INNER JOIN SII.CGG_RES_AEROPUERTO AER ON(AER.CCTN_CODIGO=CAN.CCTN_CODIGO) WHERE AER.CARPT_CODIGO = MOV.CGG_CARPT_CODIGO)
+ WHEN 1 THEN (SELECT CAN.CCTN_NOMBRE FROM SII.CGG_CANTON CAN INNER JOIN SII.CGG_RES_AEROPUERTO AER ON(AER.CCTN_CODIGO=CAN.CCTN_CODIGO) WHERE AER.CARPT_CODIGO = MOV.CARPT_CODIGO)
+END AS CCTN_NOMBRE_ISLA,
+ARL.CRALN_NOMBRE,
+CASE
+WHEN MOV.CRMOV_TIPO_OPERACION = 0 THEN 'Entrada'
+WHEN MOV.CRMOV_TIPO_OPERACION = 1 THEN 'Salida'
+END OPERACION,
+TO_CHAR(MOV.CRMOV_FECHA_VIAJE::DATE,'YYYY') ANIO,
+TO_CHAR(MOV.CRMOV_FECHA_VIAJE::DATE,'TMMONTH') MES,
+MOV.CRMOV_FECHA_VIAJE::DATE FECHA_VIAJE,
+CASE
+WHEN PER.CGNCN_CODIGO = (SELECT CGCNF_VALOR_CADENA FROM SII.CGG_CONFIGURACION WHERE CGCNF_CODIGO='CONF36') THEN 'Nacional' ELSE 'Extranjero'
+END NACIONALIDAD,
+COUNT(RSD.CRRSD_CODIGO) CANTIDAD
+FROM SII.CGG_RES_MOVILIDAD MOV
+INNER JOIN SII.CGG_RES_PERSONA PER ON (PER.CRPER_CODIGO=MOV.CRPER_CODIGO)
+INNER JOIN SII.CGG_RES_RESIDENCIA RSD ON (MOV.CRRSD_CODIGO = RSD.CRRSD_CODIGO)
+INNER JOIN SII.CGG_RES_AEROLINEA ARL ON(ARL.CRALN_CODIGO=MOV.CRALN_CODIGO)
+WHERE RSD.CRRSD_ESTADO
+AND ($P{P_CRMOV_TIPO_OPERACION}=2 OR MOV.CRMOV_TIPO_OPERACION=$P{P_CRMOV_TIPO_OPERACION})
+AND (
+	CASE
+	WHEN $P{P_CRMOV_TIPO_OPERACION}=0 THEN (LENGTH($P{P_CCTN_CODIGO})=0 OR (SELECT AER.CCTN_CODIGO FROM SII.CGG_RES_AEROPUERTO AER WHERE AER.CARPT_CODIGO=MOV.CGG_CARPT_CODIGO)=$P{P_CCTN_CODIGO})
+ 	WHEN $P{P_CRMOV_TIPO_OPERACION}=1 THEN (LENGTH($P{P_CCTN_CODIGO})=0 OR (SELECT AER.CCTN_CODIGO FROM SII.CGG_RES_AEROPUERTO AER WHERE AER.CARPT_CODIGO=MOV.CARPT_CODIGO)=$P{P_CCTN_CODIGO})
+ 	WHEN $P{P_CRMOV_TIPO_OPERACION}=2 OR $P{P_CRMOV_TIPO_OPERACION} IS NULL THEN 2=2
+	END
+     )
+AND (LENGTH($P{P_CRALN_CODIGO})=0 OR MOV.CRALN_CODIGO=$P{P_CRALN_CODIGO})
+AND MOV.CRMOV_FECHA_VIAJE::DATE BETWEEN $P{P_FECHA_INICIAL} AND $P{P_FECHA_FINAL}
+AND F_TIPO_SOLICITUD_PADRE(RSD.CRTST_CODIGO)=(SELECT CGCNF_VALOR_CADENA FROM SII.CGG_CONFIGURACION WHERE CGCNF_CODIGO='06')
+GROUP BY CCTN_NOMBRE_ISLA,ARL.CRALN_NOMBRE,MOV.CRMOV_FECHA_VIAJE::DATE,OPERACION,NACIONALIDAD
+ORDER BY CCTN_NOMBRE_ISLA,ARL.CRALN_NOMBRE,MOV.CRMOV_FECHA_VIAJE::DATE,OPERACION,NACIONALIDAD DESC]]>
+	</queryString>
+	<field name="cctn_nombre_isla" class="java.lang.String"/>
+	<field name="craln_nombre" class="java.lang.String"/>
+	<field name="operacion" class="java.lang.String"/>
+	<field name="anio" class="java.lang.String"/>
+	<field name="mes" class="java.lang.String"/>
+	<field name="fecha_viaje" class="java.sql.Date"/>
+	<field name="nacionalidad" class="java.lang.String"/>
+	<field name="cantidad" class="java.lang.Long"/>
+	<variable name="V_FECHA_ACTUAL" class="java.util.Date">
+		<variableExpression><![CDATA[new Date()]]></variableExpression>
+	</variable>
+	<variable name="V_TOTAL_TUR_NAC" class="java.math.BigDecimal" calculation="Count">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="V_TOTAL_TRAN_NAC" class="java.math.BigDecimal"/>
+	<variable name="V_TOTAL_TUR_EXTR" class="java.math.BigDecimal"/>
+	<variable name="V_TOTAL_TUR_FILT_NAC" class="java.lang.String"/>
+	<variable name="vTotal" class="java.lang.Integer" resetType="Group" resetGroup="gMes" calculation="Sum">
+		<variableExpression><![CDATA[$F{cantidad}]]></variableExpression>
+	</variable>
+	<group name="gCanton">
+		<groupExpression><![CDATA[$F{cctn_nombre_isla}]]></groupExpression>
+		<groupHeader>
+			<band height="24">
+				<textField>
+					<reportElement x="0" y="4" width="802" height="20"/>
+					<box leftPadding="4"/>
+					<textElement verticalAlignment="Middle" markup="html"/>
+					<textFieldExpression class="java.lang.String"><![CDATA["<b>Isla: </b> "+$F{cctn_nombre_isla}.toUpperCase()]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="gAerolinea">
+		<groupExpression><![CDATA[$F{craln_nombre}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<textField>
+					<reportElement x="0" y="0" width="802" height="20"/>
+					<box leftPadding="4"/>
+					<textElement verticalAlignment="Middle" markup="html"/>
+					<textFieldExpression class="java.lang.String"><![CDATA["<b>Aerolínea:</b> "+$F{craln_nombre}.toUpperCase()]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="gOperacion">
+		<groupExpression><![CDATA[$F{operacion}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<textField>
+					<reportElement x="0" y="0" width="802" height="20"/>
+					<box leftPadding="4"/>
+					<textElement verticalAlignment="Middle" markup="html"/>
+					<textFieldExpression class="java.lang.String"><![CDATA["<b>Operación: </b>"+$F{operacion}+" de Turistas"]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="gAnio">
+		<groupExpression><![CDATA[$F{anio}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<textField>
+					<reportElement x="0" y="0" width="802" height="20"/>
+					<box leftPadding="4"/>
+					<textElement verticalAlignment="Middle" markup="html"/>
+					<textFieldExpression class="java.lang.String"><![CDATA["<b>Año:</b> "+$F{anio}.toUpperCase()]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="gMes">
+		<groupExpression><![CDATA[$F{mes}]]></groupExpression>
+		<groupHeader>
+			<band height="50">
+				<textField>
+					<reportElement x="3" y="0" width="799" height="20"/>
+					<box leftPadding="3"/>
+					<textElement verticalAlignment="Middle" markup="html"/>
+					<textFieldExpression class="java.lang.String"><![CDATA["<b>Del mes de:</> "+$F{mes}.toUpperCase()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="187" y="30" width="100" height="20"/>
+					<box leftPadding="3">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Fecha]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="287" y="30" width="100" height="20"/>
+					<box leftPadding="3">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nacionalidad]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="387" y="30" width="100" height="20"/>
+					<box leftPadding="0" rightPadding="5">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Cantidad]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20">
+				<textField>
+					<reportElement x="387" y="0" width="100" height="20"/>
+					<box leftPadding="0" rightPadding="5"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$V{vTotal}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="287" y="0" width="100" height="20"/>
+					<box leftPadding="0" rightPadding="3"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total:]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="20" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="802" height="20"/>
+				<subreportParameter name="SUBREPORT_DIR"/>
+				<subreportParameter name="P_SUBTITULO_2">
+					<subreportParameterExpression><![CDATA[""]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="P_SUBTITULO_1">
+					<subreportParameterExpression><![CDATA["Total de turistas mensual por tipo"]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptEncabezadoHor"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="187" y="0" width="100" height="20" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{fecha_viaje}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="287" y="0" width="100" height="20" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nacionalidad}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="387" y="0" width="100" height="20" isPrintWhenDetailOverflows="true"/>
+				<box rightPadding="5">
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{cantidad}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="52" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="18" width="802" height="13"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptPieHor"]]></subreportExpression>
+			</subreport>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="3" y="3" width="120" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="2" y="1" width="800" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="680" y="3" width="80" height="15"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Pág "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="760" y="3" width="40" height="15"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

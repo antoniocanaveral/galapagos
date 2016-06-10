@@ -1,0 +1,699 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="0.9090909090909113"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="P_CCTN_CODIGO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CRALN_CODIGO" class="java.lang.String"/>
+	<parameter name="P_FECHA_INICIAL" class="java.util.Date"/>
+	<parameter name="P_FECHA_FINAL" class="java.util.Date"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["E:\\CGG\\APP\\REPORTS\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[WITH RECURSIVE TIPO(CRTST_CODIGO, CGG_CRTST_CODIGO, CRTST_DESCRIPCION)AS(
+					SELECT CRTST_CODIGO, CGG_CRTST_CODIGO, CRTST_DESCRIPCION FROM CGG_RES_TIPO_SOLICITUD_TRAMITE WHERE (CRTST_CODIGO = (SELECT CGCNF_VALOR_CADENA
+					FROM CGG_CONFIGURACION
+					WHERE CGCNF_CODIGO = '05') OR CRTST_CODIGO = (SELECT CGCNF_VALOR_CADENA
+					FROM CGG_CONFIGURACION
+					WHERE CGCNF_CODIGO = '06'))
+					UNION SELECT TST.CRTST_CODIGO, TST.CGG_CRTST_CODIGO, TP.CRTST_DESCRIPCION FROM CGG_RES_TIPO_SOLICITUD_TRAMITE TST, TIPO TP
+					WHERE TST.CGG_CRTST_CODIGO = TP.CRTST_CODIGO
+				)
+SELECT
+  DISTINCT
+  mvd.CRMOV_SOPORTE,
+  CAN.CCTN_NOMBRE,
+  TST.CRTST_DESCRIPCION AS CRPER_CATEGORIA,
+  MOV.CRMOV_FILTRO_INTERNO,
+  PER.CGNCN_CODIGO,
+  CASE
+   WHEN PER.CGNCN_CODIGO  = (SELECT UPPER(TRIM(CGCNF_VALOR_CADENA)) FROM SII.CGG_CONFIGURACION WHERE CGCNF_CODIGO = 'CONF36')
+   THEN 'Nacional'
+   ELSE
+   'Extranjero'
+  END AS CRPER_TIPO,
+  (SELECT NAC.CGNCN_NACIONALIDAD FROM SII.CGG_NACIONALIDAD NAC WHERE NAC.CGNCN_CODIGO=PER.CGNCN_CODIGO) CRPER_NACIONALIDAD,
+  PER.CRPER_NUM_DOC_IDENTIFIC,
+ PER.CRPER_NOMBRES||' '||PER.CRPER_APELLIDO_PATERNO||' '||COALESCE(PER.CRPER_APELLIDO_MATERNO,'') AS CRPER_NOMBRES,
+ MOV.CRMOV_USUARIO_INSERT AS CRMOV_USUARIO_INSERT_INGRESO,
+ MOV.CRMOV_FECHA_VIAJE::DATE AS CRMOV_FECHA_VIAJE_INGRESO,
+ (SELECT AER.CRALN_NOMBRE FROM SII.CGG_RES_AEROLINEA AER WHERE AER.CRALN_CODIGO=MOV.CRALN_CODIGO) AS CRALN_NOMBRE_INGRESO,
+ MOV.CRMOV_NUMERO_VUELO AS CRMOV_NUMERO_VUELO_INGRESO,
+ MOV.CRMOV_OBSERVACION AS CRMOV_OBSERVACION_INGRESO,
+ MVD.CRMOV_USUARIO_INSERT AS CRMOV_USUARIO_INSERT_SALIDA,
+ CASE
+  WHEN MVD.CRMOV_FECHA_VIAJE IS NULL THEN (CURRENT_TIMESTAMP::DATE||' (+)')::VARCHAR
+  WHEN MVD.CRMOV_FECHA_VIAJE IS NOT NULL THEN (MVD.CRMOV_FECHA_VIAJE::DATE)::VARCHAR
+ END AS CRMOV_FECHA_VIAJE_SALIDA,
+ CASE
+  WHEN MVD.CRMOV_FECHA_VIAJE IS NULL THEN 'PRESENTE'
+  WHEN MVD.CRMOV_FECHA_VIAJE IS NOT NULL THEN 'AUSENTE'
+ END AS CRMOV_ESTADO,
+ (SELECT AER.CRALN_NOMBRE FROM SII.CGG_RES_AEROLINEA AER WHERE AER.CRALN_CODIGO=MVD.CRALN_CODIGO) AS CRALN_NOMBRE_SALIDA,
+ MVD.CRMOV_NUMERO_VUELO AS CRMOV_NUMERO_VUELO_SALIDA,
+ MVD.CRMOV_OBSERVACION AS CRMOV_OBSERVACION_SALIDA
+FROM SII.CGG_RES_MOVILIDAD MOV
+INNER JOIN SII.CGG_RES_AEROPUERTO AER ON(AER.CARPT_CODIGO=MOV.CGG_CARPT_CODIGO)
+INNER JOIN SII.CGG_CANTON CAN ON (CAN.CCTN_CODIGO=AER.CCTN_CODIGO)
+INNER JOIN SII.CGG_RES_PERSONA PER ON(PER.CRPER_CODIGO = MOV.CRPER_CODIGO)
+INNER JOIN SII.CGG_RES_RESIDENCIA RSD ON(RSD.CRRSD_CODIGO=MOV.CRRSD_CODIGO AND CRRSD_ESTADO)
+INNER JOIN SII.CGG_RES_TIPO_SOLICITUD_TRAMITE TST ON(TST.CRTST_CODIGO=RSD.CRTST_CODIGO)
+LEFT JOIN SII.CGG_RES_MOVILIDAD MVD ON (MOV.CRPER_CODIGO = MVD.CRPER_CODIGO AND MVD.CRMOV_TIPO_OPERACION = 1
+AND DATE(MVD.CRMOV_FECHA_VIAJE) >= DATE(MOV.CRMOV_FECHA_VIAJE)
+AND MOV.CRRSD_CODIGO = MVD.CRRSD_CODIGO) --SALIDA
+INNER JOIN TIPO ON (TIPO.CRTST_CODIGO = RSD.CRTST_CODIGO)
+WHERE  MOV.CRMOV_TIPO_OPERACION = 0  --ENTRADA
+AND MOV.CRMOV_ESTADO
+AND MVD.CRMOV_SOPORTE=FALSE
+AND MOV.CRMOV_SOPORTE=FALSE
+AND (LENGTH($P{P_CCTN_CODIGO})=0 OR CAN.CCTN_CODIGO=$P{P_CCTN_CODIGO})
+AND (LENGTH($P{P_FECHA_INICIAL}::VARCHAR||$P{P_FECHA_FINAL}::VARCHAR) = 0 OR MOV.CRMOV_FECHA_VIAJE::DATE BETWEEN $P{P_FECHA_INICIAL} AND $P{P_FECHA_FINAL})
+AND (LENGTH($P{P_CRALN_CODIGO})=0 OR MOV.CRALN_CODIGO=$P{P_CRALN_CODIGO})
+ORDER BY CAN.CCTN_NOMBRE,CRPER_TIPO,CRPER_CATEGORIA, CRPER_NOMBRES,MOV.CRMOV_FECHA_VIAJE::DATE DESC]]>
+	</queryString>
+	<field name="crmov_soporte" class="java.lang.Boolean"/>
+	<field name="cctn_nombre" class="java.lang.String"/>
+	<field name="crper_categoria" class="java.lang.String"/>
+	<field name="crmov_filtro_interno" class="java.lang.Boolean"/>
+	<field name="cgncn_codigo" class="java.lang.String"/>
+	<field name="crper_tipo" class="java.lang.String"/>
+	<field name="crper_nacionalidad" class="java.lang.String"/>
+	<field name="crper_num_doc_identific" class="java.lang.String"/>
+	<field name="crper_nombres" class="java.lang.String"/>
+	<field name="crmov_usuario_insert_ingreso" class="java.lang.String"/>
+	<field name="crmov_fecha_viaje_ingreso" class="java.sql.Date"/>
+	<field name="craln_nombre_ingreso" class="java.lang.String"/>
+	<field name="crmov_numero_vuelo_ingreso" class="java.lang.String"/>
+	<field name="crmov_observacion_ingreso" class="java.lang.String"/>
+	<field name="crmov_usuario_insert_salida" class="java.lang.String"/>
+	<field name="crmov_fecha_viaje_salida" class="java.lang.String"/>
+	<field name="crmov_estado" class="java.lang.String"/>
+	<field name="craln_nombre_salida" class="java.lang.String"/>
+	<field name="crmov_numero_vuelo_salida" class="java.lang.String"/>
+	<field name="crmov_observacion_salida" class="java.lang.String"/>
+	<variable name="V_FECHA_ACTUAL" class="java.util.Date">
+		<variableExpression><![CDATA[new Date()]]></variableExpression>
+	</variable>
+	<variable name="V_TOTAL_REGISTROS" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{crper_nombres}]]></variableExpression>
+	</variable>
+	<variable name="fTuristasNacionales" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{crper_tipo}.equalsIgnoreCase("Nacional")&& $F{crper_categoria}.indexOf( "urista" )>-1?1:0]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="fTranseuntesNacionales" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{crper_tipo}.equalsIgnoreCase("Nacional")&& $F{crper_categoria}.indexOf( "ranse" )>-1?1:0]]></variableExpression>
+	</variable>
+	<variable name="fTuristasExtranjeros" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{crper_tipo}.equalsIgnoreCase("Extranjero")&&$F{crper_categoria}.indexOf("urist")>-1?1:0]]></variableExpression>
+	</variable>
+	<variable name="fTranseuntesExtranjeros" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{crper_tipo}.equalsIgnoreCase("Extranjero")&& $F{crper_categoria}.indexOf( "rans" )>-1?1:0]]></variableExpression>
+	</variable>
+	<variable name="fFiltroNacional" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{crper_tipo}.equalsIgnoreCase("Extranjero")&& $F{crmov_filtro_interno}==true?1:0]]></variableExpression>
+	</variable>
+	<variable name="vFilaActual" class="java.lang.Integer" resetType="Group" resetGroup="gCanton">
+		<variableExpression><![CDATA[new BigDecimal($V{vFilaActual}.intValue()+1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<group name="gCanton">
+		<groupExpression><![CDATA[$F{cctn_nombre}]]></groupExpression>
+		<groupHeader>
+			<band height="66">
+				<staticText>
+					<reportElement positionType="Float" x="55" y="26" width="51" height="40" isPrintWhenDetailOverflows="true"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Categoria]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="17" y="26" width="38" height="40" isPrintWhenDetailOverflows="true"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Tipo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="106" y="26" width="57" height="40" isPrintWhenDetailOverflows="true"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nacionalidad]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="295" y="26" width="249" height="20" isPrintWhenDetailOverflows="true"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Ingresos]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="295" y="46" width="44" height="20" isPrintWhenDetailOverflows="true"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Usuario]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="339" y="46" width="55" height="20" isPrintWhenDetailOverflows="true"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Fecha]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="544" y="26" width="258" height="20" isPrintWhenDetailOverflows="true"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Salidas]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="163" y="26" width="54" height="40" isPrintWhenDetailOverflows="true"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Identificación]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="217" y="26" width="78" height="40" isPrintWhenDetailOverflows="true"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nombres]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="394" y="46" width="40" height="20" isPrintWhenDetailOverflows="true"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Aerolínea]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="434" y="46" width="40" height="20" isPrintWhenDetailOverflows="true"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Vuelo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="474" y="46" width="70" height="20" isPrintWhenDetailOverflows="true"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Observación]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="544" y="46" width="42" height="20" isPrintWhenDetailOverflows="true"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Usuario]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="586" y="46" width="63" height="20" isPrintWhenDetailOverflows="true"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Fecha]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="649" y="46" width="37" height="20" isPrintWhenDetailOverflows="true"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Aerolinea]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="686" y="46" width="40" height="20" isPrintWhenDetailOverflows="true"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Vuelo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="726" y="46" width="76" height="20" isPrintWhenDetailOverflows="true"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Observación]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="26" width="17" height="40" isPrintWhenDetailOverflows="true"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nº]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="0" y="0" width="802" height="20"/>
+					<box leftPadding="5"/>
+					<textElement verticalAlignment="Middle" markup="html"/>
+					<textFieldExpression class="java.lang.String"><![CDATA["<b>ISLA</b> "+$F{cctn_nombre}.toUpperCase()]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="46" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="802" height="46"/>
+				<subreportParameter name="SUBREPORT_DIR"/>
+				<subreportParameter name="P_SUBTITULO_2">
+					<subreportParameterExpression><![CDATA["Desde " + new java.text.SimpleDateFormat("dd/MM/yyyy").format($P{P_FECHA_INICIAL})+ " hasta " + new java.text.SimpleDateFormat("dd/MM/yyyy").format($P{P_FECHA_FINAL})]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="P_SUBTITULO_1">
+					<subreportParameterExpression><![CDATA["Listado de turistas y transeuntes de ingreso y salida de GPS"]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptEncabezadoHor"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<detail>
+		<band height="27" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="295" y="0" width="44" height="27" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crmov_usuario_insert_ingreso}]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy-MM-dd" isBlankWhenNull="true">
+				<reportElement x="339" y="0" width="55" height="27" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{crmov_fecha_viaje_ingreso}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="394" y="0" width="40" height="27" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{craln_nombre_ingreso}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="434" y="0" width="40" height="27" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crmov_numero_vuelo_ingreso}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="544" y="0" width="42" height="27" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crmov_usuario_insert_salida}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="586" y="0" width="63" height="27" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crmov_fecha_viaje_salida}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="649" y="0" width="37" height="27" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{craln_nombre_salida}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="686" y="0" width="40" height="27" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crmov_numero_vuelo_salida}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="474" y="0" width="70" height="27" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crmov_observacion_ingreso}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="726" y="0" width="76" height="27" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crmov_observacion_salida}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="55" y="0" width="51" height="27"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_categoria}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="17" y="0" width="38" height="27" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_tipo}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="106" y="0" width="57" height="27" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_nacionalidad}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="163" y="0" width="53" height="27" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_num_doc_identific}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="216" y="0" width="79" height="27" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_nombres}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="17" height="27"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{vFilaActual}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="9" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="56" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="18" width="802" height="38"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptPieHor"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement x="755" y="3" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="732" y="3" width="23" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Pág.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="768" y="3" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[de ]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="3" y="3" width="120" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="2" y="1" width="800" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="783" y="3" width="12" height="15"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="103">
+			<staticText>
+				<reportElement x="27" y="20" width="396" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[Total de Turistas Nacionales:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="27" y="40" width="396" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[Total de Transeúntes Nacionales:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="27" y="80" width="396" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[Total de Transeúntes Extranjeros:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="27" y="60" width="396" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[Total de Turistas Extranjeros: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="27" y="0" width="396" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total de Registros:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="427" y="0" width="62" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{V_TOTAL_REGISTROS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="427" y="20" width="62" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{fTuristasNacionales}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="427" y="40" width="62" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{fTranseuntesNacionales}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="427" y="60" width="62" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{fTuristasExtranjeros}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="427" y="80" width="62" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{fTranseuntesExtranjeros}]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+</jasperReport>

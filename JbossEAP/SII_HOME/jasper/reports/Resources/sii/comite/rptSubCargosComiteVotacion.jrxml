@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptSubCargosComite" language="groovy" columnCount="3" printOrder="Horizontal" pageWidth="595" pageHeight="842" columnWidth="195" leftMargin="0" rightMargin="10" topMargin="0" bottomMargin="0" isFloatColumnFooter="true">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="P_CRTRA_CODIGO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT distinct CRC.CRCRG_NOMBRE,
+	VOTACION.CRVTO_VOTACION,
+	VOTACION.CRRES_NUMERO_RESOLUCION,
+	CRTRA.CRTRA_CODIGO,
+	VOTACION.CRRES_FECHA_EMISION::DATE,VOTACION.CISLA_NOMBRE,
+	VOTACION.CISLA_REFERENCIA
+FROM CGG_RES_CARGO_COMITE CRC
+INNER JOIN CGG_RES_COMITE CM ON (CM.CRCOM_CODIGO = CRC.CRCOM_CODIGO)
+INNER JOIN CGG_RES_TRAMITE_COMITE CTC ON (CTC.CRCOM_CODIGO = CRC.CRCOM_CODIGO)
+INNER JOIN CGG_RES_TRAMITE CRTRA ON (CRTRA.CRTST_CODIGO = CTC.CRTST_CODIGO )
+LEFT JOIN (SELECT distinct VOTO.CRVTO_VOTACION,CM.CRCRG_CODIGO,RSLT.CRTRA_CODIGO,RES.CRRES_NUMERO_RESOLUCION,RES.CRRES_FECHA_EMISION,
+CASE
+WHEN ISLA.CCTN_CODIGO = (SELECT CGCNF_VALOR_CADENA FROM CGG_CONFIGURACION WHERE CGCNF_CODIGO = 'CONF120')THEN
+	1
+WHEN ISLA.CCTN_CODIGO = (SELECT CGCNF_VALOR_CADENA FROM CGG_CONFIGURACION WHERE CGCNF_CODIGO = 'CONF121')THEN
+	2
+ELSE
+	3
+END CISLA_REFERENCIA,
+ISLA.CISLA_NOMBRE
+FROM SII.CGG_RES_SESION_COMITE SC
+INNER JOIN SII.CGG_RES_RESOLUCION RES ON (SC.CRSSC_CODIGO = RES.CRSSC_CODIGO AND 	CRRES_ESTADO)
+INNER JOIN SII.CGG_RES_RESOL_TRAMITE RSLT ON (RSLT.CRRES_CODIGO = RES.CRRES_CODIGO AND CRRST_ESTADO)
+INNER JOIN SII.CGG_RES_SESION_MIEMBRO SSM ON (SC.CRSSC_CODIGO = SSM.CRSSC_CODIGO AND CRSMB_ESTADO)
+INNER JOIN SII.CGG_RES_MIEMBRO_COMITE MCT ON (MCT.CRMBC_CODIGO = SSM.CRMBC_CODIGO AND CRMBC_ESTADO)
+INNER JOIN SII.CGG_RES_CARGO_COMITE CM ON (CM.CRCRG_CODIGO = MCT.CRCRG_CODIGO AND CRCRG_ESTADO)
+INNER JOIN SII.CGG_RES_VOTO VOTO ON (VOTO.CRSMB_CODIGO = SSM.CRSMB_CODIGO AND CRVTO_ESTADO AND VOTO.CRRES_CODIGO = RES.CRRES_CODIGO)
+INNER JOIN SII.CGG_ISLA ISLA ON (ISLA.CISLA_CODIGO = SC.CISLA_CODIGO)
+WHERE CRSSC_ESTADO
+) AS VOTACION ON (VOTACION.CRCRG_CODIGO = CRC.CRCRG_CODIGO AND VOTACION.CRTRA_CODIGO = CRTRA.CRTRA_CODIGO)
+WHERE CRC.CRCRG_PRINCIPAL AND CRTRA.CRTRA_CODIGO =  $P{P_CRTRA_CODIGO}]]>
+	</queryString>
+	<field name="crcrg_nombre" class="java.lang.String"/>
+	<field name="crvto_votacion" class="java.lang.Integer"/>
+	<field name="crres_numero_resolucion" class="java.lang.String"/>
+	<field name="crtra_codigo" class="java.lang.String"/>
+	<field name="crres_fecha_emision" class="java.sql.Date"/>
+	<field name="cisla_nombre" class="java.lang.String"/>
+	<field name="cisla_referencia" class="java.lang.Integer"/>
+	<group name="Resolucion">
+		<groupExpression><![CDATA[$F{crtra_codigo}]]></groupExpression>
+		<groupFooter>
+			<band height="147" splitType="Stretch">
+				<rectangle>
+					<reportElement x="0" y="29" width="181" height="116"/>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement x="69" y="119" width="112" height="20"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Responsable]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="10" width="196" height="20" backcolor="#000000"/>
+					<textElement textAlignment="Center">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[RESOLUCION]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="56" y="34" width="109" height="20"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{crres_numero_resolucion}]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+					<reportElement x="56" y="57" width="109" height="20"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.util.Date"><![CDATA[$F{crres_fecha_emision}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="3" y="80" width="58" height="15"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[San Cristobal]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="3" y="101" width="58" height="14"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Santa Cruz]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="3" y="122" width="58" height="15"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Isabela]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="36" width="25" height="20"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[No.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1" y="57" width="24" height="20"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Fecha:]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement x="54" y="100" width="15" height="15"/>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</rectangle>
+				<rectangle>
+					<reportElement x="54" y="122" width="15" height="15"/>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</rectangle>
+				<rectangle>
+					<reportElement x="54" y="80" width="15" height="15"/>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement x="53" y="104" width="18" height="20">
+						<printWhenExpression><![CDATA[$F{cisla_referencia}==2]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[X]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="52" y="125" width="18" height="20">
+						<printWhenExpression><![CDATA[$F{cisla_referencia}==3]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[X]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement x="198" y="29" width="381" height="116"/>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement x="198" y="9" width="381" height="20"/>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[OBSERVACIONES DE LOS MIEMBROS DEL COMITE]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="53" y="83" width="18" height="20">
+						<printWhenExpression><![CDATA[$F{cisla_referencia}==1]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[X]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<detail>
+		<band height="94">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="181" height="17"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crcrg_nombre}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="0" y="15" width="181" height="75"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<report
