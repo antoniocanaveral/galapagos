@@ -11,7 +11,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
     var inRecordCgg_res_tipo_solicitud_tramite=INRECORD_CGG_RES_TIPO_SOLICITUD_TRAMITE;
     var urlCgg_res_tipo_solicitud_tramite=URL_WS+"Cgg_res_tipo_solicitud_tramite";
     var tituloCgg_res_tipo_solicitud_tramite='Tipo de solicitud tr\u00E1mite';
-    var descCgg_res_tipo_solicitud_tramite='El formulario permite ingresar o editar informaci\u00f3n de del tipo de solicitud tr\u00E1mite';
+    var descCgg_res_tipo_solicitud_tramite='El formulario permite ingresar o editar informaci\u00f3n del tipo de solicitud tr\u00E1mite';
     var isEdit = false;
 
     var tmpTipoTramite=null;
