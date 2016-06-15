@@ -1,5 +1,6 @@
 <html>
 <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <title>SIICGG Atenci&oacute;n al cliente</title>
 <link rel="stylesheet" type="text/css" href="css/style.css" />
 <script type="text/javascript" src="js/config.js"></script>
@@ -336,7 +337,7 @@
 						<td width="203">&nbsp;</td>
 						<td width=189 align="right" valign="middle">
 						<div class="divAcercaDe" style="color: #1373A0"><b>Desarrollado
-						por besixplus cía ltda.</b></div>
+						por besixplus cï¿½a ltda.</b></div>
 						<div class="divAcercaDe"><a href="http://www.besixplus.com">
 						http://www.besixplus.com</a></div>
 						<div class="divAcercaDe">contacto@besixplus.com</div>

@@ -33,5 +33,6 @@
 		<module>siicgg_web</module>
 		<module>siiws</module>
 		<module>sii_jasper_api</module>
+		<module>sii_java_validator</module>
 	</modules>
 </project>

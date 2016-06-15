@@ -3,6 +3,8 @@ package com.besixplus.sii.util;
 import com.bmlaurus.exception.EnvironmentVariableNotDefinedException;
 
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Properties;
 
 /**
@@ -46,6 +48,10 @@ public class Env {
         }
 
         return props;
+    }
+
+    public static URL getRuleClassPath() throws EnvironmentVariableNotDefinedException, MalformedURLException {
+       return new File(getHomePath()+File.separator+"rules").toURI().toURL();
     }
 
     public static String loadExternalScripts(String resourcePath){

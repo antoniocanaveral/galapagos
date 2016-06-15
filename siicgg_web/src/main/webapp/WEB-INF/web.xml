@@ -46,12 +46,18 @@
     </welcome-file-list>
     <security-constraint>
         <display-name>PrivateWS</display-name>
-        <web-resource-collection>
-            <web-resource-name>WEB</web-resource-name>
-            <url-pattern>/PrivateWS/*</url-pattern>
-            <http-method>GET</http-method>
-            <http-method>POST</http-method>
-        </web-resource-collection>
+    <web-resource-collection>
+        <web-resource-name>WEB</web-resource-name>
+        <url-pattern>/PrivateWS/*</url-pattern>
+        <http-method>GET</http-method>
+        <http-method>POST</http-method>
+    </web-resource-collection>
+    <web-resource-collection>
+        <web-resource-name>WEB</web-resource-name>
+        <url-pattern>/*</url-pattern>
+        <http-method>GET</http-method>
+        <http-method>POST</http-method>
+    </web-resource-collection>
         <auth-constraint>
             <role-name>atencion_cliente</role-name>
         </auth-constraint>
@@ -60,9 +66,9 @@
         </user-data-constraint>
     </security-constraint>
     <security-constraint>
-        <display-name>PublicGEM</display-name>
+        <display-name>SIICGG_WEB</display-name>
         <web-resource-collection>
-            <web-resource-name>WebSite</web-resource-name>
+            <web-resource-name>siicgg_web</web-resource-name>
             <url-pattern>/*</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
