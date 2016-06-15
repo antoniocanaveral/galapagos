@@ -30,7 +30,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
     	{name:'CRSRQ_PARTICIPANTE',dataIndex:'CRSRQ_PARTICIPANTE'}
     ]);
 
-    var rGarantiaSolicitud = Ext.data.Record.create([
+   var rGarantiaSolicitud = Ext.data.Record.create([
     	{name:'CRGTS_CODIGO',mapping:'CRGTS_CODIGO'},
     	{name:'CRGRT_CODIGO',mapping:'CRGRT_CODIGO'},
     	{name:'CRTST_CODIGO',mapping:'CRTSR_CODIGO'}
@@ -614,13 +614,13 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                                 columnWidth:.25,
                                 layout:'form',
                                 labelWidth:90,
-                                items:[chkCrtst_aplica_tramite,chkCrtst_aplica_beneficiario,chkCrtst_aplica_garantia]
+                                items:[chkCrtst_aplica_tramite,chkCrtst_aplica_beneficiario] //chkCrtst_aplica_garantia
                             },
                             {
                                 columnWidth:.25,
                                 layout:'form',
                                 labelWidth:90,
-                                items:[chkCrtst_aplica_grupo,chkCrtst_comunicado_radial]
+                                items:[chkCrtst_aplica_grupo]   //chkCrtst_comunicado_radial
 
                             },
                             {
@@ -1638,6 +1638,7 @@ FrmCgg_res_tipo_solicitud_tramite.prototype.loadData = function(){
 FrmCgg_res_tipo_solicitud_tramite.prototype.setStoreTipoTramite = function(inStoreTipoTramite){
     this.setStoreTipoTramite(inStoreTipoTramite);
 }
+
 
 FrmCgg_res_tipo_solicitud_tramite.prototype.setStoreGarantia = function(inStoreGarantia){
     this.setStoreGarantia(inStoreGarantia);
