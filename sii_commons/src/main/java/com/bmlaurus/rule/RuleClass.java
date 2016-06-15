@@ -7,5 +7,8 @@ import com.besixplus.sii.objects.Cgg_regla_validacion_metadatos;
  */
 public interface RuleClass {
 
-    public String executeRule(Cgg_regla_validacion_metadatos metadata);
+    /**
+     * @return String false,Message | false | true,Message | true
+     * */
+    String executeRule(Cgg_regla_validacion_metadatos metadata);
 }

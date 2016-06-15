@@ -1,5 +1,6 @@
 package com.besixplus.sii.db;
 
+import com.besixplus.sii.util.Env;
 import com.besixplus.sii.util.InitParameters;
 
 import javax.mail.Session;
@@ -59,14 +60,10 @@ public class ManagerConnection {
 			if(!ManagerConnection.IS_DEPLOYED){
 				try {
 					DriverManager.registerDriver(new org.postgresql.Driver());
-					Properties prop = new Properties();
-					ManagerConnection.setUserName(USER_NAME_DB);
-					ManagerConnection.setPassword(PASS_DB);
-					prop.put("user", ManagerConnection.getUserName());
-					prop.put("password", ManagerConnection.getPassword());
-					//jdbc:postgresql://localhost:5435/MyDB?ApplicationName=MyApp
-					prop.put("ApplicationName",appName);
-					return DriverManager.getConnection("jdbc:postgresql://"+IP_DB+"/"+DATABASE_NAME, prop);
+					Properties prop = Env.getExternalProperties("database/database.properties");
+					ManagerConnection.setUserName(prop.getProperty("user"));
+					ManagerConnection.setPassword(prop.getProperty("password"));
+					return DriverManager.getConnection("jdbc:postgresql://"+prop.getProperty("host")+"/"+prop.getProperty("dbname"), prop);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

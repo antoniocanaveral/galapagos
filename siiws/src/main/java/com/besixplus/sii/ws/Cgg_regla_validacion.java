@@ -1,13 +1,14 @@
 package com.besixplus.sii.ws;
 
-import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.besixplus.sii.db.ManagerConnection;
+import com.besixplus.sii.i18n.Messages;
+import com.besixplus.sii.objects.Cgg_regla_validacion_metadatos;
+import com.besixplus.sii.util.Env;
+import com.bmlaurus.exception.EnvironmentVariableNotDefinedException;
+import com.bmlaurus.rule.RuleClass;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
@@ -16,24 +17,21 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
 import javax.servlet.http.HttpServletRequest;
-/*import javax.servlet.http.HttpServletResponse;*/
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFactory;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
+import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URLClassLoader;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-import com.besixplus.sii.util.Env;
-import com.bmlaurus.exception.EnvironmentVariableNotDefinedException;
-import com.bmlaurus.rule.RuleClass;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.besixplus.sii.db.ManagerConnection;
-import com.besixplus.sii.i18n.Messages;
-import com.besixplus.sii.objects.Cgg_regla_validacion_metadatos;
+/*import javax.servlet.http.HttpServletResponse;*/
 
 /**
  * CLASE Cgg_regla_validacion
@@ -452,7 +450,6 @@ public class Cgg_regla_validacion implements Serializable{
 
 	/**
 	 * SELECCIONA VARIOS REGISTROS DE LA TABLA Cgg_regla_validacion DE ACUERDO AL TIPO DE SOLICITUD DE TRAMITE .
-	 * @param inConnection CONEXION A LA BASE DE DATOS.
 	 * @param inCrtst_codigo IDENTIFICATIVO UNICO DE REGISTRO DE TIPO DE SOLICITUD DE TRAMITE
 	 * @param format FORMATO DE SALIDA DE LOS DATOS (JSON, XML).
 	 * @return com.besixplus.sii.objects.Cgg_regla_validacion OBJETO EQUIVALENTE AL REGISTRO DE LA TABLA.
@@ -533,7 +530,6 @@ public class Cgg_regla_validacion implements Serializable{
 
 	/**
 	 * SELECCIONA VARIOS REGISTROS DE LA TABLA Cgg_regla_validacion DE ACUERDO AL TIPO DE OPERACION DE VALIDACION .
-	 * @param inConnection CONEXION A LA BASE DE DATOS.
 	 * @param inCopvl_formulario IDENTIFICATIVO UNICO DE REGISTRO DE TIPO DE SOLICITUD DE TRAMITE
 	 * @param format FORMATO DE SALIDA DE LOS DATOS (JSON, XML).
 	 * @return com.besixplus.sii.objects.Cgg_regla_validacion OBJETO EQUIVALENTE AL REGISTRO DE LA TABLA.
@@ -577,7 +573,6 @@ public class Cgg_regla_validacion implements Serializable{
 
 	/**
 	 * SELECCIONA VARIOS REGISTROS DE LA TABLA Cgg_regla_validacion DE ACUERDO AL TIPO DE OPERACION DE VALIDACION .
-	 * @param inConnection CONEXION A LA BASE DE DATOS.
 	 * @param inCopvl_codigo IDENTIFICATIVO UNICO DE REGISTRO DE OPERACION VALIDACION
 	 * @param format FORMATO DE SALIDA DE LOS DATOS (JSON, XML).
 	 * @return com.besixplus.sii.objects.Cgg_regla_validacion OBJETO EQUIVALENTE AL REGISTRO DE LA TABLA.
@@ -660,7 +655,6 @@ public class Cgg_regla_validacion implements Serializable{
 	
 	/**
 	 * SELECCIONA VARIOS REGISTROS DE LA TABLA Cgg_regla_validacion DE ACUERDO AL TIPO DE OPERACION DE VALIDACION .
-	 * @param inConnection CONEXION A LA BASE DE DATOS.
 	 * @param inCopvl_formulario IDENTIFICATIVO UNICO DE REGISTRO DE TIPO DE SOLICITUD DE TRAMITE
 	 * @param format FORMATO DE SALIDA DE LOS DATOS (JSON, XML).
 	 * @return com.besixplus.sii.objects.Cgg_regla_validacion OBJETO EQUIVALENTE AL REGISTRO DE LA TABLA.
@@ -720,10 +714,9 @@ public class Cgg_regla_validacion implements Serializable{
 				Cgg_regla_validacion_metadatos objReglaMetadatos =  new Cgg_regla_validacion_metadatos();
 				objReglaMetadatos = new com.besixplus.sii.db.Cgg_regla_validacion(objRegla).selectReglaMetadatos(con);
 
-				if(objJSONRegla.toString().contains("com.bmlaurus.rule")){//es una regla de java
-					String className = objJSONRegla.toString();
-					URL myJarFiles = Env.getRuleClassPath();
-					URLClassLoader externalClassLoader = new URLClassLoader (new URL[] {myJarFiles}, this.getClass().getClassLoader());
+				if(objRegla.getCRVAL_FUNCION_VALIDACION().contains("com.bmlaurus.rule")){//es una regla de java
+					String className = objRegla.getCRVAL_FUNCION_VALIDACION();
+					URLClassLoader externalClassLoader = new URLClassLoader (Env.getRuleClassPath(), this.getClass().getClassLoader());
 					Class clazz = Class.forName(className,true,externalClassLoader);
 					RuleClass rule = (RuleClass) clazz.newInstance();
 					tmpResultado = rule.executeRule(objReglaMetadatos);

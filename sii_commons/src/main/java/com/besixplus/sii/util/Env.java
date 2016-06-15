@@ -5,6 +5,8 @@ import com.bmlaurus.exception.EnvironmentVariableNotDefinedException;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -50,8 +52,22 @@ public class Env {
         return props;
     }
 
-    public static URL getRuleClassPath() throws EnvironmentVariableNotDefinedException, MalformedURLException {
-       return new File(getHomePath()+File.separator+"rules").toURI().toURL();
+    public static URL[] getRuleClassPath() throws EnvironmentVariableNotDefinedException, MalformedURLException {
+        List<URL> ruleFiles = new ArrayList<>();
+        File dir = new File(getHomePath()+File.separator+"rules");
+        if(dir.isDirectory()){
+            for(File item:dir.listFiles()){
+                if(item.isFile()){
+                    ruleFiles.add(item.toURI().toURL());
+                }
+            }
+        }
+        URL[] urls = null;
+        if(ruleFiles.size()>0) {
+            urls = new URL[ruleFiles.size()];
+            urls = ruleFiles.toArray(urls);
+        }
+        return urls;
     }
 
     public static String loadExternalScripts(String resourcePath){

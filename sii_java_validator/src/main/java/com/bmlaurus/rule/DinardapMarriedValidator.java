@@ -9,6 +9,6 @@ public class DinardapMarriedValidator implements RuleClass {
 
     @Override
     public String executeRule(Cgg_regla_validacion_metadatos metadata) {
-        return null;
+        return "false,Los servicios externos no han sido implementados";
     }
 }
