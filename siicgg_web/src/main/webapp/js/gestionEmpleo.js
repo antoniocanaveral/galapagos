@@ -51,7 +51,7 @@ function loadModulo(){
 		id:"grdOfertas",renderTo:"divTabla1",
 		width:"100%",height:"500px",
 		webService:{
-			url:URL_WS+"Cgg_atc_gestion_empleo",
+			url:URL_WS_PUBLIC+"Cgg_atc_gestion_empleo",
 			method:"selectPage",
 			reader:{totalCountName:"totalCount",dataSetName:"dataSet"},
 			params:[
@@ -155,7 +155,7 @@ function loadModulo(){
 		var param = new SOAPClientParameters();
 		param.add('grupo',grupo);
 		param.add('format',"JSON");
-        SOAPClient.invoke(URL_WS+"Cgg_atc_gestion_empleo","selectGrupo",param, true, callBackFiltro);
+        SOAPClient.invoke(URL_WS_PUBLIC+"Cgg_atc_gestion_empleo","selectGrupo",param, true, callBackFiltro);
 	}
 	setHeightForm();
 	

@@ -62,7 +62,7 @@ function loadOfertasByUsuario(){
 					}	
 					var param = new SOAPClientParameters(); 		
 					param.add('inCusu_codigo',codigoCandidato);		
-					SOAPClient.invoke(URL_WS+"Cgg_atc_gestion_empleo", "selectEstadistica", param, false, CallBackIndicador1);
+					SOAPClient.invoke(URL_WS_PUBLIC+"Cgg_atc_gestion_empleo", "selectEstadistica", param, false, CallBackIndicador1);
 				
 					divModalAplicar.style.display="none";					
 					winAplicar.style.display="none";	
@@ -112,7 +112,7 @@ function loadOfertasByUsuario(){
 		var param = new SOAPClientParameters();
 		param.add("inCusu_codigo",codigoUsuario);
 		param.add("format","JSON");
-		SOAPClient.invoke(URL_WS+"Cgg_atc_gestion_empleo", "selectInformacionUsuario", param, true, CallBackCgg_gem_usuario_info);
+		SOAPClient.invoke(URL_WS_PUBLIC+"Cgg_atc_gestion_empleo", "selectInformacionUsuario", param, true, CallBackCgg_gem_usuario_info);
 	}
 	
 	function presentarDatosOferta(codigoVacante){		
@@ -124,7 +124,7 @@ function loadOfertasByUsuario(){
 		var param = new SOAPClientParameters();
 		param.add("inCgvcn_codigo",codigoVacante);
 		param.add("format","JSON");
-		SOAPClient.invoke(URL_WS+"Cgg_atc_gestion_empleo", "select", param, true, CallBackCgg_gem_oferta_detalle);
+		SOAPClient.invoke(URL_WS_PUBLIC+"Cgg_atc_gestion_empleo", "select", param, true, CallBackCgg_gem_oferta_detalle);
 	}
 	$("tdRequisitos").innerHTML = "<img src='css/icon/cargando.gif'/>"
 	function fnRequisitos(){
@@ -139,7 +139,7 @@ function loadOfertasByUsuario(){
 		};
 		var param = new SOAPClientParameters();
 		param.add("inCgvcn_codigo",codigoVacante);		
-		SOAPClient.invoke(URL_WS+"Cgg_atc_gestion_empleo", "selectFKVacante", param, true, CallBackCgg_gem_requisitos);
+		SOAPClient.invoke(URL_WS_PUBLIC+"Cgg_atc_gestion_empleo", "selectFKVacante", param, true, CallBackCgg_gem_requisitos);
 	}	
 }
 	
