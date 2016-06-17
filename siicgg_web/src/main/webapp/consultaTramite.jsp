@@ -38,7 +38,7 @@
 }
 
 #myDiv {
-	background-image: url(css/image/com.png);
+	background-image: url(css/image/com.gif);
 	background-repeat: no-repeat;
 	background-position: 400px 5px;
 	padding-top: 0px;
