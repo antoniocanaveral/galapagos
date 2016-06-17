@@ -808,52 +808,47 @@ public class Cgg_regla_validacion implements Serializable{
 			for (int i = 0 ; i+2 <= inReglaMetadados.getNUMEROARGUMENTOS()-1; i++)
 			{
 				tipoDatosArgumentos = ltrim(arrayTipoDatosArgumentos[i]);
-				if(tipoDatosArgumentos.toUpperCase().equals(DataTypes.INTEGER.getValue()))
-				{
-					stmSelect.setInt(i+2, objJSONReglaParams.getInt(arrayNombreArgumentos[i].toUpperCase()));
-				}
-				if(tipoDatosArgumentos.toUpperCase().equals(DataTypes.VARCHAR.getValue()))
-				{
-					stmSelect.setString(i+2, objJSONReglaParams.getString(arrayNombreArgumentos[i].toUpperCase()));
-				}
-				if(tipoDatosArgumentos.toUpperCase().equals(DataTypes.BOOLEAN.getValue()))
-				{
-					stmSelect.setBoolean(i+2, objJSONReglaParams.getBoolean(arrayNombreArgumentos[i].toUpperCase()));
-				}
-				if(tipoDatosArgumentos.toUpperCase().equals(DataTypes.NUMERIC.getValue()))
-				{
-					stmSelect.setBigDecimal(i+2, new BigDecimal(objJSONReglaParams.getInt(arrayNombreArgumentos[i].toUpperCase())));
-				}
-				if(tipoDatosArgumentos.toUpperCase().equals(DataTypes.TIMESTAMP.getValue()))
-				{
-					//stmSelect.setTimestamp(i+2, Timestamp.valueOf(objJSONReglaParams.getString(arrayNombreArgumentos[i].toUpperCase())));
-					try {
-						stmSelect.setTimestamp(i+2,new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse(objJSONReglaParams.getString(arrayNombreArgumentos[i].toUpperCase())).getTime()));
-					} catch (ParseException e) {
-						String strDate = objJSONReglaParams.getString(arrayNombreArgumentos[i].toUpperCase());
-						SimpleDateFormat sdfSource = new SimpleDateFormat("yyyy-MM-dd");
-						java.util.Date date;
+				if(objJSONReglaParams.has(arrayNombreArgumentos[i].toUpperCase())) {
+					if (tipoDatosArgumentos.toUpperCase().equals(DataTypes.INTEGER.getValue()))
+						stmSelect.setInt(i + 2, objJSONReglaParams.getInt(arrayNombreArgumentos[i].toUpperCase()));
+
+					if (tipoDatosArgumentos.toUpperCase().equals(DataTypes.VARCHAR.getValue()))
+						stmSelect.setString(i + 2, objJSONReglaParams.getString(arrayNombreArgumentos[i].toUpperCase()));
+
+					if (tipoDatosArgumentos.toUpperCase().equals(DataTypes.BOOLEAN.getValue()))
+						stmSelect.setBoolean(i + 2, objJSONReglaParams.getBoolean(arrayNombreArgumentos[i].toUpperCase()));
+
+					if (tipoDatosArgumentos.toUpperCase().equals(DataTypes.NUMERIC.getValue()))
+						stmSelect.setBigDecimal(i + 2, new BigDecimal(objJSONReglaParams.getInt(arrayNombreArgumentos[i].toUpperCase())));
+
+					if (tipoDatosArgumentos.toUpperCase().equals(DataTypes.TIMESTAMP.getValue())) {
+						//stmSelect.setTimestamp(i+2, Timestamp.valueOf(objJSONReglaParams.getString(arrayNombreArgumentos[i].toUpperCase())));
 						try {
-							date = sdfSource.parse(strDate);						
-						SimpleDateFormat sdfDestination = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
-						strDate = sdfDestination.format(date);
-						stmSelect.setTimestamp(i+2,new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse(strDate).getTime()));
-						} catch (ParseException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
+							stmSelect.setTimestamp(i + 2, new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse(objJSONReglaParams.getString(arrayNombreArgumentos[i].toUpperCase())).getTime()));
+						} catch (ParseException e) {
+							String strDate = objJSONReglaParams.getString(arrayNombreArgumentos[i].toUpperCase());
+							SimpleDateFormat sdfSource = new SimpleDateFormat("yyyy-MM-dd");
+							java.util.Date date;
+							try {
+								date = sdfSource.parse(strDate);
+								SimpleDateFormat sdfDestination = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+								strDate = sdfDestination.format(date);
+								stmSelect.setTimestamp(i + 2, new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse(strDate).getTime()));
+							} catch (ParseException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
 						}
 					}
+				}else{
+					stmSelect.setObject(i + 2,null);
 				}
 				contador = i+2;
-
 			}
 			stmSelect.setString(contador+1,inJSONRegla.getString("CRVAL_OPERADOR_COMPARADOR"));
-			if(inJSONRegla.has("CGCNF_CODIGO") && !inJSONRegla.getString("CGCNF_CODIGO").trim().isEmpty() && !inJSONRegla.getString("CGCNF_CODIGO").equals("null"))
-			{
+			if(inJSONRegla.has("CGCNF_CODIGO") && !inJSONRegla.getString("CGCNF_CODIGO").trim().isEmpty() && !inJSONRegla.getString("CGCNF_CODIGO").equals("null")){
 				stmSelect.setString(contador+2,inJSONRegla.getString("CGCNF_CODIGO"));
-			}
-			else
-			{
+			}else{
 				stmSelect.setString(contador+2,inJSONRegla.getString("CRVAL_VALOR_LIBRE"));
 			}
 			stmSelect.execute();
