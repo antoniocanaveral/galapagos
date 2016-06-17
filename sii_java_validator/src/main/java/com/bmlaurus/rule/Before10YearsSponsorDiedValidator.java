@@ -6,7 +6,7 @@ import org.json.JSONObject;
 /**
  * Created by acanaveral on 15/6/16.
  */
-public class DinardapMarriedValidator implements RuleClass {
+public class Before10YearsSponsorDiedValidator implements RuleClass {
 
     @Override
     public String executeRule(Cgg_regla_validacion_metadatos metadata, JSONObject regla) {
