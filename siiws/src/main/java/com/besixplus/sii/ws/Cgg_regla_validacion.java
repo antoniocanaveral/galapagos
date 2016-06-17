@@ -719,7 +719,7 @@ public class Cgg_regla_validacion implements Serializable{
 					URLClassLoader externalClassLoader = new URLClassLoader (Env.getRuleClassPath(), this.getClass().getClassLoader());
 					Class clazz = Class.forName(className,true,externalClassLoader);
 					RuleClass rule = (RuleClass) clazz.newInstance();
-					tmpResultado = rule.executeRule(objReglaMetadatos);
+					tmpResultado = rule.executeRule(objReglaMetadatos, objJSONRegla);
 				}else
 					tmpResultado = 	new com.besixplus.sii.db.Cgg_regla_validacion().reglaStatement(con,objReglaMetadatos,objJSONRegla);
 
