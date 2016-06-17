@@ -16,7 +16,7 @@ function loadInicio(){
 	var param = new SOAPClientParameters();				
 	param.add('inCwpag_codigo',codigoPagina);						
 	param.add('format','JSON');		
-	SOAPClient.invoke(URL_WS+"Cgg_web_pagina","select",param, true, CallBackSelectCgg_web_pagina);
+	SOAPClient.invoke(URL_WS+"PublicWS/Cgg_web_pagina","select",param, true, CallBackSelectCgg_web_pagina);
 	
 	setHeightForm();
 }
