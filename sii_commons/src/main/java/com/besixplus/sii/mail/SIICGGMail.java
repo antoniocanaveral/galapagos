@@ -62,7 +62,7 @@ public class SIICGGMail {
                 "<td><strong>"+inSubject+"</strong><br>"+inContent+"</td>"+
               "</tr>"+
             "</table>" +
-            "<br><br><br><p><font size=\"1\" color=\"gray\">SIICGG, imagenes y demas son un producto de BESIXPLUS CIA. LTDA. licenciado para utilizaci&oacute;n y desarrollo al Consejo de Gobierno regimen especial de Galapagos.<br>BESIXPLUS CIA. LTDA. 2010-2011<br>Ambato - Ecuador.</font></p>";            
+            "<br>";
             messageBodyPart.setContent(htmlText, "text/html");    
             multipart.addBodyPart(messageBodyPart);                    
             messageBodyPart = new MimeBodyPart();
@@ -104,7 +104,7 @@ public class SIICGGMail {
               "<td><strong>"+inSubject+"</strong><br>"+inContent+"</td>"+
             "</tr>"+
           "</table>" +
-          "<br><br><br><p><font size=\"1\" color=\"gray\">SIICGG, imagenes y demas son un producto de BESIXPLUS CIA. LTDA. licenciado para utilizaci&oacute;n y desarrollo al Consejo de Gobierno regimen especial de Galapagos.<br>BESIXPLUS CIA. LTDA. 2010-2011<br>Ambato - Ecuador.</font></p>";            
+          "<br><br>";
             messageBodyPart.setContent(htmlText, "text/html");  
             
             multipart.addBodyPart(messageBodyPart);                    
@@ -173,7 +173,7 @@ public class SIICGGMail {
               "<td><strong>"+inSubject+"</strong><br>"+inContent+"</td>"+
             "</tr>"+
           "</table>" +
-          "<br><br><br><p><font size=\"1\" color=\"gray\">SIICGG, imagenes y demas son un producto de BESIXPLUS CIA. LTDA. licenciado para utilizaci&oacute;n y desarrollo al Consejo de Gobierno regimen especial de Galapagos.<br>BESIXPLUS CIA. LTDA. 2010-2011<br>Ambato - Ecuador.</font></p>";            
+          "<br>";
             messageBodyPart.setContent(htmlText, "text/html");  
             
             multipart.addBodyPart(messageBodyPart);                    
