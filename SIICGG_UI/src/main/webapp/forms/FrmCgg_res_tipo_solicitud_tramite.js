@@ -30,6 +30,16 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
     	{name:'CRSRQ_PARTICIPANTE',dataIndex:'CRSRQ_PARTICIPANTE'}
     ]);
 
+    var rSolicitudAdjunto = Ext.data.Record.create([
+        {name:'code',mapping:'code'},
+        {name:'cgg_ecm_metadata_code',dataIndex:'cgg_ecm_metadata_code'},
+        {name:'file_name',dataIndex:'file_name'},
+        {name:'file_description',dataIndex:'file_description'},
+        {name:'document_type',dataIndex:'document_type'},
+        {name:'file_repository',dataIndex:'file_repository'},
+        {name:'override_name',dataIndex:'override_name'}
+    ]);
+
    var rGarantiaSolicitud = Ext.data.Record.create([
     	{name:'CRGTS_CODIGO',mapping:'CRGTS_CODIGO'},
     	{name:'CRGRT_CODIGO',mapping:'CRGRT_CODIGO'},
@@ -229,6 +239,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                 chkCrtst_aplica_beneficiario.setDisabled(!inChecked);
                 chkCrtst_aplica_otro.setDisabled(!inChecked);
                 Ext.getCmp('tpRequisito').setDisabled(!inChecked);
+                Ext.getCmp('tpAdjunto').setDisabled(!inChecked);
                 chkCrtst_restringido.setValue(false);
             }
         }
@@ -503,9 +514,10 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                     param.add('inCrtst_aplica_beneficiario',chkCrtst_aplica_beneficiario.getValue());
                     param.add('inCrtst_indice',numCrtst_indice.getValue());
                     param.add('inCrtst_requisito',grdCgg_res_solicitud_requisito.getStore().getJsonData());
+                    param.add('inCrtst_adjunto',grdCgg_res_solicitud_adjunto.getStore().getJsonData());
                     param.add('inCrtst_garantia',grdCgg_res_garantia_solicitud.getStore().getJsonData());
                     param.add('inCrtst_regla',obtenerReglasJson());
-			param.add('inCrtst_opcion',gsCgg_res_tst_aplica.getJsonData());
+			        param.add('inCrtst_opcion',gsCgg_res_tst_aplica.getJsonData());
                     SOAPClient.invoke(urlCgg_res_tipo_solicitud_tramite,INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TRAMITE,param, true, CallBackCgg_res_tipo_solicitud_tramite);
                 }catch(inErr){
                     winFrmCgg_res_tipo_solicitud_tramite.getEl().unmask();
@@ -860,6 +872,197 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
         valueField:'CRGRT_CODIGO',
         allowBlank:false
     });
+
+    //===>>AC
+    /**
+     * Ext.grid.ColumnModel Define el modelo de columnas para el objeto cgg_res_solicitud_adjunto.
+     */
+
+    var txtECMFileName = new Ext.form.TextField({
+        id:'txtECMFileName',
+        emptyText:'Nombre del Archivo'
+    });
+    var txtECMDescription = new Ext.form.TextField({
+        id:'txtECMDescription',
+        emptyText:'Descripci\u00F3n del Archivo'
+    });
+    var txtECMRepository = new Ext.form.TextField({
+        id:'txtECMRepository',
+        emptyText:'Repositorio'
+    });
+    /**
+     *Ext.form.ComboBox Combo para edicion de requisitos.
+     */
+    var dsTipoDocumentos = [[0,'D:sii:respaldo'],[1,'D:sii:personales']];
+    var cbxECMTipoDocumento = new Ext.form.ComboBox({
+        id:'cbxECMTipoDocumento',
+        store:dsTipoDocumentos,
+        displayField:'DESCRIPCION',
+        typeAhead: true,
+        mode: 'local',
+        forceSelection:true,
+        editable:false,
+        triggerAction:'all',
+        selectOnFocus:true,
+        valueField:'INDICE'
+    });
+    var cbcECMOverride =  new Ext.grid.CheckColumn({
+        dataIndex:'override_name',
+        header:'Sobreescribir',
+        width:70,
+        editor:{
+            xtype:'checkbox'
+        }
+    });
+
+    var cmCgg_res_solicitud_adjunto = new Ext.grid.ColumnModel([
+        new Ext.grid.RowNumberer(),
+        {
+            dataIndex:'code',
+            header:'Codigo',
+            width:150,
+            sortable:true,
+            hidden:true,
+            hideable:false
+        },
+        {
+            dataIndex:'cgg_ecm_metadata_code',
+            header:'Metadata',
+            width:150,
+            sortable:true,
+            hidden:true,
+            hideable:false
+        },
+        {
+            dataIndex:'file_name',
+            header:'Nombre Archivo',
+            width:150,
+            sortable:true,
+            editor:txtECMFileName
+        },
+        {
+            dataIndex:'file_description',
+            header:'Descripci\u00F3n',
+            width:150,
+            sortable:true,
+            editor:txtECMDescription
+        },{
+            dataIndex:'document_type',
+            header:'Tipo Documento',
+            width:100,
+            sortable:true,
+            editor:cbxECMTipoDocumento,
+            renderer:function(inCrsrq_participante){
+                for(var i = 0; i < dsTipoDocumentos.length ;i++){
+                    if(dsTipoDocumentos[i][0]==inCrsrq_participante){
+                        return dsTipoDocumentos[i][1];
+                    }
+                }
+            }
+        },
+        {
+            dataIndex:'file_repository',
+            header:'Repositorio',
+            width:200,
+            sortable:true,
+            editor:txtECMRepository
+        },cbcECMOverride]);
+
+    /**
+     * Ext.data.Store Agrupacion de registros de la tabla cgg_ecm_file por un campo especifico.
+     */
+    var sCgg_res_solicitud_adjunto = new Ext.data.Store({
+        proxy:new Ext.ux.bsx.SoapProxy({
+            url:URL_WS+"Alf_query",
+            method:"getAttachmentMetadata"
+        }),
+        reader:new Ext.data.JsonReader({},[
+            {
+                name:'code'
+            },
+
+            {
+                name:'cgg_ecm_metadata_code'
+            },
+
+            {
+                name:'file_name'
+            },
+            {
+                name:'file_description'
+            },
+            {
+                name:'document_type'
+            }
+            ,
+            {
+                name:'file_repository'
+            }
+            ,
+            {
+                name:'override_name'
+            }
+        ]),
+        baseParams:{
+            tableName:null,
+            recordID:null,
+            filter:null
+        }
+    });
+
+    var reSolicitudAdjunto = new Ext.ux.grid.RowEditor({
+        saveText: 'Aceptar',
+        errorSummary: false,
+        listeners:{
+            canceledit:function(inRowEditor,inFlag){
+                var inRecord=grdCgg_res_solicitud_adjunto.getStore().getAt(0);
+                if(inRecord.get('codigo')==null){
+                    grdCgg_res_solicitud_adjunto.getStore().remove(inRecord);
+                }
+            },
+            afteredit:function(inRowEditor,inObject,inRecord,inRowIndex){
+                if(inRecord.get('codigo').trim().length==0){
+                    grdCgg_res_solicitud_adjunto.getStore().remove(inRecord);
+                }else{
+                    for(var i=0;i<grdCgg_res_solicitud_adjunto.getStore().getCount();i++){
+
+                        if(inRowIndex !== i &&
+                            inRecord.get('codigo')==grdCgg_res_solicitud_adjunto.getStore().getAt(i).get('codigo')){
+                            Ext.Msg.show({
+                                title:tituloCgg_res_tipo_solicitud_tramite,
+                                msg: 'El requerimiento seleccionado ya esta establecido.',
+                                buttons: Ext.Msg.OK,
+                                icon: Ext.MessageBox.WARNING
+                            });
+                            grdCgg_res_solicitud_adjunto.getStore().removeAt(inRowIndex);
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    /**
+     * Ext.grid.GridPanel Representacion de los datos de la tabla Cgg_res_solicitud_requisito en un formato tabular de filas y columnas.
+     */
+    var grdCgg_res_solicitud_adjunto = new Ext.grid.EditorGridPanel({
+        cm:cmCgg_res_solicitud_adjunto,
+        store:sCgg_res_solicitud_adjunto,
+        region:'center',
+        sm:new Ext.grid.RowSelectionModel({
+            singleSelect:true
+        }),
+        viewConfig: {
+            forceFit: true
+        },
+        loadMask:{
+            msg:"Cargando..."
+        },
+        plugins:[reSolicitudAdjunto]
+    });
+
+    //FIN===>>AC
+
 
     /**
      * Ext.grid.ColumnModel Define el modelo de columnas para el objeto cgg_res_garantia_solicitud.
@@ -1235,28 +1438,29 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
         activeTab: 0,
         region:'center',
         items: [{
-            id:'tpRequisito',
-            title: 'Requisitos',
+            id:'tpAdjunto',
+            title: 'Adjuntos',
             layout:'border',
-            disabled:true,
-            items:[grdCgg_res_solicitud_requisito],
+            disabled:false,
+            items:[grdCgg_res_solicitud_adjunto],
             tbar:[{
                 iconCls:'iconNuevo',
-                tooltip:'Agregar requisito',
+                tooltip:'Agregar adjunto',
                 handler:function(){
-                    var rFilaRequisitoSolicitud = new rSolicitudRequisito({
-                        CRSRQ_CODIGO:'KEYGEN',
-                        CRTSR_CODIGO:'KEYGEN',
-                        CRREQ_CODIGO:null,
-                        CRSRQ_DESCRIPCION:'',
-                        CRSRQ_REQUERIDO:false,
-                        CRSRQ_PARTICIPANTE:0
+                    var rFilaAdjuntoSolicitud = new rSolicitudAdjunto({
+                        code:'KEYGEN',
+                        cgg_ecm_metadata_code:'KEYGEN',
+                        file_name:null,
+                        file_description:null,
+                        document_type:null,
+                        file_repository:null,
+                        override_name:true
                     });
-                    reSolicitudRequisito.stopEditing();
-                    sCgg_res_solicitud_requisito.insert(0,rFilaRequisitoSolicitud);
-                    grdCgg_res_solicitud_requisito.getView().refresh();
-                    grdCgg_res_solicitud_requisito.getSelectionModel().selectRow(0);
-                    reSolicitudRequisito.startEditing(0);
+                    reSolicitudAdjunto.stopEditing();
+                    sCgg_res_solicitud_adjunto.insert(0,rFilaAdjuntoSolicitud);
+                    grdCgg_res_solicitud_adjunto.getView().refresh();
+                    grdCgg_res_solicitud_adjunto.getSelectionModel().selectRow(0);
+                    reSolicitudAdjunto.startEditing(0);
                 }
             },{
                 iconCls:'iconEliminar',
@@ -1271,6 +1475,43 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                     }
                 }
             }]
+        },{
+            id:'tpRequisito',
+            title: 'Requisitos',
+            layout:'border',
+            disabled:true,
+            items:[grdCgg_res_solicitud_requisito],
+            tbar:[{
+                    iconCls:'iconNuevo',
+                    tooltip:'Agregar requisito',
+                    handler:function(){
+                        var rFilaRequisitoSolicitud = new rSolicitudRequisito({
+                            CRSRQ_CODIGO:'KEYGEN',
+                            CRTSR_CODIGO:'KEYGEN',
+                            CRREQ_CODIGO:null,
+                            CRSRQ_DESCRIPCION:'',
+                            CRSRQ_REQUERIDO:false,
+                            CRSRQ_PARTICIPANTE:0
+                        });
+                        reSolicitudRequisito.stopEditing();
+                        sCgg_res_solicitud_requisito.insert(0,rFilaRequisitoSolicitud);
+                        grdCgg_res_solicitud_requisito.getView().refresh();
+                        grdCgg_res_solicitud_requisito.getSelectionModel().selectRow(0);
+                        reSolicitudRequisito.startEditing(0);
+                        }
+                    },{
+                        iconCls:'iconEliminar',
+                        tooltip:'Eliminar requisito',
+                        handler:function(){
+                            var seleccionado = grdCgg_res_solicitud_requisito.getSelectionModel().getSelected();
+                            if(seleccionado != null ){
+                                grdCgg_res_solicitud_requisito.getStore().remove(seleccionado);
+                            }else if(grdCgg_res_solicitud_requisito.getStore().getCount()>=1){
+                                grdCgg_res_solicitud_requisito.getSelectionModel().selectLastRow();
+                                grdCgg_res_solicitud_requisito.getStore().remove(grdCgg_res_solicitud_requisito.getSelectionModel().getSelected());
+                            }
+                        }
+                    }]
         },{
             id:'tpGarantia',
             title: 'Garant\u00EDas',
@@ -1403,6 +1644,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
             show:function(inThis){
                 Ext.getCmp('pnlTabTipoSolicitud').activate('tpGarantia');
                 Ext.getCmp('pnlTabTipoSolicitud').activate('tpRequisito');
+                Ext.getCmp('pnlTabTipoSolicitud').activate('tpAdjunto');
             }
         }
     });
