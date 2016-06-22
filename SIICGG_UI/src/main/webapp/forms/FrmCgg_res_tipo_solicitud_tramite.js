@@ -33,11 +33,11 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
     var rSolicitudAdjunto = Ext.data.Record.create([
         {name:'code',mapping:'code'},
         {name:'cgg_ecm_metadata_code',dataIndex:'cgg_ecm_metadata_code'},
-        {name:'file_name',dataIndex:'file_name'},
-        {name:'file_description',dataIndex:'file_description'},
-        {name:'document_type',dataIndex:'document_type'},
-        {name:'file_repository',dataIndex:'file_repository'},
-        {name:'override_name',dataIndex:'override_name'}
+        {name:'fileName',dataIndex:'fileName'},
+        {name:'fileDescription',dataIndex:'fileDescription'},
+        {name:'documentType',dataIndex:'documentType'},
+        {name:'fileRepository',dataIndex:'fileRepository'},
+        {name:'overrideName',dataIndex:'overrideName'}
     ]);
 
    var rGarantiaSolicitud = Ext.data.Record.create([
@@ -893,21 +893,19 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
     /**
      *Ext.form.ComboBox Combo para edicion de requisitos.
      */
-    var dsTipoDocumentos = [[0,'D:sii:respaldo'],[1,'D:sii:personales']];
+    var dsTipoDocumentos = [['D:sii:respaldo','Respaldo'],['D:sii:personales','Personales']];
     var cbxECMTipoDocumento = new Ext.form.ComboBox({
         id:'cbxECMTipoDocumento',
         store:dsTipoDocumentos,
-        displayField:'DESCRIPCION',
         typeAhead: true,
         mode: 'local',
         forceSelection:true,
         editable:false,
         triggerAction:'all',
-        selectOnFocus:true,
-        valueField:'INDICE'
+        selectOnFocus:true
     });
     var cbcECMOverride =  new Ext.grid.CheckColumn({
-        dataIndex:'override_name',
+        dataIndex:'overrideName',
         header:'Sobreescribir',
         width:70,
         editor:{
@@ -934,34 +932,34 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
             hideable:false
         },
         {
-            dataIndex:'file_name',
+            dataIndex:'fileName',
             header:'Nombre Archivo',
             width:150,
             sortable:true,
             editor:txtECMFileName
         },
         {
-            dataIndex:'file_description',
+            dataIndex:'fileDescription',
             header:'Descripci\u00F3n',
             width:150,
             sortable:true,
             editor:txtECMDescription
         },{
-            dataIndex:'document_type',
+            dataIndex:'documentType',
             header:'Tipo Documento',
             width:100,
             sortable:true,
             editor:cbxECMTipoDocumento,
-            renderer:function(inCrsrq_participante){
+            renderer:function(inTipoDocumento){
                 for(var i = 0; i < dsTipoDocumentos.length ;i++){
-                    if(dsTipoDocumentos[i][0]==inCrsrq_participante){
+                    if(dsTipoDocumentos[i][0]==inTipoDocumento){
                         return dsTipoDocumentos[i][1];
                     }
                 }
             }
         },
         {
-            dataIndex:'file_repository',
+            dataIndex:'fileRepository',
             header:'Repositorio',
             width:200,
             sortable:true,
@@ -974,7 +972,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
     var sCgg_res_solicitud_adjunto = new Ext.data.Store({
         proxy:new Ext.ux.bsx.SoapProxy({
             url:URL_WS+"Alf_query",
-            method:"getAttachmentMetadata"
+            method:"getLocalMetadata"
         }),
         reader:new Ext.data.JsonReader({},[
             {
@@ -986,27 +984,26 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
             },
 
             {
-                name:'file_name'
+                name:'fileName'
             },
             {
-                name:'file_description'
+                name:'fileDescription'
             },
             {
-                name:'document_type'
+                name:'documentType'
             }
             ,
             {
-                name:'file_repository'
+                name:'fileRepository'
             }
             ,
             {
-                name:'override_name'
+                name:'overrideName'
             }
         ]),
         baseParams:{
-            tableName:null,
-            recordID:null,
-            filter:null
+            tableName:'Cgg_res_tramite',
+            filter:"crtst_codigo='"+txtCrtst_codigo.getValue()+"'"
         }
     });
 
@@ -1021,6 +1018,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                 }
             },
             afteredit:function(inRowEditor,inObject,inRecord,inRowIndex){
+                var inRecord=grdCgg_res_solicitud_adjunto.getStore().getAt(0);
                 if(inRecord.get('codigo').trim().length==0){
                     grdCgg_res_solicitud_adjunto.getStore().remove(inRecord);
                 }else{
@@ -1450,11 +1448,11 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                     var rFilaAdjuntoSolicitud = new rSolicitudAdjunto({
                         code:'KEYGEN',
                         cgg_ecm_metadata_code:'KEYGEN',
-                        file_name:null,
-                        file_description:null,
-                        document_type:null,
-                        file_repository:null,
-                        override_name:true
+                        fileName:null,
+                        fileDescription:null,
+                        documentType:null,
+                        fileRepository:null,
+                        overrideName:true
                     });
                     reSolicitudAdjunto.stopEditing();
                     sCgg_res_solicitud_adjunto.insert(0,rFilaAdjuntoSolicitud);
@@ -1738,6 +1736,13 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                 params:{
                     inCrtst_codigo:inRecordCgg_res_tipo_solicitud_tramite.get('CRTST_CODIGO'),
                     format:"JSON"
+                }
+            });
+
+            sCgg_res_solicitud_adjunto.reload({
+                params:{
+                    tableName:'Cgg_res_tramite',
+                    filter:"crtst_codigo='"+inRecordCgg_res_tipo_solicitud_tramite.get('CRTST_CODIGO')+"'"
                 }
             });
 

@@ -92,7 +92,7 @@ public class Alf_query implements Serializable {
             @WebParam(name = "recordID") String recordID,
             @WebParam(name = "filter") String filter
     ){
-        String json = null;
+        String json = "";
         Connection con = ManagerConnection.getConnection();
         SiiModelMetadata modelMetadata = SiiDataLoader.getAlfrescoMetadata(con,tableName,filter);
         if(modelMetadata!=null){
@@ -123,5 +123,26 @@ public class Alf_query implements Serializable {
         }
         return json;
     }
+
+    /**
+     *
+     * @param tableName Nombre de la tabla de SII
+     * @param filter Filtro para la búsqueda
+     * @return JSON con la lista de archivos de ese ECM_metadata
+     */
+    @WebMethod
+    public String getLocalMetadata(
+            @WebParam(name = "tableName") String tableName,
+            @WebParam(name = "filter") String filter
+    ){
+        String json = "[]";
+        Connection con = ManagerConnection.getConnection();
+        SiiModelMetadata modelMetadata = SiiDataLoader.getAlfrescoMetadata(con,tableName,filter);
+        if(modelMetadata!=null){
+            json = gson.toJson(modelMetadata.getFileList());
+        }
+        return json;
+    }
+
 
 }

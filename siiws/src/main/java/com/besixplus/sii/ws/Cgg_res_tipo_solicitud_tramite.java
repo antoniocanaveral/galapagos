@@ -10,6 +10,7 @@ import com.besixplus.sii.objects.Cgg_res_tst_aplica;
 import com.bmlaurus.alfresco.db.SiiDataSaver;
 import com.bmlaurus.alfresco.model.SiiModelFile;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +29,7 @@ import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -490,9 +492,20 @@ NO.
 			}
 			res = new com.besixplus.sii.db.Cgg_res_tipo_solicitud_tramite(obj).insert(con);
 
+
 			if(obj.getCRTST_CODIGO() != null && obj.getCRTST_CODIGO().equalsIgnoreCase("keygen")==false 
 					&& obj.getCRTST_CODIGO().length()>=CGGEnumerators.LONGITUDCLAVEPRIMARIA.MINIMO.getValue() 
 					&& obj.getCRTST_CODIGO().length()<=CGGEnumerators.LONGITUDCLAVEPRIMARIA.MAXIMO.getValue()){
+
+
+				//Almacenamos o Modificamos los adjuntos
+				SiiDataSaver attachmentSaver = null;
+				if(inCrtst_adjunto!=null && inCrtst_adjunto.length()>0) {
+					Type filesListType = new TypeToken<ArrayList<SiiModelFile>>() {}.getType();
+					List<SiiModelFile> files = (List<SiiModelFile>) new Gson().fromJson(inCrtst_adjunto,filesListType);
+					attachmentSaver = new SiiDataSaver(con,tmpRequest.getUserPrincipal().getName(),"Cgg_res_tramite","crtst_codigo='"+obj.getCRTST_CODIGO()+"'",files);
+
+				}
 
 				org.json.JSONArray jaRequisitos = new org.json.JSONArray(inCrtst_requisito);			
 				for(int i = 0 ; i < jaRequisitos.length(); i++){
@@ -558,7 +571,9 @@ NO.
 					}
 				}
 				if(res.equalsIgnoreCase("true")){
-					con.commit();					
+					if(attachmentSaver!=null)
+						attachmentSaver.save();
+					con.commit();
 				}else{
 					con.rollback();
 					obj.setCRTST_CODIGO("false");
@@ -684,8 +699,9 @@ NO
 			//Almacenamos o Modificamos los adjuntos
 			SiiDataSaver attachmentSaver = null;
 			if(inCrtst_adjunto!=null && inCrtst_adjunto.length()>0) {
-				List<SiiModelFile> files = (List<SiiModelFile>) new Gson().fromJson(inCrtst_adjunto, List.class);
-				attachmentSaver = new SiiDataSaver(con,tmpRequest.getUserPrincipal().getName(),"Cgg_res_tramite","Cgg_res_tipo_solicitud='"+inCrtst_codigo+"'",files);
+				Type filesListType = new TypeToken<ArrayList<SiiModelFile>>() {}.getType();
+				List<SiiModelFile> files = (List<SiiModelFile>) new Gson().fromJson(inCrtst_adjunto,filesListType);
+				attachmentSaver = new SiiDataSaver(con,tmpRequest.getUserPrincipal().getName(),"Cgg_res_tramite","crtst_codigo='"+inCrtst_codigo+"'",files);
 
 			}
 
@@ -865,9 +881,9 @@ NO
 				}
 			}
 			if(res.equals("true")) {
-				con.commit();
 				if(attachmentSaver!=null)
 					attachmentSaver.save();
+				con.commit();
 			}else {
 				con.rollback();
 			}
@@ -1182,12 +1198,9 @@ NO
 	 * @param dir DIRECCION DEL ORDENAMIENTO DE LOS REGISTROS.
 	 * @param keyword CRITERIO DE BUSQUEDA.
 	 * @param format FORMATO DE SALIDA DE LOS DATOS (JSON o XML).
-	 * @param inSW SI VISUALIZA TODAS LAS SOLICITUDES O SOLO LAS QUE GENERAN TRAMITE
-	 * @param inCrtst_codigo TIPO DE SOLICITUD DE TRAMITE PADRE.
 	 * @return VECTOR JSON o XML EQUIVALENTE A LOS REGISTROS DE LA TABLA.
 	 * @throws SOAPException 
-	 */
-	@WebMethod 
+	 */	@WebMethod 
 	public String selectPageDirectConPadre(
 			@WebParam(name="start")int start,
 			@WebParam(name="limit")int limit,
