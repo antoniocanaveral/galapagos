@@ -531,6 +531,18 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
             }
         }
     });
+
+    //AC=>
+    var btnAdjuntos = new Ext.ux.form.AlfrescoFM({
+        id:'compAdjunto',   //(opcional)
+        name:'compAdjunto', //(opcional)
+        text: 'Adjuntos',    //(opcional -> Texto del botón)
+        tableName: 'Cgg_res_tramite',
+        validateRecordID:true,
+        recordID : inRecordCgg_res_seguimiento.get('CRTRA_CODIGO'),
+        filter: "crtst_codigo='"+inRecordCgg_res_seguimiento.get('CRTST_CODIGO')+"'"
+    });
+
     /**
      * Ext.grid.ColumnModel Define el modelo de columnas para el objeto cgg_res_informe.
      */
@@ -1680,12 +1692,12 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
             layout:'border',            
             items:[grdCgg_res_informe_seguimiento]
         },
-        {
+        /*{AC=>
             id:'tpSeguimientoAdjunto',
             title:'Adjuntos',
             layout:'border',
             items:[pnlAdjuntoSeguimiento]
-        },
+        },*/
         {
             id:'tpSeguimientoRequerimiento',
             title:'Requisitos a cumplir',
@@ -1902,7 +1914,7 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
                     }
                     ]
                 }
-            },'-',btnResolucionCgg_res_seguimiento,'->',btnCerrarCgg_res_seguimiento],
+            },'-',btnResolucionCgg_res_seguimiento,'-',btnAdjuntos,'->',btnCerrarCgg_res_seguimiento],
             listeners:{
                 show:function(){
                     tpSeguimiento.activate('tpSeguimiento1');

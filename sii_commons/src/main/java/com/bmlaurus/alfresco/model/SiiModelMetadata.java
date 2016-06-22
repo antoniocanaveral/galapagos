@@ -3,6 +3,10 @@ package com.bmlaurus.alfresco.model;
 import com.bmlaurus.alfresco.integration.SiiFolderResult;
 
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -28,6 +32,9 @@ public class SiiModelMetadata implements Serializable{
     //Contenido
     private SiiFolderResult folderResult;
 
+
+    public SiiModelMetadata() {
+    }
 
     public SiiModelMetadata(String code, String tableName, String filter, String filesRepository, boolean isList, boolean estado, String usuario_insert, String usuario_update) {
         this.code = code;
@@ -126,5 +133,54 @@ public class SiiModelMetadata implements Serializable{
 
     public void setFolderResult(SiiFolderResult folderResult) {
         this.folderResult = folderResult;
+    }
+
+    public boolean save(Connection conn){
+        boolean result = false;
+        try {
+            PreparedStatement pstmt = conn.prepareCall("SELECT code FROM cgg_ecm_metadata WHERE code = ?");
+            pstmt.setString(1,code);
+            ResultSet rs = pstmt.executeQuery();
+            String strSQL = null;
+            PreparedStatement statement;
+            if(rs!=null && rs.next()){
+                rs.close();
+                pstmt.close();
+                //Empezamos con la persistencia
+                strSQL = "UPDATE sii.cgg_ecm_metadata SET table_name=?, filter=?, files_repository=?, is_list=?" +
+                                            ", estado=?, usuario_insert=?, usuario_update=? " +
+                            "WHERE code = ?";
+                statement = conn.prepareStatement(strSQL);
+                statement.setString(1,tableName);
+                statement.setString(2,filter);
+                statement.setString(3, filesRepository);
+                statement.setBoolean(4,isList);
+                statement.setBoolean(5,estado);
+                statement.setString(6,usuario_insert);
+                statement.setString(7,usuario_update);
+                //
+                statement.setString(8,code);
+            }else{//INSERT
+                strSQL = "INSERT INTO sii.cgg_ecm_metadata (code, table_name, filter, files_repository, is_list, " +
+                        "            estado, usuario_insert, usuario_update) " +
+                        "    VALUES (?, ?, ?, ?, ?, " +
+                        "            ?, ?, ?);";
+                statement = conn.prepareStatement(strSQL);
+                statement.setString(1,code);
+                statement.setString(2,tableName);
+                statement.setString(3,filter);
+                statement.setString(4, filesRepository);
+                statement.setBoolean(5,isList);
+                statement.setBoolean(6,estado);
+                statement.setString(7,usuario_insert);
+                statement.setString(8,usuario_update);
+            }
+            statement.execute();
+            statement.close();
+            result = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

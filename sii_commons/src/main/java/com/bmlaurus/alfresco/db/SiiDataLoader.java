@@ -30,21 +30,20 @@ public class SiiDataLoader {
                 stmt = inConnection.prepareStatement(strSql);
                 stmt.setString(1,tableName);
                 if(filter!=null && !filter.isEmpty())
-                    stmt.setString(3,filter);
+                    stmt.setString(2,filter);
 
                 results = stmt.executeQuery();
                 //Debería devolver solamente 1
-                results.next();
+                if(results.next()) {
+                    modelMetadata = new SiiModelMetadata(results.getString("CODE"), results.getString("TABLE_NAME"), results.getString("FILTER"),
+                            results.getString("FILES_REPOSITORY"), results.getBoolean("IS_LIST"), results.getBoolean("ESTADO"),
+                            results.getString("USUARIO_INSERT"), results.getString("USUARIO_UPDATE"));
 
-                modelMetadata=new SiiModelMetadata(results.getString("CODE"),results.getString("TABLE_NAME"),results.getString("FILTER"),
-                        results.getString("FILES_REPOSITORY"), results.getBoolean("IS_LIST"), results.getBoolean("ESTADO"),
-                        results.getString("USUARIO_INSERT"), results.getString("USUARIO_UPDATE"));
-
-                if(modelMetadata.isList()){
-                    //Cargamos la lista de archivos
-                    modelMetadata.setFileList(getAlfrescoFiles(inConnection, modelMetadata.getCode()));
+                    if (modelMetadata.isList()) {
+                        //Cargamos la lista de archivos
+                        modelMetadata.setFileList(getAlfrescoFiles(inConnection, modelMetadata.getCode()));
+                    }
                 }
-
                 results.close();
                 stmt.close();
             } catch (SQLException e) {
@@ -66,7 +65,7 @@ public class SiiDataLoader {
             results = stmt.executeQuery();
 
             while (results.next()){
-                SiiModelFile modelFile = new SiiModelFile(results.getString("CODE"),results.getString("FILE_NAME"),results.getString("FILE_DESCRIPTION"),
+                SiiModelFile modelFile = new SiiModelFile(results.getString("CODE"),results.getString("CGG_ECM_METADATA_CODE"),results.getString("FILE_NAME"),results.getString("FILE_DESCRIPTION"),
                         results.getString("DOCUMENT_TYPE"),results.getString("FILE_REPOSITORY"),results.getBoolean("OVERRIDE_NAME"),results.getBoolean("ESTADO"),
                         results.getString("USUARIO_INSERT"), results.getString("USUARIO_UPDATE"));
                 if(files==null)

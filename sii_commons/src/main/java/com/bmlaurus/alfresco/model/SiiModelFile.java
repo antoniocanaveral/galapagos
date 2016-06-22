@@ -3,6 +3,10 @@ package com.bmlaurus.alfresco.model;
 import com.bmlaurus.alfresco.integration.SiiFileResult;
 
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -16,6 +20,7 @@ public class SiiModelFile implements Serializable{
     public static final String DOCUMENT_TYPE_RESPALDO = "D:sii:respaldo";
 
     private String code;
+    private String cgg_ecm_metadata_code;
     private String fileName;
     private String fileDescription;
     private String documentType;
@@ -30,8 +35,9 @@ public class SiiModelFile implements Serializable{
     //Contenido
     private SiiFileResult fileResult;
 
-    public SiiModelFile(String code, String fileName, String fileDescription, String documentType, String fileRepository, boolean overrideName, boolean estado, String usuario_insert, String usuario_update) {
+    public SiiModelFile(String code, String cgg_ecm_metadata_code, String fileName, String fileDescription, String documentType, String fileRepository, boolean overrideName, boolean estado, String usuario_insert, String usuario_update) {
         this.code = code;
+        this.cgg_ecm_metadata_code = cgg_ecm_metadata_code;
         this.fileName = fileName;
         this.fileDescription = fileDescription;
         this.documentType = documentType;
@@ -48,6 +54,14 @@ public class SiiModelFile implements Serializable{
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getCgg_ecm_metadata_code() {
+        return cgg_ecm_metadata_code;
+    }
+
+    public void setCgg_ecm_metadata_code(String cgg_ecm_metadata_code) {
+        this.cgg_ecm_metadata_code = cgg_ecm_metadata_code;
     }
 
     public String getFileName() {
@@ -128,5 +142,68 @@ public class SiiModelFile implements Serializable{
 
     public void setFileResult(SiiFileResult fileResult) {
         this.fileResult = fileResult;
+    }
+
+    public boolean save(Connection conn){
+        boolean result = false;
+        try {
+            PreparedStatement pstmt = conn.prepareCall("SELECT code FROM cgg_ecm_file WHERE code = ?");
+            pstmt.setString(1,code);
+            ResultSet rs = pstmt.executeQuery();
+            String strSQL = null;
+            PreparedStatement statement;
+            if(rs!=null && rs.next()){
+                rs.close();
+                pstmt.close();
+                //Empezamos con la persistencia
+                //UPDATE
+                strSQL = "UPDATE sii.cgg_ecm_file SET cgg_ecm_metadata_code=?, file_name=?, file_description=?, document_type=?, file_repository=?," +
+                        "            override_name=?, estado=?, usuario_insert=?, usuario_update=? " +
+                        "WHERE code = ?";
+                statement = conn.prepareStatement(strSQL);
+                statement.setString(1, cgg_ecm_metadata_code);
+                statement.setString(2, fileName);
+                statement.setString(3, fileDescription);
+                statement.setString(4, documentType);
+                statement.setString(5, fileRepository);
+                statement.setBoolean(6, overrideName);
+                statement.setBoolean(7, estado);
+                statement.setString(8, usuario_insert);
+                statement.setString(9, usuario_update);
+                //
+                statement.setString(10,code);
+            }else{//INSERT
+                strSQL = "INSERT INTO sii.cgg_ecm_file (code, cgg_ecm_metadata_code, file_name, file_description, document_type, file_repository," +
+                        "            override_name, estado, usuario_insert, usuario_update) " +
+                        "    VALUES (?, ?, ?, ?, ?, ?," +
+                        "            ?, ?, ?, ?);";
+                statement = conn.prepareStatement(strSQL);
+                statement.setString(1,code);
+                statement.setString(2, cgg_ecm_metadata_code);
+                statement.setString(3, fileName);
+                statement.setString(4, fileDescription);
+                statement.setString(5, documentType);
+                statement.setString(6, fileRepository);
+                statement.setBoolean(7, overrideName);
+                statement.setBoolean(8, estado);
+                statement.setString(9, usuario_insert);
+                statement.setString(10, usuario_update);
+
+                statement.execute();
+                statement.close();
+
+                strSQL = "INSERT INTO sii.cgg_ecm_file_index(" +
+                        "            cgg_ecm_file_code, cgg_ecm_index_definition_code)" +
+                        "    VALUES (?, 'IDX_IDN');";
+                statement = conn.prepareStatement(strSQL);
+                statement.setString(1,code);
+            }
+            statement.execute();
+            statement.close();
+            result=true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptSubCargosComite" language="groovy" columnCount="3" printOrder="Horizontal" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="280" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isFloatColumnFooter="true">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="ireport.jasperserver.reportUnit" value="/Reports/sii/residencia/rptListadoResidentesTemporalesPreaprobados"/>
+	<property name="ireport.jasperserver.url" value="http://190.95.187.82:8081/jasperserver/services/repository"/>
+	<parameter name="P_CRCOM_CODIGO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT CC.CRCRG_NOMBRE
+FROM SII.CGG_RES_COMITE CMT
+INNER JOIN SII.CGG_RES_CARGO_COMITE CC ON CC.CRCOM_CODIGO = CMT.CRCOM_CODIGO AND CC.CRCRG_ESTADO
+INNER JOIN SII.CGG_RES_MIEMBRO_COMITE MC ON (MC.CRCRG_CODIGO = CC.CRCRG_CODIGO)
+WHERE CMT.CRCOM_ESTADO
+AND CMT.CRCOM_CODIGO = $P{P_CRCOM_CODIGO}
+AND MC.CRMBC_TITULAR = true]]>
+	</queryString>
+	<field name="crcrg_nombre" class="java.lang.String"/>
+	<detail>
+		<band height="109">
+			<textField>
+				<reportElement x="0" y="0" width="244" height="27"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crcrg_nombre}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="0" y="27" width="244" height="82"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="24" y="42" width="72" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Aprobado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="129" y="42" width="75" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Negado]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="175" y="48" width="11" height="10"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="89" width="244" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Firma]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="75" y="48" width="11" height="10"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+		</band>
+	</detail>
+</jasperReport>
