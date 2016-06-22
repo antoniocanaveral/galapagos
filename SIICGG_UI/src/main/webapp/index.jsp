@@ -257,7 +257,7 @@
                             </table>
                         </div>
                     </td>
-                    <td colspan="2" width="80%" valign="top"><a href="http://www.cgg.gob.ec/"
+                    <td colspan="2" width="80%" valign="top"><a href="http://www.gobiernogalapagos.gob.ec"
                                                                 target="_blank" style="margin: 5px; float: right;"> <img
                                 src="resources/images/cgg.png" /> </a>
                     </td>
@@ -271,9 +271,7 @@
                         <div align="left"><span class="headline1"> Sistema integral inform&aacute;tico SIICGG</span><br></div>
                     </td>
                     <td>
-                        <div align="center"><a href="http://www.besixplus.com"
-                                               target="_blank" style="margin: 5px; float: right;"> <img
-                                    src="resources/images/besixplus.png" /> </a></div>
+
                     </td>
                 </tr>
             </table>            

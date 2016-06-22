@@ -183,6 +183,16 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
         return flag;
     }
 
+    var adjunto = new Ext.ux.form.AlfrescoFM({
+        id:'compAdjunto',  //(opcional)
+        name:'compAdjunto',       //(opcional)
+        fieldLabel :'Adjuntos',         //(opcional -> Despliega la etiqueta del comoponente. Si no se define, aparece solo el botón)
+        text: 'Adjunto',                //(opcional -> Texto del botón)
+        tableName : 'Cgg_res_informe',
+        validateRecordID:true,
+        recordID : txtCrinf_codigo.value
+    });
+
     var btnGuardarCgg_res_informe = new Ext.Button({
         id:'btnGuardarCgg_res_informe',
         text:'Guardar',
@@ -192,6 +202,7 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
                 if(validarInforme()==false){
                     return;
                 }
+                adjunto.recordID = txtCrinf_codigo.value;
                 pnlCinfoComponentes.getEl().mask('Guardando...', 'x-mask-loading');
                 pnlCgg_res_Adjunto.getForm().submit({
                     url:URL_WS+"InformeAdjuntoSeguimientoSRV",
@@ -199,7 +210,7 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
                         pnlCinfoComponentes.getEl().unmask();                        
                         if(inAction.result.msg.trim()=='true'){
                             Ext.MsgPopup.msg(tituloCgg_res_informe,"El informe ha sido registrado!.", MsgPopup.INFO);
-                            winFrmCgg_res_informe.close()
+                            //winFrmCgg_res_informe.close()
                         }                        
                     },
                     failure:function(inForm,inAction){
@@ -216,7 +227,7 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
                         inCrise_extracto_informe:txtCrinf_extracto_informe.getValue(),
                         inCrise_descripcion_adjunto:txtCrinf_descripcion_adjunto.getValue()
                     }
-                });                      
+                });
             }
         }
     });
@@ -255,7 +266,8 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
         labelWidth :90,
         height:130,
         fileUpload:true,
-        items:[filCrinfo_archivo_adjunto,txtCrinf_descripcion_adjunto]
+        items:[adjunto]
+        //items:[filCrinfo_archivo_adjunto,txtCrinf_descripcion_adjunto]
     });
 
     var pnlfsCgg_res_Adjunto = new Ext.form.FieldSet({

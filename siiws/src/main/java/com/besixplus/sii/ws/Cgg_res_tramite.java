@@ -2205,6 +2205,7 @@ VALORES:
 			@WebParam(name="inCgg_crper_codigo")String inCgg_crper_codigo,
 			@WebParam(name="inCrtst_codigo")String inCrtst_codigo,
 			@WebParam(name="inCisla_codigo")String inCisla_codigo,
+			@WebParam(name ="inCrtt_codigo")String inCrtt_codigo,
 			@WebParam(name="inCrtra_observacion")String inCrtra_observacion,
 			@WebParam(name="inCvveh_codigo")String inCvveh_codigo,
 			@WebParam(name="inCvmtr_codigo")String inCvmtr_codigo,

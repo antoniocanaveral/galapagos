@@ -1,5 +1,21 @@
 package com.besixplus.sii.servlets;
 
+import com.besixplus.sii.db.Cgg_configuracion;
+import com.besixplus.sii.db.ManagerConnection;
+import com.besixplus.sii.db.SQLErrorHandler;
+import com.besixplus.sii.objects.Cgg_res_adjunto;
+import com.besixplus.sii.objects.Cgg_res_informe_seguimiento;
+import com.besixplus.sii.objects.ServerResponse;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.json.JSONObject;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Connection;
@@ -10,24 +26,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.json.JSONObject;
-
-import com.besixplus.sii.db.Cgg_configuracion;
-import com.besixplus.sii.db.ManagerConnection;
-import com.besixplus.sii.db.SQLErrorHandler;
-import com.besixplus.sii.objects.Cgg_res_adjunto;
-import com.besixplus.sii.objects.Cgg_res_informe_seguimiento;
-import com.besixplus.sii.objects.ServerResponse;
 
 /**
  * @author BESIXPLUS CIA. LTDA.
@@ -130,7 +128,15 @@ public class InformeAdjuntoSeguimiento extends HttpServlet implements Serializab
 							}
 						}
 					}
-				}								
+				}
+				if(objAdjunto.getCRADJ_CODIGO()==null){//Esto vino por Entrada de Alfresco
+					objAdjunto.setCRADJ_CODIGO("KEYGEN");
+					objAdjunto.setCRADJ_ESTADO(true);
+					objAdjunto.setCRADJ_FECHA_REGISTRO(new Date());
+					objAdjunto.setCRADJ_USUARIO_INSERT(request.getUserPrincipal().getName());
+					objAdjunto.setCRADJ_USUARIO_UPDATE(request.getUserPrincipal().getName());
+					objAdjunto.setCRADJ_CONTENIDO("alfresco/container");
+				}
 				tmpCon = ManagerConnection.getConnection();
 				tmpCon.setAutoCommit(false);
 				if(operacion.equalsIgnoreCase("insert")==true){	

@@ -56,10 +56,10 @@ Para insertar el botón que hace la llamada a AlfrescoMng es necesario identific
         text: 'Adjunto',                //(opcional -> Texto del botón)
         tableName : 'CGG_TABLA_DE REFERENCIA',
         recordID : 'RECORD_ID',
+        validateRecordID: false,        //(opcional -> Valida que recordID tenga valor antes de ejecutarse)
         filter: 'FILTRO_PARA_EL_MODELO' //(opcional)
     });
 </pre>
-
 Esto generará un botón con el ícono de "attachment" que hará la llamada a los servicios para cargar el modelo de Alfresco relacionado.
 
 ![alt tag](./botonAlfresco.png)
