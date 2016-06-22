@@ -1,6 +1,8 @@
 package com.bmlaurus.rule;
 
 import com.besixplus.sii.objects.Cgg_regla_validacion_metadatos;
+import com.bmlaurus.rule.RuleClass;
+
 import org.json.JSONObject;
 
 /**
