@@ -1,7 +1,9 @@
 package com.besixplus.sii.servlets;
 
+import com.besixplus.sii.db.ManagerConnection;
 import com.besixplus.sii.objects.ServerResponse;
 import com.bmlaurus.alfresco.AlfrescoActions;
+import com.bmlaurus.alfresco.db.SiiDataLoader;
 import com.bmlaurus.alfresco.integration.*;
 import com.bmlaurus.alfresco.model.SiiModelFile;
 import com.bmlaurus.alfresco.utils.InputStreamDataSource;
@@ -18,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -97,12 +101,18 @@ public class AlfrescoUploader extends HttpServlet implements Serializable {
                         }
                         dh = new DataHandler(new InputStreamDataSource(item.getInputStream(),fileName));
                         //Agregamos nombre del archivo y propiedades
-                        if(document==null && filesRepository!=null){
-                            document = new SiiRespaldoDocument("FreeUploader");
-                            document.setPath(filesRepository);
-                        }else
-                            document.setPath(modelFile.getFileRepository());
-
+                        Connection tmpCon = ManagerConnection.getConnection();
+                        try {
+                            if (document == null && filesRepository != null) {
+                                document = new SiiRespaldoDocument("FreeUploader");
+                                String repo = SiiDataLoader.repoResolver(tmpCon, table_name, record_id, filesRepository);
+                                document.setPath(repo);
+                            } else
+                                document.setPath(modelFile.resolveFileRepository(tmpCon, table_name, record_id));
+                            tmpCon.close();
+                        }catch (SQLException e){
+                            e.printStackTrace();
+                        }
                         if(document!=null)
                             document.setFileName(item.getName());
                     }

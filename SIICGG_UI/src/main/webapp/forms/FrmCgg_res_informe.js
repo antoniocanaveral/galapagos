@@ -188,7 +188,7 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
         name:'compAdjunto',       //(opcional)
         fieldLabel :'Adjuntos',         //(opcional -> Despliega la etiqueta del comoponente. Si no se define, aparece solo el botón)
         text: 'Adjunto',                //(opcional -> Texto del botón)
-        tableName : 'Cgg_res_informe',
+        tableName : 'Cgg_res_informe_seguimiento',
         validateRecordID:true,
         recordID : txtCrinf_codigo.value
     });
@@ -202,14 +202,18 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
                 if(validarInforme()==false){
                     return;
                 }
-                adjunto.recordID = txtCrinf_codigo.value;
                 pnlCinfoComponentes.getEl().mask('Guardando...', 'x-mask-loading');
                 pnlCgg_res_Adjunto.getForm().submit({
                     url:URL_WS+"InformeAdjuntoSeguimientoSRV",
                     success:function(inForm,inAction){
-                        pnlCinfoComponentes.getEl().unmask();                        
-                        if(inAction.result.msg.trim()=='true'){
+                        pnlCinfoComponentes.getEl().unmask();
+                        var res = inAction.result.msg.trim().split(",");
+                        if(res[0]=='true'){
                             Ext.MsgPopup.msg(tituloCgg_res_informe,"El informe ha sido registrado!.", MsgPopup.INFO);
+                            if(res.length>1) {
+                                INSENTENCIA_CGG_RES_INFORME = "update";
+                                adjunto.recordID = res[1];
+                            }
                             //winFrmCgg_res_informe.close()
                         }                        
                     },

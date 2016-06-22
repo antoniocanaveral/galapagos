@@ -5,6 +5,7 @@ import com.bmlaurus.alfresco.model.SiiModelIndexDefinition;
 import com.bmlaurus.alfresco.model.SiiModelIndexItem;
 import com.bmlaurus.alfresco.model.SiiModelMetadata;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -160,5 +161,63 @@ public class SiiDataLoader {
                 return def;
         }
         return null;
+    }
+
+    public static String repoResolver(Connection conn, String table_name, String recordID, String sourcePath) throws SQLException {
+        StringBuffer result = new StringBuffer();
+        String strSQL;
+        String pkColumn = getPKColumng(conn,table_name);
+        if (pkColumn!=null) {
+            //Obtengo el registro al que hace referencia el adjunto
+            PreparedStatement statement = null;
+            strSQL = "SELECT * FROM " + table_name + " WHERE " + pkColumn + "=?";
+            statement = conn.prepareStatement(strSQL);
+            statement.setString(1,recordID);
+            ResultSet rs = statement.executeQuery();
+            if(rs!=null && rs.next()){
+                //Evaluamos la cadena que representa el path
+                String[] path = sourcePath.split("/");
+                for (String pathItem : path) {
+                    if (pathItem.contains("@")) {
+                        String[] complex = pathItem.replace("@", "").split(";");
+                        if (complex.length > 1) {//resultado de una query
+                            String[] linkData = complex[1].split("\\.");
+                            String strSQLLink = "SELECT " + linkData[1] + " FROM " + linkData[0] + " WHERE " + getPKColumng(conn,linkData[0]) + "='" + rs.getObject(complex[0]) + "'";
+                            PreparedStatement linkStatement = conn.prepareStatement(strSQLLink);
+                            ResultSet linkrs = linkStatement.executeQuery();
+                            if(linkrs!=null && linkrs.next()){
+                                result.append(linkrs.getObject(1));
+                            }
+                            linkrs.close();
+                            linkStatement.close();
+                        } else {//solo campo
+                            result.append(rs.getObject(pathItem.replace("@", "").trim()));
+                        }
+                    } else
+                        result.append(pathItem);
+
+                    result.append("/");
+                }
+            }
+            rs.close();
+            statement.close();
+        }
+        return result.toString();
+    }
+
+
+    public static String getPKColumng(Connection conn, String tableName) throws SQLException {
+        String pk = null;
+        PreparedStatement stmt = null;
+        String strSQL = "SELECT a.attname::varchar FROM   pg_index i JOIN   pg_attribute a ON a.attrelid = i.indrelid AND a.attnum = ANY(i.indkey)" +
+                "WHERE  i.indrelid = 'sii." + tableName.toLowerCase() + "'::regclass AND i.indisprimary";
+        stmt = conn.prepareStatement(strSQL);
+        ResultSet resultSet = stmt.executeQuery();
+        if (resultSet != null && resultSet.next()) {
+            pk = resultSet.getString(1);
+        }
+        resultSet.close();
+        stmt.close();
+        return pk;
     }
 }

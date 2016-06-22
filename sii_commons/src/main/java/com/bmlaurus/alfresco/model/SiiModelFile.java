@@ -1,5 +1,6 @@
 package com.bmlaurus.alfresco.model;
 
+import com.bmlaurus.alfresco.db.SiiDataLoader;
 import com.bmlaurus.alfresco.integration.SiiFileResult;
 
 import java.io.Serializable;
@@ -142,6 +143,18 @@ public class SiiModelFile implements Serializable{
 
     public void setFileResult(SiiFileResult fileResult) {
         this.fileResult = fileResult;
+    }
+
+    public String resolveFileRepository(Connection conn, String table_name, String recordID){
+        if(this.getFileRepository()!=null){
+            try {
+                return SiiDataLoader.repoResolver(conn,table_name,recordID,getFileRepository());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
     }
 
     public boolean save(Connection conn){

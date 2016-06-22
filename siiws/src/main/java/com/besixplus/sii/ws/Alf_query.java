@@ -98,17 +98,18 @@ public class Alf_query implements Serializable {
         if(modelMetadata!=null){
             //Si es de subida libre, obtenemos los archivos del repositorio
             if(!modelMetadata.isList()){
-                SiiFolderResult result = AlfrescoActions.getFolderContent(modelMetadata.getFilesRepository());
+                SiiFolderResult result = AlfrescoActions.getFolderContent(modelMetadata.resolveFileRepository(con,recordID));
                 modelMetadata.setFolderResult(result);
             }else{//Si es lista de archivos, vamos poniendo los datos de los archivos en cada sitio
                 Map<String,SiiFolderResult> remotePaths = new HashMap<>();
                 for(SiiModelFile file:modelMetadata.getFileList()){
-                    if(!remotePaths.containsKey(file.getFileRepository())){
-                        SiiFolderResult result = AlfrescoActions.getFolderContent(file.getFileRepository());
-                        remotePaths.put(file.getFileRepository(),result);
+                    String realRepo = file.resolveFileRepository(con,tableName,recordID);
+                    if(!remotePaths.containsKey(realRepo)){
+                        SiiFolderResult result = AlfrescoActions.getFolderContent(realRepo);
+                        remotePaths.put(realRepo,result);
                     }
                     if(remotePaths.size()>0) {
-                        SiiFolderResult fileFolder = remotePaths.get(file.getFileRepository());
+                        SiiFolderResult fileFolder = remotePaths.get(realRepo);
                         if (fileFolder != null) {
                             for (SiiFileResult fileResult : fileFolder.getFiles()) {
                                 if (fileResult.getName().contains(file.getFileName()))

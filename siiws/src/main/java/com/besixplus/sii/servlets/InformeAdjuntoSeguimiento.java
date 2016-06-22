@@ -72,6 +72,7 @@ public class InformeAdjuntoSeguimiento extends HttpServlet implements Serializab
 			}
 			upload.setSizeMax(tmpConf.getCGCNF_VALOR_NUMERICO()*1024*1024);
 			List items;
+			appResponse.setSuccess(Boolean.parseBoolean(outResult));
 			try {
 				items = upload.parseRequest(request);
 				Iterator iter = items.iterator();
@@ -154,11 +155,14 @@ public class InformeAdjuntoSeguimiento extends HttpServlet implements Serializab
 					}
 
 					if(outResultInforme.equalsIgnoreCase("true")==true && outResultAdjunto.equalsIgnoreCase("true")==true){
-						tmpCon.commit();	
-						outResult = "true";						
+						tmpCon.commit();
+						//Devolvemos el codigo para que se pueda gestionar en el adjunto
+						outResult = "true,"+objInforme.getCRISE_CODIGO();
+						appResponse.setSuccess(true);
 					}else{
 						tmpCon.rollback();
 						outResult = "false";
+						appResponse.setSuccess(false);
 					}				
 				}
 
@@ -174,7 +178,6 @@ public class InformeAdjuntoSeguimiento extends HttpServlet implements Serializab
 				SQLErrorHandler.errorHandler(ex);
 				outResult = ex.getMessage();
 			}
-			appResponse.setSuccess(Boolean.parseBoolean(outResult));
 			appResponse.setMsg(outResult);
 			response.setContentType("text/html");
 			response.getWriter().println(new JSONObject(appResponse).toString());
