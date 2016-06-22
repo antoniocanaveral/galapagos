@@ -14,3 +14,8 @@ WITH (
 );
 ALTER TABLE sii.cgg_tipo_tramite
   OWNER TO postgres;
+
+-- Datos
+
+INSERT INTO sii.cgg_tipo_tramite (crtt_codigo, crtt_nombre, crtt_estado) VALUES ('CRTT1', 'Solicitud de residencia', true);
+INSERT INTO sii.cgg_tipo_tramite (crtt_codigo, crtt_nombre, crtt_estado) VALUES ('CRTT2', 'Revocatoria de residencia', true);
