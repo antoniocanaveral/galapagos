@@ -23,7 +23,7 @@ public class LocalTests {
 
     @Test
     public void CreatePath(){
-        System.err.println(validateReport("/Reports/sii/residencia", "rptInformeTecnicoResidencia"));
+        System.err.println(validateReport("residencia", "rptListadoSolicitudesResidenciaReceptados"));
     }
 
 

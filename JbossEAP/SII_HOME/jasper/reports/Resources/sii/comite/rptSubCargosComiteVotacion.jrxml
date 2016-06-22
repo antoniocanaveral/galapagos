@@ -17,7 +17,7 @@ FROM CGG_RES_CARGO_COMITE CRC
 INNER JOIN CGG_RES_COMITE CM ON (CM.CRCOM_CODIGO = CRC.CRCOM_CODIGO)
 INNER JOIN CGG_RES_TRAMITE_COMITE CTC ON (CTC.CRCOM_CODIGO = CRC.CRCOM_CODIGO)
 INNER JOIN CGG_RES_TRAMITE CRTRA ON (CRTRA.CRTST_CODIGO = CTC.CRTST_CODIGO )
-LEFT JOIN (SELECT distinct VOTO.CRVTO_VOTACION,CM.CRCRG_CODIGO,RSLT.CRTRA_CODIGO,RES.CRRES_NUMERO_RESOLUCION,RES.CRRES_FECHA_EMISION,
+LEFT JOIN (SELECT VOTO.CRVTO_VOTACION,CM.CRCRG_CODIGO,RSLT.CRTRA_CODIGO,RES.CRRES_NUMERO_RESOLUCION,RES.CRRES_FECHA_EMISION,
 CASE
 WHEN ISLA.CCTN_CODIGO = (SELECT CGCNF_VALOR_CADENA FROM CGG_CONFIGURACION WHERE CGCNF_CODIGO = 'CONF120')THEN
 	1
@@ -28,14 +28,13 @@ ELSE
 END CISLA_REFERENCIA,
 ISLA.CISLA_NOMBRE
 FROM SII.CGG_RES_SESION_COMITE SC
-INNER JOIN SII.CGG_RES_RESOLUCION RES ON (SC.CRSSC_CODIGO = RES.CRSSC_CODIGO AND 	CRRES_ESTADO)
-INNER JOIN SII.CGG_RES_RESOL_TRAMITE RSLT ON (RSLT.CRRES_CODIGO = RES.CRRES_CODIGO AND CRRST_ESTADO)
-INNER JOIN SII.CGG_RES_SESION_MIEMBRO SSM ON (SC.CRSSC_CODIGO = SSM.CRSSC_CODIGO AND CRSMB_ESTADO)
-INNER JOIN SII.CGG_RES_MIEMBRO_COMITE MCT ON (MCT.CRMBC_CODIGO = SSM.CRMBC_CODIGO AND CRMBC_ESTADO)
-INNER JOIN SII.CGG_RES_CARGO_COMITE CM ON (CM.CRCRG_CODIGO = MCT.CRCRG_CODIGO AND CRCRG_ESTADO)
-INNER JOIN SII.CGG_RES_VOTO VOTO ON (VOTO.CRSMB_CODIGO = SSM.CRSMB_CODIGO AND CRVTO_ESTADO AND VOTO.CRRES_CODIGO = RES.CRRES_CODIGO)
+INNER JOIN SII.CGG_RES_RESOLUCION RES ON (SC.CRSSC_CODIGO = RES.CRSSC_CODIGO )
+INNER JOIN SII.CGG_RES_RESOL_TRAMITE RSLT ON (RSLT.CRRES_CODIGO = RES.CRRES_CODIGO )
+INNER JOIN SII.CGG_RES_SESION_MIEMBRO SSM ON (SC.CRSSC_CODIGO = SSM.CRSSC_CODIGO)
+INNER JOIN SII.CGG_RES_MIEMBRO_COMITE MCT ON (MCT.CRMBC_CODIGO = SSM.CRMBC_CODIGO)
+INNER JOIN SII.CGG_RES_CARGO_COMITE CM ON CM.CRCRG_CODIGO = MCT.CRCRG_CODIGO
+INNER JOIN SII.CGG_RES_VOTO VOTO ON (VOTO.CRSMB_CODIGO = SSM.CRSMB_CODIGO)
 INNER JOIN SII.CGG_ISLA ISLA ON (ISLA.CISLA_CODIGO = SC.CISLA_CODIGO)
-WHERE CRSSC_ESTADO
 ) AS VOTACION ON (VOTACION.CRCRG_CODIGO = CRC.CRCRG_CODIGO AND VOTACION.CRTRA_CODIGO = CRTRA.CRTRA_CODIGO)
 WHERE CRC.CRCRG_PRINCIPAL AND CRTRA.CRTRA_CODIGO =  $P{P_CRTRA_CODIGO}]]>
 	</queryString>
@@ -206,4 +205,59 @@ WHERE CRC.CRCRG_PRINCIPAL AND CRTRA.CRTRA_CODIGO =  $P{P_CRTRA_CODIGO}]]>
 				</graphicElement>
 			</rectangle>
 			<staticText>
-				<report
+				<reportElement x="3" y="20" width="69" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Aprobado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="89" y="20" width="48" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Negado]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="41" y="22" width="15" height="15"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="123" y="23" width="15" height="15"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="70" width="181" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Firma]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="41" y="23" width="18" height="20">
+					<printWhenExpression><![CDATA[$F{crvto_votacion}==0]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[x]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="122" y="24" width="18" height="20">
+					<printWhenExpression><![CDATA[$F{crvto_votacion}==1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[x]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

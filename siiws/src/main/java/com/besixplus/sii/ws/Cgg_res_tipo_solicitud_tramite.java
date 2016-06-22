@@ -1,11 +1,18 @@
 package com.besixplus.sii.ws;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.besixplus.sii.db.ManagerConnection;
+import com.besixplus.sii.i18n.Messages;
+import com.besixplus.sii.misc.CGGEnumerators;
+import com.besixplus.sii.objects.Cgg_res_garantia_solicitud;
+import com.besixplus.sii.objects.Cgg_res_solicitud_requisito;
+import com.besixplus.sii.objects.Cgg_res_tipo_solicitud_regla;
+import com.besixplus.sii.objects.Cgg_res_tst_aplica;
+import com.bmlaurus.alfresco.db.SiiDataSaver;
+import com.bmlaurus.alfresco.model.SiiModelFile;
+import com.google.gson.Gson;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
@@ -20,18 +27,13 @@ import javax.xml.soap.SOAPFactory;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.besixplus.sii.db.ManagerConnection;
-import com.besixplus.sii.i18n.Messages;
-import com.besixplus.sii.misc.CGGEnumerators;
-import com.besixplus.sii.objects.Cgg_res_garantia_solicitud;
-import com.besixplus.sii.objects.Cgg_res_solicitud_requisito;
-import com.besixplus.sii.objects.Cgg_res_tipo_solicitud_regla;
-import com.besixplus.sii.objects.Cgg_res_tst_aplica;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * CLASE Cgg_res_tipo_solicitud_tramite
@@ -417,6 +419,7 @@ NO.
 	 * @param inCrtst_aplica_beneficiario SI EL TIPO DE SOLICITUD REQUIERE DE UN BENEFICIARIO
 	 * @param inCrtst_indice INDICE NUMERICO UTIL PARA LA GENERACION DE EXPEDIENTE DE PERSONA O NUMERO DE CARNET PARA RESIDENCIA.
 	 * @param inCrtst_requisito Cadena de datos en formato json de los requisitos a ser cumplidos por el tipo de solicitud de tramite.
+	 * @param inCrtst_adjunto Cadena de datos en formato json de los adjuntos a ser subidos a Alfresco.
 	 * @param inCrtst_garantia Cadena de datos en formato json de los garantias que deben ser cumplidas por el tramite.
 	 * @param inCrtst_regla Cadena de datos en formato json de las reglas de validacion que deben ser cumplidas por el tramite.
 	 * @param inCrtst_opcion Opciones que aplica el tipo de solicitud.
@@ -445,6 +448,7 @@ NO.
 			@WebParam(name="inCrtst_aplica_beneficiario")boolean inCrtst_aplica_beneficiario,
 			@WebParam(name="inCrtst_indice")int inCrtst_indice,
 			@WebParam(name="inCrtst_requisito")String inCrtst_requisito,
+			@WebParam(name="inCrtst_adjunto")String inCrtst_adjunto,
 			@WebParam(name="inCrtst_garantia")String inCrtst_garantia,
 			@WebParam(name="inCrtst_regla")String inCrtst_regla,
 			@WebParam(name="inCrtst_opcion")String inCrtst_opcion
@@ -602,6 +606,7 @@ NO
 	 * @param inCrtst_aplica_beneficiario SI EL TIPO DE SOLICITUD REQUIERE DE UN BENEFICIARIO
 	 * @param inCrtst_indice INDICE NUMERICO UTIL PARA LA GENERACION DE EXPEDIENTE DE PERSONA O NUMERO DE CARNET PARA RESIDENCIA.
 	 * @param inCrtst_requisito Cadena de datos en formato json de los requisitos a ser cumplidos por el tipo de solicitud de tramite.
+	 * @param inCrtst_adjunto Cadena de datos en formato json de los adjuntos a ser subidos en Alfresco.
 	 * @param inCrtst_garantia Cadena de datos en formato json de los garantias que deben ser cumplidas por el tramite.
 	 * @param inCrtst_regla Cadena de datos en formato json de las reglas que son aplicadas al tipo de solicitud de tramite.
 	 * @param inCrtst_opcion Opciones que aplica el tipo de solicitud.
@@ -631,6 +636,7 @@ NO
 			@WebParam(name="inCrtst_aplica_beneficiario")boolean inCrtst_aplica_beneficiario,
 			@WebParam(name="inCrtst_indice")int inCrtst_indice,
 			@WebParam(name="inCrtst_requisito")String inCrtst_requisito,
+			@WebParam(name="inCrtst_adjunto")String inCrtst_adjunto,
 			@WebParam(name="inCrtst_garantia")String inCrtst_garantia,
 			@WebParam(name="inCrtst_regla")String inCrtst_regla,
 			@WebParam(name="inCrtst_opcion")String inCrtst_opcion
@@ -673,6 +679,15 @@ NO
 				throw new SOAPFaultException(SOAPFactory.newInstance().createFault(myInfoMessages.getMessage("sii.seguridad.acceso.negado", null), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
 			}
 			res = new com.besixplus.sii.db.Cgg_res_tipo_solicitud_tramite(obj).update(con);
+
+
+			//Almacenamos o Modificamos los adjuntos
+			SiiDataSaver attachmentSaver = null;
+			if(inCrtst_adjunto!=null && inCrtst_adjunto.length()>0) {
+				List<SiiModelFile> files = (List<SiiModelFile>) new Gson().fromJson(inCrtst_adjunto, List.class);
+				attachmentSaver = new SiiDataSaver(con,tmpRequest.getUserPrincipal().getName(),"Cgg_res_tramite","Cgg_res_tipo_solicitud='"+inCrtst_codigo+"'",files);
+
+			}
 
 			if(res.equalsIgnoreCase("true") && obj.getCRTST_CODIGO() != null 
 					&& obj.getCRTST_CODIGO().length()>=CGGEnumerators.LONGITUDCLAVEPRIMARIA.MINIMO.getValue() 
@@ -849,10 +864,13 @@ NO
 					}
 				}
 			}
-			if(res.equals("true"))
-				con.commit();	
-			else
+			if(res.equals("true")) {
+				con.commit();
+				if(attachmentSaver!=null)
+					attachmentSaver.save();
+			}else {
 				con.rollback();
+			}
 			con.setAutoCommit(true);
 			con.close();
 			if(!res.equals("true"))
