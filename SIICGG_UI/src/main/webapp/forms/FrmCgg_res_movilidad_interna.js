@@ -92,8 +92,8 @@ function FrmCgg_res_movilidad_interna(IN_SENTENCIA_CGG_RES_MOVILIDAD_INTERNA,IN_
         cmMovilidadPersonaIngreso = new Ext.grid.ColumnModel([
             {dataIndex:'CRPER_TIPO_DOCUMENTO',header:'Documento',width:150,sortable:true},
             {dataIndex:'CRPER_NOMBRES',header:'Nombres',width:150,sortable:true},
-            {dataIndex:'CRPER_APELLIDO_PATERNO',header:'Apellido paterno',width:150,sortable:true},
-            {dataIndex:'CRPER_APELLIDO_MATERNO',header:'Apellido materno',width:150,sortable:true},
+            {dataIndex:'CRPER_APELLIDO_PATERNO',header:'Primer apellido',width:150,sortable:true},
+            {dataIndex:'CRPER_APELLIDO_MATERNO',header:'Segundo apellido',width:150,sortable:true},
             {dataIndex:'CRPER_NUM_DOC_IDENTIFIC',header:'Num doc identific',width:150,sortable:true},
             {dataIndex:'CRPER_FECHA_NACIMIENTO',header:'Fecha nacimiento',width:150,sortable:true,renderer:truncDate},
             {dataIndex:'CRPER_GENERO',header:'Genero',width:150,sortable:true,renderer:function(inData){

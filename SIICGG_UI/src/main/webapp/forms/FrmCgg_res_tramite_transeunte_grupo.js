@@ -908,7 +908,7 @@ function FrmCgg_res_tramite_transeunte_grupo(INSENTENCIA_CGG_RES_TRAMITE,INRECOR
 
     {
         dataIndex:'CRPER_APELLIDO_PATERNO',
-        header:'Apellido paterno',
+        header:'Primer apellido',
         width:150,
         sortable:true,
         hidden:true
@@ -916,7 +916,7 @@ function FrmCgg_res_tramite_transeunte_grupo(INSENTENCIA_CGG_RES_TRAMITE,INRECOR
 
     {
         dataIndex:'CRPER_APELLIDO_MATERNO',
-        header:'Apellido materno',
+        header:'Segundo apellido',
         width:150,
         sortable:true,
         hidden:true

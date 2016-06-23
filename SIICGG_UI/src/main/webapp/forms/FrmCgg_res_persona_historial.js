@@ -34,14 +34,14 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
 
         {
             dataIndex:'CRPER_APELLIDO_PATERNO',
-            header:'Apellido paterno',
+            header:'Primer apellido',
             width:150,
             sortable:true
         },
 
         {
             dataIndex:'CRPER_APELLIDO_MATERNO',
-            header:'Apellido materno',
+            header:'Segundo apellido',
             width:150,
             sortable:true
         },

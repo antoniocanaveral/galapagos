@@ -935,14 +935,14 @@ function Persona(){
 
     {
         dataIndex:'CRPER_APELLIDO_PATERNO',
-        header:'Apellido paterno',
+        header:'Primer apellido',
         width:150,
         sortable:true
     },
 
     {
         dataIndex:'CRPER_APELLIDO_MATERNO',
-        header:'Apellido materno',
+        header:'Segundo apellido',
         width:150,
         sortable:true
     },
@@ -1128,14 +1128,14 @@ function PersonaAsistenteCurso(){
 
     {
         dataIndex:'CRPER_APELLIDO_PATERNO',
-        header:'Apellido paterno',
+        header:'Primer apellido',
         width:150,
         sortable:true
     },
 
     {
         dataIndex:'CRPER_APELLIDO_MATERNO',
-        header:'Apellido materno',
+        header:'Segundo apellido',
         width:150,
         sortable:true
     },
@@ -2720,14 +2720,14 @@ function PersonaResidentePermanente(){
 
     {
         dataIndex:'CRPER_APELLIDO_PATERNO',
-        header:'Apellido paterno',
+        header:'Primer apellido',
         width:150,
         sortable:true
     },
 
     {
         dataIndex:'CRPER_APELLIDO_MATERNO',
-        header:'Apellido materno',
+        header:'Segundo apellido',
         width:150,
         sortable:true
     },
@@ -4442,14 +4442,14 @@ function Cgg_gem_candidato_lite(){
     this.columnModel = new Ext.grid.ColumnModel([
     {
         dataIndex:'CRPER_APELLIDO_PATERNO',
-        header:'Apellido paterno',
+        header:'Primer apellido',
         width:200,
         sortable:true
     },
 
     {
         dataIndex:'CRPER_APELLIDO_MATERNO',
-        header:'Apellido materno',
+        header:'Segundo apellido',
         width:200,
         sortable:true
     },

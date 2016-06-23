@@ -906,6 +906,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
         id: 'txtCrtra_comunicado_radial',
         name: 'txtCrtra_comunicado_radial',
         fieldLabel: 'C. radial',
+        hidden : true,
         anchor: '100%',
         listeners:{
             specialkey: function(inThis, inE){
@@ -1305,17 +1306,17 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
             var tmpTipoGarantia = '';
             if (validarFormularioTramite(true) == false) {
                 return;
-            }else{
+            }/*else{
                 var flagSoloGuardar = confirm('Va a solo guardar el tr\u00e1mite.\nInformaci\u00f3n de requisitos, seguimiento y adjuntos ser\u00e1n omitidos.\nSeguro de continuar?');
                 if(flagSoloGuardar ==false){
                     return;
                 }
-            }
+            }*/
             try {
                 if(tmpDepositoGarantia){
                     tmpTipoGarantia = "{CRDPT_CODIGO:\""+tmpDepositoGarantia.get('CRDPT_CODIGO')+"\",CRGRT_CODIGO:\""+crgrtCodigo+"\"}";
                 }
-                pnlFrmCgg_res_tramitePrincipal.getEl().mask('Espere un momento por favor.<br>El tiempo de respuesta depender\u00E1 del tama\u00F1o de sus archivos adjuntos.', 'x-mask-loading');
+                pnlFrmCgg_res_tramitePrincipal.getEl().mask('Espere un momento por favor.', 'x-mask-loading');
                 Ext.getCmp('pnlFrmCgg_res_tramite3').getForm().submit({
                     url: URL_WS + "TramiteSRV",
                     success: function(inForm,inAction){
@@ -1370,7 +1371,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                                     }
                                 }
 
-                                winFrmCgg_res_tramite.close();
+                                //winFrmCgg_res_tramite.close();
                             }else {
                                 Ext.Msg.show({
                                     title: tituloCgg_res_tramite,
@@ -1780,7 +1781,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
     {
         dataIndex: 'CRREQ_CODIGO',
         header: 'Requisito',
-        width: 120,
+        width: 240,
         sortable: true,
         renderer: function(inCRREQ_CODIGO){
             var i = 0;
@@ -1831,74 +1832,11 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
     }, cbcCRRQT_CUMPLE, {
         dataIndex: 'CRRQT_OBSERVACION',
         header: 'Observaci\u00F3n',
-        width: 200,
+        width: 350,
         sortable: true,
         editor: {
             xtype: 'textfield'
         }
-    },{
-        xtype: 'actioncolumn',
-        width: 80,
-        header:'Adjunto',
-        items: [
-        {
-            iconCls: 'iconAdjunto',                // Use a URL in the icon config
-            tooltip: 'Subir adjunto',
-            handler: function(grid, rowIndex, colIndex) {
-                grdCgg_res_solicitud_requisito.getSelectionModel().selectRow(rowIndex);
-                var rAdjuntoTemporal = grdCgg_res_solicitud_requisito.getSelectionModel().getSelected();
-                if(rAdjuntoTemporal!== null){
-                    var objSubirAdjunto = new FrmCgg_res_adjunto_temporal();
-                    objSubirAdjunto.closeHandler(function(){
-                        var dialogResult = objSubirAdjunto.dialogResult();
-                        if(dialogResult  !== null){
-                            rAdjuntoTemporal.set('CRATE_DATA',objSubirAdjunto.dialogResult());
-                        }
-                    });
-                    objSubirAdjunto.show();
-                }
-            }
-        },{
-            iconCls: 'iconEliminar',                // Use a URL in the icon config
-            tooltip: 'Eliminar adjunto',
-            handler: function(grid, rowIndex, colIndex) {
-                grdCgg_res_solicitud_requisito.getSelectionModel().selectRow(rowIndex);
-                var rAdjuntoRequisito = grdCgg_res_solicitud_requisito.getSelectionModel().getSelected();
-                if(rAdjuntoRequisito!== null){
-                    rAdjuntoRequisito.set('CRATE_DATA',null);
-                }
-            }
-        },{
-            iconCls: 'iconBuscar',                // Use a URL in the icon config
-            tooltip: 'Ver adjunto',
-            handler: function(grid, rowIndex, colIndex) {
-                grdCgg_res_solicitud_requisito.getSelectionModel().selectRow(rowIndex);
-                var rAdjuntoRequisito = grdCgg_res_solicitud_requisito.getSelectionModel().getSelected();
-                if(rAdjuntoRequisito!== null){
-                    var objCrate_data = rAdjuntoRequisito.get('CRATE_DATA');
-                    if(objCrate_data!==undefined &&objCrate_data!==null && objCrate_data!==''){
-                        var url1 = URL_DOC_VIEWER+'?table=cgg_res_adjunto_temporal&keyc=crate_codigo&keyv='+objCrate_data.CRATE_CODIGO +'&column=crate_archivo&fn='+objCrate_data.CRATE_NOMBRE+'&request=view';
-                        window.open(url1);
-                    }
-
-                }
-            }
-        },{
-            iconCls: 'iconGuardar',
-            tooltip: 'Guardar adjunto',
-            handler: function(grid, rowIndex, colIndex) {
-                grdCgg_res_solicitud_requisito.getSelectionModel().selectRow(rowIndex);
-                var rAdjuntoRequisito = grdCgg_res_solicitud_requisito.getSelectionModel().getSelected();
-                if(rAdjuntoRequisito!== null){
-                    var objCrate_data = rAdjuntoRequisito.get('CRATE_DATA');
-                    if(objCrate_data!==undefined && objCrate_data!==null && objCrate_data!==''){
-                        var url2 = URL_DOC_VIEWER+'?table=cgg_res_adjunto_temporal&keyc=crate_codigo&keyv='+objCrate_data.CRATE_CODIGO +'&column=crate_archivo&fn='+objCrate_data.CRATE_NOMBRE+'&request=download';
-                        window.open(url2);
-                    }
-                }
-            }
-        }
-        ]
     },{
         dataIndex: 'CRATE_DATA',
         header: 'Datos adjunto',
@@ -2126,7 +2064,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
         {
             dataIndex: 'CUSU_CODIGO',
             header: 'Usuario',
-            width: 150,
+            width: 240,
             sortable: true,
             editor:cbxCUSU_CODIGOEditor,
             renderer:function(inCUSU_CODIGO){
@@ -2673,8 +2611,6 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
         //numCrtra_folio.setDisabled(estado);
         spfCrtra_folio.setDisabled(estado);
 
-        Ext.getCmp('btnAgregarAdjunto').setDisabled(estado);
-        Ext.getCmp('btnEliminarAdjunto').setDisabled(estado);
         Ext.getCmp('btnGuardarCgg_res_tramite').setDisabled(estado);
         Ext.getCmp('btnOpciones').setDisabled(estado);
         btnCgg_crper_codigoCgg_res_tramite.setDisabled(estado);
@@ -2850,7 +2786,6 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                 btnCrper_codigoCgg_res_tramite.disable();
                 btnGuardarCgg_res_tramite.disable();
                 btnCgg_res_tramiteSoloGuardar.disable();
-                grdCgg_res_adjunto.disable();
                 Ext.getCmp('btnOpciones').disable();
 
                 cargarSolicitud(tmpSolicitud,true);
@@ -2865,7 +2800,6 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                 btnCgg_crper_codigoCgg_res_tramite.enable();
                 btnCrper_codigoCgg_res_tramite.enable();
                 btnGuardarCgg_res_tramite.enable();
-                grdCgg_res_adjunto.enable();
                 habilitarTramite(true);
                 cargarSolicitud(tmpSolicitud,false);
 
@@ -2885,7 +2819,6 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                 btnCrper_codigoCgg_res_tramite.disable();
                 btnGuardarCgg_res_tramite.disable();
                 btnCgg_res_tramiteSoloGuardar.disable();
-                grdCgg_res_adjunto.disable();
                 Ext.getCmp('btnAvisoTramite').show();
                 Ext.getCmp('btnOpciones').disable();
                 habilitarTramite(false);

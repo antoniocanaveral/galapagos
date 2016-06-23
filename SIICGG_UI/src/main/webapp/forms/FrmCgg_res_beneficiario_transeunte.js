@@ -48,7 +48,7 @@ function FrmCgg_res_beneficiario_transeunte(inRecordCgg_res_beneficiario,INRECOR
     var txtCrben_apellido_paterno = new Ext.form.TextField({
         id:'txtCrben_apellido_paterno',
         name:'txtCrben_apellido_paterno',
-        fieldLabel :'Apellido paterno',
+        fieldLabel :'Primer apellido',
         anchor:'98%',
         allowBlank :false
     });
@@ -58,7 +58,7 @@ function FrmCgg_res_beneficiario_transeunte(inRecordCgg_res_beneficiario,INRECOR
     var txtCrben_apellido_materno = new Ext.form.TextField({
         id:'txtCrben_apellido_materno',
         name:'txtCrben_apellido_materno',
-        fieldLabel :'Apellido materno',
+        fieldLabel :'Segundo apellido',
         anchor:'98%'
     });
 

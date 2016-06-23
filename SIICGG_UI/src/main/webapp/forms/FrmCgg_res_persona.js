@@ -807,7 +807,7 @@ function FrmCgg_res_persona(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_RES_PERSONA
     var txtCrper_apellido_paterno = new Ext.form.TextField({
         id:'txtCrper_apellido_paterno',
         name:'txtCrper_apellido_paterno',
-        fieldLabel :'Apellido paterno',
+        fieldLabel :'Primer apellido',
         anchor:'98%',
         allowBlank :false,
         invalidText : 'Es necesario ingresar el apellido  de la persona '
@@ -818,7 +818,7 @@ function FrmCgg_res_persona(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_RES_PERSONA
     var txtCrper_apellido_materno = new Ext.form.TextField({
         id:'txtCrper_apellido_materno',
         name:'txtCrper_apellido_materno',
-        fieldLabel :'Apellido materno',
+        fieldLabel :'Segundo apellido',
         anchor:'98%',
         allowBlank : true
     });

@@ -705,8 +705,8 @@ function Persona(){
     cm =new Ext.grid.ColumnModel([
         {dataIndex:'CRPER_NUM_DOC_IDENTIFIC',header:'No. documento',width:150,sortable:true},
         {dataIndex:'CRPER_NOMBRES',header:'Nombres',width:150,sortable:true},
-        {dataIndex:'CRPER_APELLIDO_PATERNO',header:'Apellido paterno',width:150,sortable:true},
-        {dataIndex:'CRPER_APELLIDO_MATERNO',header:'Apellido materno',width:150,sortable:true},
+        {dataIndex:'CRPER_APELLIDO_PATERNO',header:'Primer apellido',width:150,sortable:true},
+        {dataIndex:'CRPER_APELLIDO_MATERNO',header:'Segundo apellido',width:150,sortable:true},
         {dataIndex:'CRPER_FECHA_NACIMIENTO',header:'Fecha nacimiento',width:150,sortable:true,renderer:truncDate},
         {dataIndex:'CRPER_LUGAR_NACIMIENTO',header:'Lugar nacimiento',width:150,sortable:true},
         {dataIndex:'CRPER_GENERO',header:'Genero',width:150,sortable:true,renderer:function(inCrper_genero){
@@ -819,14 +819,14 @@ function PersonaAsistenteCurso(){
 
         {
             dataIndex:'CRPER_APELLIDO_PATERNO',
-            header:'Apellido paterno',
+            header:'Primer apellido',
             width:150,
             sortable:true
         },
 
         {
             dataIndex:'CRPER_APELLIDO_MATERNO',
-            header:'Apellido materno',
+            header:'Segundo apellido',
             width:150,
             sortable:true
         },
@@ -2192,8 +2192,8 @@ Cgg_kdx_Venta_estado.prototype.getStore=function(){
         cmPersonaResidentePermanente =new Ext.grid.ColumnModel([
             {dataIndex:'CRPER_NUM_DOC_IDENTIFIC',header:'No. documento',width:150,sortable:true},
             {dataIndex:'CRPER_NOMBRES',header:'Nombres',width:150,sortable:true},
-            {dataIndex:'CRPER_APELLIDO_PATERNO',header:'Apellido paterno',width:150,sortable:true},
-            {dataIndex:'CRPER_APELLIDO_MATERNO',header:'Apellido materno',width:150,sortable:true},
+            {dataIndex:'CRPER_APELLIDO_PATERNO',header:'Primer apellido',width:150,sortable:true},
+            {dataIndex:'CRPER_APELLIDO_MATERNO',header:'Segundo apellido',width:150,sortable:true},
             {dataIndex:'CRPER_FECHA_NACIMIENTO',header:'Fecha nacimiento',width:150,sortable:true,renderer:truncDate},
             {dataIndex:'CRPER_LUGAR_NACIMIENTO',header:'Lugar nacimiento',width:150,sortable:true},
             {dataIndex:'CRPER_GENERO',header:'Genero',width:150,sortable:true},
@@ -3579,14 +3579,14 @@ function Cgg_gem_candidato_lite(){
     this.columnModel = new Ext.grid.ColumnModel([
         {
             dataIndex:'CRPER_APELLIDO_PATERNO',
-            header:'Apellido paterno',
+            header:'Primer apellido',
             width:200,
             sortable:true
         },
 
         {
             dataIndex:'CRPER_APELLIDO_MATERNO',
-            header:'Apellido materno',
+            header:'Segundo apellido',
             width:200,
             sortable:true
         },

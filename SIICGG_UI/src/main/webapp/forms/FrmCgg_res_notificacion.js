@@ -62,13 +62,13 @@ function FrmCgg_res_notificacion(INSENTENCIA_CGG_RES_NOTIFICACION,INRECORD_CGG_R
         },
         {
             dataIndex:'CRPER_APELLIDO_PATERNO',
-            header:'Apellido paterno',
+            header:'Primer apellido',
             width:150,
             sortable:true
         },
         {
             dataIndex:'CRPER_APELLIDO_MATERNO',
-            header:'Apellido materno',
+            header:'Segundo apellido',
             width:150,
             sortable:true
         },

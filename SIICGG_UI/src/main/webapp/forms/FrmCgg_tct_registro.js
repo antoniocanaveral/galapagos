@@ -579,7 +579,7 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
     var txtCrper_apellido_paterno = new Ext.form.TextField({
         id:'txtCrper_apellido_paterno',
         name:'txtCrper_apellido_paterno',
-        fieldLabel :'Apellido paterno',
+        fieldLabel :'Primer apellido',
         anchor:'98%',
         allowBlank :false,
         invalidText : 'Es necesario ingresar el apellido  de la persona '
