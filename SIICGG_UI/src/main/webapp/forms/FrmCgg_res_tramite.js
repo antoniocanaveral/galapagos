@@ -1371,7 +1371,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                                     }
                                 }
 
-                                //winFrmCgg_res_tramite.close();
+                                winFrmCgg_res_tramite.close();
                             }else {
                                 Ext.Msg.show({
                                     title: tituloCgg_res_tramite,
@@ -2482,6 +2482,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
         region: 'east',
         layout: 'border',
         fileUpload: true,
+        hidden : true,
         collapsible:true,
         collapsed:true,
         split: true,
@@ -2504,6 +2505,18 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
         items: [pnlFrmCgg_res_tramite2, pnlFrmCgg_res_tramite1Norte]
     });
 
+    //AC=>
+    var btnAdjuntos = new Ext.ux.form.AlfrescoFM({
+        id:'compAdjunto',   //(opcional)
+        name:'compAdjunto', //(opcional)
+        text: 'Adjuntos',    //(opcional -> Texto del botón)
+        tableName: 'Cgg_res_tramite',
+        validateRecordID:true,
+        recordID : (inRecordCgg_res_tramite?inRecordCgg_res_tramite.get('CRTRA_CODIGO'):null),
+        filter: "crtst_codigo='"+(inRecordCgg_res_tramite?inRecordCgg_res_tramite.get('CRTST_CODIGO'):null)+"'"
+    });
+
+
     /**
      * Ext.Window Ventana en la que reside los controles necesarios para administrar la informacion de los registros de la tabla Cgg_res_tramite.
      */
@@ -2521,7 +2534,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
         maximizable: true,
         constrain: true,
         modal: true,
-        bbar: [btnGuardarCgg_res_tramite,btnCgg_res_tramiteSoloGuardar,{
+        bbar: [btnGuardarCgg_res_tramite,btnCgg_res_tramiteSoloGuardar,'-',btnAdjuntos,{
             id:'btnOpciones',
             text: 'Opciones',
             menu: {
