@@ -568,37 +568,26 @@ $(function() {
      *	DOCUMENTOS
      **/
 
-    function cargarDocumentos(crdcslTipo){
+    function cargarDocumentos(crtst_codigo){
 
         function CallBackCgg_res_documentacion_solicitada(r){
             var a = eval('('+r+')');
             var tbodyDocumentacionSolicitada = document.getElementById("tblDocumentacion").tBodies[0];
-            //tbodyDocumentacionSolicitada.reload();
-            for(i=0;i<a.dataSet.length;i++){
+
+            for(i=0;i<a.length;i++){
                 var fila = insertarFila();
                 //Tipo de Documento
                 var celda= fila.insertCell(0);
-                celda.id = a.dataSet[i].CRDCSL_CODIGO;
-                celda.innerHTML = a.dataSet[i].CRDCSL_DESCRIPCION;
-                celda.width = 225;
-
-                //Adjunto
-
-
+                celda.id = a[i].code;
+                celda.innerHTML = a[i].fileDescription;
+                celda.width = "100%";
             }
-
         }
-
+        limpiarTabla();
         var param = new SOAPClientParameters();
-        param.add('format','JSON');
-        param.add('start',0);
-        param.add('limit',10);
-        param.add('sort','CRDCSL_CODIGO');
-        param.add('dir','ASC');
-        param.add('keyword',crdcslTipo);
-        param.add('inCrdcsl_tipo',crdcslTipo);
-        SOAPClient.invoke(URL_WS+"Cgg_res_documentacion_solicitada","selectPageDirect",param, true, CallBackCgg_res_documentacion_solicitada);
-
+        param.add('tableName','Cgg_res_tramite');
+        param.add('filter',"crtst_codigo='"+crtst_codigo+"'");
+        SOAPClient.invoke(URL_WS+"Alf_query","getLocalMetadata",param, true, CallBackCgg_res_documentacion_solicitada);
 
         function insertarFila(){
             var tbodyDocumentacionSolicitada = document.getElementById("tblDocumentacion").tBodies[0];
@@ -982,6 +971,12 @@ $(function() {
                         //window.open(urlReport);
                     }
                 });
+                //Invocacion Alfresco del FrontEnd
+                var _tableName = encodeURIComponent("Cgg_res_tramite");
+                var _recordId = encodeURIComponent(tmpRespuestaTramite[0]);
+                var _filter = encodeURIComponent("crtst_codigo='"+tmpMotivoResidenciaId+"'");
+                PopupCenter("alfrescoMng.html?tableName="+_tableName+"&recordId="+_recordId+"&filter="+_filter,'Adjuntos','820','630');
+                //Fin Alfresco
             }
             else
             {
@@ -1250,6 +1245,7 @@ $(function() {
                 $("#txtMotivoResidencia").val(tmpMotivoResidencia);
                 $("#dlgMotivoResidencia").dialog("close");
                 consultarReglaValidacion(tmpMotivoResidenciaId);
+                cargarDocumentos(tmpMotivoResidenciaId);
 
             }
             else

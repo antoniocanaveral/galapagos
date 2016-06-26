@@ -69,6 +69,26 @@
             font-size: 10px;
         }
     </style>
+    <!--ALFRESCO-->
+    <script>
+        function PopupCenter(url, title, w, h) {
+            // Fixes dual-screen position                         Most browsers      Firefox
+            var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
+            var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
+
+            var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+            var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+            var left = ((width / 2) - (w / 2)) + dualScreenLeft;
+            var top = ((height / 2) - (h / 2)) + dualScreenTop;
+            var newWindow = window.open(url, title, 'scrollbars=yes, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+
+            // Puts focus on the newWindow
+            if (window.focus) {
+                newWindow.focus();
+            }
+        }
+    </script>
 </head>
 <BODY>
 <input type="hidden" id="txtUsuario"
@@ -340,8 +360,12 @@ obligatorios</span></div>
             <%--MO--%>
             <div id="divDocumentacion">
                 <div class="form-line cssTabButton">
-                    <div id="divBgModal" class="bgtransparent"
-                         style="width: 100%; height: 100%"></div>
+                    <div id="infoDocs" style="width: 100%">
+                        <div style="font: 12px 'Helvetica'" class="divAviso">
+                            Los documentos listados a continuaci&oacute;n se le solicitar&aacute;n al guardar el formulario.<br/>
+                            Por favor tengalos a la mano en formato digital.
+                        </div>
+                    </div>
                     <table width="200" border="0" style="font-size: 11px">
                         <tr>
                             <td><!--  -->
@@ -354,11 +378,8 @@ obligatorios</span></div>
                                         <thead
                                                 style="display: block; border-bottom: 1px solid #CCCCCC; width: 100%">
                                         <tr>
-                                            <th width="365px">
+                                            <th width="100%">
                                                 <div align="left">Documentos</div>
-                                            </th>
-                                            <th width="225px">
-                                                <div align="left">Adjuntos</div>
                                             </th>
                                         </tr>
                                         </thead>
