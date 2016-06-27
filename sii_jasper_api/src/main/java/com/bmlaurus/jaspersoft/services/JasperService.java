@@ -1,6 +1,7 @@
 package com.bmlaurus.jaspersoft.services;
 
 import com.bmlaurus.jaspersoft.BaseAPI;
+import com.bmlaurus.jaspersoft.model.InputControl;
 import com.bmlaurus.jaspersoft.model.JasperReport;
 import com.bmlaurus.jaspersoft.model.JasperReport.DataSource;
 import com.bmlaurus.jaspersoft.model.JasperReport.Jrxml;
@@ -21,7 +22,21 @@ import static com.bmlaurus.jaspersoft.model.JasperReport.HDR_CONTENT_TYPE;
  */
 public class JasperService extends BaseAPI {
 
-    public JasperReport getOrCreateJasperReport(String parentPath, String reportName,  List<JasperReportResource> resourceList){
+    private List<InputControl> inputControls;
+
+    public List<InputControl> getInputControls() {
+        return inputControls;
+    }
+
+    public void setInputControls(List<InputControl> inputControls) {
+        this.inputControls = inputControls;
+    }
+
+    public JasperService(List<InputControl> inputControls) {
+        this.inputControls = inputControls;
+    }
+
+    public JasperReport getOrCreateJasperReport(String parentPath, String reportName, List<JasperReportResource> resourceList){
         return getOrCreateJasperReport(config.getProperty("SII_REPORTS_PATH"),parentPath,reportName,resourceList);
     }
 
@@ -72,6 +87,11 @@ public class JasperService extends BaseAPI {
                 res.addResources(resourceList);
                 jasper.setResources(res);
             }
+            if(inputControls!=null){
+                for(InputControl control:inputControls){
+                    jasper.addInputControl(new JasperReport.InputControl(control.getUri()));
+                }
+            }
             jasper.setJrxml(new Jrxml(config.getProperty("SII_RESOURCES_PATH") + "/" + (parentPath.equals("sii") ? "": parentPath) + (parentPath.isEmpty()||parentPath.equals("sii") ? "" : "/") + reportName + ".jrxml"));
             jasper.setUri(config.getProperty("RESOURCE") + basePath +"/"+ parentPath + (parentPath.isEmpty() ? "" : "/") + reportName);
 
@@ -92,4 +112,9 @@ public class JasperService extends BaseAPI {
         }
         return  result;
     }
+
+    private void createInputControls(){
+
+    }
+
 }

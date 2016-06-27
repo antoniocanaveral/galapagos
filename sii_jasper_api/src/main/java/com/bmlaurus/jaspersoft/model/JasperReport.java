@@ -159,6 +159,12 @@ public class JasperReport extends  BaseRestModel implements Serializable {
         this.inputControls = inputControls;
     }
 
+    public void addInputControl(InputControl inputControl){
+        if(inputControls==null)
+            inputControls = new ArrayList<>();
+        inputControls.add(inputControl);
+    }
+
     public Resource getResources() {
         return resources;
     }
@@ -207,6 +213,10 @@ public class JasperReport extends  BaseRestModel implements Serializable {
 
         private JrxmlReference jrxmlFileReference;
 
+        public String getUri() {
+            return jrxmlFileReference.getUri();
+        }
+
         public Jrxml(String uri) {
             JrxmlReference reference = new JrxmlReference(uri);
             this.jrxmlFileReference = reference;
@@ -214,6 +224,10 @@ public class JasperReport extends  BaseRestModel implements Serializable {
 
         private class JrxmlReference implements Serializable{
             private String uri;
+
+            public String getUri() {
+                return uri;
+            }
 
             public JrxmlReference(String uri) {
                 this.uri = uri;

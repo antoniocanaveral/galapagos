@@ -11,6 +11,7 @@ import java.util.Date;
 public class JasperFile extends  BaseRestModel implements Serializable {
 
     public static final String MIME_TYPE_JRXML = "jrxml";
+    public static final String MIME_TYPE_IMAGE = "img";
 
     private Date creationDate;
     private String description;

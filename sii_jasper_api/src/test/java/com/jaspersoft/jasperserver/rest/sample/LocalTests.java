@@ -4,6 +4,7 @@ import com.besixplus.sii.util.Env;
 import com.bmlaurus.exception.EnvironmentVariableNotDefinedException;
 import com.bmlaurus.jasper.JasperResponse;
 import com.bmlaurus.jaspersoft.model.ExtraResource;
+import com.bmlaurus.jaspersoft.model.InputControl;
 import com.bmlaurus.jaspersoft.model.JasperReportResource;
 import com.bmlaurus.jaspersoft.services.*;
 import com.google.gson.Gson;
@@ -48,6 +49,12 @@ public class LocalTests {
 
                 folderService = new FolderService();
                 folderService.getOrCreateFolder(config.getProperty("SII_DATASOURCE_PATH"), "sii");
+
+                folderService = new FolderService();
+                folderService.getOrCreateFolder(config.getProperty("SII_DATATYPES_PATH"), "sii");
+
+                folderService = new FolderService();
+                folderService.getOrCreateFolder(config.getProperty("SII_CONTROLS_PATH"), "sii");
                 //CREAMOS EL DATASOURCE
                 DataSourceService dataSourceService = new DataSourceService();
                 dataSourceService.getOrCreateDataSource();
@@ -64,13 +71,19 @@ public class LocalTests {
                                 String justName = resource.getName().substring(0, resource.getName().indexOf("."));
                                 if(resource.getName().endsWith("jrxml")) {
                                     fileService.uploadFile(remotePath.replace("/" + resource.getName(), ""), resource.getName(), resource);
-                                    JasperService jasperService = new JasperService();
+                                    List<InputControl> controls = null;
+                                    InputControlService controlService = new InputControlService();
+                                    controls = controlService.getOrCreateInputControls(resource);
+                                    JasperService jasperService = new JasperService(controls);
                                     int beginIndex = remotePath.replace("/" + resource.getName(), "").lastIndexOf("/");
                                     String parentPath = remotePath.replace("/" + resource.getName(), "").substring(beginIndex + 1);
                                     String basePath = remotePath.replace("/" + resource.getName(), "").substring(0,beginIndex);
                                     jasperService.getOrCreateJasperReport(basePath, parentPath, justName, null);
-                                }else{//Subimos el archivo sin poner la extensión
+                                }else{
+                                    //Subimos el archivo sin poner la extensión
                                     fileService.uploadFile(remotePath.replace("/" + resource.getName(), ""),justName , resource);
+                                    //Subimos el archivo nuevamente pero con extensión
+                                    fileService.uploadFile(remotePath.replace("/" + resource.getName(), ""),resource.getName() , resource);
                                 }
 
                             }
@@ -122,7 +135,10 @@ public class LocalTests {
                                 }
                             }
                             if (resource.isReport()) {
-                                JasperService jasperService = new JasperService();
+                                List<InputControl> controls = null;
+                                InputControlService controlService = new InputControlService();
+                                controls = controlService.getOrCreateInputControls(new File(resource.getLocalFile()));
+                                JasperService jasperService = new JasperService(controls);
                                 jasperService.getOrCreateJasperReport(lastFolder, localFile.substring(0, localFile.lastIndexOf(".")),null);
                             }
                         }
@@ -135,10 +151,13 @@ public class LocalTests {
                 folderService = new FolderService();
                 folderService.getOrCreateFolder(config.getProperty("SII_RESOURCES_PATH") + "/" + reportFolder, reportFolder);
             }
+            List<InputControl> controls = null;
             File reportRoot = new File(Env.getHomePath()+config.getProperty("SII_LOCAL_REPOSITORY")+config.getProperty("SII_REPORTS_PATH")+"/"+reportFolder+"/"+reportName+"_files");
             if(reportRoot != null && reportRoot.exists() && reportRoot.isDirectory()) {
                 for(File item:reportRoot.listFiles()){
                     if(item.getName().contains(reportName)){
+                        InputControlService controlService = new InputControlService();
+                        controls = controlService.getOrCreateInputControls(item);
                         if(!fileService.touchFile(config.getProperty("SII_RESOURCES_PATH") + "/" + reportFolder+"/"+reportName + ".jrxml"))
                             fileService.uploadFile(config.getProperty("SII_RESOURCES_PATH") + "/" + reportFolder, reportName + ".jrxml", item);
                     }else{
@@ -156,7 +175,7 @@ public class LocalTests {
                 response.setErrorMessage("El archivo " + reportName + ".jrxml NO existe localmente");
             }
 
-            JasperService jasperService = new JasperService();
+            JasperService jasperService = new JasperService(controls);
             jasperService.getOrCreateJasperReport(reportFolder, reportName, resources);
 
         } catch (EnvironmentVariableNotDefinedException e) {
