@@ -24,7 +24,7 @@ public class LocalTests {
 
     @Test
     public void CreatePath(){
-        System.err.println(validateReport("residencia", "rptListadoSolicitudesResidenciaReceptados"));
+        System.err.println(validateReport("atencionalcliente", "rptSolicitudResidenciaPermanente"));
     }
 
 
@@ -168,6 +168,10 @@ public class LocalTests {
                             fileService.uploadFile(config.getProperty("SII_RESOURCES_PATH") + "/" + reportFolder, item.getName(), item);
                         JasperReportResource resource = new JasperReportResource(item.getName(),config.getProperty("SII_RESOURCES_PATH") + "/" + reportFolder + "/"+item.getName());
                         resources.add(resource);
+                        if(item.getName().endsWith("jrxml")){
+                            JasperService jasperService = new JasperService(controls);
+                            jasperService.getOrCreateJasperReport(reportFolder, item.getName().substring(0,item.getName().indexOf(".")), null);
+                        }
                     }
                 }
             } else {

@@ -57,6 +57,16 @@ function AlfrescoMng(_tableName, _recordID, _filter){
                 if(alfrescoResponse.folderResult){//Hay documentos previamente subidos.
                     //cargamos el store.
                     console.log("Hay archivos en el servidor");
+                    var filteredData = {"files": alfrescoResponse.folderResult};
+                    store = new Ext.data.Store({
+                        root: "files",
+                        reader: new Ext.data.JsonReader({
+                            id: 'code',
+                            root: 'files'
+                        }, [{name: "fileDescription"}, {name: "fileName"}, {name:"fileRepository"}]),
+                        fields: ["fileDescription", "fileName", "fileRepository"]
+                    });
+                    store.loadData(filteredData);
                 }
             }
 
@@ -320,6 +330,48 @@ function freeUpload(_this, e){
     var btnUpload = _this;
     if(btnUpload.fileObj){
         var uploader = new AlfrescoUploader(_this.fileObj,tableName,recordID);
+        uploader.on('hide',function(_that){
+            var result = uploader.result();
+            console.log("HIDE: "+result);
+            if(btnUpload.fileContainer){
+                btnUpload.setIconClass('ecmRefresh');
+                btnUpload.fileContainer.fileObj.fileResult = result;
+            }
+            uploader.destroy();
+        });
+        uploader.on('close',function(p){
+            console.log("CLOSE!!");
+        });
+        uploader.show();
+    }else{//Es subida Libre
+        var indexes = [];
+        indexes.push(
+            {
+                "code": "IDX_IDN",
+                "name": "Identificable",
+                "itemList": [
+                    {
+                        "code": "ITEM_TABLA",
+                        "itemName": "TABLE_NAME_NAME",
+                        "itemDataType": "STRING",
+                        "itemLabel": "Nombre de la Tabla SII",
+                        "isMandatory": true,
+                        "estado": true
+                    },
+                    {
+                        "code": "ITEM_RECORD_ID",
+                        "itemName": "RECORD_ID_NAME",
+                        "itemDataType": "STRING",
+                        "itemLabel": "Identificador del Registro",
+                        "isMandatory": true,
+                        "estado": true
+                    }
+                ],
+                "estado": true
+            }
+        );
+        var jsonFile = {"code":"FREE", "documentType": "D:sii:personales", "fileRepository":alfrescoResponse.filesRepository ,"indexDefinitionList":indexes};
+        var uploader = new AlfrescoUploader(jsonFile,tableName,recordID);
         uploader.on('hide',function(_that){
             var result = uploader.result();
             console.log("HIDE: "+result);

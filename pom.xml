@@ -27,6 +27,7 @@
 	</properties>
 
 	<modules>
+		<module>sii_alfresco_config</module>
 		<module>sii_commons</module>
 		<module>sii_ecm_integration</module>
 		<module>SIICGG_UI</module>
