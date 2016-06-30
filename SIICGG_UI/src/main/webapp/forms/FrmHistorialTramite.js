@@ -291,7 +291,22 @@ function FrmHistorialTramite(inDesktop){
             }
         }
     });
-        
+
+    var btnAdjuntos = new Ext.ux.form.AlfrescoFM({
+        id:'compAdjunto',   //(opcional)
+        name:'compAdjunto', //(opcional)
+        text: 'Adjuntos',    //(opcional -> Texto del botón)
+        tableName: 'Cgg_res_tramite',
+        validateRecordID:true
+    });
+
+    btnAdjuntos.addListener("updateData",function(t){
+        var rTramite = grdHistorialTramite.getSelectionModel().getSelected();
+        t.recordID = rTramite.get('CRTRA_CODIGO');
+        t.filter = "crtst_codigo='"+rTramite.get('CRTST_CODIGO')+"'";
+        rTramite=null;
+    });
+
     function devolucionGarantia(inCrtra_codigo,inTodo, inVerificar){
         var scpHistorialTramite = new SOAPClientParameters();
         scpHistorialTramite.add('inCrtra_codigo', inCrtra_codigo);
@@ -733,7 +748,7 @@ function FrmHistorialTramite(inDesktop){
             iconCls:'iconHistorial',
             tbar:getPanelTitulo('Listado '+tituloListadoHistorialTramite,descListadoHistorialTramite),
             items:[pnlHistorialTramite],
-            bbar:[btnRevisarHistorialTramite,btnAnularTramite,'-',btnRevisarTramite,btnHstRptDevolucionGarantia,'-',btnReporteHistorialTramite,'->',btnSalirHistorialTramite],
+            bbar:[btnRevisarHistorialTramite,btnAnularTramite,'-',btnRevisarTramite,btnAdjuntos,'-',btnReporteHistorialTramite,'->',btnSalirHistorialTramite],
             listeners:{
                 show:function(){
                     Ext.getCmp('sfBusquedaHistorial').focus(true,400);
