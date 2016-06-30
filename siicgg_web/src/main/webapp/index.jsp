@@ -7,6 +7,7 @@
         response.setHeader("Expires", "0"); // Proxies.
     %>
     <title>SIICGG Atenci&oacute;n al cliente</title>
+    <link href='https://fonts.googleapis.com/css?family=Work+Sans:400,500,800,600' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="css/style.css"/>
     <script type="text/javascript" src="js/config.js"></script>
     <script type="text/javascript" src="js/SoapClient.js"></script>
@@ -382,11 +383,8 @@
                                 <td width="48" height="54"><img src="css/image/logocgg.gif"
                                                                 width="41" height="46" longdesc="cgg"></td>
                                 <td width="354" align="left" valign="middle">
-                                    <div class="divAcercaDe" align="left" style="color: #1373A0">
-                                        <div align="left"><b>Consejo de Gobierno de Gal&aacute;pagos.</b></div>
-                                    </div>
                                     <div class="divAcercaDe" align="left">
-                                        <div align="left"><a href="http://www.gobiernogalapagos.gob.ec">http://www.gobiernogalapagos.gob.ec</a>
+                                        <div align="left"><b><a href="http://www.gobiernogalapagos.gob.ec">Consejo de Gobierno de Galápagos</a></b>
                                         </div>
                                     </div>
                                     <div class="divAcercaDe" align="left">
@@ -399,7 +397,17 @@
                                 </td>
                                 <td width="203">&nbsp;</td>
                                 <td align="right" valign="middle">
-                                    <img src="css/image/logobml.png" width="300px">
+                                    <div class="divAcercaDe" align="left">
+                                        <div align="left"><b><a href="http://www.bmlaurus.com">BMLaurus</a></b>
+                                        </div>
+                                    </div>
+                                    <div class="divAcercaDe" align="left">
+                                        <div align="left"><b>V&iacute;a Interoce&aacute;nica y Pasaje A. Centro de negocios Quor&uacute;m Quito, oficina 34. Paseo San Francisco</b></div>
+                                    </div>
+                                    <div class="divAcercaDe" align="left">
+                                        <div align="left">Cumbay&aacute; - Ecuador
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         </table>
