@@ -1804,6 +1804,28 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
         }
         ]
     };
+
+    //AC==>
+    var btnAdjuntos = new Ext.ux.form.AlfrescoFM({
+        id:'compAdjunto',   //(opcional)
+        name:'compAdjunto', //(opcional)
+        text: 'Adjuntos',    //(opcional -> Texto del botón)
+        tableName: 'Cgg_res_persona',
+        validateRecordID:true,
+        recordID : null,
+        filter : null
+    });
+
+    btnAdjuntos.addListener("updateData",function(t){
+        t.recordID = null;
+        t.recordID = tmpInformacionPersona!=undefined?tmpInformacionPersona.CRPER_CODIGO:null;
+        t.filter = null;
+        rTramite=null;
+    });
+
+    //<== AC
+
+
     /**
      * Ext.Window Ventana en la que reside los controles necesarios para administrar consulta de persona.
      */
@@ -1833,7 +1855,7 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
             constrain:true,
             resizable:true,
             iconCls:'iconHistorialPersona',
-            bbar:['->',btnCerrarCgg_res_persona_historial]
+            bbar:[btnAdjuntos,'->',btnCerrarCgg_res_persona_historial]
         });
         winFrmCgg_res_persona_historial.on("beforeclose",function(){
             pnlPersonaHistorial.items =[];

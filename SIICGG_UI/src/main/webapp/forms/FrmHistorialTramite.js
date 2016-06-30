@@ -301,6 +301,7 @@ function FrmHistorialTramite(inDesktop){
     });
 
     btnAdjuntos.addListener("updateData",function(t){
+        t.recordID = null;
         var rTramite = grdHistorialTramite.getSelectionModel().getSelected();
         t.recordID = rTramite.get('CRTRA_CODIGO');
         t.filter = "crtst_codigo='"+rTramite.get('CRTST_CODIGO')+"'";

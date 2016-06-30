@@ -32,7 +32,7 @@ Ext.ux.form.AlfrescoFM = Ext.extend(Ext.Button, {
             var alfrescoMng = new AlfrescoMng(this.tableName, this.recordID, this.filter);
             alfrescoMng.show();
         }else
-            Ext.MsgPopup.msg("Adjunto","Guarde Primero el registro.", MsgPopup.ERROR);
+            Ext.MsgPopup.msg("Adjunto","Guarde o Seleccione el registro, para abrir Adjuntos.", MsgPopup.ERROR);
 
     },
 });
