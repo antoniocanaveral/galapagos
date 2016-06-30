@@ -1709,4 +1709,27 @@ public class Cgg_res_tramite implements Serializable{
 		return outResult;
 	}
 
+	/**
+	 * ACTUALIZA UN REGISTRO DE LA TABLA Cgg_res_tramite.
+	 * @param inConnection CONEXION A LA BASE DE DATOS.
+	 * @return bool <code>true</code> SI SE ACTUALIZO EL REGISTRO, CASO CONTRARIO <code>false</code>.
+	 */
+	public String updateIsla(
+			java.sql.Connection inConnection
+	){
+		String outResult = "true";
+		try{
+			CallableStatement stmUpdate = inConnection.prepareCall("{ call sii.F_CGG_RES_TRAMITE_UPDATE_ISLA(?,?,?) }");
+			stmUpdate.setString(1, this.getCgg_res_tramite().getCRTRA_CODIGO());
+			stmUpdate.setString(2, this.getCgg_res_tramite().getCISLA_CODIGO());
+			stmUpdate.setString(3, this.getCgg_res_tramite().getCRTRA_USUARIO_UPDATE());
+			stmUpdate.executeUpdate();
+			stmUpdate.close();
+		}catch(SQLException e){
+			com.besixplus.sii.db.SQLErrorHandler.errorHandler(e);
+			outResult = e.getMessage();
+		}
+		return outResult;
+	}
+
 }

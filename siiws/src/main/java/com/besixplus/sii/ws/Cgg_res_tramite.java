@@ -3339,6 +3339,32 @@ VALORES:
 		return res;
 	}
 
-
+	@WebMethod
+	public String updateIsla(
+			@WebParam(name="inCrtra_codigo")String inCrtra_codigo,
+			@WebParam(name="inCisla_codigo")String inCisla_codigo
+	) throws SOAPException {
+		String res = "true";
+		HttpServletRequest tmpRequest = (HttpServletRequest) wctx.getMessageContext().get(MessageContext.SERVLET_REQUEST);
+		com.besixplus.sii.objects.Cgg_res_tramite obj = new com.besixplus.sii.objects.Cgg_res_tramite();
+		obj.setCRTRA_CODIGO(inCrtra_codigo);
+		obj.setCISLA_CODIGO(inCisla_codigo);
+		obj.setCRTRA_USUARIO_UPDATE(tmpRequest.getUserPrincipal().getName());
+		try{
+			Connection con = ManagerConnection.getConnection();
+			if(!com.besixplus.sii.db.Cgg_sec_objeto.isGrant(con, Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getClassName(), tmpRequest.getUserPrincipal().getName(), 1)){
+				con.close();
+				throw new SOAPFaultException(SOAPFactory.newInstance().createFault(myInfoMessages.getMessage("sii.seguridad.acceso.negado", null), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
+			}
+			res = new com.besixplus.sii.db.Cgg_res_tramite(obj).updateIsla(con);
+			con.close();
+			if(!res.equalsIgnoreCase("true"))
+				throw new SOAPFaultException(SOAPFactory.newInstance().createFault(res, new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
+		}catch(SQLException inException){
+			com.besixplus.sii.db.SQLErrorHandler.errorHandler(inException);
+			throw new SOAPFaultException(SOAPFactory.newInstance().createFault(inException.getMessage(), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
+		}
+		return res;
+	}
 
 }
