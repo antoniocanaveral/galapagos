@@ -628,6 +628,42 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
         allowBlank: false,
         readOnly: 'true'
     });
+    //AC=>
+    var btnChangeIsla = new Ext.Button({
+        id:'btnChangeIsla',
+        iconCls: 'iconRecargar',
+        listeners:{
+            click: function(){
+                var tmpFLCgg_isla = new FrmListadoCgg_isla();
+                var objBusqueda = new DlgBusqueda(tmpFLCgg_isla.getStore(), tmpFLCgg_isla.getColumnModel());
+                objBusqueda.closeHandler(function(){
+                    var tmpRecord = objBusqueda.getSelectedRow();
+                    if (tmpRecord != null && tmpRecord != undefined) {
+                        txtCisla_codigo.setValue(tmpRecord.get('CISLA_NOMBRE'));
+                        tmpIsla = tmpRecord.get('CISLA_CODIGO');
+
+                        new ManagerCookies().erase('CGG_ISLA');
+                        new ManagerCookies().create('CGG_ISLA', Ext.util.JSON.encode(tmpRecord.data), 168);
+
+                        if(inRecordCgg_res_tramite && inRecordCgg_res_tramite.get('CRTRA_CODIGO')!='KEYGEN') {
+                            var params = new SOAPClientParameters();
+                            params.add('inCrtra_codigo', inRecordCgg_res_tramite.get('CRTRA_CODIGO'));
+                            params.add('inCisla_codigo', tmpIsla);
+                            var tmpEstado = SOAPClient.invoke(URL_WS + 'Cgg_res_tramite', 'updateIsla', params, false, null);
+                            if(tmpEstado == 'true')
+                                winFrmCgg_res_tramite.close();
+                            else
+                                Ext.MsgPopup.msg("Tramite","Ha ocurrido un error al cambiar de Isla", MsgPopup.ERROR);
+                        }
+                    }
+                });
+                objBusqueda.show();
+                if(inRecordCgg_res_tramite && inRecordCgg_res_tramite.get('CRTRA_CODIGO')!='KEYGEN')
+                    Ext.MsgPopup.msg("Isla","Al cambiar la Isla el tramite puede desaparecer de su bandeja", MsgPopup.INFO);
+            }
+        }
+    });
+    //<=
     /**
      * IDENTIFICATIVO UNICO DE REGISTRO DE ISLA
      */
@@ -1507,7 +1543,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                 }, {
                     columnWidth: .07,
                     layout: 'form',
-                    items: [btnCisla_codigoCgg_res_tramite]
+                    items: [btnChangeIsla]
                 }]
             }, {
                 columnWidth: 1,
@@ -2608,7 +2644,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
         txtCrpro_codigo.setDisabled(estado);
         txtCrtst_codigo.setDisabled(estado);
         txtCrett_codigo.setDisabled(estado);
-        txtCisla_codigo.setDisabled(estado);
+        //txtCisla_codigo.setDisabled(estado);
         txtCrdpt_codigo.setDisabled(estado);
         numCrtra_anio.setDisabled(estado);
         txtCrtra_numero.setDisabled(estado);
@@ -2627,6 +2663,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
         Ext.getCmp('btnGuardarCgg_res_tramite').setDisabled(estado);
         Ext.getCmp('btnOpciones').setDisabled(estado);
         btnCgg_crper_codigoCgg_res_tramite.setDisabled(estado);
+        btnChangeIsla.setDisabled(estado);
         btnCisla_codigoCgg_res_tramite.setDisabled(estado);
         btnCrdpt_codigoCgg_res_tramite.setDisabled(estado);
         btnCrett_codigoCgg_res_tramite.setDisabled(estado);
@@ -2962,8 +2999,10 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
         }
 
         if (txtCisla_codigo.getValue() == null || txtCisla_codigo.getValue().trim().length == 0) {
+            //txtCisla_codigo.setDisabled(false);
             txtCisla_codigo.markInvalid('Establezca la isla de tr\u00E1mite, por favor.');
-            btnCisla_codigoCgg_res_tramite.focus();
+            //btnCisla_codigoCgg_res_tramite.focus();
+            btnChangeIsla.focus();
             flagValidar = false;
             return flagValidar;
         }

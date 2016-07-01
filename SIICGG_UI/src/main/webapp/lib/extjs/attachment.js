@@ -13,11 +13,12 @@ Ext.ux.form.AlfrescoFM = Ext.extend(Ext.Button, {
     iconCls: 'iconAdjunto',
     onRender : function(ct, position){
         Ext.ux.form.AlfrescoFM.superclass.onRender.call(this, ct, position);
+        this.addEvents("updateData");
 
     },
     onClick : function(e, t){
         e.preventDefault();
-
+        this.fireEvent("updateData",this);
         //Validamos si tiene recordID
         var isValid = true;
         if(this.validateRecordID) {
@@ -31,8 +32,8 @@ Ext.ux.form.AlfrescoFM = Ext.extend(Ext.Button, {
             var alfrescoMng = new AlfrescoMng(this.tableName, this.recordID, this.filter);
             alfrescoMng.show();
         }else
-            Ext.MsgPopup.msg("Adjunto","Guarde Primero el registro.", MsgPopup.ERROR);
+            Ext.MsgPopup.msg("Adjunto","Guarde o Seleccione el registro, para abrir Adjuntos.", MsgPopup.ERROR);
 
-    }
+    },
 });
 Ext.reg('uxalfrescofm', Ext.ux.form.AlfrescoFM);

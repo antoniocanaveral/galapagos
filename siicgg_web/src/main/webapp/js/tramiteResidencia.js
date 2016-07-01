@@ -562,6 +562,52 @@ $(function() {
 
     }
 
+    //AC
+    //Requisitos
+    function cargarRequisitos(crtst_codigo){
+        function callBackCgg_res_requisitos(r) {
+            var a = eval('('+r+')');
+            var tbodyDocumentacionSolicitada = document.getElementById("tblRequisitos").tBodies[0];
+
+            for(i=0;i<a.length;i++){
+                var fila = insertarFila();
+                //Tipo de Documento
+                var celda= fila.insertCell(0);
+                celda.id = a[i].CRREQ_CODIGO;
+                celda.innerHTML = a[i].CRREQ_DESCRIPCION;
+                celda.width = 600;
+            }
+        }
+        limpiarRequisitos();
+        var param = new SOAPClientParameters();
+        param.add('inCrtst_codigo',crtst_codigo);
+        param.add('inCrtra_codigo',null);
+        param.add('format',"JSON");
+        SOAPClient.invoke(URL_WS+"Cgg_res_requisito_tramite","selectTramiteTipoSolcitudRequisito",param, true, callBackCgg_res_requisitos);
+
+        function insertarFila(){
+            var tbodyDocumentacionSolicitada = document.getElementById("tblRequisitos").tBodies[0];
+            var fila =tbodyDocumentacionSolicitada.insertRow(-1);
+            fila.onclick = function(){
+                filaTablaDocumentacion = this;
+                posicionD = this.sectionRowIndex+1;
+                for (var i=1;i<document.getElementById("tblRequisitos").rows.length;i++) {
+                    document.getElementById("tblRequisitos").rows[i].className = "rowNoSelectTable";
+                }
+                this.className="rowSelectTable";
+            };
+            return fila;
+        }
+    }
+
+    function limpiarRequisitos(){
+        var tbodyDocumentacionSolicitada = document.getElementById("tblRequisitos").tBodies[0];
+        while(tbodyDocumentacionSolicitada.rows.length > 0) {
+            tbodyDocumentacionSolicitada.deleteRow(0);
+        }
+    }
+
+
     //MO
 
     /**
@@ -580,7 +626,7 @@ $(function() {
                 var celda= fila.insertCell(0);
                 celda.id = a[i].code;
                 celda.innerHTML = a[i].fileDescription;
-                celda.width = "100%";
+                celda.width = 600;
             }
         }
         limpiarTabla();
@@ -1246,6 +1292,7 @@ $(function() {
                 $("#dlgMotivoResidencia").dialog("close");
                 consultarReglaValidacion(tmpMotivoResidenciaId);
                 cargarDocumentos(tmpMotivoResidenciaId);
+                cargarRequisitos(tmpMotivoResidenciaId);
 
             }
             else
