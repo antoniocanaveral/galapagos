@@ -1511,7 +1511,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
             }]
         },{
             id:'tpGarantia',
-            title: 'Garant\u00EDas',
+            title: '',
             layout:'border',
             items:[grdCgg_res_garantia_solicitud],
             disabled:true,

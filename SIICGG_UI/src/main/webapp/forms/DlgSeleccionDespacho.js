@@ -311,7 +311,7 @@ function DlgSeleccionDespacho(inCrpro_codigo){
                     return NO_DATA_MESSAGE;
                 }
             }
-        },{
+        },/*{
             dataIndex:'CRFAS_SUMILLA',
             header:'Comentario/Sumilla',
             width:150,
@@ -319,7 +319,7 @@ function DlgSeleccionDespacho(inCrpro_codigo){
             editor:{
                 xtype:'textfield'
             }
-        },{
+        },*/{
             dataIndex:'CRFAS_TAREA_REALIZA',
             header:'Actividad',
             width:150,

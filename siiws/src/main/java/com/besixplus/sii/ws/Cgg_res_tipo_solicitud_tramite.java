@@ -698,7 +698,7 @@ NO
 
 			//Almacenamos o Modificamos los adjuntos
 			SiiDataSaver attachmentSaver = null;
-			if(inCrtst_adjunto!=null && inCrtst_adjunto.length()>0) {
+			if(inCrtst_adjunto!=null && inCrtst_adjunto.length()>2) {
 				Type filesListType = new TypeToken<ArrayList<SiiModelFile>>() {}.getType();
 				List<SiiModelFile> files = (List<SiiModelFile>) new Gson().fromJson(inCrtst_adjunto,filesListType);
 				attachmentSaver = new SiiDataSaver(con,tmpRequest.getUserPrincipal().getName(),"Cgg_res_tramite","crtst_codigo='"+inCrtst_codigo+"'",files);

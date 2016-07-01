@@ -1,13 +1,15 @@
 package com.besixplus.sii.ws;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+import com.besixplus.sii.db.ManagerConnection;
+import com.besixplus.sii.i18n.Messages;
+import com.besixplus.sii.misc.CGGEnumerators;
+import com.besixplus.sii.misc.CGGEnumerators.*;
+import com.besixplus.sii.objects.Cgg_res_fase;
+import com.besixplus.sii.objects.Cgg_res_novedad_notificacion;
+import com.besixplus.sii.objects.Cgg_res_tramite;
+import com.besixplus.sii.objects.ServerResponse;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
@@ -23,22 +25,14 @@ import javax.xml.soap.SOAPFactory;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import com.besixplus.sii.db.ManagerConnection;
-import com.besixplus.sii.i18n.Messages;
-import com.besixplus.sii.misc.CGGEnumerators;
-import com.besixplus.sii.misc.CGGEnumerators.ESTADOATENCION;
-import com.besixplus.sii.misc.CGGEnumerators.ESTADORESPUESTA;
-import com.besixplus.sii.misc.CGGEnumerators.LONGITUDCLAVEPRIMARIA;
-import com.besixplus.sii.misc.CGGEnumerators.TIPONOVEDAD;
-import com.besixplus.sii.misc.CGGEnumerators.TIPORESPUESTA;
-import com.besixplus.sii.objects.Cgg_res_fase;
-import com.besixplus.sii.objects.Cgg_res_novedad_notificacion;
-import com.besixplus.sii.objects.Cgg_res_tramite;
-import com.besixplus.sii.objects.ServerResponse;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 
 /**
  * CLASE Cgg_res_seguimiento

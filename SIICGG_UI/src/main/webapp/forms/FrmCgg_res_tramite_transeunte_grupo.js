@@ -1372,7 +1372,7 @@ function FrmCgg_res_tramite_transeunte_grupo(INSENTENCIA_CGG_RES_TRAMITE,INRECOR
                     return NO_DATA_MESSAGE;
                 }
             }
-        }, {
+        }, /*{
             dataIndex: 'CRFAS_SUMILLA',
             header: 'Comentario/Sumilla',
             width: 150,
@@ -1380,7 +1380,7 @@ function FrmCgg_res_tramite_transeunte_grupo(INSENTENCIA_CGG_RES_TRAMITE,INRECOR
             editor: {
                 xtype: 'textfield'
             }
-        }, {
+        },*/ {
             dataIndex: 'CRFAS_TAREA_REALIZA',
             header: 'Actividad',
             width: 150,

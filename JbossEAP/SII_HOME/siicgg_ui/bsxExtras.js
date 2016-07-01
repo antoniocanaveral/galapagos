@@ -4045,7 +4045,9 @@ function Cgg_res_tramite(){
         dataIndex:'CRTRA_COMUNICADO_RADIAL',
         header:'Comunicado radial',
         width:100,
-        sortable:true
+        sortable:true,
+        hidden:true,
+        hideable:false
     },
     {
         dataIndex:'CRTRA_MOTIVO',

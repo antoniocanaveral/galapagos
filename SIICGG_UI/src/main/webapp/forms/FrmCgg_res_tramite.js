@@ -2081,7 +2081,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                 }
             }
         },
-        {
+        /*{
             dataIndex: 'CRFAS_SUMILLA',
             header: 'Comentario/Sumilla',
             width: 150,
@@ -2089,7 +2089,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
             editor: {
                 xtype: 'textfield'
             }
-        }, {
+        },*/ {
             dataIndex: 'CRFAS_TAREA_REALIZA',
             header: 'Actividad',
             width: 150,

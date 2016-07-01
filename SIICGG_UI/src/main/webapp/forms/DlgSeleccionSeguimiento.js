@@ -273,7 +273,7 @@ function DlgSeleccionSeguimiento(){
             header:'Usuario',
             width:150,
             sortable:true
-        },{
+        },/*{
             dataIndex:'CRFAS_SUMILLA',
             header:'Comentario/Sumilla',
             width:150,
@@ -281,7 +281,7 @@ function DlgSeleccionSeguimiento(){
             editor:{
                 xtype:'textfield'
             }
-        },{
+        },*/{
             dataIndex:'CRFAS_TAREA_REALIZA',
             header:'Actividad',
             width:150,

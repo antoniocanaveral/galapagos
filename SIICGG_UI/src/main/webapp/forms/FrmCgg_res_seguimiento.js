@@ -1677,7 +1677,7 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
                     }
                     ]
                 }
-            },'-',btnResolucionCgg_res_seguimiento,'-',btnAdjuntos,'->',btnCerrarCgg_res_seguimiento],
+            },'-',btnAdjuntos,'->',btnCerrarCgg_res_seguimiento],
             listeners:{
                 show:function(){
                     tpSeguimiento.activate('tpSeguimiento1');
@@ -1711,7 +1711,7 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
             minimizable:true,
             constrain:true,
             iconCls:'iconSeguimiento',
-            bbar:[btnAprobarCgg_res_seguimiento,btnNegarCgg_res_seguimiento,btnOtraAccionCgg_res_seguimiento,btnResolucionCgg_res_seguimiento,'->',btnCerrarCgg_res_seguimiento],
+            bbar:[btnAprobarCgg_res_seguimiento,btnNegarCgg_res_seguimiento,btnOtraAccionCgg_res_seguimiento,'->',btnCerrarCgg_res_seguimiento],
             listeners:{
                 show:function() {
                     $('divTramite').innerHTML = tplTramite.apply(datosTramite);
