@@ -34,7 +34,7 @@ public class SendMailJob implements Job{
 			tmpCon.close();
 			
 			for (Cgg_buzon_correo tmpCorreo : tmpCorreos) {
-				//new SendMailThread(tmpCorreo, tmpConf.getCGCNF_VALOR_CADENA()).start();
+				new SendMailThread(tmpCorreo, tmpConf.getCGCNF_VALOR_CADENA()).start();
 			}
 			
 			tmpCorreos.clear();
@@ -73,12 +73,10 @@ class SendMailThread extends Thread{
 		        	new com.besixplus.sii.db.Cgg_configuracion(tmpConf1).select(tmpCon1);		        	
 		        	tmpMessage.setFrom(new InternetAddress(tmpConf1.getCGCNF_VALOR_CADENA()));
 				} catch (SQLException e) {
-					e.printStackTrace();					
-					tmpMessage.setFrom();
+					e.printStackTrace();
 				}
 				tmpCon1.close();
-			}else			
-				tmpMessage.setFrom();
+			}
 			tmpMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(myCorreo.getCBZC_DESTINATARIO()));
 			tmpMessage.addRecipient(Message.RecipientType.CC, new InternetAddress(myEmailCC));
 			tmpMessage.setSubject(myCorreo.getCBZC_ASUNTO());

@@ -13,7 +13,8 @@ echo ""
 echo ""
 
 #MODIFICAR ESTA VARIABLE PARA SU AMBIENTE
-JBOSS_HOME="/home/advance/java/ambiente-integralGalapagos/jboss-eap-6.4"
+#JBOSS_HOME="/home/advance/java/ambiente-integralGalapagos/jboss-eap-6.4"
+JBOSS_HOME="/Users/acanaveral/Desarrollo/Advance/JbossEAP40"
 
 export ROOT_PATH=$(pwd)
 

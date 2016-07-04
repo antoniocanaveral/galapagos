@@ -3,6 +3,7 @@ package com.besixplus.sii.db;
 import com.besixplus.sii.util.Env;
 import com.besixplus.sii.util.InitParameters;
 
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -82,11 +83,19 @@ public class ManagerConnection {
 	/**OBTIENE LA SESION ESTABLECIDA A LA BASE DE DATOS
 	 * @return SESION
 	 */
-	public synchronized static Session getMailSession(){
+	public static Session getMailSession(){
 		if(MAIL_SESSION == null)
 			try {
-				MAIL_SESSION = (Session) new InitialContext().lookup("java:/Mail");
-			} catch (NamingException e) {
+				//MAIL_SESSION = (Session) new InitialContext().lookup("java:/Mail");
+				//Vamos a crear la conexion a partir de un archivo de propiedades
+				Properties props = Env.getExternalProperties("mailing/config.properties");
+				MAIL_SESSION = Session.getInstance(props, new javax.mail.Authenticator() {
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(props.getProperty("mail.username"), props.getProperty("mail.password"));
+					}
+				});
+				MAIL_SESSION.setDebug(Boolean.parseBoolean(props.getProperty("mail.debug")));
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		return MAIL_SESSION;

@@ -51,10 +51,9 @@ public class Env {
 
         return props;
     }
-
-    public static URL[] getRuleClassPath() throws EnvironmentVariableNotDefinedException, MalformedURLException {
+    public static URL[] resolveClassPath(String basePath) throws EnvironmentVariableNotDefinedException, MalformedURLException {
         List<URL> ruleFiles = new ArrayList<>();
-        File dir = new File(getHomePath()+File.separator+"rules");
+        File dir = new File(getHomePath()+File.separator+basePath);
         if(dir.isDirectory()){
             for(File item:dir.listFiles()){
                 if(item.isFile()){

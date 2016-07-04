@@ -716,7 +716,7 @@ public class Cgg_regla_validacion implements Serializable{
 
 				if(objRegla.getCRVAL_FUNCION_VALIDACION().contains("com.bmlaurus.rule")){//es una regla de java
 					String className = objRegla.getCRVAL_FUNCION_VALIDACION();
-					URLClassLoader externalClassLoader = new URLClassLoader (Env.getRuleClassPath(), this.getClass().getClassLoader());
+					URLClassLoader externalClassLoader = new URLClassLoader (Env.resolveClassPath("rules"), this.getClass().getClassLoader());
 					Class clazz = Class.forName(className,true,externalClassLoader);
 					RuleClass rule = (RuleClass) clazz.newInstance();
 					tmpResultado = rule.executeRule(objReglaMetadatos, objJSONRegla);
