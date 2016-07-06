@@ -1002,7 +1002,7 @@ function FrmCgg_res_beneficiario_transeunte(inRecordCgg_res_beneficiario,INRECOR
             var param = new SOAPClientParameters();
             var tmpEvaluacion = evaluarReglasValidacion();
             param.add('inJSON_reglas_validacion',tmpEvaluacion);
-            param.add('jsonData',jsonData);
+            param.add('jsonData',JSON.stringify(jsonData));
             var r = SOAPClient.invoke(URL_WS+'Cgg_regla_validacion' ,'ejecutarReglaTipoSolicitud',param, false, null);
 
             var validacion = Ext.util.JSON.decode(r);

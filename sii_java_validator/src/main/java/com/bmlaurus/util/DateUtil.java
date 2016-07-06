@@ -10,12 +10,9 @@ package com.bmlaurus.util;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Locale;
 
 /**
  * Clase utilitaria de fechas
@@ -29,6 +26,8 @@ public final class DateUtil {
 	 * Formato :: yyyy-MM-ddd
 	 */
 	public static String F_yyyy_MM_dd = "yyyy-MM-dd";
+	
+	public static String F_ddMMyyyy = "dd/MM/yyyy";
 	
 	public static String FECHA_11JUNIO = "2015-06-11";
 	
