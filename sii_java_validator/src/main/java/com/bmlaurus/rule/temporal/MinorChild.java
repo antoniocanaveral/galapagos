@@ -2,6 +2,7 @@ package com.bmlaurus.rule.temporal;
 
 import java.util.Date;
 
+import com.bmlaurus.rule.RuleData;
 import org.json.JSONObject;
 
 import com.besixplus.sii.objects.Cgg_regla_validacion_metadatos;
@@ -13,7 +14,7 @@ import com.bmlaurus.util.DateUtil;
 public class MinorChild implements RuleClass {
 
     @Override
-    public String executeRule(Cgg_regla_validacion_metadatos metadata, JSONObject regla) {
+    public String executeRule(Cgg_regla_validacion_metadatos metadata, JSONObject regla, RuleData ruleData) {
 
     	
         Date fechaNacimientoHijo = DateUtil.formatDate(DateUtil.F_yyyy_MM_dd, "1998-06-20");//aqui se debe llamar al servicio web para que devuelva la fecha de nacimieno del hijo

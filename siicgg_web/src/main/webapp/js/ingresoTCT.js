@@ -986,7 +986,7 @@ function loadIngresoTCT(){
 			tmpNumeroDocumento = txtNumeroDocumento.value;
 			tmpCrper_codigo = codigoPersona?codigoPersona:'';
 			tmpCusu_nombre = null;
-var arrFecha = dtFechaIngreso.value.split('/');
+			var arrFecha = dtFechaIngreso.value.split('/');
 			var fechaIngreso = arrFecha[2]+'-'+arrFecha[1]+'-'+arrFecha[0];		
 
 			tmpFechaIngreso = fechaIngreso+'T00:00:00';
@@ -996,6 +996,7 @@ var arrFecha = dtFechaIngreso.value.split('/');
             var param = new SOAPClientParameters();
 			var jsonevalualRegla = evaluarReglasValidacion(objReglasValidacion);			
             param.add('inJSON_reglas_validacion',jsonevalualRegla);
+			param.add('jsonData',null);
             SOAPClient.invoke(URL_WS+'PublicWS/Cgg_regla_validacion' ,'ejecutarReglaTipoSolicitud',param, true, CallBackCgg_regla_validacion);
     }
 	setHeightForm();

@@ -1715,6 +1715,7 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
             objReglasValidacion  = Ext.decode(tmpObjReglasValidacion);
             var param = new SOAPClientParameters();
             param.add('inJSON_reglas_validacion',evaluarReglasValidacion(objReglasValidacion));
+            param.add('jsonData',null);
             SOAPClient.invoke(URL_WS+'Cgg_regla_validacion' ,'ejecutarReglaTipoSolicitud',param, true, CallBackCgg_regla_validacion);
         }catch(inErr){
             Ext.MsgPopup.msg(tituloCgg_tct_registro, "No se ha podido validar la informaci\u00f3n a almacenar.\nError:"+inErr);

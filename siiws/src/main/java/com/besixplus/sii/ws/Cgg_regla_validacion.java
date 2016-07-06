@@ -6,6 +6,8 @@ import com.besixplus.sii.objects.Cgg_regla_validacion_metadatos;
 import com.besixplus.sii.util.Env;
 import com.bmlaurus.exception.EnvironmentVariableNotDefinedException;
 import com.bmlaurus.rule.RuleClass;
+import com.bmlaurus.rule.RuleData;
+import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -619,9 +621,10 @@ public class Cgg_regla_validacion implements Serializable{
 	 */
 	@WebMethod
 	public String ejecutarReglaTipoSolicitud(		
-			@WebParam(name="inJSON_reglas_validacion")String inJSON_reglas_validacion
+			@WebParam(name="inJSON_reglas_validacion")String inJSON_reglas_validacion,
+			@WebParam(name="jsonData")String jsonData
 	) throws SOAPException{
-		return ejecutarReglaTipoSolicitudLocal(inJSON_reglas_validacion);
+		return ejecutarReglaTipoSolicitudLocal(inJSON_reglas_validacion, jsonData);
 	}
 
 	/** ESTABLECE LAS REGLAS DE VALIDACIONES.
@@ -693,7 +696,8 @@ public class Cgg_regla_validacion implements Serializable{
 	 * @throws SOAPException 
 	 */
 	public String ejecutarReglaTipoSolicitudLocal(		
-			String inJSON_reglas_validacion
+			String inJSON_reglas_validacion,
+			String jsonData
 	) throws SOAPException{
 		
 		JSONArray arrayJSONRegla = null;
@@ -713,13 +717,22 @@ public class Cgg_regla_validacion implements Serializable{
 				objRegla.setCRVAL_FUNCION_VALIDACION(objJSONRegla.getString("CRVAL_FUNCION_VALIDACION"));
 				Cgg_regla_validacion_metadatos objReglaMetadatos =  new Cgg_regla_validacion_metadatos();
 				objReglaMetadatos = new com.besixplus.sii.db.Cgg_regla_validacion(objRegla).selectReglaMetadatos(con);
+				RuleData jsonRecord = null;
+				try{
+					if(jsonData!=null){
+						Gson parser = new Gson();
+						jsonRecord = parser.fromJson(jsonData,RuleData.class);
+					}
+				}catch (Exception e){
+					e.printStackTrace();
+				}
 
 				if(objRegla.getCRVAL_FUNCION_VALIDACION().contains("com.bmlaurus.rule")){//es una regla de java
 					String className = objRegla.getCRVAL_FUNCION_VALIDACION();
 					URLClassLoader externalClassLoader = new URLClassLoader (Env.resolveClassPath("rules"), this.getClass().getClassLoader());
 					Class clazz = Class.forName(className,true,externalClassLoader);
 					RuleClass rule = (RuleClass) clazz.newInstance();
-					tmpResultado = rule.executeRule(objReglaMetadatos, objJSONRegla);
+					tmpResultado = rule.executeRule(objReglaMetadatos, objJSONRegla, jsonRecord);
 				}else
 					tmpResultado = 	new com.besixplus.sii.db.Cgg_regla_validacion().reglaStatement(con,objReglaMetadatos,objJSONRegla);
 

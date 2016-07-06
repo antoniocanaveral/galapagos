@@ -1118,11 +1118,18 @@ $(function() {
             }
             crperNumDocIdentific = $('#txtNumDocBeneficiario').val();
             cggCrperFechaNacimiento = $('#dtFechaNacimiento').val();
-
+            var jsonData = {
+                'CRPER_CODIGO':crperCodigo,
+                'CGGCRPER_CODIGO':cggcrperCodigo,
+                'CRPER_NUM_DOC_IDENTIFIC':crperNumDocIdentific,
+                'CRPER_FECHA_NACIMIENTO':cggCrperFechaNacimiento,
+                'CRDPT_CODIGO':crdptCodigo
+            };
             var resultadoRegla = evaluarReglaTramite();
             if(resultadoRegla!==null){
                 var param = new SOAPClientParameters();
                 param.add('inJSON_reglas_validacion',resultadoRegla);
+                param.add('jsonData',jsonData);
                 var validacion = SOAPClient.invoke(URL_WS+'Cgg_regla_validacion' ,'ejecutarReglaTipoSolicitud',param, false, null);
                 validacion = eval('('+validacion+')');
                 if(validacion.resultadoValidacion !== undefined){

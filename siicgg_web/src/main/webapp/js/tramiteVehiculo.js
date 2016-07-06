@@ -1244,11 +1244,16 @@ $(function() {
             // cggcrperCodigo = tmpRecordBeneficiario[0].CRPER_CODIGO!=undefined?tmpRecordBeneficiario[0].CRPER_CODIGO:null;
             crperNumDocIdentific = $('#txtNumDocBeneficiario').val();
             cvvehCodigo = tmpVehiculo.VEHICULO;
-
+            var jsonData = {'CVVEH_CODIGO':cvvehCodigo,
+                'CRPER_CODIGO':crperCodigo,
+                'CGGCRPER_CODIGO':cggcrperCodigo,
+                'CRPER_NUM_DOC_IDENTIFIC':crperNumDocIdentific
+            };
             var resultadoRegla = evaluarReglaTramite();
             if(resultadoRegla!==null){
                 var param = new SOAPClientParameters();
                 param.add('inJSON_reglas_validacion',resultadoRegla);
+                param.add('jsonData',jsonData);
                 var validacion = SOAPClient.invoke(URL_WS+'Cgg_regla_validacion' ,'ejecutarReglaTipoSolicitud',param, false, null);
                 validacion = eval('('+validacion+')');
                 if(validacion.resultadoValidacion !== undefined){

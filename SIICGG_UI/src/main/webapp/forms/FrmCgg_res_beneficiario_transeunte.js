@@ -993,10 +993,16 @@ function FrmCgg_res_beneficiario_transeunte(inRecordCgg_res_beneficiario,INRECOR
             crperNumDocIdentific = txtCrben_num_doc_identific.getValue();            
             cggCrperFechaNacimiento = dtCrper_fecha_nacimiento.getValue().format('d/m/Y');
             //cggcrperCodigo = txtCrben_codigo.getValue();
-
+            var jsonData = {
+                'CRPER_CODIGO':crperCodigo,
+                'CGGCRPER_CODIGO':cggcrperCodigo,
+                'CRPER_NUM_DOC_IDENTIFIC':crperNumDocIdentific,
+                'CRPER_FECHA_NACIMIENTO':cggCrperFechaNacimiento
+            };
             var param = new SOAPClientParameters();
             var tmpEvaluacion = evaluarReglasValidacion();
             param.add('inJSON_reglas_validacion',tmpEvaluacion);
+            param.add('jsonData',jsonData);
             var r = SOAPClient.invoke(URL_WS+'Cgg_regla_validacion' ,'ejecutarReglaTipoSolicitud',param, false, null);
 
             var validacion = Ext.util.JSON.decode(r);

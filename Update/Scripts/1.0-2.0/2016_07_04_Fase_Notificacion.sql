@@ -85,7 +85,7 @@ BEGIN
 		ntfn_fecha_update,
 		ntfn_usuario_update
 	FROM SII.cgg_not_fase_notification
-	WHERE CGNES_ESTADO = TRUE AND
+	WHERE ntfn_estado = TRUE AND
 		CRFAS_CODIGO = in_CRFAS_CODIGO;
 	RETURN NEXT TMP_REF;
 END
@@ -133,6 +133,16 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
+
+INSERT INTO sii.cgg_not_mail(
+            ntml_codigo, ntml_name, ntml_description, ntml_subject, ntml_type,
+            ntml_body, ntml_sendheader, ntml_sendfooter, ntml_header_override,
+            ntml_footer_override, ntml_estado, ntml_fecha_insert, ntml_usuario_insert,
+            ntml_fecha_update, ntml_usuario_update)
+    VALUES (sii.f_keygen('Cgg_Not_Mail','ntml_codigo','NTML'), 'Test Mail', 'Correo de Prueba', 'Sistema Integral C.G.G.', 'html',
+            'Estimado @USER_NAME@ </br></br> Sirvase en atender el siguiente requerimiento', true, true, null,
+            null, true, current_timestamp, 'admin',
+            current_timestamp, 'admin');
 
 
 --> MIGRATION SCRIPT CONTROLLER <--

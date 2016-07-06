@@ -1,5 +1,6 @@
 package com.bmlaurus.rule.transeunte;
 
+import com.bmlaurus.rule.RuleData;
 import org.json.JSONObject;
 
 import com.besixplus.sii.objects.Cgg_regla_validacion_metadatos;
@@ -11,7 +12,7 @@ import com.bmlaurus.rule.RuleClass;
 public class ExceedTimeCategoryPasserbyReason  implements RuleClass {
 
     @Override
-    public String executeRule(Cgg_regla_validacion_metadatos metadata, JSONObject regla) {
+    public String executeRule(Cgg_regla_validacion_metadatos metadata, JSONObject regla, RuleData ruleData) {
     	return "true";
     }
 

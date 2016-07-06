@@ -970,34 +970,45 @@ function FrmCgg_res_fase(INSENTENCIA_CGG_RES_FASE,INRECORD_PROCESO_FASE,INRECORD
         }
     });
 
-    var dsDestinatarios = [['AUSP','Auspiciante'],['BENF','Beneficiario'], ['USUA','Funcionario Fase'], ['GOB','Gobierno de Galápagos']];
+    var dsDestinatarios = [['AUSP','Auspiciante'],['BENF','Beneficiario'], ['USUA','Funcionario Fase'], ['GOB','Gobierno de Gal\u00F1pagos']];
     var dsMensajes = new Ext.data.Store({
         proxy:new Ext.ux.bsx.SoapProxy({
             url:URL_WS+"Cgg_not_mail",
             method:"selectAll"
         }),
-        remoteSort:true,
+        remoteSort:false,
         reader:new Ext.data.JsonReader({},[
             {
-                name:'NTML_CODIGO'
+                name:'ntml_codigo'
             },
 
             {
-                name:'NTML_NOMBRE'
+                name:'ntml_name'
             },
 
             {
-                name:'NTML_DESCRIPCION'
+                name:'ntml_description'
             }
         ]),
-        baseParams:{
+        listeners:{
+            load:function(){
+                dsMensajes.sort('ntml_name','ASC');
+            }
         }
     });
+    dsMensajes.load();
     var cmbMensajes = new Ext.form.ComboBox({
         id:"cmbMensajes",
         store:dsMensajes,
         mode: 'local',
-        forceSelection:true
+        forceSelection:true,
+        displayField:'ntml_name',
+        typeAhead: true,
+        triggerAction:'all',
+        emptyText:'Seleccione un Mensaje',
+        selectOnFocus:true,
+        tpl: '<tpl for="."><div ext:qtip="{ntml_description}" class="x-combo-list-item">{ntml_name}</div></tpl>',
+        valueField:'ntml_codigo'
     });
     var cmbDestinatarios = new Ext.form.ComboBox({
         id:"cmbDestinatarios",
@@ -1030,7 +1041,19 @@ function FrmCgg_res_fase(INSENTENCIA_CGG_RES_FASE,INRECORD_PROCESO_FASE,INRECORD
             header:'Mensaje',
             width:400,
             sortable:true,
-            editor:cmbMensajes
+            editor:cmbMensajes,
+            renderer:function(inNtml_codigo){
+                var i =0;
+                var result = 'no datos';
+                for(i=0;i<dsMensajes.getCount();i++){
+                    var rRequisito = dsMensajes.getAt(i);
+                    if(rRequisito.get('ntml_codigo') == inNtml_codigo){
+                        result = rRequisito.get('ntml_name');
+                        break;
+                    }
+                }
+                return result;
+            }
         },
 
         {
@@ -1093,7 +1116,7 @@ function FrmCgg_res_fase(INSENTENCIA_CGG_RES_FASE,INRECORD_PROCESO_FASE,INRECORD
         tbar: [{
             // xtype:'button',
             iconCls:'iconNuevo',
-            tooltip:'Agregar notificación',
+            tooltip:'Agregar notificaci\u00F3n',
             handler : function(){ // Agrego filas
                 var tmpRecordCriterio = grdCgg_res_fase_notificacion.getStore().recordType;
                 reNotification.stopEditing();
@@ -1112,7 +1135,7 @@ function FrmCgg_res_fase(INSENTENCIA_CGG_RES_FASE,INRECORD_PROCESO_FASE,INRECORD
             {
                 xtype:'button',
                 iconCls:'iconEliminar',
-                tooltip:'Eliminar requisito de fase',
+                tooltip:'Eliminar notificaci\u00F3n',
                 handler : function(){ // Agrego filas
                     if (grdCgg_res_fase_notificacion.getSelectionModel().getSelected().get('CRFAS_CODIGO') != 'KEYGEN')
                     {
@@ -1131,7 +1154,7 @@ function FrmCgg_res_fase(INSENTENCIA_CGG_RES_FASE,INRECORD_PROCESO_FASE,INRECORD
                                         }else{
                                             Ext.Msg.show({
                                                 title:tituloCgg_res_fase,
-                                                msg: 'La informaci\u00f3n de la notificación no ha podido ser eliminada.',
+                                                msg: 'La informaci\u00f3n de la notificaci\u00F3n no ha podido ser eliminada.',
                                                 buttons: Ext.Msg.OK,
                                                 icon: Ext.MessageBox.ERROR
                                             });
@@ -1458,7 +1481,11 @@ function FrmCgg_res_fase(INSENTENCIA_CGG_RES_FASE,INRECORD_PROCESO_FASE,INRECORD
                     format:TypeFormat.JSON
                 }
             });
-
+            gsCgg_not_fase_notification.reload({
+                params:{
+                    inCrfas_codigo:inRecordCgg_res_fase['CRFAS_CODIGO']
+                }
+            });
         }
     }
     /**

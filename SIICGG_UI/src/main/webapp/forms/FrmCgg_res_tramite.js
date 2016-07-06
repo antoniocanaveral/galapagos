@@ -3145,7 +3145,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
 
         pnlFrmCgg_res_tramitePrincipal.getEl().mask('Validando...', 'x-mask-loading');
         try{
-
+            var jsonData = {};
             try{
                 crtstCodigo = tmpTipoSolicitud.get('CRTST_CODIGO');
                 crperCodigo = (tmpAuspiciante)?tmpAuspiciante.get('CRPER_CODIGO'):null;
@@ -3153,12 +3153,20 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                 crperNumDocIdentific = rBeneficiario.get('CRPER_NUM_DOC_IDENTIFIC');
                 cggCrperFechaNacimiento = rBeneficiario.get('CRPER_FECHA_NACIMIENTO');                
                 crdptCodigo = tmpDepositoGarantia.data.CRDPT_CODIGO;
+                jsonData = {'CRTST_CODIGO':crtstCodigo,
+                            'CRPER_CODIGO':crperCodigo,
+                            'CGGCRPER_CODIGO':cggcrperCodigo,
+                            'CRPER_NUM_DOC_IDENTIFIC':crperNumDocIdentific,
+                            'CRPER_FECHA_NACIMIENTO':cggCrperFechaNacimiento,
+                            'CRDPT_CODIGO':crdptCodigo
+                            };
             }catch(inErr){}
 
             var resultadoRegla = evaluarReglaTramite();
             if(resultadoRegla!==null){
                 var param = new SOAPClientParameters();
                 param.add('inJSON_reglas_validacion',resultadoRegla);
+                param.add('jsonData',jsonData);
                 var validacion = SOAPClient.invoke(URL_WS+'Cgg_regla_validacion' ,'ejecutarReglaTipoSolicitud',param, false, null);
                 validacion = Ext.util.JSON.decode(validacion);
                 if(validacion.resultadoValidacion !== undefined){

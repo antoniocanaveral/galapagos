@@ -298,6 +298,7 @@ function FrmCgg_tct_adjunto_csv(inDesktop) {
                  objReglasValidacion=Ext.encode(objReglasValidacion);
                  var param = new SOAPClientParameters();
                  param.add('inJSON_reglas_validacion',objReglasValidacion);
+                 param.add('jsonData',null);
                  SOAPClient.invoke(URL_WS+'Cgg_regla_validacion' ,'ejecutarReglaTipoSolicitud',param, true, validarReglas);
                  }catch(inErr){
                  Ext.MsgPopup.msg("Error", "No se ha podido validar la informaci\u00f3n a almacenar.\nError:"+inErr);

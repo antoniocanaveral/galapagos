@@ -11,5 +11,5 @@ public interface RuleClass {
     /**
      * @return String false,Message | false | true,Message | true
      * */
-    String executeRule(Cgg_regla_validacion_metadatos metadata, JSONObject regla);
+    String executeRule(Cgg_regla_validacion_metadatos metadata, JSONObject regla, RuleData ruleData);
 }
