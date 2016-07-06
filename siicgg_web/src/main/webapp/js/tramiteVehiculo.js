@@ -1253,7 +1253,7 @@ $(function() {
             if(resultadoRegla!==null){
                 var param = new SOAPClientParameters();
                 param.add('inJSON_reglas_validacion',resultadoRegla);
-                param.add('jsonData',jsonData);
+                param.add('jsonData',JSON.stringify(jsonData));
                 var validacion = SOAPClient.invoke(URL_WS+'Cgg_regla_validacion' ,'ejecutarReglaTipoSolicitud',param, false, null);
                 validacion = eval('('+validacion+')');
                 if(validacion.resultadoValidacion !== undefined){

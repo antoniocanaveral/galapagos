@@ -995,7 +995,7 @@ function loadIngresoTCT(){
             objReglasValidacion  = eval('('+tmpObjReglasValidacion+')');/*Ext.decode(tmpObjReglasValidacion);*/
             var param = new SOAPClientParameters();
 			var jsonevalualRegla = evaluarReglasValidacion(objReglasValidacion);			
-            param.add('inJSON_reglas_validacion',jsonevalualRegla);
+            param.add('inJSON_reglas_validacion',JSON.stringify(jsonevalualRegla));
 			param.add('jsonData',null);
             SOAPClient.invoke(URL_WS+'PublicWS/Cgg_regla_validacion' ,'ejecutarReglaTipoSolicitud',param, true, CallBackCgg_regla_validacion);
     }
