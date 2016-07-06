@@ -3,6 +3,7 @@ package com.bmlaurus.rule;
 import java.util.Date;
 
 import com.besixplus.sii.objects.Cgg_regla_validacion_metadatos;
+import com.bmlaurus.rule.RuleClass;
 import com.bmlaurus.util.DateUtil;
 
 import org.json.JSONObject;
@@ -13,7 +14,9 @@ import org.json.JSONObject;
 public class MarriedBefore10YearsSponsorDiedValidator implements RuleClass {
 
     @Override
-    public String executeRule(Cgg_regla_validacion_metadatos metadata, JSONObject regla, RuleData ruleData) {
+    public String executeRule(Cgg_regla_validacion_metadatos metadata,
+			JSONObject regla, RuleData ruleData) {
+    	
         
     	 boolean auspicianteFallecido = true; //llamar al servicio para validar si el auspiciante ha fallecido
 		 
