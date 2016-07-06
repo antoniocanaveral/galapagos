@@ -97,15 +97,14 @@ public class Cgg_not_fase_notificacion implements Serializable {
     ){
         String outResult = "true";
         try{
-            CallableStatement stmInsert = inConnection.prepareCall("{ ? = call sii.f_cgg_not_fase_notification_insert(?, ?, ?, ?, ?, ?, ?) }");
-            stmInsert.registerOutParameter(1, java.sql.Types.VARCHAR);
-            stmInsert.setString(2, this.getCgg_not_fase_notificacion().getCrpro_codigo());
-            stmInsert.setString(3, this.getCgg_not_fase_notificacion().getCrfas_codigo());
-            stmInsert.setString(4, this.getCgg_not_fase_notificacion().getNtml_codigo());
-            stmInsert.setString(5, this.getCgg_not_fase_notificacion().getNtfn_destinatario());
-            stmInsert.setBoolean(6, this.getCgg_not_fase_notificacion().isNtfn_estado());
-            stmInsert.setString(7, this.getCgg_not_fase_notificacion().getNtfn_usuario_insert());
-            stmInsert.setString(8, this.getCgg_not_fase_notificacion().getNtfn_usuario_update());
+            CallableStatement stmInsert = inConnection.prepareCall("{ call sii.f_cgg_not_fase_notification_insert(?, ?, ?, ?, ?, ?, ?) }");
+            stmInsert.setString(1, this.getCgg_not_fase_notificacion().getCrpro_codigo());
+            stmInsert.setString(2, this.getCgg_not_fase_notificacion().getCrfas_codigo());
+            stmInsert.setString(3, this.getCgg_not_fase_notificacion().getNtml_codigo());
+            stmInsert.setString(4, this.getCgg_not_fase_notificacion().getNtfn_destinatario());
+            stmInsert.setBoolean(5, this.getCgg_not_fase_notificacion().isNtfn_estado());
+            stmInsert.setString(6, this.getCgg_not_fase_notificacion().getNtfn_usuario_insert());
+            stmInsert.setString(7, this.getCgg_not_fase_notificacion().getNtfn_usuario_update());
             stmInsert.execute();
             stmInsert.close();
         }catch(SQLException e){

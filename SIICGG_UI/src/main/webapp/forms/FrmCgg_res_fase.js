@@ -954,18 +954,10 @@ function FrmCgg_res_fase(INSENTENCIA_CGG_RES_FASE,INRECORD_PROCESO_FASE,INRECORD
     var reNotification= new Ext.ux.grid.RowEditor({
         saveText: 'Aceptar',
         cancelText:'Cancelar',
-        listeners:{
-            validateedit:function(inRowEditor,inObject,inRecord,inRowIndex){
+        listeners: {
+            validateedit: function (inRowEditor, inObject, inRecord, inRowIndex) {
             },
-            canceledit:function(inRowEditor,inFlag){
-                var inRecord= grdCgg_res_fase_notificacion.getStore().getAt(0);
-                if(inRecord.get('CJCRI_CODIGO') == 'KEYGEN')
-                {
-                    if (inRecord.get('CJCRI_REQUERIMIENTO').length == 0)
-                    {
-                        grdCgg_res_fase_notificacion.getStore().remove(inRecord);
-                    }
-                }
+            canceledit: function (inRowEditor, inFlag) {
             }
         }
     });
@@ -1061,7 +1053,19 @@ function FrmCgg_res_fase(INSENTENCIA_CGG_RES_FASE,INRECORD_PROCESO_FASE,INRECORD
             header:'Destinatario',
             width:400,
             sortable:true,
-            editor: cmbDestinatarios
+            editor: cmbDestinatarios,
+            renderer:function(inNtml_destinatario){
+                var i =0;
+                var result = 'no datos';
+                for(i=0;i<dsDestinatarios.getCount();i++){
+                    var rRequisito = dsDestinatarios.getAt(i);
+                    if(rRequisito.get(0) == inNtml_destinatario){
+                        result = rRequisito.get(1);
+                        break;
+                    }
+                }
+                return result;
+            }
         }]);
 
     //Agrupacion de registros de la tabla Cgg_pra_contacto por un campo especifico.*/

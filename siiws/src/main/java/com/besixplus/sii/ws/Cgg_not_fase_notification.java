@@ -62,7 +62,7 @@ public class Cgg_not_fase_notification implements Serializable {
             return inException.getMessage();
         }
         if (tmpObj != null)
-            return tmpFormat.getData().toString();
+            return tmpFormat.getData().toString().toUpperCase();
         return null;
     }
 

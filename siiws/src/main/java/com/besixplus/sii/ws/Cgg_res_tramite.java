@@ -31,6 +31,7 @@ import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
 
+import com.besixplus.sii.mail.ProcessMail;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -953,6 +954,8 @@ VALORES:
 
 							flagSeguimientoPadre = new com.besixplus.sii.db.Cgg_res_seguimiento(objSeguimientoPadre).insert(objConn);
 							//log+="-9 Seguimiento padre";
+							ProcessMail mailer = new ProcessMail(objSeguimientoPadre);
+							mailer.start();
 
 							if(flagSeguimientoPadre.equalsIgnoreCase("true")==true){
 

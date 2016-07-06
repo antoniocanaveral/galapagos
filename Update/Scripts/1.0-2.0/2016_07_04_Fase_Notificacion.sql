@@ -67,7 +67,7 @@ CREATE TABLE sii.cgg_not_fase_notification
 ALTER TABLE sii.cgg_not_fase_notification ADD CONSTRAINT cgg_not_fase_notification_pk PRIMARY KEY (crpro_codigo, crfas_codigo, ntml_codigo, ntfn_destinatario);
 
 
-CREATE OR REPLACE FUNCTION f_cgg_not_fase_notification_select(in_CRFAS_CODIGO character varying)
+CREATE OR REPLACE FUNCTION sii.f_cgg_not_fase_notification_select(in_CRFAS_CODIGO character varying)
   RETURNS SETOF refcursor AS
 $BODY$
 DECLARE
@@ -94,7 +94,7 @@ $BODY$
   COST 100
   ROWS 1000;
 
-CREATE OR REPLACE FUNCTION f_cgg_not_fase_notification_delete(in_crpro_codigo character varying,in_crfas_codigo character varying,
+CREATE OR REPLACE FUNCTION sii.f_cgg_not_fase_notification_delete(in_crpro_codigo character varying,in_crfas_codigo character varying,
           in_ntml_codigo character varying,in_ntfn_destinatario character varying)
   RETURNS void AS
 $BODY$
@@ -110,7 +110,7 @@ $BODY$
   COST 100;
 
 
-CREATE OR REPLACE FUNCTION f_cgg_not_fase_notification_insert(in_crpro_codigo character varying,in_crfas_codigo character varying,
+CREATE OR REPLACE FUNCTION sii.f_cgg_not_fase_notification_insert(in_crpro_codigo character varying,in_crfas_codigo character varying,
           in_ntml_codigo character varying,in_ntfn_destinatario character varying, in_ntfn_estado boolean,
           in_ntfn_usuario_update character varying,in_ntfn_usuario_insert character varying)
   RETURNS void AS

@@ -227,11 +227,7 @@ public class Cgg_res_fase implements Serializable{
 						res = String.valueOf(new com.besixplus.sii.db.Cgg_jur_criterio(objFaseCriterio).insert(con));
 					}
 					if (res.equalsIgnoreCase("true")==true)
-					{
 						con.commit();
-						con.setAutoCommit(true);
-						con.close();
-					}
 
 					//Insert Mensajes
 					org.json.JSONArray objNotificacionJSON = new org.json.JSONArray(inFaseNotificacion_JSON);
@@ -622,11 +618,7 @@ public class Cgg_res_fase implements Serializable{
 
 					}
 					if (res.equalsIgnoreCase("true")==true)
-					{
 						con.commit();
-						con.setAutoCommit(true);
-						con.close();
-					}
 
 					//Insert Mensajes
 					org.json.JSONArray objNotificacionJSON = new org.json.JSONArray(inFaseNotificacion_JSON);
