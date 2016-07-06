@@ -1,25 +1,6 @@
 package com.besixplus.sii.servlets;
 
-import java.awt.print.Printable;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Iterator;
-import java.util.List;
-import java.util.StringTokenizer;
-
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.besixplus.sii.objects.OperacionValidacion;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -27,12 +8,20 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.besixplus.sii.db.Cgg_operacion_validacion;
-import com.besixplus.sii.db.ManagerConnection;
-import com.besixplus.sii.objects.Cgg_regla_validacion;
-import com.besixplus.sii.objects.Cgg_regla_validacion_metadatos;
-import com.besixplus.sii.objects.Cgg_res_adjunto;
-import com.besixplus.sii.objects.OperacionValidacion;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
 
 public class Cgg_tct_ingreso_salida_csv extends HttpServlet implements Serializable{
 	private static final long serialVersionUID = 910421694;
@@ -143,7 +132,7 @@ public class Cgg_tct_ingreso_salida_csv extends HttpServlet implements Serializa
 
 											arrayJSONRegla.getJSONObject(i).put("CRTSE_CAMPO_EVALUACION",arrayJSONParams.toString());
 										}
-										resultRegla = new com.besixplus.sii.ws.Cgg_regla_validacion().ejecutarReglaTipoSolicitudLocal(arrayJSONRegla.toString());
+										resultRegla = new com.besixplus.sii.ws.Cgg_regla_validacion().ejecutarReglaTipoSolicitudLocal(arrayJSONRegla.toString(),null);
 										
 									}
 									catch (Exception e) {
@@ -239,7 +228,7 @@ public class Cgg_tct_ingreso_salida_csv extends HttpServlet implements Serializa
 
 											arrayJSONRegla.getJSONObject(i).put("CRTSE_CAMPO_EVALUACION",arrayJSONParams.toString());
 										}
-										resultRegla = new com.besixplus.sii.ws.Cgg_regla_validacion().ejecutarReglaTipoSolicitudLocal(arrayJSONRegla.toString());
+										resultRegla = new com.besixplus.sii.ws.Cgg_regla_validacion().ejecutarReglaTipoSolicitudLocal(arrayJSONRegla.toString(),null);
 										
 									}
 									catch (Exception e) {

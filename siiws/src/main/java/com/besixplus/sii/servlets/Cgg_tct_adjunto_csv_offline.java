@@ -1,6 +1,17 @@
 package com.besixplus.sii.servlets;
 
-import java.awt.print.Printable;
+import com.besixplus.sii.objects.OperacionValidacion;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,26 +24,6 @@ import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
-
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import com.besixplus.sii.db.Cgg_operacion_validacion;
-import com.besixplus.sii.db.ManagerConnection;
-import com.besixplus.sii.objects.Cgg_regla_validacion;
-import com.besixplus.sii.objects.Cgg_regla_validacion_metadatos;
-import com.besixplus.sii.objects.Cgg_res_adjunto;
-import com.besixplus.sii.objects.OperacionValidacion;
 
 public class Cgg_tct_adjunto_csv_offline extends HttpServlet implements Serializable{
 	private static final long serialVersionUID = 910421694;
@@ -198,7 +189,7 @@ public class Cgg_tct_adjunto_csv_offline extends HttpServlet implements Serializ
 										}
 										if (!objOperacionValidacion.getPersona().equals("false"))
 										{
-											resultRegla = new com.besixplus.sii.ws.Cgg_regla_validacion().ejecutarReglaTipoSolicitudLocal(arrayJSONRegla.toString());
+											resultRegla = new com.besixplus.sii.ws.Cgg_regla_validacion().ejecutarReglaTipoSolicitudLocal(arrayJSONRegla.toString(),null);
 										}
 										else
 										{

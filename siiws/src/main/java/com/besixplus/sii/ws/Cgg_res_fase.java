@@ -233,20 +233,22 @@ public class Cgg_res_fase implements Serializable{
 						con.close();
 					}
 
+					//Insert Mensajes
 					org.json.JSONArray objNotificacionJSON = new org.json.JSONArray(inFaseNotificacion_JSON);
 					if (objNotificacionJSON.length()>0)
 						res = "false";
-					for (int i = 0 ; i < objCriterioJSON.length(); i++){
+					for (int i = 0 ; i < objNotificacionJSON.length(); i++){
 						com.besixplus.sii.objects.Cgg_not_fase_notificacion objFaseNotificacion = new com.besixplus.sii.objects.Cgg_not_fase_notificacion();
 						objFaseNotificacion.setCrpro_codigo(obj.getCRPRO_CODIGO());
 						objFaseNotificacion.setCrfas_codigo(obj.getCRFAS_CODIGO());
-						objFaseNotificacion.setNtml_codigo(((org.json.JSONObject)objCriterioJSON.get(i)).get("NTML_CODIGO").toString());
-						objFaseNotificacion.setNtfn_destinatario(((org.json.JSONObject)objCriterioJSON.get(i)).get("NTFN_DESTINATARIO").toString());
+						objFaseNotificacion.setNtml_codigo(((org.json.JSONObject)objNotificacionJSON.get(i)).get("NTML_CODIGO").toString());
+						objFaseNotificacion.setNtfn_destinatario(((org.json.JSONObject)objNotificacionJSON.get(i)).get("NTFN_DESTINATARIO").toString());
 						objFaseNotificacion.setNtfn_estado(true);
 						objFaseNotificacion.setNtfn_usuario_insert(tmpRequest.getUserPrincipal().getName());
 						objFaseNotificacion.setNtfn_usuario_update(tmpRequest.getUserPrincipal().getName());
 						res = String.valueOf(new com.besixplus.sii.db.Cgg_not_fase_notificacion(objFaseNotificacion).insert(con));
 					}
+
 					if (res.equalsIgnoreCase("true")==true){
 						con.commit();
 						con.setAutoCommit(true);
@@ -630,12 +632,12 @@ public class Cgg_res_fase implements Serializable{
 					org.json.JSONArray objNotificacionJSON = new org.json.JSONArray(inFaseNotificacion_JSON);
 					if (objNotificacionJSON.length()>0)
 						res = "false";
-					for (int i = 0 ; i < objCriterioJSON.length(); i++){
+					for (int i = 0 ; i < objNotificacionJSON.length(); i++){
 						com.besixplus.sii.objects.Cgg_not_fase_notificacion objFaseNotificacion = new com.besixplus.sii.objects.Cgg_not_fase_notificacion();
 						objFaseNotificacion.setCrpro_codigo(obj.getCRPRO_CODIGO());
 						objFaseNotificacion.setCrfas_codigo(obj.getCRFAS_CODIGO());
-						objFaseNotificacion.setNtml_codigo(((org.json.JSONObject)objCriterioJSON.get(i)).get("NTML_CODIGO").toString());
-						objFaseNotificacion.setNtfn_destinatario(((org.json.JSONObject)objCriterioJSON.get(i)).get("NTFN_DESTINATARIO").toString());
+						objFaseNotificacion.setNtml_codigo(((org.json.JSONObject)objNotificacionJSON.get(i)).get("NTML_CODIGO").toString());
+						objFaseNotificacion.setNtfn_destinatario(((org.json.JSONObject)objNotificacionJSON.get(i)).get("NTFN_DESTINATARIO").toString());
 						objFaseNotificacion.setNtfn_estado(true);
 						objFaseNotificacion.setNtfn_usuario_insert(tmpRequest.getUserPrincipal().getName());
 						objFaseNotificacion.setNtfn_usuario_update(tmpRequest.getUserPrincipal().getName());
