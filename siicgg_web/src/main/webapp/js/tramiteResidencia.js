@@ -1129,7 +1129,7 @@ $(function() {
             if(resultadoRegla!==null){
                 var param = new SOAPClientParameters();
                 param.add('inJSON_reglas_validacion',resultadoRegla);
-                param.add('jsonData',jsonData);
+                param.add('jsonData',JSON.stringify(jsonData));
                 var validacion = SOAPClient.invoke(URL_WS+'Cgg_regla_validacion' ,'ejecutarReglaTipoSolicitud',param, false, null);
                 validacion = eval('('+validacion+')');
                 if(validacion.resultadoValidacion !== undefined){
@@ -1300,6 +1300,11 @@ $(function() {
                 consultarReglaValidacion(tmpMotivoResidenciaId);
                 cargarDocumentos(tmpMotivoResidenciaId);
                 cargarRequisitos(tmpMotivoResidenciaId);
+
+                if($('#txtMotivoResidencia').val() == 'Permanente octava transitoria')
+                {
+                    alert('Para iniciar este tr\u00e1mite debe acercarse a ventanilla.\n Seleccione otra para continuar.');
+                }
 
             }
             else

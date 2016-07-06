@@ -3166,7 +3166,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
             if(resultadoRegla!==null){
                 var param = new SOAPClientParameters();
                 param.add('inJSON_reglas_validacion',resultadoRegla);
-                param.add('jsonData',jsonData);
+                param.add('jsonData',JSON.stringify(jsonData));
                 var validacion = SOAPClient.invoke(URL_WS+'Cgg_regla_validacion' ,'ejecutarReglaTipoSolicitud',param, false, null);
                 validacion = Ext.util.JSON.decode(validacion);
                 if(validacion.resultadoValidacion !== undefined){
