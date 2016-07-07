@@ -1118,8 +1118,10 @@ $(function() {
             }
             crperNumDocIdentific = $('#txtNumDocBeneficiario').val();
             cggCrperFechaNacimiento = $('#dtFechaNacimiento').val();
+            var crdidCodigo = $('#cbxTipoDocumentoBeneficiario').val();
             var jsonData = {
                 'CRPER_CODIGO':crperCodigo,
+                'CRDID_CODIGO':crdidCodigo,
                 'CGGCRPER_CODIGO':cggcrperCodigo,
                 'CRPER_NUM_DOC_IDENTIFIC':crperNumDocIdentific,
                 'CRPER_FECHA_NACIMIENTO':cggCrperFechaNacimiento,

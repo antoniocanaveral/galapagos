@@ -3151,9 +3151,11 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                 crperCodigo = (tmpAuspiciante)?tmpAuspiciante.get('CRPER_CODIGO'):null;
                 cggcrperCodigo = (rBeneficiario)?rBeneficiario.get('CRPER_CODIGO'):null;
                 crperNumDocIdentific = rBeneficiario.get('CRPER_NUM_DOC_IDENTIFIC');
-                cggCrperFechaNacimiento = rBeneficiario.get('CRPER_FECHA_NACIMIENTO');                
+                cggCrperFechaNacimiento = rBeneficiario.get('CRPER_FECHA_NACIMIENTO');
+                var crdidCodigo = rBeneficiario.get('CRDID_CODIGO');
                 //crdptCodigo = tmpDepositoGarantia.data.CRDPT_CODIGO;
                 jsonData = {'CRTST_CODIGO':crtstCodigo,
+                            'CRDID_CODIGO':crdidCodigo,
                             'CRPER_CODIGO':crperCodigo,
                             'CGGCRPER_CODIGO':cggcrperCodigo,
                             'CRPER_NUM_DOC_IDENTIFIC':crperNumDocIdentific,
