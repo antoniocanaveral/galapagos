@@ -22,6 +22,8 @@ public class RuleData implements Serializable {
 
     private String CVVEH_CODIGO; //Código de Vehículo
 
+    private String CRDID_CODIGO; //Código del tipo de identificación del Beneficiario. Puede venir nulo
+
     public String getCRTST_CODIGO() {
         return CRTST_CODIGO;
     }
@@ -76,5 +78,13 @@ public class RuleData implements Serializable {
 
     public void setCVVEH_CODIGO(String CVVEH_CODIGO) {
         this.CVVEH_CODIGO = CVVEH_CODIGO;
+    }
+
+    public String getCRDID_CODIGO() {
+        return CRDID_CODIGO;
+    }
+
+    public void setCRDID_CODIGO(String CRDID_CODIGO) {
+        this.CRDID_CODIGO = CRDID_CODIGO;
     }
 }
