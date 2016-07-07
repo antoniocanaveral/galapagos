@@ -2,11 +2,9 @@ package com.bmlaurus.rule;
 
 
 
-import com.bmlaurus.ws.dinardap.DinardapService;
-import org.json.JSONObject;
-
 import com.besixplus.sii.objects.Cgg_regla_validacion_metadatos;
 import com.bmlaurus.ws.dinardap.RegistroCivil;
+import org.json.JSONObject;
 
 public class RegisteredIdentificationBeneficiary implements RuleClass {
 
@@ -18,8 +16,11 @@ public class RegisteredIdentificationBeneficiary implements RuleClass {
     	   String error = regla.getString("CRVAL_SUGERENCIA");
          	
     	   RegistroCivil registroCivil = new RegistroCivil(ruleData.getCRPER_NUM_DOC_IDENTIFIC());//cedula del auspiciante
-           if(registroCivil.callServiceAsObject().equals(DinardapService.CALL_ERROR)){
-               error = (String) registroCivil.getResultMap().get(DinardapService.KEY_MENSAJE);
+           if(registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_ERROR)){
+               if(registroCivil.getResultMap()!=null)
+                   error = (String) registroCivil.getResultMap().get(RegistroCivil.KEY_MENSAJE);
+               else
+                   return "true,"+RegistroCivil.SERVICE_ERROR;
            }
           
       	    if(registroCivil.getCedula()==null || registroCivil.getCedula().trim().isEmpty()){

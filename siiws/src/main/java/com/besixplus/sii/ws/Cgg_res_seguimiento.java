@@ -8,6 +8,8 @@ import com.besixplus.sii.objects.Cgg_res_fase;
 import com.besixplus.sii.objects.Cgg_res_novedad_notificacion;
 import com.besixplus.sii.objects.Cgg_res_tramite;
 import com.besixplus.sii.objects.ServerResponse;
+import com.besixplus.sii.util.Env;
+import com.bmlaurus.rule.RulePhase;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -27,6 +29,7 @@ import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.net.URLClassLoader;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -722,17 +725,27 @@ public class Cgg_res_seguimiento implements Serializable{
 				if(outResult.equals("true")){
 					//VERIFICA SI EXISTE UNA FUNCION POR EJECUTAR
 					if(objFaseSeguimiento.getCRFAS_FUNCION_EJECUTA().trim().isEmpty()==false){
-						if (objFaseSeguimiento.getCRFAS_EJECUTA_DESPACHO()== true && inTipo_atencion == CGGEnumerators.ESTADOATENCION.DESPACHADO.getValue()){
-							tmpMsg = new com.besixplus.sii.db.Cgg_res_seguimiento().ejecutarFuncionSeguimiento(inConnection,objFaseSeguimiento.getCRFAS_FUNCION_EJECUTA(),objSeguimiento.getCRSEG_CODIGO(),inUserName);
-							if (!tmpMsg.equalsIgnoreCase("false"))
-								appResponse.setMsg(tmpMsg);
-
-						}
+						boolean runRule = false;
+						if (objFaseSeguimiento.getCRFAS_EJECUTA_DESPACHO()== true && inTipo_atencion == CGGEnumerators.ESTADOATENCION.DESPACHADO.getValue())
+							runRule=true;
 						else if(objFaseSeguimiento.getCRFAS_EJECUTA_DESPACHO()== false && inTipo_atencion == CGGEnumerators.ESTADOATENCION.DISTRIBUIDO.getValue())
-						{
-							tmpMsg = new com.besixplus.sii.db.Cgg_res_seguimiento().ejecutarFuncionSeguimiento(inConnection,objFaseSeguimiento.getCRFAS_FUNCION_EJECUTA(),objSeguimiento.getCRSEG_CODIGO(),inUserName);
-							if (!tmpMsg.equalsIgnoreCase("false"))
+							runRule=true;
+
+						if(runRule){
+							if(objFaseSeguimiento.getCRFAS_FUNCION_EJECUTA().contains("com.bmlaurus.phaserule")){//es una regla de java para fases
+								String className = objFaseSeguimiento.getCRFAS_FUNCION_EJECUTA();
+								URLClassLoader externalClassLoader = new URLClassLoader (Env.resolveClassPath("rules"), this.getClass().getClassLoader());
+								Class clazz = Class.forName(className,true,externalClassLoader);
+								RulePhase rule = (RulePhase) clazz.newInstance();
+								rule.setConnection(inConnection);
+								tmpMsg = rule.executeRule(objSeguimiento, tramite, inUserName);
+							}else{
+								tmpMsg = new com.besixplus.sii.db.Cgg_res_seguimiento().ejecutarFuncionSeguimiento(inConnection,objFaseSeguimiento.getCRFAS_FUNCION_EJECUTA(),
+										objSeguimiento.getCRSEG_CODIGO(),inUserName);
+							}
+							if (tmpMsg!=null && !tmpMsg.equalsIgnoreCase("false"))
 								appResponse.setMsg(tmpMsg);
+								//tmpResultado = 	new com.besixplus.sii.db.Cgg_regla_validacion().reglaStatement(con,objReglaMetadatos,objJSONRegla);
 						}
 					}
 				}
