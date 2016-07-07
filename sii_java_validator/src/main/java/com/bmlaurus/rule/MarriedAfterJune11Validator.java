@@ -40,23 +40,28 @@ public class MarriedAfterJune11Validator implements RuleClass {
 		}		
 		
          	
-    	   RegistroCivil registroCivil = new RegistroCivil(auspiciante.getCRPER_NUM_DOC_IDENTIFIC());//cedula del auspiciante
-           registroCivil.callServiceAsObject();
+        RegistroCivil registroCivil = new RegistroCivil(auspiciante.getCRPER_NUM_DOC_IDENTIFIC());//cedula del auspiciante
+        if(registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_ERROR)){
+            if(registroCivil.getResultMap()!=null)
+                error = (String) registroCivil.getResultMap().get(RegistroCivil.KEY_MENSAJE);
+            else
+                return "true,"+RegistroCivil.SERVICE_ERROR;
+        }else{
+        	if(registroCivil.getCedulaConyuge()==null || registroCivil.getCedulaConyuge().trim().isEmpty() 
+               		|| registroCivil.getFechaMatrimonio()==null || registroCivil.getFechaMatrimonio().trim().isEmpty()){
+          	    	 return "true,"+Constantes.MENSAJE_DATOS_NULOS;
+               }
+               
+          	    Date fechaMatrimonio = DateUtil.formatDate(DateUtil.F_ddMMyyyy, registroCivil.getFechaMatrimonio()); 
+          	 
+               if(registroCivil.getCedulaConyuge().trim().equals(ruleData.getCRPER_NUM_DOC_IDENTIFIC())){//cedula del beneficiario
+    	           	if(fechaMatrimonio.after(DateUtil.formatDate(DateUtil.F_yyyy_MM_dd, DateUtil.FECHA_11JUNIO))){
+    	           		return "true";
+    	            }
+               }
+        }
           
-      	    if(registroCivil.getCedulaConyuge()==null || registroCivil.getCedulaConyuge().trim().isEmpty() 
-           		|| registroCivil.getFechaMatrimonio()==null || registroCivil.getFechaMatrimonio().trim().isEmpty()){
-      	    	 return "true,"+Constantes.MENSAJE_DATOS_NULOS;
-           }
-           
-      	    Date fechaMatrimonio = DateUtil.formatDate(DateUtil.F_ddMMyyyy, registroCivil.getFechaMatrimonio()); 
-      	 
-           if(registroCivil.getCedulaConyuge().trim().equals(ruleData.getCRPER_NUM_DOC_IDENTIFIC())){//cedula del beneficiario
-	           	if(fechaMatrimonio.after(DateUtil.formatDate(DateUtil.F_yyyy_MM_dd, DateUtil.FECHA_11JUNIO))){
-	           		return "true";
-	            }
-           }
-           
-           return "false,"+error;
+       return "false,"+error;
         
     }
 }

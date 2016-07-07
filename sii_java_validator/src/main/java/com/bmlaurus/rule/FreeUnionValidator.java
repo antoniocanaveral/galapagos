@@ -36,19 +36,24 @@ public class FreeUnionValidator implements RuleClass {
 		}		
 		
          	
-    	RegistroCivil registroCivil = new RegistroCivil(auspiciante.getCRPER_NUM_DOC_IDENTIFIC());//cedula del auspiciante
-        registroCivil.callServiceAsObject();
+        RegistroCivil registroCivil = new RegistroCivil(auspiciante.getCRPER_NUM_DOC_IDENTIFIC());//cedula del auspiciante
+        if(registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_ERROR)){
+            if(registroCivil.getResultMap()!=null)
+                error = (String) registroCivil.getResultMap().get(RegistroCivil.KEY_MENSAJE);
+            else
+                return "true,"+RegistroCivil.SERVICE_ERROR;
+        }else{
         
-        
-        if(registroCivil.getEstadoCivil()==null || registroCivil.getEstadoCivil().trim().isEmpty() 
-         		|| registroCivil.getCedulaConyuge()==null || registroCivil.getCedulaConyuge().trim().isEmpty()){
-        	 return "true,"+Constantes.MENSAJE_DATOS_NULOS;
-   	    }
-   	 
-        if(registroCivil.getCedulaConyuge().trim().equals(ruleData.getCRPER_NUM_DOC_IDENTIFIC())){//cedula del beneficiario
-        	if(registroCivil.getEstadoCivil().equalsIgnoreCase(Constantes.UNION_DE_HECHO)){
-        		return "true";
-           	}
+        	if(registroCivil.getEstadoCivil()==null || registroCivil.getEstadoCivil().trim().isEmpty() 
+             		|| registroCivil.getCedulaConyuge()==null || registroCivil.getCedulaConyuge().trim().isEmpty()){
+            	 return "true,"+Constantes.MENSAJE_DATOS_NULOS;
+       	    }
+       	 
+            if(registroCivil.getCedulaConyuge().trim().equals(ruleData.getCRPER_NUM_DOC_IDENTIFIC())){//cedula del beneficiario
+            	if(registroCivil.getEstadoCivil().equalsIgnoreCase(Constantes.UNION_DE_HECHO)){
+            		return "true";
+               	}
+            }
         }
         
   		 return "false,"+error;

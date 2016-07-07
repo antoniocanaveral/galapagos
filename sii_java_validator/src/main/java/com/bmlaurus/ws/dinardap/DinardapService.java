@@ -39,7 +39,7 @@ public abstract class DinardapService {
 
     public static String CALL_OK    = "OK";
     public static String CALL_ERROR = "ERROR";
-    public static String SERVICE_ERROR = "No es posible establecer una coexión con el servicio";
+    public static String SERVICE_ERROR = "No es posible establecer una conexión con el servicio";
 
     protected String numeroIdentificacion;
     protected Map<String,Object> resultMap;

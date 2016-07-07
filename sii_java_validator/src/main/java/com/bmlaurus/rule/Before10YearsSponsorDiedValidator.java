@@ -37,30 +37,36 @@ public class Before10YearsSponsorDiedValidator implements RuleClass {
 			e.printStackTrace();
 		}		
 		
-         RegistroCivil registroCivil = new RegistroCivil(auspiciante.getCRPER_NUM_DOC_IDENTIFIC());//cedula del auspiciante
-         registroCivil.callServiceAsObject();
+        RegistroCivil registroCivil = new RegistroCivil(auspiciante.getCRPER_NUM_DOC_IDENTIFIC());//cedula del auspiciante
+        if(registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_ERROR)){
+	          if(registroCivil.getResultMap()!=null)
+	              error = (String) registroCivil.getResultMap().get(RegistroCivil.KEY_MENSAJE);
+	          else
+	              return "true,"+RegistroCivil.SERVICE_ERROR;
+        }else{
         
-         boolean auspicianteFallecido = false;
-         
-         if(registroCivil.getCedulaConyuge()==null || registroCivil.getCedulaConyuge().trim().isEmpty() 
-         		|| registroCivil.getFechaMatrimonio()==null || registroCivil.getFechaMatrimonio().trim().isEmpty()){
-        	 return "true,"+Constantes.MENSAJE_DATOS_NULOS;
-         }
- 	 	
- 	 	 if(registroCivil.getFechaDefuncion()!=null && !registroCivil.getFechaDefuncion().trim().isEmpty()){
- 	        	auspicianteFallecido = true;
- 	     }
- 	 	 
- 	 	 Date fechaMatrimonio = DateUtil.formatDate(DateUtil.F_ddMMyyyy, registroCivil.getFechaMatrimonio()); 
- 	 	 Date fechaDiezAnos = DateUtil.sumarAnos(fechaMatrimonio, DateUtil.ANOS);
- 	 	 Date fechaActual = new Date(); 
- 	 	 
- 	 	if(registroCivil.getCedulaConyuge().trim().equals(ruleData.getCRPER_NUM_DOC_IDENTIFIC())){//cedula del beneficiario
- 		 	if((fechaActual.before(fechaDiezAnos))
- 		 	        && auspicianteFallecido){
- 		 		return "true";
- 		 	}
- 	 	}
+        	boolean auspicianteFallecido = false;
+            
+            if(registroCivil.getCedulaConyuge()==null || registroCivil.getCedulaConyuge().trim().isEmpty() 
+            		|| registroCivil.getFechaMatrimonio()==null || registroCivil.getFechaMatrimonio().trim().isEmpty()){
+           	 return "true,"+Constantes.MENSAJE_DATOS_NULOS;
+            }
+    	 	
+    	 	 if(registroCivil.getFechaDefuncion()!=null && !registroCivil.getFechaDefuncion().trim().isEmpty()){
+    	        	auspicianteFallecido = true;
+    	     }
+    	 	 
+    	 	 Date fechaMatrimonio = DateUtil.formatDate(DateUtil.F_ddMMyyyy, registroCivil.getFechaMatrimonio()); 
+    	 	 Date fechaDiezAnos = DateUtil.sumarAnos(fechaMatrimonio, DateUtil.ANOS);
+    	 	 Date fechaActual = new Date(); 
+    	 	 
+    	 	if(registroCivil.getCedulaConyuge().trim().equals(ruleData.getCRPER_NUM_DOC_IDENTIFIC())){//cedula del beneficiario
+    		 	if((fechaActual.before(fechaDiezAnos))
+    		 	        && auspicianteFallecido){
+    		 		return "true";
+    		 	}
+    	 	}
+        }
  	 	
  	 	return "false,"+error;
     }

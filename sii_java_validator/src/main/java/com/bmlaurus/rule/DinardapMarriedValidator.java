@@ -37,19 +37,24 @@ public class DinardapMarriedValidator implements RuleClass {
 		}		
 		
          	
-    	RegistroCivil registroCivil = new RegistroCivil(auspiciante.getCRPER_NUM_DOC_IDENTIFIC());//cedula del auspiciante
-        registroCivil.callServiceAsObject();
-                    
-        if(registroCivil.getCedulaConyuge()==null || registroCivil.getCedulaConyuge().trim().isEmpty()){ 
-        	return "true,"+Constantes.MENSAJE_DATOS_NULOS;
-   	    }
+        RegistroCivil registroCivil = new RegistroCivil(auspiciante.getCRPER_NUM_DOC_IDENTIFIC());//cedula del auspiciante
+        if(registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_ERROR)){
+	          if(registroCivil.getResultMap()!=null)
+	              error = (String) registroCivil.getResultMap().get(RegistroCivil.KEY_MENSAJE);
+	          else
+	              return "true,"+RegistroCivil.SERVICE_ERROR;
+        }else{
+
+        	  if(registroCivil.getCedulaConyuge()==null || registroCivil.getCedulaConyuge().trim().isEmpty()){ 
+            	  return "true,"+Constantes.MENSAJE_DATOS_NULOS;
+       	      }
+            
+              if(registroCivil.getCedulaConyuge()!=null && registroCivil.getCedulaConyuge().trim().equals(ruleData.getCRPER_NUM_DOC_IDENTIFIC())){//cedula del beneficiario
+             	  return "true";
+              }
+        }
         
-          if(registroCivil.getCedulaConyuge()!=null && registroCivil.getCedulaConyuge().trim().equals(ruleData.getCRPER_NUM_DOC_IDENTIFIC())){//cedula del beneficiario
-         	  return "true";
-          }else{
-        	  return "false,"+error;
-          }
+        return "false,"+error;
+        
     }
-
-
 }

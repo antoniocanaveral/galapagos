@@ -18,7 +18,6 @@ public class MinorChild implements RuleClass {
 			JSONObject regla, RuleData ruleData) {
     	
         String error = regla.getString("CRVAL_SUGERENCIA");
-    
    	 
         Date fechaNacimientoHijo = DateUtil.formatDate(DateUtil.F_ddMMyyyy, ruleData.getCRPER_FECHA_NACIMIENTO());
         Date fechaTemp = DateUtil.sumarAnos(fechaNacimientoHijo, 18);

@@ -15,19 +15,19 @@ public class RegisteredIdentificationBeneficiary implements RuleClass {
     	
     	   String error = regla.getString("CRVAL_SUGERENCIA");
          	
-    	   RegistroCivil registroCivil = new RegistroCivil(ruleData.getCRPER_NUM_DOC_IDENTIFIC());//cedula del auspiciante
+    	   RegistroCivil registroCivil = new RegistroCivil(ruleData.getCRPER_NUM_DOC_IDENTIFIC());//cedula del beneficiario
            if(registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_ERROR)){
                if(registroCivil.getResultMap()!=null)
                    error = (String) registroCivil.getResultMap().get(RegistroCivil.KEY_MENSAJE);
                else
                    return "true,"+RegistroCivil.SERVICE_ERROR;
+           }else{
+        	   if(registroCivil.getCedula()!=null && !registroCivil.getCedula().trim().isEmpty()){
+         	    	return "true";
+               }   
            }
           
-      	    if(registroCivil.getCedula()==null || registroCivil.getCedula().trim().isEmpty()){
-      	    	return "false,"+error;
-            }
-      	          
-           return "true";
+           return "false,"+error;
         
     }
 }

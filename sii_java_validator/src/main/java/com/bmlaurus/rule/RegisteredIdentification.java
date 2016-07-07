@@ -32,15 +32,20 @@ public class RegisteredIdentification implements RuleClass {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}		
-         	
-    	   RegistroCivil registroCivil = new RegistroCivil(auspiciante.getCRPER_NUM_DOC_IDENTIFIC());//cedula del auspiciante
-           registroCivil.callServiceAsObject();
-          
-      	    if(registroCivil.getCedula()==null || registroCivil.getCedula().trim().isEmpty()){
-      	    	return "false,"+error;
-            }
+        
+        RegistroCivil registroCivil = new RegistroCivil(auspiciante.getCRPER_NUM_DOC_IDENTIFIC());//cedula del auspiciante
+        if(registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_ERROR)){
+            if(registroCivil.getResultMap()!=null)
+                error = (String) registroCivil.getResultMap().get(RegistroCivil.KEY_MENSAJE);
+            else
+                return "true,"+RegistroCivil.SERVICE_ERROR;
+        }else{
+        	if(registroCivil.getCedula()!=null && !registroCivil.getCedula().trim().isEmpty()){
+      	    	return "true";
+            }	
+        }
       	          
-           return "true";
+        return "false,"+error;
         
     }
 }

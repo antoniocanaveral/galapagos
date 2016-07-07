@@ -27,6 +27,8 @@ public class TenyearsApplicationResidenceValidator implements RuleClass {
     	
     	List<com.besixplus.sii.objects.Cgg_res_tramite> listaTramite = new ArrayList<com.besixplus.sii.objects.Cgg_res_tramite>();
     	 Cgg_res_persona auspiciante = new Cgg_res_persona();
+    	 String error = regla.getString("CRVAL_SUGERENCIA");
+    	 
     	try{
 			Connection con = ManagerConnection.getConnection();
 			con.setAutoCommit(false);
@@ -45,25 +47,37 @@ public class TenyearsApplicationResidenceValidator implements RuleClass {
 			e.printStackTrace();
 		}		
     	
+    	
     	if(listaTramite == null || listaTramite.isEmpty()){
      		return "false,"+Constantes.MENSAJE_SOLICITUD_TEMPORAL;
      	}
     	
     	 Date fechaRecepcion = listaTramite.get(0).getCRTRA_FECHA_RECEPCION();
+    	 
+    	 if(fechaRecepcion==null){
+    		 return "false,"+Constantes.MENSAJE_SOLICITUD_TEMPORAL_FECHA; 
+    	 }
+    	 
     	 Date fechaDiezAnos = DateUtil.sumarAnos(fechaRecepcion, DateUtil.ANOS);
  	 	 Date fechaActual = new Date(); 
  	 	 
     	if(fechaDiezAnos.before(fechaActual) || fechaDiezAnos.equals(fechaActual)){
     		return "true";
     	}else{
-    		RegistroCivil registroCivil = new RegistroCivil(auspiciante.getCRPER_NUM_DOC_IDENTIFIC());//cedula del auspiciante
-            registroCivil.callServiceAsObject();
+    	
+            RegistroCivil registroCivil = new RegistroCivil(auspiciante.getCRPER_NUM_DOC_IDENTIFIC());//cedula del auspiciante
+            if(registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_ERROR)){
+                if(registroCivil.getResultMap()!=null)
+                    error = (String) registroCivil.getResultMap().get(RegistroCivil.KEY_MENSAJE);
+                else
+                    return "true,"+RegistroCivil.SERVICE_ERROR;
+            }
             
             if(registroCivil.getFechaDefuncion()!=null && !registroCivil.getFechaDefuncion().trim().isEmpty()){
             	return "true";
             }	
- 	     }
+ 	    }
             
-    	return "false,"+regla.getString("CRVAL_SUGERENCIA");
+    	return "false,"+error;
     }
 }
