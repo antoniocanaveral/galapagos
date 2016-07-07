@@ -1,123 +1,162 @@
 table.tabla {
-	font-family: 'MS Sans Serif', Geneva, sans-serif;
-	font-size: 12px;
-	width: 100%;
-	background-color: white;
+	font-size:12px;	
+	width:100% !important;	
+	background: #fff;
+	border-collapse: collapse;
 }
-
-table.tabla thead {
-	display: block;
-	overflow: hidden;
-	border-bottom: 1px solid #E2BD7E;
-	padding-top: 0px;
-	width: 100%;
+table#grdOfertas.tabla thead{		
+	/*display:block;
+	overflow:hidden;*/
+	padding-top:0px;
+	width:100%;	
 }
-
 .cssColumnTitle {
-	display: block;
-	vertical-align: middle;
+    /*display: block;*/
+    vertical-align: middle;
 }
-
 .cssColumnTitle th {
-	padding: 3px 2px;
-	height: 22px;
-	font-size: 12px;
+    border: 1px solid #f4f4f4;
+    color: #7f969f;
+    font-size: 0.95em;
+    font-weight: 500;
+    height: 22px;
+    letter-spacing: -0.5px;
+    padding: 8px;
+    text-transform: uppercase;
+}
+table#grdOfertas.tabla tbody td:nth-child(5),
+.cssColumnTitle th:nth-child(5){
+	border-right: none;
+}
+table#grdOfertas.tabla tbody td:nth-child(6),
+.cssColumnTitle th:nth-child(6){
+	border-left: none;
+}
+.csstbody  {
+	width:100%;	
+	/*overflow: auto;
+	display:block;*/
+}
+table#grdOfertas.tabla > tbody > tr > td,
+table#grdPreguntas.tabla > tbody > tr > td {
+	padding:2px;
+	cursor:default;
+	height:auto;
+	border: 1px solid #f4f4f4;
+	padding: 2px 8px;
+}
+table#grdPreguntas.tabla > thead > tr > th {
+	display: none;
+}
+#tblPersona.tabla {
+    border: 1px solid #e0e0e0 !important;
+}
+#tblPersona.tabla thead {
+	border-bottom: 1px solid #e0e0e0;
+}
+#tblPersona th {
+    color: #7f969f;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.95em;
+}
+#tblPersona.tabla tbody {
+	display: table-row-group !important;
+	vertical-align: top !important;
+	height: auto !important;
+}
+#tblPersona.tabla tbody td {
+	height: 30px;
+	cursor: pointer;
+}
+table#grdOfertas.tabla thead th:nth-child(1),
+table#grdOfertas.tabla tbody td:nth-child(1) {
+	width: 15%;
 }
 
-.csstbody {
-	width: 100%;
-	overflow: auto;
-	display: block;
+table#grdOfertas.tabla thead th:nth-child(2),
+table#grdOfertas.tabla tbody td:nth-child(2) {
+	width: 10%;
 }
 
-table.tabla tbody td {
-	padding: 2px;
-	cursor: default;
-	height: auto;
-	/*border:1;*/ /*color:#347696;*/
-	border-bottom: 1px dashed #E2BD7E;
-	/*border:1 dashed #E2BD7E;*/
+table#grdOfertas.tabla thead th:nth-child(3),
+table#grdOfertas.tabla tbody td:nth-child(3) {
+	width: 20%;
 }
 
-table.tabla tbody tr:hover { /*background-color:#FF8000;*/
-	color: #FF8000;
+table#grdOfertas.tabla thead th:nth-child(4),
+table#grdOfertas.tabla tbody td:nth-child(4) {
+	width: 13%;
 }
 
-.templateTable {
-	width: 100%;
-	font-size: 12px;
-	text-align: left;
+table#grdOfertas.tabla thead th:nth-child(5),
+table#grdOfertas.tabla tbody td:nth-child(5) {
+	width: 30%;
 }
 
-.templateTable TH {
-	font-weight: bolder;
-	font-family: 'MS Sans Serif', Geneva, sans-serif;
+table#grdOfertas.tabla thead th:nth-child(6),
+table#grdOfertas.tabla tbody td:nth-child(6) {
+	width: 5%;
 }
 
-.templateTable Td {
-	font-family: 'MS Sans Serif', Geneva, sans-serif;
+table#grdOfertas.tabla tbody tr:hover{
+	color:#ff8000;
 }
 
-.rowSelectTable {
-	background-color: #F4E7BD
+.templateTable{
+	width:100%;
+	font-size:12px;
+	text-align:left;
 }
-
-.rowNoSelectTable {
-	background-image: url :( icon/aceptar.png )
+.templateTable TH{
+	font-weight:500;
 }
-
-table.paginBar {
-	border: 1px;
-	font-size: 9px;
-	border-top: 1px dotted #E2BD7E;
+.rowSelectTable{background-color:#f3f3f3}
+.rowNoSelectTable{background-image:url:(icon/aceptar.png)}
+table.paginBar{	
+	border:1px;
+	font-size:9px;
 }
 
 table.paginBar button {
-	width: 22px;
-	height: 22px;
-	background-repeat: no-repeat;
-	background-position: 2px 2px;
+    background-color: transparent;
+    background-position: 2px 2px;
+    background-repeat: no-repeat;
+    height: 22px;
+    margin: 0;
+    padding: 0;
+    width: 22px;
 }
-
 table.searchBar {
-	display: block;
-	overflow: hidden;
-	border-bottom: 1px dotted #E2BD7E;
-	width: 100%;
-	font-size: 11px;
+	border-spacing: 0;
+    border-collapse: collapse;
+    display: block;
+    margin: 15px 0;
+    overflow: hidden;
+    width: 100%;
 }
-
+table.searchBar td:nth-child(1) {
+    padding-left: 10px;
+}
+.cssSearch input {
+    border: 1px solid #ded8dc;
+    border-radius: 3px 0 0 3px;
+}
 table.searchBar button {
-	width: 22px;
-	height: 22px;
-	background-repeat: no-repeat;
-	background-position: 2px 2px;
+    background-color: transparent;
+    background-position: center center;
+    background-repeat: no-repeat;
+    border: 1px solid #ded8dc;
+    border-radius: 0 3px 3px 0;
+    height: 23px;
+    margin: 0 0 0 -3px;
+    padding: 0;
+    width: 23px;
 }
-
-.iconFirst {
-	background-image: url(icon/first.png) !important
-}
-
-.iconPrevious {
-	background-image: url(icon/previous.png) !important
-}
-
-.iconNext {
-	background-image: url(icon/next.png) !important
-}
-
-.iconLast {
-	background-image: url(icon/last.png) !important
-}
-
-.iconReload {
-	background-image: url(icon/reload.png) !important
-}
-
-.iconBuscar {
-	background-image: url(icon/buscar.png) !important
-}
-
-.iconLoading {
-	background-image: url(icon/loading.gif) !important
-}
+.iconFirst{background-image:url(icon/first.png) !important}
+.iconPrevious{background-image:url(icon/previous.png) !important}
+.iconNext{background-image:url(icon/next.png) !important}
+.iconLast{background-image:url(icon/last.png) !important}
+.iconReload{background-image:url(icon/reload.png) !important}
+.iconBuscar{background-image:url(icon/buscar.png) !important}
+.iconLoading{background-image:url(icon/loading.gif) !important}
