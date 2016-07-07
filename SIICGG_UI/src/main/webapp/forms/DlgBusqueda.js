@@ -40,6 +40,7 @@ function DlgBusqueda(gsBusqueda, cmBusqueda, inMultiSelect){
         store: gsBusqueda,
         displayInfo: true,
         pageSize:30,
+
         displayMsg: 'Mostrando {0} - {1} de {2}',
         temptyMsg: 'No hay informaci&oacute;n para mostrar'
     });

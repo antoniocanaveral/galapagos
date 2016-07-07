@@ -83,8 +83,14 @@ public abstract class DinardapService {
             result =  utils.getFichaGeneral(numeroIdentificacion,serviceType);
             resultMap = new Gson().fromJson(result, Map.class);
             instituciones = (Map) resultMap.get(KEY_INSTITUCIONES);
-            datosPrincipales = (Map) instituciones.get(KEY_DATOS_PRINCIPALES);
-            serviceName = (String) instituciones.get(KEY_NOMBRE);
+            if(instituciones!=null) {
+                datosPrincipales = (Map) instituciones.get(KEY_DATOS_PRINCIPALES);
+                serviceName = (String) instituciones.get(KEY_NOMBRE);
+            }else{
+                //Debe haber un error
+                System.err.println(result);
+                result = CALL_ERROR;
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
