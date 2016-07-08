@@ -954,11 +954,9 @@ VALORES:
 
 							flagSeguimientoPadre = new com.besixplus.sii.db.Cgg_res_seguimiento(objSeguimientoPadre).insert(objConn);
 							//log+="-9 Seguimiento padre";
-							ProcessMail mailer = new ProcessMail(objSeguimientoPadre);
-							mailer.start();
-
 							if(flagSeguimientoPadre.equalsIgnoreCase("true")==true){
-
+                                ProcessMail mailer = new ProcessMail(objSeguimientoPadre,obj,objFase);
+                                mailer.start();
 								if(objJsonFasesSeguimientos.length()==0){
 									//REGISTRO DE LA NOVEDAD NOTIFICACION PARA EL SEGUIMIENTO PADRE EN CASO DE SOLO GUARDADO
 									objNotificacionSeguimiento = new Cgg_res_novedad_notificacion();

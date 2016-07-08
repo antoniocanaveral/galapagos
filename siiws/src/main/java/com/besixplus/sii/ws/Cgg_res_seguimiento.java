@@ -2,6 +2,7 @@ package com.besixplus.sii.ws;
 
 import com.besixplus.sii.db.ManagerConnection;
 import com.besixplus.sii.i18n.Messages;
+import com.besixplus.sii.mail.ProcessMail;
 import com.besixplus.sii.misc.CGGEnumerators;
 import com.besixplus.sii.misc.CGGEnumerators.*;
 import com.besixplus.sii.objects.Cgg_res_fase;
@@ -733,11 +734,15 @@ public class Cgg_res_seguimiento implements Serializable{
 
 						if(runRule){
 							if(objFaseSeguimiento.getCRFAS_FUNCION_EJECUTA().contains("com.bmlaurus.phaserule")){//es una regla de java para fases
+								//Verificamos que tramite venga con datos
+								if(tramite.getCRTST_CODIGO()==null){
+									tramite.setCRTRA_CODIGO(objSeguimiento.getCRTRA_CODIGO());
+									tramite = new com.besixplus.sii.db.Cgg_res_tramite(tramite).select(inConnection);
+								}
 								String className = objFaseSeguimiento.getCRFAS_FUNCION_EJECUTA();
 								URLClassLoader externalClassLoader = new URLClassLoader (Env.resolveClassPath("rules"), this.getClass().getClassLoader());
 								Class clazz = Class.forName(className,true,externalClassLoader);
-								RulePhase rule = (RulePhase) clazz.newInstance();
-								rule.setConnection(inConnection);
+								RulePhase rule = (RulePhase) clazz.getConstructor(Connection.class).newInstance(inConnection);
 								tmpMsg = rule.executeRule(objSeguimiento, tramite, inUserName);
 							}else{
 								tmpMsg = new com.besixplus.sii.db.Cgg_res_seguimiento().ejecutarFuncionSeguimiento(inConnection,objFaseSeguimiento.getCRFAS_FUNCION_EJECUTA(),
@@ -745,7 +750,6 @@ public class Cgg_res_seguimiento implements Serializable{
 							}
 							if (tmpMsg!=null && !tmpMsg.equalsIgnoreCase("false"))
 								appResponse.setMsg(tmpMsg);
-								//tmpResultado = 	new com.besixplus.sii.db.Cgg_regla_validacion().reglaStatement(con,objReglaMetadatos,objJSONRegla);
 						}
 					}
 				}
@@ -834,7 +838,7 @@ public class Cgg_res_seguimiento implements Serializable{
 
 								//NOTIFICACION A TRAVEZ DE CORREO ELECTRONICO AL USUARIO DEL SEGUIMIENTO Q RECIBIO EL SEGUIMIENTO.
 								//TODO: IMPLEMENTAR LA NOTIFICACION POR CORREO ELECTRONICO.
-								//Notificador objNotificador = new Notificador(inMail, inAsunto, inContenido, inNombreAdjuntos, inAdjuntos)																								
+								//Notificador objNotificador = new Notificador(inMail, inAsunto, inContenido, inNombreAdjuntos, inAdjuntos)
 							}
 
 						}else{
@@ -846,7 +850,9 @@ public class Cgg_res_seguimiento implements Serializable{
 						}										
 					}
 					if(flagSeguimientoHijo.equalsIgnoreCase("true")==true){										
-						inConnection.commit();																												
+						inConnection.commit();
+						ProcessMail mailer = new ProcessMail(objSeguimiento,tramite,objFaseSeguimiento);
+						mailer.start();
 					}else{
 						outResult="NO SE PUDO ALMACENAR EL ENVIO DE SEGUIMIENTO.";
 						inConnection.rollback();

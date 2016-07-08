@@ -17,6 +17,7 @@ Documentos de Instalación de la plataforma
 [Componente]: ./doc/alfresco/Usage.md "Componentes para SII"
 [Reglas]: ./doc/Reglas.md "Reglas Java"
 [Dinardap]: ./sii_java_validator/README.md
+[Fases]: ./doc/FasesJava.md
 
 - Se creó la carpeta Update en la raíz del proyecto, para registrar los [Scripts][] de base de datos
 - Separación de los componentes comunes en el proyecto **sii_commons** utilizado por los 3 proyectos originales
@@ -32,3 +33,5 @@ Documentos de Instalación de la plataforma
 - Se permiten reglas de Java además de las actuales funciones de base de datos [Reglas][].
 - Servicio para llamadas a la Dinardap [Dinardap][]
 - Procesos Cron y Mailing con archivos de configuración externos. SII_HOME/mailing & SII_HOME/cron
+- Motor de Mensajería: Se define en cada fase el mensaje y los destinatarios a enviar. Defaults en SII_HOME/mailing/format.properties
+- Permitir funciones java en las fases. [Fases][]

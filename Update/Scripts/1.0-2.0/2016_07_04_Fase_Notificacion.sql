@@ -51,6 +51,40 @@ $BODY$
   ROWS 1000;
 
 
+CREATE OR REPLACE FUNCTION sii.f_cgg_not_mail_selectByCode(in_NTML_CODIGO character VARYING )
+  RETURNS SETOF refcursor AS
+$BODY$
+DECLARE
+	TMP_REF REFCURSOR;
+BEGIN
+  OPEN TMP_REF FOR
+	SELECT
+		ntml_codigo,
+		ntml_name,
+		ntml_description,
+		ntml_subject,
+		ntml_type,
+		ntml_body,
+		ntml_sendheader,
+		ntml_sendfooter,
+		ntml_header_override,
+		ntml_footer_override,
+		ntml_estado,
+		ntml_fecha_insert,
+		ntml_usuario_insert,
+		ntml_fecha_update,
+		ntml_usuario_update
+	FROM SII.cgg_not_mail
+	WHERE ntml_estado = TRUE
+	AND ntml_codigo = in_NTML_CODIGO;
+	RETURN NEXT TMP_REF;
+END
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100
+  ROWS 1000;
+
+
 CREATE TABLE sii.cgg_not_fase_notification
 (
    ntml_codigo character varying NOT NULL,

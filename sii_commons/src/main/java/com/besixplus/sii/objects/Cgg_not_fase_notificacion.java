@@ -8,6 +8,13 @@ import java.io.Serializable;
 public class Cgg_not_fase_notificacion implements Serializable {
 
     private static final long serialVersionUID = 6951762004707402783L;
+    //['AUSP','Auspiciante'],['BENF','Beneficiario'], ['USUA','Funcionario Fase'], ['GOB','Gobierno de Gal\u00F1pagos']];
+
+    public static final String DEST_AUSPICIANTE = "AUSP";
+    public static final String DEST_BENEFICIARIO = "BENF";
+    public static final String DEST_FUNCIONARIOFASE = "USUA";
+    public static final String DEST_GOBIERNO = "GOB";
+
 
     private String NTML_CODIGO;
     private String CRFAS_CODIGO;
