@@ -18,10 +18,17 @@ public class MinorChild implements RuleClass {
 			JSONObject regla, RuleData ruleData) {
     	
         String error = regla.getString("CRVAL_SUGERENCIA");
-   	 
-        Date fechaNacimientoHijo = DateUtil.formatDate(DateUtil.F_ddMMyyyy, ruleData.getCRPER_FECHA_NACIMIENTO());
-        Date fechaTemp = DateUtil.sumarAnos(fechaNacimientoHijo, 18);
-        System.out.println(fechaTemp);
+        Date fechaNacimientoHijo =null;
+        Date fechaTemp=null;
+        
+        try{
+	        fechaNacimientoHijo = DateUtil.formatDate(DateUtil.F_ddMMyyyy, ruleData.getCRPER_FECHA_NACIMIENTO());
+	        fechaTemp = DateUtil.sumarAnos(fechaNacimientoHijo, 18);
+        }catch(NullPointerException ec){
+        	fechaNacimientoHijo = DateUtil.formatDate(DateUtil.F_yyyy_MM_dd, ruleData.getCRPER_FECHA_NACIMIENTO());
+	        fechaTemp = DateUtil.sumarAnos(fechaNacimientoHijo, 18);
+        }    
+        
         Date fechaActual = new Date();
 
         if(fechaActual.before(fechaTemp) || fechaActual.equals(fechaTemp)){
