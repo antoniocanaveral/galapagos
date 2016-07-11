@@ -3,7 +3,6 @@ package com.bmlaurus.ws.dinardap;
 import com.bmlaurus.ws.service.ConnectionUtils;
 import com.google.gson.Gson;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -42,9 +41,10 @@ public abstract class DinardapService {
     public static String SERVICE_ERROR = "No es posible establecer una conexión con el servicio";
 
     protected String numeroIdentificacion;
-    protected Map<String,Object> resultMap;
-    protected Map instituciones;
-    protected Map datosPrincipales;
+
+    protected transient Map<String,Object> resultMap;
+    protected transient Map instituciones;
+    protected transient Map datosPrincipales;
     protected int serviceType;
     protected String serviceName;
 
@@ -92,7 +92,7 @@ public abstract class DinardapService {
                 System.err.println(result);
                 result = CALL_ERROR;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return result;
@@ -144,5 +144,10 @@ public abstract class DinardapService {
 
     private String capitalize(final String line) {
         return Character.toUpperCase(line.charAt(0)) + line.substring(1);
+    }
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 }

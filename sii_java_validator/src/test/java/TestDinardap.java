@@ -1,6 +1,6 @@
-import com.bmlaurus.ws.dinardap.CNE;
-import com.bmlaurus.ws.dinardap.DinardapService;
 import com.bmlaurus.ws.dinardap.RegistroCivil;
+import com.google.gson.Gson;
+import org.json.JSONObject;
 import org.junit.Test;
 
 /**
@@ -10,10 +10,16 @@ public class TestDinardap {
 
     @Test
     public void ServiceTestet(){
-        DinardapService registroCivil = new RegistroCivil("1002867800");
+
+        RegistroCivil registroCivil = new RegistroCivil("1716264450");
         System.out.println(registroCivil.callServiceAsObject());
-        DinardapService cne = new CNE("1002867800");
-        System.out.println(cne.callServiceAsObject());
+        System.out.println(new Gson().toJson(registroCivil));
+        //System.out.print("OK");
+        //DinardapService cne = new CNE("1002867800");
+        //System.out.println(cne.callServiceAsObject());
+
+        JSONObject kk =  new JSONObject(new Gson().toJson(registroCivil));
+        System.out.println(kk.getString("cedula"));
     }
 
 

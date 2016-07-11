@@ -44,7 +44,11 @@ public abstract class SiiAttachmentDocument implements Serializable{
     }
 
     public String getFullPath(){
-        return getPath()+"/"+getFileName();
+        String path = getPath();
+        if(!path.endsWith("/"))
+            path = path + "/";
+        path = path + getFileName();
+        return path;
     }
 
     public abstract String getDocumentName();

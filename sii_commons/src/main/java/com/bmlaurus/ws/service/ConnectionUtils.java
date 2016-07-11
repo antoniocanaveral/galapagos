@@ -3,15 +3,16 @@ package com.bmlaurus.ws.service;
 import com.besixplus.sii.util.Env;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
@@ -21,7 +22,7 @@ import java.util.Properties;
 public class ConnectionUtils {
 
 
-    public String getFichaGeneral(String numeroIdentificacion, int codigoPaquete) throws MalformedURLException,
+    public String getFichaGeneral(String numeroIdentificacion, int codigoPaquete) throws Exception,
             IOException {
 
         Properties config = Env.getExternalProperties("dinardap/config.properties");
@@ -75,6 +76,43 @@ public class ConnectionUtils {
 
         //Devolvemos un JSON con el resultado
         JSONObject result = org.json.XML.toJSONObject(outputString);
-        return result.getJSONObject("soap:Envelope").getJSONObject("soap:Body").getJSONObject("ns2:getFichaGeneralResponse").getJSONObject("return").toString();
+
+        JSONObject  returnData = result.getJSONObject("soap:Envelope").getJSONObject("soap:Body").getJSONObject("ns2:getFichaGeneralResponse").getJSONObject("return");
+        try {
+            returnData = getStringObject(returnData);
+        }catch (Exception e){
+            returnData  =  result.getJSONObject("soap:Envelope").getJSONObject("soap:Body").getJSONObject("ns2:getFichaGeneralResponse").getJSONObject("return");
+            e.printStackTrace();
+        }
+        return returnData.toString();
     }
+
+
+    private JSONObject getStringObject(JSONObject object){
+
+        Iterator iter = object.keys();
+        while(iter.hasNext()){
+            String key = (String)iter.next();
+            if(object.get(key) instanceof JSONObject){
+                getStringObject(object.getJSONObject(key));
+            }else if(object.get(key) instanceof JSONArray){
+                getStringIterator(object.getJSONArray(key));
+            }else{
+                String value = object.get(key).toString();
+                object.put(key,value);
+            }
+        }
+
+        return object;
+    }
+
+    private void getStringIterator(JSONArray arr){
+        for (int i = 0; i < arr.length(); i++) {
+            if(arr.get(i) instanceof JSONObject)
+                getStringObject(arr.getJSONObject(i));
+            else if(arr.get(i) instanceof JSONArray)
+                getStringIterator(arr.getJSONArray(i));
+        }
+    }
+
 }

@@ -230,6 +230,7 @@ public abstract class BasePublicAPI {
             props.put("cmis:name", fileName);
         }
 
+        props.put(PropertyIds.IS_LATEST_MAJOR_VERSION,true);
         Aspect.addAspectProperty(props, "P:cm:titled", "cm:description", getDefaultDescription());
 
         if(aspect!=null){
@@ -255,7 +256,8 @@ public abstract class BasePublicAPI {
             System.out.println("Created new document: " + document.getId());
         } catch (CmisContentAlreadyExistsException ccaee) {
             document = (Document) cmisSession.getObjectByPath(parentFolder.getPath() + "/" + fileName);
-            System.out.println("Document already exists: " + fileName);
+            System.out.println("Document already exists (Making Versionable): " + fileName);
+            updateDocument(document, file, aspect);
         }
 
         return document;
@@ -269,8 +271,10 @@ public abstract class BasePublicAPI {
         Session cmisSession = getCmisSession();
         List<Property<?>> list = doc.getProperties();
         LinkedHashMap<String, Object> props = new LinkedHashMap<>();
+
         for (Property<?> i : list) props.put(i.getId(),i.getValue());
         props.put(PropertyIds.IS_LATEST_MAJOR_VERSION,true);
+
         Aspect.addAspectProperty(props, "P:cm:titled", "cm:description", getDefaultDescription());
 
         if(aspect!=null){

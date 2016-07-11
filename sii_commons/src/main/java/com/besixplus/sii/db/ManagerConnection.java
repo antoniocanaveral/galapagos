@@ -6,7 +6,6 @@ import com.besixplus.sii.util.InitParameters;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -53,7 +52,7 @@ public class ManagerConnection {
 				try{
 					ManagerConnection.DATA_SOURCE = (DataSource)new InitialContext().lookup("java:/sii");
 					ManagerConnection.IS_DEPLOYED= true;
-				} catch (NamingException e) {
+				} catch (Exception  e) {
 					e.printStackTrace();
 					ManagerConnection.IS_DEPLOYED= false;
 				}
