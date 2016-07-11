@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptDinardapCedula" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="faf0c0ac-9091-4e29-8120-c456bf763229">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="org.json.JSONObject"/>
+	<parameter name="CEDULA_DATOS" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select 1]]>
+	</queryString>
+	<field name="?column?" class="java.lang.Integer"/>
+	<summary>
+		<band height="538" splitType="Stretch">
+			<frame>
+				<reportElement x="13" y="48" width="527" height="464" uuid="e1cb7328-b38e-4732-a74b-29d4b6a99936"/>
+				<box>
+					<topPen lineWidth="2.0" lineColor="#999999"/>
+					<leftPen lineWidth="2.0" lineColor="#999999"/>
+					<bottomPen lineWidth="2.0" lineColor="#999999"/>
+					<rightPen lineWidth="2.0" lineColor="#999999"/>
+				</box>
+			</frame>
+			<image>
+				<reportElement x="32" y="53" width="115" height="146" uuid="f774ab50-d093-43d7-9453-fabe7ff4fdd7"/>
+				<imageExpression><![CDATA[net.sf.jasperreports.engine.util.JRImageLoader.getInstance(new SimpleJasperReportsContext()).loadAwtImageFromBytes(javax.xml.bind.DatatypeConverter.parseBase64Binary((new org.json.JSONObject($P{CEDULA_DATOS})).getString("fotografia")))]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="157" y="83" width="205" height="20" forecolor="#006699" uuid="08a37860-e49f-4b6d-bec2-1569ee2e94a9"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[APELLIDOS Y NOMBRES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="157" y="133" width="205" height="20" forecolor="#006699" uuid="7d677be4-4b47-46ca-a1c0-9fc64084a6d0"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[LUGAR DE NACIMIENTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="17" y="199" width="130" height="20" forecolor="#006699" uuid="4130b39b-3b84-41b5-92eb-31681c025b9a"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[FECHA DE NACIMIENTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="163" y="53" width="28" height="20" forecolor="#006699" uuid="b9357a5a-291d-47eb-bab5-eb9669e46512"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Nº.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="285" y="199" width="130" height="20" forecolor="#006699" uuid="5f76d0bc-6887-45d8-b347-f248e46084f0"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[NACIONALIDAD]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="157" y="103" width="343" height="20" uuid="a04b116b-e0a3-4e34-b84b-9cdfc161def3"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("nombre")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="191" y="53" width="153" height="20" uuid="dbdd5497-c8ab-40bb-a9a0-95325effaba7"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("cedula")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="285" y="229" width="130" height="20" forecolor="#006699" uuid="a81a700e-3ab8-4d41-8c6d-e8c42ba808bd"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[SEXO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="17" y="229" width="130" height="20" forecolor="#006699" uuid="7afdcbd6-a5d0-41ec-a24b-64f65cc63c19"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[ESTADO CIVIL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="17" y="259" width="130" height="20" forecolor="#006699" uuid="7dcbad3f-d432-4cba-8219-39690436d01d"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[CONYUGE]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="157" y="153" width="343" height="20" uuid="ef815f73-89fd-4487-b31f-807043311c1a"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("lugarNacimiento")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="147" y="199" width="125" height="20" uuid="13173b6e-f568-40e5-bc4b-9ab63b8fd1b3"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("fechaNacimiento")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="147" y="229" width="125" height="20" uuid="a2210909-747e-4695-b20d-4d44d69d50ac"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("estadoCivil")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="415" y="199" width="125" height="20" uuid="12760fe1-68e0-4e8d-b733-294d429c3561"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("nacionalidad")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="415" y="229" width="125" height="20" uuid="21c5aaac-0ba9-457c-950f-668fe049d00d"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("genero")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="17" y="279" width="255" height="20" uuid="0809a09a-0606-45a5-8502-1816474a37ac"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("conyuge")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="17" y="309" width="130" height="20" forecolor="#006699" uuid="3684c96f-3409-4752-8583-84b0cd8572a9"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[INSTRUCCIÓN]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="17" y="329" width="255" height="20" uuid="b7b81114-a0cb-4f70-9e64-c352d2b03ea8"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("instruccion")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="285" y="329" width="255" height="20" uuid="9730757a-70df-4a46-982f-1ac3391ec910"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("profesion")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="285" y="309" width="206" height="20" forecolor="#006699" uuid="5199e3ea-1c68-4be1-ad9b-adb08bfeb807"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[PROFESIÓN / OCUPACIÓN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="17" y="362" width="255" height="20" forecolor="#006699" uuid="bfa66c19-f305-4c9e-88c6-51fe54ced3ba"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[CEDULA / APELLIDOS Y NOMBRES DEL PADRE]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="17" y="382" width="255" height="20" uuid="f6a5b916-683d-40cd-b922-6bd139b1459d"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("cedulaPadre")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="285" y="362" width="255" height="20" forecolor="#006699" uuid="56097de9-8f18-45ef-b73e-9c2a86903288"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[CEDULA / APELLIDOS Y NOMBRES DE LA MADRE]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="285" y="382" width="255" height="20" uuid="071185c6-c23c-4ec9-a5be-8bf0a83dcffd"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("cedulaMadre")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="17" y="402" width="255" height="20" uuid="af7ae21a-1fb5-4ed4-9f09-41beb93d3ff9"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("nombrePadre")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="285" y="402" width="255" height="20" uuid="df3faa89-3739-4803-b905-4b84ecdf9080"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("nombreMadre")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="285" y="279" width="125" height="20" uuid="f2a3ac5c-a6a8-4f0b-9c6d-261fb81cfbf7"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("cedulaConyuge")]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="197" y="440" width="177" height="51" uuid="01170dbe-a86d-4a6a-a71c-891d736db42d"/>
+				<imageExpression><![CDATA[net.sf.jasperreports.engine.util.JRImageLoader.getInstance(new SimpleJasperReportsContext()).loadAwtImageFromBytes(javax.xml.bind.DatatypeConverter.parseBase64Binary((new org.json.JSONObject($P{CEDULA_DATOS})).getString("firma")))]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="207" y="492" width="167" height="20" forecolor="#006699" uuid="77405a04-ab5a-4781-b610-ed80ca5cd8d8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[FIRMA DEL CEDULADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="16" uuid="b38a111d-1577-4905-99a0-d109841eac6d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Este Documento Sustituye a la Cédula y es válido solamente para el Sistema Integral del CGG ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="16" width="555" height="20" uuid="eb583b77-efc4-477d-ba09-fd9f22060d70"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Documento Generado a partir de los datos obtenidos del Servicio del Registro Civil]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="307" y="518" width="128" height="20" uuid="8934d128-9cc4-43c7-bdc0-f2c3900cdf0e"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha de Generación:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy h.mm a">
+				<reportElement x="435" y="518" width="120" height="20" uuid="bd7b089d-f1a2-41d6-ba5b-9e513020fe55"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>
