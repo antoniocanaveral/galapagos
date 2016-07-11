@@ -32,8 +32,12 @@ public class GenerarResolucion extends RulePhase {
                 if(props.get(tramite.getCRTST_CODIGO())!=null)
                     reportName = (String) props.get(tramite.getCRTST_CODIGO());
 
+                //Obtenemos el Numero de Resolucion Secuencial y la fecha. Lo ponemos en la residencia
+
+
+
                 //Ya tenemos el reporte que hay que hacer. Lo invocamos y guardamos en BG.
-                //El reporte generado lo ponemos en Alfresco* Como controlamos esto?? Lo ponemos en Informes?
+                //El reporte generado lo ponemos en Alfresco* Tal vez requiera llamar a un WS o un Servlet.
             }
         }
         //FIXME: Controlar el return de la funcion.

@@ -1,17 +1,14 @@
 package com.besixplus.sii.ws;
 
-import java.io.Serializable;
-
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import com.besixplus.sii.db.ManagerConnection;
+import com.besixplus.sii.i18n.Messages;
+import com.besixplus.sii.mail.Base64;
+import com.besixplus.sii.objects.Cgg_res_adjunto_temporal;
+import com.bmlaurus.attachment.CreateRCAttachment;
+import com.bmlaurus.ws.dinardap.RegistroCivil;
+import com.bmlaurus.ws.dinardap.Utils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
@@ -26,15 +23,14 @@ import javax.xml.soap.SOAPFactory;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
-
-import com.besixplus.sii.mail.Base64;
-import com.bmlaurus.ws.dinardap.RegistroCivil;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.besixplus.sii.db.ManagerConnection;
-import com.besixplus.sii.i18n.Messages;
-import com.besixplus.sii.objects.Cgg_res_adjunto_temporal;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * CLASE Cgg_res_persona
@@ -437,8 +433,6 @@ public class Cgg_res_persona implements Serializable{
 	 * @param inCrper_observaciones OBSERVACIONES O COMENTARIOS PARA CON LA PERSONA
 .
 	 * @param inCrper_numero_residencia NUMERO UNICO DE IDENTIFICACION DE RESIDENCIA.
-	 * @param inCrper_foto FOTOGRAFIA DE LA PERSONA.
-	 * @param inCrper_foto_curriculum FOTOGRAFIA DE LA PERSONA PARA PUBLICACION EN EL CURRICULUM.
 	 * @param inCrper_huella_dactilar HUELLA DACTILAR DE LA PERSONA.
 	 * @param inCrper_huella_imagen IMAGEN DE LA HUELLA DE LA PERSONA
 	 * @param inCrper_huella_cadena HUELLA DE LA PERSONA
@@ -915,10 +909,6 @@ public class Cgg_res_persona implements Serializable{
 	 * @param inCrper_observaciones OBSERVACIONES O COMENTARIOS PARA CON LA PERSONA
 
 	 * @param inCrper_numero_residencia NUMERO UNICO DE IDENTIFICACION DE RESIDENCIA
-	 * @param inCrper_foto FOTOGRAFIA DE LA PERSONA
-	 * @param inCrper_foto_curriculum FOTOGRAFIA DE LA PERSONA PARA PUBLICACION EN EL CURRICULUM
-	 * @param inCrper_huella_dactilar HUELLA DACTILAR DE LA PERSONA
-	 * @param inCrper_firma FIRMA DIGITAL DE LA PERSONA
 	 * @param inCrper_autorizado ESTADO DEL REGISTRO QUE DEFINE SI UNA PERSONA TIENE AUTORIZADO SU INGRESO A LA PROVINCIA
 	 * @param inCrper_numero_expediente NUMERO DE EXPEDIENTE UNICO
 	 * @param inCrper_fecha_archivo FECHA DE ARCHIVO DE LA DOCUMENTACION DE LA PERSONA
@@ -1323,10 +1313,30 @@ public class Cgg_res_persona implements Serializable{
 			RegistroCivil registroCivil = new RegistroCivil(tmpObj.getCRPER_NUM_DOC_IDENTIFIC());//cedula del beneficiario
 			if(registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_OK)) {
 				if (registroCivil.getCedula() != null && !registroCivil.getCedula().trim().isEmpty()) {
+					List<String> apellidos = Utils.buildNombresApellidos(registroCivil.getNombrePadre(),registroCivil.getNombreMadre(), registroCivil.getNombre());
+					if(apellidos!=null && apellidos.size()==3) {
+						tmpObj.setCRPER_APELLIDO_PATERNO(apellidos.get(0));
+						tmpObj.setCRPER_APELLIDO_MATERNO(apellidos.get(1));
+						tmpObj.setCRPER_NOMBRES(apellidos.get(2));
+					}
+					SimpleDateFormat sdf = new SimpleDateFormat("DD/MM/YYYY");
+					tmpObj.setCRPER_FECHA_NACIMIENTO(sdf.parse(registroCivil.getFechaNacimiento()));
 
-
-
-
+					/*
+					* Creamos la cedula en BG
+					* */
+					final String crper_codigo = tmpObj.getCRPER_CODIGO();
+					Thread t = new Thread() {
+						public void run() {
+							CreateRCAttachment attachment = new CreateRCAttachment(registroCivil,crper_codigo);
+							try {
+								attachment.attachReport();
+							} catch (SQLException e) {
+								e.printStackTrace();
+							}
+						}
+					};
+					t.start();
 				}
 			}
 			//
@@ -1338,6 +1348,8 @@ public class Cgg_res_persona implements Serializable{
 		}catch(SQLException inException){
 			com.besixplus.sii.db.SQLErrorHandler.errorHandler(inException);
 			throw new SOAPFaultException(SOAPFactory.newInstance().createFault(inException.getMessage(), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
+		} catch (ParseException e) {
+			e.printStackTrace();
 		}
 		if (tmpObj != null)
 			return tmpFormat.getData().toString();

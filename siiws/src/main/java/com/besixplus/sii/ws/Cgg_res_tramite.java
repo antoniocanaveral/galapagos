@@ -1,20 +1,31 @@
 package com.besixplus.sii.ws;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
+import com.besixplus.sii.db.ManagerConnection;
+import com.besixplus.sii.i18n.Messages;
+import com.besixplus.sii.mail.ProcessMail;
+import com.besixplus.sii.misc.CGGEnumerators;
+import com.besixplus.sii.misc.CGGEnumerators.*;
+import com.besixplus.sii.objects.Cgg_configuracion;
+import com.besixplus.sii.objects.Cgg_res_adjunto;
+import com.besixplus.sii.objects.Cgg_res_adjunto_temporal;
+import com.besixplus.sii.objects.Cgg_res_fase;
+import com.besixplus.sii.objects.Cgg_res_novedad_notificacion;
+import com.besixplus.sii.objects.Cgg_res_persona;
+import com.besixplus.sii.objects.Cgg_res_proceso;
+import com.besixplus.sii.objects.Cgg_res_requisito_tramite;
+import com.besixplus.sii.objects.Cgg_res_seguimiento;
+import com.besixplus.sii.objects.Cgg_res_tramite_garantia;
+import com.besixplus.sii.objects.Cgg_usuario;
+import com.besixplus.sii.objects.Cgg_veh_motor;
+import com.besixplus.sii.objects.Cgg_veh_vehiculo;
+import com.besixplus.sii.objects.Cgg_veh_vehiculo_motor;
+import com.besixplus.sii.objects.*;
+import com.bmlaurus.attachment.CreateRCAttachment;
+import com.bmlaurus.ws.dinardap.RegistroCivil;
+import com.google.gson.Gson;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
@@ -30,39 +41,17 @@ import javax.xml.soap.SOAPFactory;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
-
-import com.besixplus.sii.mail.ProcessMail;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.besixplus.sii.db.ManagerConnection;
-import com.besixplus.sii.i18n.Messages;
-import com.besixplus.sii.misc.CGGEnumerators;
-import com.besixplus.sii.misc.CGGEnumerators.ESTADOATENCION;
-import com.besixplus.sii.misc.CGGEnumerators.ESTADOPENDIENTETRAMITE;
-import com.besixplus.sii.misc.CGGEnumerators.ESTADORESPUESTA;
-import com.besixplus.sii.misc.CGGEnumerators.LONGITUDCLAVEPRIMARIA;
-import com.besixplus.sii.misc.CGGEnumerators.TIPONOVEDAD;
-import com.besixplus.sii.misc.CGGEnumerators.TIPORESPUESTA;
-import com.besixplus.sii.objects.Cgg_configuracion;
-import com.besixplus.sii.objects.Cgg_res_adjunto;
-import com.besixplus.sii.objects.Cgg_res_adjunto_temporal;
-import com.besixplus.sii.objects.Cgg_res_deposito_garantia;
-import com.besixplus.sii.objects.Cgg_res_fase;
-import com.besixplus.sii.objects.Cgg_res_novedad_notificacion;
-import com.besixplus.sii.objects.Cgg_res_persona;
-import com.besixplus.sii.objects.Cgg_res_proceso;
-import com.besixplus.sii.objects.Cgg_res_requisito_tramite;
-import com.besixplus.sii.objects.Cgg_res_seguimiento;
-import com.besixplus.sii.objects.Cgg_res_tramite_garantia;
-import com.besixplus.sii.objects.Cgg_usuario;
-import com.besixplus.sii.objects.Cgg_veh_motor;
-import com.besixplus.sii.objects.Cgg_veh_vehiculo;
-import com.besixplus.sii.objects.Cgg_veh_vehiculo_motor;
-import com.besixplus.sii.objects.NodoTramite;
-import com.besixplus.sii.objects.ServerResponse;
-import com.google.gson.Gson;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * CLASE Cgg_res_tramite
@@ -2161,24 +2150,14 @@ VALORES:
 	/**
 	 * INSERTA UN REGISTRO EN LA TABLA Cgg_res_tramite.
 	 * @param inCrper_codigo CODIGO IDENTIFICATIVO DE REGISTRO DE AUSPICIANTE.
-	 * @param inCrpjr_codigo IDENTIFICATIVO UNICO DE REGISTRO DE AUSPICIANTE PERSONA JURIDICA.
 	 * @param inCgg_crper_codigo CODIGO IDENTIFICATIVO DE REGISTRO DEL BENEFICIARIO. CAMPO RECURSIVO HACIA LA MISMA TABLA DE PERSONA.
-	 * @param inCrpro_codigo IDENTIFICATIVO UNICO DE REGISTRO DE PROCESO.
 	 * @param inCrtst_codigo IDENTIFICATIVO UNICO DE REGISTRO TIPO SOLICITUD.
 	 * @param inCvveh_codigo IDENTIFICADOR UNICO DE REGISTRO DE VEHICULO.
-	 * @param inCrett_codigo IDENTIFICATIVO UNICO DE REGISTRO ESTADO TRAMITE.
 	 * @param inCisla_codigo IDENTIFICATIVO UNICO DE REGISTRO DE ISLA.
-	 * @param inCrdpt_codigo CODIGO IDENTIFICATIVO DE REGISTRO DEPOSITO DE GARANTIA.
 	 * @param inCvmtr_codigo IDENTIFICATIVO UNICO DE REGISTRO DE MOTOR.
-	 * @param inCrtra_anio ANIO DE REALIZACION DEL TRAMITE.
-	 * @param inCrtra_numero NUMERO SECUENCIAL UNICO DEL TRAMITE, QUE SE RESTABLECE ANUALMENTE..
-	 * @param inCrtra_fecha_recepcion FECHA DE RECEPCION DEL TRAMITE.
-	 * @param inCrtra_actividad_residencia ACTIVIDAD A REALIZAR EN LA PROVINCIA POR PARTE DEL BENEFICIARIO RESIDENCIA.
 	 * @param inCrtra_observacion OBSERVACION DEL TRAMITE- HISTORIAL FORMATO JSON.
 	 * @param inCgg_cvveh_codigo IDENTIFICATIVO UNICO DE REGISTRO DE VEHICULO
 	 * @param inCgg_cvmtr_codigo IDENTIFICATIVO UNICO DE REGISTRO DE MOTOR
-	 * @param inCrtra_dias_permanencia NUMERO DE DIAS AUTORIZADOS PARA PERMANENCIA DE UNA PERSONA.
-	 * @param inCrtra_pendiente DETERMINA SI UN TRAMITE YA HA SIDO EVALUADO POR COMITE
 VALORES:
 0-NO EVALUADO
 1-EVALUADO
@@ -2186,18 +2165,10 @@ VALORES:
 3-SOLO GUARDADO
 4-FINALIZADO
 5-OTRO TIPO DE ESTADO.
-	 * @param inCrtra_observacion_pendiente JUSTIFICACION DE PORQUE EL TRAMITE QUEDO PENDIENTE.
 	 * @param inCrtra_atencion_cliente SI LA INFORMACION FUE REGISTRADA DESDE ATENCION AL CLIENTE.
 	 * @param inNuevoBeneficiarioJSON NUEVO BENEFICIARIO
 	 * @param inContactoPersonaJSON CONTACTOS DE LA PERSONA
 	 * @param inInfoVehiculos INFORMACION VEHICULOS
-	 * @param inCrtra_comunicado_radial NUMERO DE COMUNICADO RADIAL QUE PATROCINA EL TRAMITE DE RESIDENCIA TEMPORAL.
-	 * @param inCrtra_motivo NUMERO DE ARTICULO QUE MOTIVO LA SOLICITUD DE RESIDENCIA..
-	 * @param inCrtra_folio NUMERO DE HOJAS FOLIADAS PARA EL TRAMITE.
-	 * @param inCrtra_grupo DETERMINA SI EL TRAMITE PERTENECE A UN GRUPO.
-	 * @param inCrtra_orden DETERMINA EL ORDENAMIENTO EN EL INGRESO PARA TRAMITES DE GRUPO.
-	 * @param inCrtra_fecha_ingreso FECHA DE INGRESO A LA PROVINCIA DEL BENEFICIARIO.
-	 * @param inCrtra_fecha_salida FECHA DE SALIDA DE LA PROVINCIA DEL BENEFICIARIO.
 	 * @return String <code>true</code> SI SE INGRESO EL REGISTRO, CASO CONTRARIO <code>false</code>.
 	 */
 	@WebMethod
