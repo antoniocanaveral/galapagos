@@ -28,6 +28,7 @@ import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
 
 import com.besixplus.sii.mail.Base64;
+import com.bmlaurus.ws.dinardap.RegistroCivil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -1316,6 +1317,20 @@ public class Cgg_res_persona implements Serializable{
 			}
 			con.setAutoCommit(!ManagerConnection.isDeployed());
 			tmpObj = new com.besixplus.sii.db.Cgg_res_persona(tmpObj).selectNumDoc(con);
+
+			//MO
+
+			RegistroCivil registroCivil = new RegistroCivil(tmpObj.getCRPER_NUM_DOC_IDENTIFIC());//cedula del beneficiario
+			if(registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_OK)) {
+				if (registroCivil.getCedula() != null && !registroCivil.getCedula().trim().isEmpty()) {
+
+
+
+
+				}
+			}
+			//
+
 			ArrayList<com.besixplus.sii.objects.Cgg_res_persona> tmpArray = new ArrayList<com.besixplus.sii.objects.Cgg_res_persona>();
 			tmpArray.add(tmpObj);
 			tmpFormat = new com.besixplus.sii.misc.Formatter(format, tmpArray);
