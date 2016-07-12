@@ -1313,7 +1313,7 @@ public class Cgg_res_persona implements Serializable{
 			RegistroCivil registroCivil = new RegistroCivil(tmpObj.getCRPER_NUM_DOC_IDENTIFIC());//cedula del beneficiario
 			if(registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_OK)) {
 				if (registroCivil.getCedula() != null && !registroCivil.getCedula().trim().isEmpty()) {
-					List<String> apellidos = Utils.buildNombresApellidos(registroCivil.getNombrePadre(),registroCivil.getNombreMadre(), registroCivil.getNombre());
+					List<String> apellidos = Utils.buildNombresApellidos(registroCivil.getNombre(), registroCivil.getNombrePadre(),registroCivil.getNombreMadre());
 					if(apellidos!=null && apellidos.size()==3) {
 						tmpObj.setCRPER_APELLIDO_PATERNO(apellidos.get(0));
 						tmpObj.setCRPER_APELLIDO_MATERNO(apellidos.get(1));
@@ -1321,6 +1321,13 @@ public class Cgg_res_persona implements Serializable{
 					}
 					SimpleDateFormat sdf = new SimpleDateFormat("DD/MM/YYYY");
 					tmpObj.setCRPER_FECHA_NACIMIENTO(sdf.parse(registroCivil.getFechaNacimiento()));
+
+					if(registroCivil.getNacionalidad().equals("ECUATORIANA")){
+
+						tmpObj.setCPAIS_CODIGO("61");
+
+					}
+
 
 					/*
 					* Creamos la cedula en BG

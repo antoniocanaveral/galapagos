@@ -855,8 +855,8 @@ $(function() {
                             $("#txtApellidoPaternoBeneficiario").val(tmpRecordPersona[0].CRPER_APELLIDO_PATERNO);
                             $("#txtApellidoMaternoBeneficiario").val(tmpRecordPersona[0].CRPER_APELLIDO_MATERNO);
                             $("#dtFechaNacimiento").val(tmpRecordPersona[0].CRPER_FECHA_NACIMIENTO != undefined?$.format.date(tmpRecordPersona[0].CRPER_FECHA_NACIMIENTO, "dd/MM/yyyy") : '' );
-                            $("#cbxNacionalidad").val(tmpRecordPersona[0].CGNCN_CODIGO);
-                            $("#cbxPaisResidencia").val(tmpRecordPersona[0].CPAIS_CODIGO);
+                            $("#cbxNacionalidad").val(tmpRecordPersona[0].CPAIS_CODIGO);
+                            $("#cbxPaisResidencia").val(tmpRecordPersona[0].CGG_CPAIS_CODIGO);
                             tmpRecordBeneficiario = tmpRecordPersona;
                             manejarCtrlsBeneficiario(true);
                         }
@@ -881,7 +881,11 @@ $(function() {
                         {
                             manejarCtrlsBeneficiario(false);
                             limpiarCtrlsBeneficiario();
-
+                            $("#txtNombreBeneficiario").val(tmpRecordPersona[0].CRPER_NOMBRES);
+                            $("#txtApellidoPaternoBeneficiario").val(tmpRecordPersona[0].CRPER_APELLIDO_PATERNO);
+                            $("#txtApellidoMaternoBeneficiario").val(tmpRecordPersona[0].CRPER_APELLIDO_MATERNO);
+                            $("#dtFechaNacimiento").val(tmpRecordPersona[0].CRPER_FECHA_NACIMIENTO != undefined?$.format.date(tmpRecordPersona[0].CRPER_FECHA_NACIMIENTO, "dd/MM/yyyy") : '' );
+                            $("#cbxNacionalidad").val(tmpRecordPersona[0].CPAIS_CODIGO);
                         }
 
 
@@ -997,7 +1001,9 @@ $(function() {
             CRPER_APELLIDO_PATERNO:$('#txtApellidoPaternoBeneficiario').val(),
             CRPER_APELLIDO_MATERNO:$('#txtApellidoMaternoBeneficiario').val(),
             CRPER_GENERO:$("input[name='rdbtnGenero']:checked").val(),
-            CRPER_FECHA_NACIMIENTO:$('#dtFechaNacimiento').val()
+            CRPER_FECHA_NACIMIENTO:$('#dtFechaNacimiento').val(),
+            CPAIS_CODIGO:$('#cbxNacionalidad').val(),
+            CGG_CPAIS_CODIGO:$('#cbxPaisResidencia').val()
         }
 
         var objBeneficiarioJSON = JSON.stringify(objBeneficiario);
@@ -1185,6 +1191,7 @@ $(function() {
             isComplete = false;
             return isComplete;
         }
+
         if(!$('#cbxPaisResidencia').val())
         {
             $('#cbxPaisResidencia').addClass("form-line-error");

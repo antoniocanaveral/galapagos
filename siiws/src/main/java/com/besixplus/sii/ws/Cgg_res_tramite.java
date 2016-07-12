@@ -20,8 +20,6 @@ import com.besixplus.sii.objects.Cgg_veh_motor;
 import com.besixplus.sii.objects.Cgg_veh_vehiculo;
 import com.besixplus.sii.objects.Cgg_veh_vehiculo_motor;
 import com.besixplus.sii.objects.*;
-import com.bmlaurus.attachment.CreateRCAttachment;
-import com.bmlaurus.ws.dinardap.RegistroCivil;
 import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -2274,8 +2272,10 @@ VALORES:
 					objNuevoBeneficiario.setCRDID_CODIGO(objTmpPersona.getString("CRDID_CODIGO"));
 					objNuevoBeneficiario.setCRPER_NOMBRES(objTmpPersona.getString("CRPER_NOMBRES"));
 					objNuevoBeneficiario.setCRPER_APELLIDO_PATERNO(objTmpPersona.getString("CRPER_APELLIDO_PATERNO"));
-					objNuevoBeneficiario.setCRPER_APELLIDO_PATERNO(objTmpPersona.getString("CRPER_APELLIDO_PATERNO"));
+					objNuevoBeneficiario.setCRPER_APELLIDO_MATERNO(objTmpPersona.getString("CRPER_APELLIDO_MATERNO"));
 					objNuevoBeneficiario.setCRPER_NUM_DOC_IDENTIFIC(objTmpPersona.getString("CRPER_NUM_DOC_IDENTIFIC"));
+					objNuevoBeneficiario.setCPAIS_CODIGO(objTmpPersona.getString("CPAIS_CODIGO"));
+					objNuevoBeneficiario.setCGG_CPAIS_CODIGO(objTmpPersona.getString("CGG_CPAIS_CODIGO"));
 					objNuevoBeneficiario.setCRPER_GENERO(objTmpPersona.getInt("CRPER_GENERO"));
 					objNuevoBeneficiario.setCRPER_ATENCION_CLIENTE(inCrtra_atencion_cliente);
 
