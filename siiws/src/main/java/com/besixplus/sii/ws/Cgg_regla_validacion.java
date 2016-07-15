@@ -626,13 +626,13 @@ public class Cgg_regla_validacion implements Serializable{
 			@WebParam(name="inJSON_reglas_validacion")String inJSON_reglas_validacion,
 			@WebParam(name="jsonData")String jsonData
 	) throws SOAPException{
-		StringBuilder result = new StringBuilder();
+		List result = new ArrayList();
 		List data = new Gson().fromJson(jsonData,ArrayList.class);
 		for(int i=0;i<data.size();i++){
 			String oneData = new Gson().toJson(data.get(i));
-			result.append(ejecutarReglaTipoSolicitudLocal(inJSON_reglas_validacion, oneData));
+			result.add(ejecutarReglaTipoSolicitudLocal(inJSON_reglas_validacion, oneData));
 		}
-		return result.toString();
+		return new Gson().toJson(result);
 	}
 
 	/**

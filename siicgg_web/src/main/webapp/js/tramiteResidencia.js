@@ -1296,7 +1296,7 @@ $(function() {
                         CRPER_NOMBRES: tblPersona.rows[i].cells[2].innerHTML,
                         CRPER_APELLIDO_PATERNO: tblPersona.rows[i].cells[3].innerHTML,
                         CRPER_APELLIDO_MATERNO: tblPersona.rows[i].cells[4].innerHTML,
-                        CRPER_GENERO: tblPersona.rows[posicion].cells[8].innerHTML == 'M'?"0":"1",
+                        CRPER_GENERO: tblPersona.rows[i].cells[8].innerHTML == 'M'?"0":"1",
                         CRPER_FECHA_NACIMIENTO: tblPersona.rows[i].cells[7].innerHTML,
                         CPAIS_CODIGO: tblPersona.rows[i].cells[6].id,
                         CGG_CPAIS_CODIGO: tblPersona.rows[i].cells[5].id
@@ -1304,7 +1304,7 @@ $(function() {
                     beneficiarios.push(objBeneficiario);
                 }
             }
-            if(beneficiarios.size()<=0){
+            if(beneficiarios.length<=0){
                 new bsxMessageBox({
                     title: 'Alerta',
                     msg: 'Por favor ingrese al menos un beneficiario.',
@@ -1312,7 +1312,7 @@ $(function() {
                 });
                 return;
             }
-            var objBeneficiarioJSON = JSON.stringify(objBeneficiario);
+            var objBeneficiarioJSON = JSON.stringify(beneficiarios);
 
             var param = new SOAPClientParameters();
             param.add('inCrper_codigo', tmpRecordAuspiciante != null ? tmpRecordAuspiciante[0].CRPER_CODIGO : null);
@@ -1449,7 +1449,7 @@ $(function() {
                         CRPER_NOMBRES: tblPersona.rows[i].cells[2].innerHTML,
                         CRPER_APELLIDO_PATERNO: tblPersona.rows[i].cells[3].innerHTML,
                         CRPER_APELLIDO_MATERNO: tblPersona.rows[i].cells[4].innerHTML,
-                        CRPER_GENERO: tblPersona.rows[posicion].cells[8].innerHTML == 'M'?"0":"1",
+                        CRPER_GENERO: tblPersona.rows[i].cells[8].innerHTML == 'M'?"0":"1",
                         CRPER_FECHA_NACIMIENTO: tblPersona.rows[i].cells[7].innerHTML,
                         CPAIS_CODIGO: tblPersona.rows[i].cells[6].id,
                         CRDPT_CODIGO: crdptCodigo,
@@ -1458,7 +1458,7 @@ $(function() {
                     beneficiarios.push(objBeneficiario);
                 }
             }
-            if(beneficiarios.size()<=0){
+            if(beneficiarios.length<=0){
                 new bsxMessageBox({
                     title: 'Alerta',
                     msg: 'Por favor ingrese al menos un beneficiario.',
@@ -1466,7 +1466,7 @@ $(function() {
                 });
                 return;
             }
-            var objBeneficiarioJSON = JSON.stringify(objBeneficiario);
+            var objBeneficiarioJSON = JSON.stringify(beneficiarios);
 
             var resultadoRegla = evaluarReglaTramite();
             if(resultadoRegla!==null){
@@ -1476,12 +1476,14 @@ $(function() {
                 var validacion = SOAPClient.invoke(URL_WS+'Cgg_regla_validacion' ,'ejecutarReglaTranseuntesTipoSolicitud',param, false, null);
                 validacion = eval('('+validacion+')');
                 if(validacion.resultadoValidacion !== undefined){
-                    if(validacion.resultadoValidacion == 'false'){
+                    for(var i=0;i<validacion.length;i++) {
+                        if (validacion[i].resultadoValidacion == 'false') {
 
-                        $("#divReglaValidacion").html($.tmpl( "resultadoReglaTemplate", validacion ));
-                        $("#dlgReglaValidacion").dialog("open");
+                            $("#divReglaValidacion").html($.tmpl("resultadoReglaTemplate", validacion[i]));
+                            $("#dlgReglaValidacion").dialog("open");
+                        }
+                        flagRegla = eval(validacion[i].resultadoValidacion);
                     }
-                    flagRegla=eval(validacion.resultadoValidacion);
                 }else{
                     flagRegla = null;
                 }
