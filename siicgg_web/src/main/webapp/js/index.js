@@ -1,7 +1,7 @@
 var divCargando;
 var RolUsuario;
 var McTmp="uno";
-function loadInit(){	
+function loadInit(){
 	var txtUsuario = document.getElementById("txtUsuario");
 	if (txtUsuario.value!="false"){
 		function CallBackRolUsuario(r){
@@ -88,6 +88,7 @@ function loadInit(){
 
 
 }
+
 function loadFecha(){
 	var fecha = new Date();
 	var days = ['Domingo','Lunes','Martes','Mi&eacute;rcoles','Jueves','Viernes','S&aacute;bado'];
@@ -269,4 +270,5 @@ function setOptionModuloSeleccionado(idModulo){
 			}
 		}
 	}
+
 }

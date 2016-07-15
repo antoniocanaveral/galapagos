@@ -16,3 +16,8 @@ Deben cumplir con la condición de encontrarse en el paquete com.bmlaurus.phaser
 </pre>
 
 Para la regla de Resolución, existe un archivo en SII_HOME/rules/resolucion.properties donde se parametriza el reporte a utilizar como resolución para cada tipo de solicitud.
+
+
+### Cuidado
+Hay una funcionalidad que utiliza este módulo. Que consiste en llamar a servicios del proyecto siiws. Si se va a distribuir 
+la aplicación es importante cambiar el parámetro de host del archivo SII_HOME/invoker/config.properties

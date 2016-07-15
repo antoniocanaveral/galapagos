@@ -148,7 +148,7 @@ body > table > tbody > tr > td > table > tbody > tr:nth-child(2) > td > table > 
 /* iframe */
 #iFrameBody {
     max-width: 100% !important;
-    min-height: 540px !important;
+    /*min-height: 540px !important;--->CALCULADO*/
     padding: 20px 20px 0 !important;
 }
 /* footer */

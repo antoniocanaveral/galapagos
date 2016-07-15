@@ -35,6 +35,10 @@ los archivos, tenemos que especificar la relación para que obtenga la data de u
 
 Esto generaría **solicitudes/SC-100/1710679968**
 
+**Adicionalmente podemos definir los repositorios según las propiedades del archivo SII_HOME/alfresco/globals.properties por ejemplo simplemente:**
+
+`alfpath.identificacion.path`
+
 ## Componentes
 
 Se crearon 2 componentes Javascript adicionales para poder utilizar el modelo de Alfresco en el sistema:

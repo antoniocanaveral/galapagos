@@ -14,7 +14,7 @@ BEGIN
 	INSERT INTO sii.cgg_ecm_file(
             code, cgg_ecm_metadata_code, file_name, file_description, document_type, file_repository,
             override_name, estado, usuario_insert, usuario_update)
-	VALUES ( v_file_code, v_code, 'cedula', 'Documento de Identidad', 'D:sii:personales','Personales/@crper_num_doc_identific@',
+	VALUES ( v_file_code, v_code, 'identificacion', 'Documento de Identidad', 'D:sii:personales','Personales/@crper_num_doc_identific@',
             true, true, 'ADMIN', 'ADMIN');
 
        INSERT INTO sii.cgg_ecm_file_index(

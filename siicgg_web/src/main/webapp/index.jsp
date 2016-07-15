@@ -1,6 +1,6 @@
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <%
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
         response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
@@ -13,8 +13,20 @@
     <script type="text/javascript" src="js/SoapClient.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript" src="js/prototype.js"></script>
+    <script>
+        //AC--> ACTUALIZACION DEL ESTILO
+        window.onresize = function(event) {
+            fitFrame();
+        };
+        function fitFrame(){
+            var _screen_height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+            var _frame = document.getElementById("iFrameBody");
+            _frame.style.minHeight = (_screen_height-157);
+        }
+
+    </script>
 </head>
-<body onLoad="loadInit()">
+<body onLoad="fitFrame(); loadInit();">
 <input type="hidden" id="txtUsuario"
        value=<%
 		try{
@@ -362,9 +374,10 @@
                                         <tr>
                                             <td>
                                                 <div id="divCargando" class="cargando"><span>Cargando...</span></div>
-                                                <iframe frameborder="0" scrolling="no" id="iFrameBody"
+                                                <iframe frameborder="0" scrolling="yes" id="iFrameBody"
                                                         src="bienvenida.jsp?CWPAG_CODIGO=CWPAG1"
-                                                        style="margin: 0; padding: 0; max-width: 700px;" width="100%"
+                                                        style="overflow-y:scroll !important; overflow-x:hidden !important; overflow:hidden;
+                                                            margin: 0; padding: 0; max-width: 700px;" width="100%"
                                                         onload="document.getElementById('divCargando').style.visibility='hidden';">
                                                 </iframe>
                                             </td>
@@ -384,7 +397,7 @@
                                                                 width="41" height="46" longdesc="cgg"></td>
                                 <td width="354" align="left" valign="middle">
                                     <div class="divAcercaDe" align="left">
-                                        <div align="left"><b><a href="http://www.gobiernogalapagos.gob.ec">Consejo de Gobierno de Galápagos</a></b>
+                                        <div align="left"><b><a href="http://www.gobiernogalapagos.gob.ec">Consejo de Gobierno de Gal&aacute;pagos</a></b>
                                         </div>
                                     </div>
                                     <div class="divAcercaDe" align="left">

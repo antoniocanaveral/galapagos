@@ -10,6 +10,7 @@ var filter;
 var alfrescoResponse = undefined;
 //Panel de Propiedades
 var east;
+var isList;
 
 function AlfrescoMng(_tableName, _recordID, _filter){
 
@@ -26,6 +27,7 @@ function AlfrescoMng(_tableName, _recordID, _filter){
         param.add('tableName', tableName);
         param.add('recordID', recordID);
         param.add('filter', filter);
+        isList = false;
         //alfrescoResponse = {"code":"TEST1","tableName":"TABLA_PRUEBA","isList":true,"fileList":[{"code":"FILE_TEST2","fileName":"papeleta","fileDescription":"Documento de Votación","documentType":"D:sii:personales","fileRepository":"test/listas/carpeta_usuario","overrideName":true,"indexDefinitionList":[{"code":"IDX_ALM","name":"Almacenable","description":"Permite relacionar el adjunto con el archivo físico","itemList":[{"code":"ITEM_CAJA","itemName":"CAJA_NAME","itemDataType":"STRING","itemLabel":"Número de Caja","isMandatory":true,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"},{"code":"ITEM_CARPETA","itemName":"CARPETA_NAME","itemDataType":"STRING","itemLabel":"Número de Carpeta","isMandatory":true,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"},{"code":"ITEM_DESCRIPCION","itemName":"DESCRIPCION_NAME","itemDataType":"TEXT","itemLabel":"Descripción del Almacenamiento","isMandatory":false,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"}],"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"}],"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"},{"code":"FILE_TEST1","fileName":"cedula","fileDescription":"Documento de Identidad","documentType":"D:sii:respaldo","fileRepository":"test/listas/carpeta_usuario","overrideName":true,"indexDefinitionList":[{"code":"IDX_ALM","name":"Almacenable","description":"Permite relacionar el adjunto con el archivo físico","itemList":[{"code":"ITEM_CAJA","itemName":"CAJA_NAME","itemDataType":"STRING","itemLabel":"Número de Caja","isMandatory":true,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"},{"code":"ITEM_CARPETA","itemName":"CARPETA_NAME","itemDataType":"STRING","itemLabel":"Número de Carpeta","isMandatory":true,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"},{"code":"ITEM_DESCRIPCION","itemName":"DESCRIPCION_NAME","itemDataType":"TEXT","itemLabel":"Descripción del Almacenamiento","isMandatory":false,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"}],"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"},{"code":"IDX_IDN","name":"Identificable","description":"Relaciona el adjunto en Alfresco, con la base de datos de SII","itemList":[{"code":"ITEM_TABLA","itemName":"TABLE_NAME_NAME","itemDataType":"STRING","itemLabel":"Nombre de la Tabla SII","isMandatory":true,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"},{"code":"ITEM_RECORD_ID","itemName":"RECORD_ID_NAME","itemDataType":"STRING","itemLabel":"Identificador del Registro","isMandatory":true,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"}],"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"},{"code":"IDX_CAD","name":"Caducable","description":"Añade una fecha de caducidad del adjunto","itemList":[{"code":"ITEM_FECHA","itemName":"CADUCIDAD_NAME","itemDataType":"DATE","itemLabel":"Fecha de Caducidad del Documento","isMandatory":true,"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"}],"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"}],"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN","fileResult":{"displayName":"Documentos Personales SII","name":"cedula.pdf","id":"64011ae2-1a0e-4747-93c2-508a908dd4c7;1.0"}}],"estado":true,"usuario_insert":"ADMIN","usuario_update":"ADMIN"};
         if(alfrescoResponse==undefined || alfrescoResponse.trim() == "")
             alfrescoResponse = SOAPClient.invoke(URL_WS + 'Alf_query', "getAttachmentMetadata", param, false, null);
@@ -42,8 +44,10 @@ function AlfrescoMng(_tableName, _recordID, _filter){
 
             var comps=[]; //variable donde pondremos los componentes
             var store;
-            if (alfrescoResponse.isList) {
-                var filteredData = {"files": alfrescoResponse.fileList};
+            isList = alfrescoResponse.isList;
+            var filteredData = undefined;
+            if (isList) {
+                filteredData = {"files": alfrescoResponse.fileList};
                 store = new Ext.data.Store({
                     root: "files",
                     reader: new Ext.data.JsonReader({
@@ -57,14 +61,14 @@ function AlfrescoMng(_tableName, _recordID, _filter){
                 if(alfrescoResponse.folderResult){//Hay documentos previamente subidos.
                     //cargamos el store.
                     console.log("Hay archivos en el servidor");
-                    var filteredData = {"files": alfrescoResponse.folderResult};
+                    filteredData = {"files": alfrescoResponse.folderResult};
                     store = new Ext.data.Store({
                         root: "files",
                         reader: new Ext.data.JsonReader({
-                            id: 'code',
+                            id: 'id',
                             root: 'files'
-                        }, [{name: "fileDescription"}, {name: "fileName"}, {name:"fileRepository"}]),
-                        fields: ["fileDescription", "fileName", "fileRepository"]
+                        }, [{name: "name"}, {name: "displayName"}, {name:"id"}]),
+                        fields: ["name", "displayName", "id"]
                     });
                     store.loadData(filteredData);
                 }
@@ -75,7 +79,7 @@ function AlfrescoMng(_tableName, _recordID, _filter){
             var btnDownload = new Ext.Button({iconCls:'ecmDownload', height: '32px', width: '32px', listeners:{click:fileDownload}, disabled:true});
             var freePanel = undefined;
             if(!alfrescoResponse.isList){
-                var btnUpload = new Ext.Button({iconCls:'ecmUpload', height: '32px', width: '32px',listeners:{click:freeUpload}, disabled:true});
+                var btnUpload = new Ext.Button({iconCls:'ecmUpload', height: '32px', width: '32px',listeners:{click:freeUpload}, disabled:false});
                 freePanel = new Ext.Panel({
                     layout:'hbox',
                     cls: 'ecmTransparentBtn',
@@ -89,16 +93,71 @@ function AlfrescoMng(_tableName, _recordID, _filter){
                 });
 
             comps.push(freePanel);
+            //AL SELECCIONAR EL ARCHIVO
+            fileSelected = function(_this, e) {
+                var pnl = _this;
+                if (!isList || (pnl.fileObj && pnl.fileObj.fileResult)) {
+                    //traemos las propiedades
+                    activityIndicator = new Ext.LoadMask(Ext.getBody(), {msg: "Cargando Propiedades..."});
+                    activityIndicator.show();
+                    var param = new SOAPClientParameters();
+                    param.add('fileId', (isList?pnl.fileObj.fileResult.id:pnl.fileObj.id));
+                    param.add('versionInfo', false);
+                    var fileProperties = SOAPClient.invoke(URL_WS + 'Alf_query', "getFullFileInfo", param, false, null);
+                    if (fileProperties) {
+                        fileProperties = eval("(" + fileProperties + ')'); //Convierte string a Objeto JSON
+                        buildFileProperties(fileProperties);
+                    }
+                    activityIndicator.hide();
+                    activityIndicator = null;
+
+                    if (lastSelected != undefined)
+                        lastSelected.class = 'x-panel';
+                    lastSelected = pnl;
+                    lastSelected.class = 'x-panel selected-file-record';
+                    var oldPdfViewer = document.getElementById('pdf_viewer');
+                    if (oldPdfViewer) {
+                        var viewer = document.getElementById("pdf_viewer");
+                        viewer.parentNode.removeChild(viewer);
+                    }
+
+                    var options = {
+                        id: 'pdf_viewer',
+                        fallbackLink: '<p>Su navegador no soporta visualizaci&oacute;n de PDFs en l&iacute;nea. Descargue el archivo para visualizarlo: <a href="[url]">Descargar PDF</a></p>'
+                    };
+
+                    //Mostrar cargador
+                    activityIndicator = new Ext.LoadMask(Ext.getBody(), {msg: "Cargando Archivo..."});
+                    activityIndicator.show();
+                    //Timer para que no se quede eternamente pensando
+                    setTimeout(function(){
+                        if(activityIndicator){
+                            Ext.MsgPopup.msg(tituloAlfrescoMng, "Tiempo de espera agotado. Puede que no exista el documento.",MsgPopup.INFO);
+                            activityIndicator.hide();
+                            activityIndicator=null;
+                        }
+                    }, ALF_VIEWER_TIMER?ALF_VIEWER_TIMER:5000);
+                    PDFObject.embed(URL_WS+"AlfrescoDownloaderSVR?documentID="+(isList?pnl.fileObj.fileResult.id:pnl.fileObj.id), '#'+Ext.getCmp('alfresco_center_pdf_viewer').getEl().dom.lastChild.lastChild.id, options);
+                    //PDFObject.embed("https://localhost:8443/siiws/AlfrescoDownloaderSVR?documentID=" + (isList?pnl.fileObj.fileResult.id:pnl.fileObj.id), '#' + Ext.getCmp('alfresco_center_pdf_viewer').getEl().dom.lastChild.lastChild.id, options);
+                    var pdfViewer = document.getElementById('pdf_viewer');
+                    pdfViewer.onload = function (state) {
+                        console.log('file loaded');
+                        if (activityIndicator)
+                            activityIndicator.hide();
+                        activityIndicator = null;
+                    }
+                }
+            };
 
             //STORE DE DATA
             if(store){
                 var renderedData = store.reader.jsonData;
-                var files = renderedData.files;
+                var files = isList?renderedData.files:renderedData.files.files;
                 var lastSelected=undefined;
                 for(var i=0;i<files.length;i++){
                     var fileName = new Ext.Button({
                         xtype: 'button',
-                        text:files[i].fileDescription,
+                        text:isList?files[i].fileDescription:files[i].name,
                         fileObj: files[i],
                         prentPanelId:"tarjet_"+i,
                         width: 120,
@@ -106,12 +165,12 @@ function AlfrescoMng(_tableName, _recordID, _filter){
                     });
                     fileName.on('click',fileSelected);
                     var btnAction;
-                    if(files[i].fileResult){
+                    if(files[i].fileResult || !isList){
                         btnAction = new Ext.Button({
                             iconCls:'ecmRefresh',
                             fileObj: files[i],
                             fileContainer:fileName,
-                            fileName:files[i].fileName,
+                            fileName:isList?files[i].fileName:files[i].name,
                             margins: '0 0 5 15',
                             listeners:{click:freeUpload}
                         });
@@ -211,61 +270,6 @@ function AlfrescoMng(_tableName, _recordID, _filter){
 
             this.getWindow().on('close',this.beforeClose);
 
-            function fileSelected(_this, e) {
-                var pnl = _this;
-                if (pnl.fileObj && pnl.fileObj.fileResult) {
-                    //traemos las propiedades
-                    activityIndicator = new Ext.LoadMask(Ext.getBody(), {msg: "Cargando Propiedades..."});
-                    activityIndicator.show();
-                    var param = new SOAPClientParameters();
-                    param.add('fileId', pnl.fileObj.fileResult.id);
-                    param.add('versionInfo', false);
-                    var fileProperties = SOAPClient.invoke(URL_WS + 'Alf_query', "getFullFileInfo", param, false, null);
-                    if (fileProperties) {
-                        fileProperties = eval("(" + fileProperties + ')'); //Convierte string a Objeto JSON
-                        buildFileProperties(fileProperties);
-                    }
-                    activityIndicator.hide();
-                    activityIndicator = null;
-
-                    if (lastSelected != undefined)
-                        lastSelected.class = 'x-panel';
-                    lastSelected = pnl;
-                    lastSelected.class = 'x-panel selected-file-record';
-                    var oldPdfViewer = document.getElementById('pdf_viewer');
-                    if (oldPdfViewer) {
-                        var viewer = document.getElementById("pdf_viewer");
-                        viewer.parentNode.removeChild(viewer);
-                    }
-
-                    var options = {
-                        id: 'pdf_viewer',
-                        fallbackLink: '<p>Su navegador no soporta visualización de PDFs en línea. Descargue el archivo para visualizarlo: <a href="[url]">Descargar PDF</a></p>'
-                    };
-
-                    //Mostrar cargador
-                    activityIndicator = new Ext.LoadMask(Ext.getBody(), {msg: "Cargando Archivo..."});
-                    activityIndicator.show();
-                    //Timer para que no se quede eternamente pensando
-                    setTimeout(function(){
-                        if(activityIndicator){
-                            Ext.MsgPopup.msg(tituloAlfrescoMng, "Tiempo de espera agotado. Puede que no exista el documento.",MsgPopup.INFO);
-                            activityIndicator.hide();
-                            activityIndicator=null;
-                        }
-                    }, ALF_VIEWER_TIMER?ALF_VIEWER_TIMER:5000);
-                    PDFObject.embed(URL_WS+"AlfrescoDownloaderSVR?documentID="+pnl.fileObj.fileResult.id, '#'+Ext.getCmp('alfresco_center_pdf_viewer').getEl().dom.lastChild.lastChild.id, options);
-                    //PDFObject.embed("https://localhost:8443/siiws/AlfrescoDownloaderSVR?documentID=" + pnl.fileObj.fileResult.id, '#' + Ext.getCmp('alfresco_center_pdf_viewer').getEl().dom.lastChild.lastChild.id, options);
-                    var pdfViewer = document.getElementById('pdf_viewer');
-                    pdfViewer.onload = function (state) {
-                        console.log('file loaded');
-                        if (activityIndicator)
-                            activityIndicator.hide();
-                        activityIndicator = null;
-                    }
-                }
-            }
-
             activityIndicator.hide();
             activityIndicator = null;
             //-->>FIN
@@ -328,8 +332,9 @@ function LoadJs(url){
 
 function freeUpload(_this, e){
     var btnUpload = _this;
-    if(btnUpload.fileObj){
-        var uploader = new AlfrescoUploader(_this.fileObj,tableName,recordID);
+    var uploader = undefined;
+    if(isList && btnUpload.fileObj){
+        uploader = new AlfrescoUploader(_this.fileObj,tableName,recordID);
         uploader.on('hide',function(_that){
             var result = uploader.result();
             console.log("HIDE: "+result);
@@ -371,7 +376,7 @@ function freeUpload(_this, e){
             }
         );
         var jsonFile = {"code":"FREE", "documentType": "D:sii:personales", "fileRepository":alfrescoResponse.filesRepository ,"indexDefinitionList":indexes};
-        var uploader = new AlfrescoUploader(jsonFile,tableName,recordID);
+        uploader = new AlfrescoUploader(jsonFile,tableName,recordID);
         uploader.on('hide',function(_that){
             var result = uploader.result();
             console.log("HIDE: "+result);

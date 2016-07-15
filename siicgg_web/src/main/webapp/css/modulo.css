@@ -28,6 +28,32 @@ li {
     text-indent: -.7em;
 }
 
+li.ui-state-default {
+	content: "";
+	display: inline-flex;
+	text-align: center;
+	width: auto;
+}
+
+li.ui-state-active {
+	content: "";
+	display: inline-flex;
+	text-align: center;
+	text-indent: 1px;
+	width: auto;
+}
+
+li:before {
+	content: "\2022 ";
+	color: #ffaa22; /* or whatever color you prefer */
+}
+li.ui-state-default::before {
+	content: "";
+}
+li.ui-state-active::before {
+	content: "";
+}
+
 br {
 	display: none;
 }
@@ -40,7 +66,7 @@ legend {
     font-weight: 300;
 }
 fieldset {
-    background: #fafafa;
+    /*background: #fafafa;*/
     border: 1px solid #e0e0e0;
     border-radius: 5px;
     font-size: 12px !important;
@@ -51,10 +77,6 @@ fieldset > table > tbody {
 }
 table {
     font-size: 12px !important;
-}
-li:before {
-    content: "• ";
-    color: #ffaa22; /* or whatever color you prefer */
 }
 
 .tituloPrincipal {
@@ -295,6 +317,22 @@ button:active {
 button:focus { outline: 0 }
 button img {
 	display: none;
+}
+button[id*="btnBuscar"]{
+	background: #0078e7 url("./icon/buscar.png") no-repeat scroll center center;
+	height: 22px;
+	padding: 0;
+	vertical-align: top;
+	width: 22px;
+}
+
+button.ui-datepicker-trigger{
+	background: #0078e7 url("./icon/date.png") no-repeat scroll center center;
+	height: 22px;
+	padding: 0;
+	vertical-align: top;
+	width: 22px;
+	margin-left: 5px;
 }
 
 .cssFormularioBorde{	

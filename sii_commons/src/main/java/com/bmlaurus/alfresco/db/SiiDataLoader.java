@@ -1,5 +1,6 @@
 package com.bmlaurus.alfresco.db;
 
+import com.besixplus.sii.util.Env;
 import com.bmlaurus.alfresco.model.SiiModelFile;
 import com.bmlaurus.alfresco.model.SiiModelIndexDefinition;
 import com.bmlaurus.alfresco.model.SiiModelIndexItem;
@@ -11,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Created by acanaveral on 27/5/16.
@@ -174,29 +176,36 @@ public class SiiDataLoader {
             statement = conn.prepareStatement(strSQL);
             statement.setString(1,recordID);
             ResultSet rs = statement.executeQuery();
-            if(rs!=null && rs.next()){
+            if(rs!=null && rs.next()) {
                 //Evaluamos la cadena que representa el path
-                String[] path = sourcePath.split("/");
-                for (String pathItem : path) {
-                    if (pathItem.contains("@")) {
-                        String[] complex = pathItem.replace("@", "").split(";");
-                        if (complex.length > 1) {//resultado de una query
-                            String[] linkData = complex[1].split("\\.");
-                            String strSQLLink = "SELECT " + linkData[1] + " FROM " + linkData[0] + " WHERE " + getPKColumng(conn,linkData[0]) + "='" + rs.getObject(complex[0]) + "'";
-                            PreparedStatement linkStatement = conn.prepareStatement(strSQLLink);
-                            ResultSet linkrs = linkStatement.executeQuery();
-                            if(linkrs!=null && linkrs.next()){
-                                result.append(linkrs.getObject(1));
+                if (sourcePath.startsWith("alfpath.") && sourcePath.endsWith(".path")) {
+                    Properties globals = Env.getExternalProperties("alfresco/globals.properties");
+                    if (globals != null)
+                        sourcePath = globals.getProperty(sourcePath);
+                }
+                if(sourcePath!=null){
+                    String[] path = sourcePath.split("/");
+                    for (String pathItem : path) {
+                        if (pathItem.contains("@")) {
+                            String[] complex = pathItem.replace("@", "").split(";");
+                            if (complex.length > 1) {//resultado de una query
+                                String[] linkData = complex[1].split("\\.");
+                                String strSQLLink = "SELECT " + linkData[1] + " FROM " + linkData[0] + " WHERE " + getPKColumng(conn, linkData[0]) + "='" + rs.getObject(complex[0]) + "'";
+                                PreparedStatement linkStatement = conn.prepareStatement(strSQLLink);
+                                ResultSet linkrs = linkStatement.executeQuery();
+                                if (linkrs != null && linkrs.next()) {
+                                    result.append(linkrs.getObject(1));
+                                }
+                                linkrs.close();
+                                linkStatement.close();
+                            } else {//solo campo
+                                result.append(rs.getObject(pathItem.replace("@", "").trim()));
                             }
-                            linkrs.close();
-                            linkStatement.close();
-                        } else {//solo campo
-                            result.append(rs.getObject(pathItem.replace("@", "").trim()));
-                        }
-                    } else
-                        result.append(pathItem);
+                        } else
+                            result.append(pathItem);
 
-                    result.append("/");
+                        result.append("/");
+                    }
                 }
             }
             rs.close();

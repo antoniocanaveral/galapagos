@@ -1,4 +1,197 @@
 $(function() {
+    var swEdit;
+
+    var modeTranseuntes = false;
+    //AC****VARIABLES PARA TRANSEUNTE*******/
+    var frmPersona = $("#frmPersona");
+    var btnAgregar = $("#btnTranAgregar");
+    var btnEliminar = $("#btnTranEliminar");
+    var btnEditar = $("#btnTranEditar");
+    var btnAceptarIngreso = $("#btnAceptarIngreso");
+    var btnSalirIngreso = $("#btnSalirIngreso");
+    var tblPersona = document.getElementById("tblPersona");
+    function showForm(frm){
+        document.getElementById("divBgModal").style.display="block";
+        document.getElementById(frm.selector).style.display="block";
+    }
+    function btnSalirAll(frm){
+        document.getElementById("divBgModal").style.display="none";
+        document.getElementById(frm.selector).style.display="none";
+        clearFormPersona();
+    }
+    btnAgregar.click(function(){
+        //txtNumeroDocumento.readOnly = false;
+        swEdit = false;
+        showForm($("FrmIngresoPersona"));
+        //fnHabilitarControles(true);
+        //btnAceptarIngreso.disabled = true;
+    });
+
+    btnEliminar.click(function(){
+        if(filaTablaPersona){
+            var tbodyPersona = tblPersona.tBodies[0];
+            tbodyPersona.removeChild(filaTablaPersona);
+            filaTablaPersona='';
+        }
+    });
+
+    btnSalirIngreso.click(function(){
+        btnSalirAll($("FrmIngresoPersona"));
+    });
+
+    btnAceptarIngreso.click(function(){
+        fnLlenarPersona();
+    });
+
+    btnEditar.click(function(){
+        if (filaTablaPersona){
+            if(posicion>0){
+                cbxTipoDocumentoBeneficiario.dom.value=tblPersona.rows[posicion].cells[0].id;
+                $('#txtNumDocBeneficiario').val(tblPersona.rows[posicion].cells[1].innerHTML);
+                $('#txtNombreBeneficiario').val(tblPersona.rows[posicion].cells[2].innerHTML);
+                $('#txtApellidoPaternoBeneficiario').val(tblPersona.rows[posicion].cells[3].innerHTML);
+                $('#txtApellidoMaternoBeneficiario').val(tblPersona.rows[posicion].cells[4].innerHTML);
+                cbxPaisResidencia.dom.value=tblPersona.rows[posicion].cells[5].id;
+                cbxNacionalidad.dom.value=tblPersona.rows[posicion].cells[6].id;
+                $('#dtFechaNacimiento').val(tblPersona.rows[posicion].cells[7].innerHTML);
+                if(tblPersona.rows[posicion].cells[8].innerHTML == 'M')
+                    $("input[name='rdbtnGenero']")[0].checked = true;
+                else
+                    $("input[name='rdbtnGenero']")[1].checked = true;
+                swEdit = true;
+                //btnAceptarIngreso.visibled=false;
+                showForm($("FrmIngresoPersona"));
+            }
+        }
+    });
+
+    var cont = 1;
+    function fnLlenarPersona(){
+        var tbodyPersona = tblPersona.tBodies[0];
+        if(verificarInformacionTramite()) {
+            if (swEdit == false) {
+                if (tblPersona.rows.length > 1) {
+                    for (var i = 1; i < tblPersona.rows.length; i++) {
+                        if (tblPersona.rows[i].cells[1].innerHTML == $('#txtNumDocBeneficiario').val()) {
+                            new bsxMessageBox({
+                                title: "Error de ingreso",
+                                msg: 'La persona ya pertenece al listado de pre-registro.',
+                                icon: "iconError"
+                            });
+                            return;
+                        }
+                    }
+                }
+            } else {
+                tblPersona.rows[posicion].cells[0].id = cbxTipoDocumentoBeneficiario.dom.value;
+                tblPersona.rows[posicion].cells[0].innerHTML = cbxTipoDocumentoBeneficiario.dom.options[cbxTipoDocumentoBeneficiario.dom.selectedIndex].text;
+                tblPersona.rows[posicion].cells[1].id = tmpRecordBeneficiario != null ? tmpRecordBeneficiario[0].CRPER_CODIGO : 'KEYGEN';
+                tblPersona.rows[posicion].cells[1].innerHTML = $('#txtNumDocBeneficiario').val();
+                tblPersona.rows[posicion].cells[2].innerHTML = $('#txtNombreBeneficiario').val();
+                tblPersona.rows[posicion].cells[3].innerHTML = $('#txtApellidoPaternoBeneficiario').val();
+                tblPersona.rows[posicion].cells[4].innerHTML = $('#txtApellidoMaternoBeneficiario').val();
+                tblPersona.rows[posicion].cells[5].id = cbxPaisResidencia.dom.value;
+                tblPersona.rows[posicion].cells[5].innerHTML = cbxPaisResidencia.dom.options[cbxPaisResidencia.dom.selectedIndex].text;
+                tblPersona.rows[posicion].cells[6].id = cbxNacionalidad.dom.value;
+                tblPersona.rows[posicion].cells[6].innerHTML = cbxNacionalidad.dom.options[cbxNacionalidad.dom.selectedIndex].text;
+                tblPersona.rows[posicion].cells[7].innerHTML = $('#dtFechaNacimiento').val();
+                if ($("input[name='rdbtnGenero']:checked").val() == 0) {
+                    tblPersona.rows[posicion].cells[8].innerHTML = 'M';
+                } else {
+                    tblPersona.rows[posicion].cells[8].innerHTML = 'F';
+                }
+                //tblPersona.rows[posicion].cells[10].id = (txtCodigoTramite.value)?txtCodigoTramite.value:"";
+                //tblPersona.rows[posicion].cells[10].innerHTML = txtCodigoTramite.value;
+                swEdit = false;
+                btnSalirAll($("FrmIngresoPersona"));
+
+                return;
+            }
+            var fila = tbodyPersona.insertRow(tblPersona.rows.length - 1);
+            fila.id = 'tr' + cont;
+            fila.onclick = function () {
+                filaTablaPersona = this;
+                posicion = this.sectionRowIndex + 1;
+                for (var i = 1; i < tblPersona.rows.length; i++) {
+                    tblPersona.rows[i].className = "rowNoSelectTable";
+                }
+                this.className = "rowSelectTable";
+
+            };
+
+            cont++;
+
+            var celda = fila.insertCell(0);
+            celda.id = cbxTipoDocumentoBeneficiario.dom.value;
+            celda.innerHTML = cbxTipoDocumentoBeneficiario.dom.options[cbxTipoDocumentoBeneficiario.dom.selectedIndex].text;
+            celda.width = 80;
+
+            celda = fila.insertCell(1);
+            celda.id = tmpRecordBeneficiario != null ? tmpRecordBeneficiario[0].CRPER_CODIGO : 'KEYGEN';
+            celda.innerHTML = $('#txtNumDocBeneficiario').val();
+            celda.width = 80;
+
+            celda = fila.insertCell(2);
+            //celda.id = txtCodigoPersona.value;
+            celda.innerHTML = $('#txtNombreBeneficiario').val();
+            celda.width = 110;
+
+            celda = fila.insertCell(3);
+            celda.innerHTML = $('#txtApellidoPaternoBeneficiario').val();
+            celda.width = 110;
+
+            celda = fila.insertCell(4);
+            celda.innerHTML = $('#txtApellidoMaternoBeneficiario').val();
+            celda.width = 110;
+
+            celda = fila.insertCell(5);
+            celda.id = cbxPaisResidencia.dom.value;
+            celda.innerHTML = cbxPaisResidencia.dom.options[cbxPaisResidencia.dom.selectedIndex].text;
+            celda.width = 80;
+
+            celda = fila.insertCell(6);
+            celda.id = cbxNacionalidad.dom.value;
+            celda.innerHTML = cbxNacionalidad.dom.options[cbxNacionalidad.dom.selectedIndex].text;
+            celda.width = 80;
+
+            celda = fila.insertCell(7);
+            celda.innerHTML = $('#dtFechaNacimiento').val();
+            celda.width = 80;
+
+            celda = fila.insertCell(8);
+            if ($("input[name='rdbtnGenero']:checked").val() == 0) {
+                celda.id = '0';
+                celda.innerHTML = 'M';
+            } else {
+                celda.innerHTML = 'F';
+                celda.id = '1';
+            }
+            celda.width = 40;
+
+            btnSalirAll($("FrmIngresoPersona"));
+        }else{
+            new bsxMessageBox({
+                title:'Alerta',
+                msg: 'Por favor verifique que todos los datos hayan sido ingresados correctamente.',
+                icon: "iconInfo"
+            });
+        }
+    }
+
+    function clearFormPersona(){
+        cbxTipoDocumentoBeneficiario.dom.value = null;
+        cbxTipoDocumentoBeneficiario.dom.value = null;
+        tmpRecordBeneficiario= null;
+        $('#txtNumDocBeneficiario').val("");
+        $('#txtNombreBeneficiario').val("");
+        $('#txtApellidoPaternoBeneficiario').val("");
+        $('#txtApellidoMaternoBeneficiario').val("");
+        tcbxPaisResidencia.dom.value= null;
+        cbxNacionalidad.dom.value= null;
+        $('#dtFechaNacimiento').val(null);
+    }
+    
+    
     var tmpConfiguracion;//Variable utilizada para almacenar datos de configuracion consultados en la base;
     var tmpRecordPersona;//Variable almacena informacion de persona
     var tmpRecordBeneficiario;
@@ -28,7 +221,7 @@ $(function() {
     var btnSalirCgg_gem_contacto_persona = document.getElementById("btnSalirCgg_gem_contacto_persona");
     var filaTablaContacto;
     var posicion;
-    var swEdit;
+
 
     /******************INICIO DE DEFINICION DE VARIABLES PARA DOCUMENTACION SOLICITADA*******************/
     var filaTablaDocumentacion;
@@ -69,7 +262,7 @@ $(function() {
 
 
     $('#dtFechaNacimiento').datepicker({
-        showOn: 'both',
+        showOn: 'button',
         buttonImage: 'css/icon/date.gif',
         buttonImageOnly: false,
         appendText: '(dd/mm/yyyy)',
@@ -82,7 +275,11 @@ $(function() {
         changeMonth: true,
         showButtonPanel: false,
         nextText: 'Siguiente',
-        prevText: 'Anterior'
+        prevText: 'Anterior',
+        beforeShow: function(input, inst)
+        {
+            inst.dpDiv.css({marginLeft: (input.offsetWidth+50) + 'px'});
+        }
     });
 
     //PRUEBA ADJUNTO
@@ -689,6 +886,27 @@ $(function() {
         $('#txtMotivoResidencia').val('');
         tmpMotivoResidenciaId=null;
         selectMotivoResidenciaTree($(this).val());
+
+        //AC -> QUEMADO! Cambiar a Modo Transeuntes si fuese el caso (CRTST7)
+        var personaForm = document.getElementById("personaForm");
+        personaForm.style.display = "block";
+        if($(this).val()==='CRTST7'){
+            modeTranseuntes = true;
+            $("#tabs").tabs("select",1);
+            document.getElementById("divMultiTranseuntes").style.display = "block";
+            document.getElementById("divAuspiciado").style.display = "none";
+            document.getElementById("liAuspiciado").style.display = "none";
+            var contentPersona = document.getElementById("contentPersona");
+            contentPersona.appendChild(personaForm);
+        }else if(modeTranseuntes){
+            modeTranseuntes = false;
+            var auspiciado = document.getElementById("divAuspiciado");
+            document.getElementById("divMultiTranseuntes").style.display = "none";
+            auspiciado.style.display = "block";
+            document.getElementById("liAuspiciado").style.display = "block";
+            auspiciado.appendChild(personaForm);
+            $("#tabs").tabs("select",0);
+        }
     });
 
 
@@ -987,62 +1205,54 @@ $(function() {
     $('#btnSalirTramiteResidencia').click(function(){
         $('#myForm').hide();
     });
-    $('#btnGuardarTramiteResidencia').click(function(){
+    $('#btnGuardarTramiteResidencia').click(function() {
         var inContactosJSON = obtenerJSONContactos();
-        if (verificarInformacionTramite() == false)
-        {
-            //alert('');
-            new bsxMessageBox({
-                title:'Alerta',
-                msg: 'Por favor verifique que todos los datos hayan sido ingresados correctamente.',
-                icon: "iconInfo"
-            });
-            return;
+        if (!modeTranseuntes) {
+            if (verificarInformacionTramite() == false) {
+                //alert('');
+                new bsxMessageBox({
+                    title: 'Alerta',
+                    msg: 'Por favor verifique que todos los datos hayan sido ingresados correctamente.',
+                    icon: "iconInfo"
+                });
+                return;
+            }
         }
-        if(inContactosJSON.length<3)
-        {
+        if (inContactosJSON.length < 3) {
             new bsxMessageBox({
-                title:'Alerta',
+                title: 'Alerta',
                 msg: 'Por favor verifique que se haya ingresado al menos una informacion de contacto.',
                 icon: "iconInfo"
             });
-            $("#tabs").tabs("select",1);
+            $("#tabs").tabs("select", 1);
             return;
         }
-        if( validarReglaTramite() == false){
-            $('#divCargando1').hide();
-            $('#divCargando1').html('Cargando..');
-            return;
+        if (!modeTranseuntes) {
+            if (validarReglaTramite() == false) {
+                $('#divCargando1').hide();
+                $('#divCargando1').html('Cargando..');
+                return;
+            }
+        }else{
+            if (validarReglaTranseuntes() == false) {
+                $('#divCargando1').hide();
+                $('#divCargando1').html('Cargando..');
+                return;
+            }
         }
         $('#divCargando1').html('Cargando..');
 
-
-        //DEFINICION DEL OBJETO BENEFICIARIO PARA EL ALMACENAMIENTO CUANDO SEA UN NUEVO REGISTRO
-        var objBeneficiario ={
-            CRPER_CODIGO :tmpRecordBeneficiario !=null?tmpRecordBeneficiario[0].CRPER_CODIGO:'KEYGEN',
-            CRPER_NUM_DOC_IDENTIFIC:$('#txtNumDocBeneficiario').val(),
-            CRDID_CODIGO:$('#cbxTipoDocumentoBeneficiario').val(),
-            CRPER_NOMBRES:$('#txtNombreBeneficiario').val(),
-            CRPER_APELLIDO_PATERNO:$('#txtApellidoPaternoBeneficiario').val(),
-            CRPER_APELLIDO_MATERNO:$('#txtApellidoMaternoBeneficiario').val(),
-            CRPER_GENERO:$("input[name='rdbtnGenero']:checked").val(),
-            CRPER_FECHA_NACIMIENTO:$('#dtFechaNacimiento').val(),
-            CPAIS_CODIGO:$('#cbxNacionalidad').val(),
-            CGG_CPAIS_CODIGO:$('#cbxPaisResidencia').val()
-        }
-
-        var objBeneficiarioJSON = JSON.stringify(objBeneficiario);
-        function CallBackCgg_res_tramite(r){
+        function CallBackCgg_res_tramite(r) {
             $('#divCargando1').hide();
             var tmpRespuestaTramite = eval(r);
 
             if (tmpRespuestaTramite[0].substring(0, 5) == 'CRTRA') {
                 //alert('');
                 new bsxMessageBox({
-                    title:'Informaci\u00F3n',
-                    msg: 'Su trámite ha sido generado correctamente, se enviará a su corre electrónico los datos de su solicitud. El n\u00FAmero de su tr\u00E1mite es: <span style="color:#039BD7"><b>'+ new Date().getFullYear()+'-'+tmpRespuestaTramite[1]/*.split('CRTRA')[1]*/ + '</b></span>.\n A continuaci\u00f3n se gener\u00E1 el detalle de su solicitud.',
+                    title: 'Informaci\u00F3n',
+                    msg: 'El tr\u00E1mite ha sido guardado y despachado. El n\u00FAmero de su tr\u00E1mite es: <span style="color:#039BD7"><b>' + new Date().getFullYear() + '-' + tmpRespuestaTramite[1]/*.split('CRTRA')[1]*/ + '</b></span>.\n A continuaci\u00f3n se gener\u00E1 el detalle de su solicitud.',
                     icon: "iconOk",
-                    close:function(){
+                    close: function () {
                         printSolicitud(tmpRespuestaTramite[0]);
                         $('#myForm').hide();
                         //window.open(urlReport);
@@ -1051,39 +1261,103 @@ $(function() {
                 //Invocacion Alfresco del FrontEnd
                 var _tableName = encodeURIComponent("Cgg_res_tramite");
                 var _recordId = encodeURIComponent(tmpRespuestaTramite[0]);
-                var _filter = encodeURIComponent("crtst_codigo='"+tmpMotivoResidenciaId+"'");
-                PopupCenter("alfrescoMng.html?tableName="+_tableName+"&recordId="+_recordId+"&filter="+_filter,'Adjuntos','820','630');
+                var _filter = encodeURIComponent("crtst_codigo='" + tmpMotivoResidenciaId + "'");
+                PopupCenter("alfrescoMng.html?tableName=" + _tableName + "&recordId=" + _recordId + "&filter=" + _filter, 'Adjuntos', '820', '630');
                 //Fin Alfresco
-            }
-            else
-            {
+            }else {
                 //alert('');
                 new bsxMessageBox({
-                    title:'Error',
+                    title: 'Error',
                     msg: 'Ha ocurrido un problema al gestionar su petici&oacute;n. Pedimos disculpas por las molestias ocasionadas!!',
                     icon: "iconError"
                 });
             }
         }
-        var param = new SOAPClientParameters();
-        param.add('inCrper_codigo',tmpRecordAuspiciante !=null?tmpRecordAuspiciante[0].CRPER_CODIGO:null) ;
-        param.add('inCgg_crper_codigo',tmpRecordBeneficiario !=null?tmpRecordBeneficiario[0].CRPER_CODIGO:'KEYGEN') ;
-        // param.add('inCrtst_codigo', $("#cbxTipoSolicitudResidencia").val()) ;
-        param.add('inCrtst_codigo', tmpMotivoResidenciaId);
-        param.add('inCisla_codigo', $("#cbxIslaTramite").val()) ;
-        //MO
-        param.add('inCrtt_codigo', $("#cbxTipoTramite").val()) ;
-        //
-        param.add('inCrtra_observacion','Registro desde Atencion al Cliente') ;
-        param.add('inCvveh_codigo',null) ;
-        param.add('inCvmtr_codigo',null) ;
-        param.add('inCgg_cvveh_codigo',null) ;
-        param.add('inCgg_cvmtr_codigo',null) ;
-        param.add('inCrtra_atencion_cliente',true) ;
-        param.add('inNuevoBeneficiarioJSON',objBeneficiarioJSON) ;
-        param.add('inContactoPersonaJSON',inContactosJSON);//'[]') ;
-        param.add('inInfoVehiculos',null) ;
-        SOAPClient.invoke(URL_WS+"Cgg_res_tramite",'registrarTramiteLite',param, true, CallBackCgg_res_tramite);
+
+        if(!modeTranseuntes) {
+            //DEFINICION DEL OBJETO BENEFICIARIO PARA EL ALMACENAMIENTO CUANDO SEA UN NUEVO REGISTRO
+            var objBeneficiario = {
+                CRPER_CODIGO: tmpRecordBeneficiario != null ? tmpRecordBeneficiario[0].CRPER_CODIGO : 'KEYGEN',
+                CRPER_NUM_DOC_IDENTIFIC: $('#txtNumDocBeneficiario').val(),
+                CRDID_CODIGO: $('#cbxTipoDocumentoBeneficiario').val(),
+                CRPER_NOMBRES: $('#txtNombreBeneficiario').val(),
+                CRPER_APELLIDO_PATERNO: $('#txtApellidoPaternoBeneficiario').val(),
+                CRPER_APELLIDO_MATERNO: $('#txtApellidoMaternoBeneficiario').val(),
+                CRPER_GENERO: $("input[name='rdbtnGenero']:checked").val(),
+                CRPER_FECHA_NACIMIENTO: $('#dtFechaNacimiento').val(),
+                CPAIS_CODIGO: $('#cbxNacionalidad').val(),
+                CGG_CPAIS_CODIGO: $('#cbxPaisResidencia').val()
+            };
+
+            var objBeneficiarioJSON = JSON.stringify(objBeneficiario);
+
+            var param = new SOAPClientParameters();
+            param.add('inCrper_codigo', tmpRecordAuspiciante != null ? tmpRecordAuspiciante[0].CRPER_CODIGO : null);
+            param.add('inCgg_crper_codigo', tmpRecordBeneficiario != null ? tmpRecordBeneficiario[0].CRPER_CODIGO : 'KEYGEN');
+            // param.add('inCrtst_codigo', $("#cbxTipoSolicitudResidencia").val()) ;
+            param.add('inCrtst_codigo', tmpMotivoResidenciaId);
+            param.add('inCisla_codigo', $("#cbxIslaTramite").val());
+            //MO
+            param.add('inCrtt_codigo', $("#cbxTipoTramite").val());
+            //
+            param.add('inCrtra_observacion', 'Registro desde Atencion al Cliente');
+            param.add('inCvveh_codigo', null);
+            param.add('inCvmtr_codigo', null);
+            param.add('inCgg_cvveh_codigo', null);
+            param.add('inCgg_cvmtr_codigo', null);
+            param.add('inCrtra_atencion_cliente', true);
+            param.add('inNuevoBeneficiarioJSON', objBeneficiarioJSON);
+            param.add('inContactoPersonaJSON', inContactosJSON);//'[]') ;
+            param.add('inInfoVehiculos', null);
+            SOAPClient.invoke(URL_WS + "Cgg_res_tramite", 'registrarTramiteLite', param, true, CallBackCgg_res_tramite);
+        }else{
+            var beneficiarios = [];
+            if (tblPersona.rows.length > 1) {
+                for (var i = 1; i < tblPersona.rows.length; i++) {
+                    var objBeneficiario = {
+                        CRPER_CODIGO: tblPersona.rows[i].cells[1].id,
+                        CRPER_NUM_DOC_IDENTIFIC: tblPersona.rows[i].cells[1].innerHTML,
+                        CRDID_CODIGO: tblPersona.rows[i].cells[0].id,
+                        CRPER_NOMBRES: tblPersona.rows[i].cells[2].innerHTML,
+                        CRPER_APELLIDO_PATERNO: tblPersona.rows[i].cells[3].innerHTML,
+                        CRPER_APELLIDO_MATERNO: tblPersona.rows[i].cells[4].innerHTML,
+                        CRPER_GENERO: tblPersona.rows[posicion].cells[8].innerHTML == 'M'?"0":"1",
+                        CRPER_FECHA_NACIMIENTO: tblPersona.rows[i].cells[7].innerHTML,
+                        CPAIS_CODIGO: tblPersona.rows[i].cells[6].id,
+                        CGG_CPAIS_CODIGO: tblPersona.rows[i].cells[5].id
+                    };
+                    beneficiarios.push(objBeneficiario);
+                }
+            }
+            if(beneficiarios.size()<=0){
+                new bsxMessageBox({
+                    title: 'Alerta',
+                    msg: 'Por favor ingrese al menos un beneficiario.',
+                    icon: "iconInfo"
+                });
+                return;
+            }
+            var objBeneficiarioJSON = JSON.stringify(objBeneficiario);
+
+            var param = new SOAPClientParameters();
+            param.add('inCrper_codigo', tmpRecordAuspiciante != null ? tmpRecordAuspiciante[0].CRPER_CODIGO : null);
+            param.add('inCgg_crper_codigo', null);
+            param.add('inCrtst_codigo', tmpMotivoResidenciaId);
+            param.add('inCisla_codigo', $("#cbxIslaTramite").val());
+            param.add('inCrtt_codigo', $("#cbxTipoTramite").val());
+            param.add('inCrtra_observacion', 'Registro desde Atencion al Cliente');
+            param.add('inCvveh_codigo', null);
+            param.add('inCvmtr_codigo', null);
+            param.add('inCgg_cvveh_codigo', null);
+            param.add('inCgg_cvmtr_codigo', null);
+            param.add('inCrtra_atencion_cliente', true);
+            param.add('inNuevoBeneficiarioJSON', objBeneficiarioJSON);
+            param.add('inContactoPersonaJSON', inContactosJSON);//'[]') ;
+            param.add('inInfoVehiculos', null);
+            param.add('inBeneficiarios_JSON', objBeneficiarioJSON);
+
+            SOAPClient.invoke(URL_WS + "Cgg_res_tramite", 'registrarTramiteTranseunteLite', param, true, CallBackCgg_res_tramite);
+        }
     });
 
     manejarCtrlsAuspiciante();
@@ -1164,6 +1438,67 @@ $(function() {
                 param.add('inJSON_reglas_validacion',resultadoRegla);
                 param.add('jsonData',JSON.stringify(jsonData));
                 var validacion = SOAPClient.invoke(URL_WS+'Cgg_regla_validacion' ,'ejecutarReglaTipoSolicitud',param, false, null);
+                validacion = eval('('+validacion+')');
+                if(validacion.resultadoValidacion !== undefined){
+                    if(validacion.resultadoValidacion == 'false'){
+
+                        $("#divReglaValidacion").html($.tmpl( "resultadoReglaTemplate", validacion ));
+                        $("#dlgReglaValidacion").dialog("open");
+                    }
+                    flagRegla=eval(validacion.resultadoValidacion);
+                }else{
+                    flagRegla = null;
+                }
+            }
+        }catch(inErr){
+            //   Ext.MsgPopup.msg(tituloCgg_res_tramite, "No se ha podido validar la informaci\u00f3n a almacenar.<br>Error:"+inErr+'<br>'+ERR_MESSAGE);
+            flagRegla = false;
+        }
+        // pnlFrmCgg_res_tramitePrincipal.getEl().unmask();
+        return flagRegla;
+    }
+
+    function validarReglaTranseuntes(){
+        var flagRegla = false;
+        $('#divCargando1').html('Validando..');
+        $('#divCargando1').show();
+        try{
+            var beneficiarios = [];
+            if (tblPersona.rows.length > 1) {
+                for (var i = 1; i < tblPersona.rows.length; i++) {
+                    var objBeneficiario = {
+                        CRPER_CODIGO: tmpRecordAuspiciante[0].CRPER_CODIGO,
+                        CGGCRPER_CODIGO: tblPersona.rows[i].cells[1].id,
+                        CRPER_NUM_DOC_IDENTIFIC: tblPersona.rows[i].cells[1].innerHTML,
+                        CRDID_CODIGO: tblPersona.rows[i].cells[0].id,
+                        CRPER_NOMBRES: tblPersona.rows[i].cells[2].innerHTML,
+                        CRPER_APELLIDO_PATERNO: tblPersona.rows[i].cells[3].innerHTML,
+                        CRPER_APELLIDO_MATERNO: tblPersona.rows[i].cells[4].innerHTML,
+                        CRPER_GENERO: tblPersona.rows[posicion].cells[8].innerHTML == 'M'?"0":"1",
+                        CRPER_FECHA_NACIMIENTO: tblPersona.rows[i].cells[7].innerHTML,
+                        CPAIS_CODIGO: tblPersona.rows[i].cells[6].id,
+                        CRDPT_CODIGO: crdptCodigo,
+                        CGG_CPAIS_CODIGO: tblPersona.rows[i].cells[5].id
+                    };
+                    beneficiarios.push(objBeneficiario);
+                }
+            }
+            if(beneficiarios.size()<=0){
+                new bsxMessageBox({
+                    title: 'Alerta',
+                    msg: 'Por favor ingrese al menos un beneficiario.',
+                    icon: "iconInfo"
+                });
+                return;
+            }
+            var objBeneficiarioJSON = JSON.stringify(objBeneficiario);
+
+            var resultadoRegla = evaluarReglaTramite();
+            if(resultadoRegla!==null){
+                var param = new SOAPClientParameters();
+                param.add('inJSON_reglas_validacion',resultadoRegla);
+                param.add('jsonData',objBeneficiarioJSON);
+                var validacion = SOAPClient.invoke(URL_WS+'Cgg_regla_validacion' ,'ejecutarReglaTranseuntesTipoSolicitud',param, false, null);
                 validacion = eval('('+validacion+')');
                 if(validacion.resultadoValidacion !== undefined){
                     if(validacion.resultadoValidacion == 'false'){

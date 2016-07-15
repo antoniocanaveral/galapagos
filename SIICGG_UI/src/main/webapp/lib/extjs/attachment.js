@@ -34,6 +34,6 @@ Ext.ux.form.AlfrescoFM = Ext.extend(Ext.Button, {
         }else
             Ext.MsgPopup.msg("Adjunto","Guarde o Seleccione el registro, para abrir Adjuntos.", MsgPopup.ERROR);
 
-    },
+    }
 });
 Ext.reg('uxalfrescofm', Ext.ux.form.AlfrescoFM);

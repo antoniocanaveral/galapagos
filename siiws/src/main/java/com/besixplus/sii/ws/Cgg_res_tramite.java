@@ -2145,6 +2145,104 @@ VALORES:
 				return outCadena.insert(outCadena.indexOf("<dataSet>")+9,"<totalCount>"+tmpCount+"</totalCount>").toString();
 		return null;
 	}
+
+
+	/**
+	 * INSERTA UN REGISTRO EN LA TABLA Cgg_res_tramite.
+	 * @param inCrper_codigo CODIGO IDENTIFICATIVO DE REGISTRO DE AUSPICIANTE.
+	 * @param inCgg_crper_codigo CODIGO IDENTIFICATIVO DE REGISTRO DEL BENEFICIARIO. CAMPO RECURSIVO HACIA LA MISMA TABLA DE PERSONA.
+	 * @param inCrtst_codigo IDENTIFICATIVO UNICO DE REGISTRO TIPO SOLICITUD.
+	 * @param inCvveh_codigo IDENTIFICADOR UNICO DE REGISTRO DE VEHICULO.
+	 * @param inCisla_codigo IDENTIFICATIVO UNICO DE REGISTRO DE ISLA.
+	 * @param inCvmtr_codigo IDENTIFICATIVO UNICO DE REGISTRO DE MOTOR.
+	 * @param inCrtra_observacion OBSERVACION DEL TRAMITE- HISTORIAL FORMATO JSON.
+	 * @param inCgg_cvveh_codigo IDENTIFICATIVO UNICO DE REGISTRO DE VEHICULO
+	 * @param inCgg_cvmtr_codigo IDENTIFICATIVO UNICO DE REGISTRO DE MOTOR
+	VALORES:
+	0-NO EVALUADO
+	1-EVALUADO
+	2-CADUCADO
+	3-SOLO GUARDADO
+	4-FINALIZADO
+	5-OTRO TIPO DE ESTADO.
+	 * @param inCrtra_atencion_cliente SI LA INFORMACION FUE REGISTRADA DESDE ATENCION AL CLIENTE.
+	 * @param inNuevoBeneficiarioJSON NUEVO BENEFICIARIO
+	 * @param inContactoPersonaJSON CONTACTOS DE LA PERSONA
+	 * @param inInfoVehiculos INFORMACION VEHICULOS
+	 * @param inBeneficiarios_JSON ARREGLO DE BENEFICIARIOS
+	 * @return String <code>true</code> SI SE INGRESO EL REGISTRO, CASO CONTRARIO <code>false</code>.
+	 */
+	@WebMethod
+	public String registrarTramiteTranseunteLite(
+			@WebParam(name="inCrper_codigo")String inCrper_codigo,
+			@WebParam(name="inCgg_crper_codigo")String inCgg_crper_codigo,
+			@WebParam(name="inCrtst_codigo")String inCrtst_codigo,
+			@WebParam(name="inCisla_codigo")String inCisla_codigo,
+			@WebParam(name ="inCrtt_codigo")String inCrtt_codigo,
+			@WebParam(name="inCrtra_observacion")String inCrtra_observacion,
+			@WebParam(name="inCvveh_codigo")String inCvveh_codigo,
+			@WebParam(name="inCvmtr_codigo")String inCvmtr_codigo,
+			@WebParam(name="inCgg_cvveh_codigo")String inCgg_cvveh_codigo,
+			@WebParam(name="inCgg_cvmtr_codigo")String inCgg_cvmtr_codigo,
+			@WebParam(name="inCrtra_atencion_cliente")boolean inCrtra_atencion_cliente,
+			@WebParam(name="inNuevoBeneficiarioJSON")String inNuevoBeneficiarioJSON,
+			@WebParam(name="inContactoPersonaJSON")String inContactoPersonaJSON,
+			@WebParam(name="inInfoVehiculos")String inInfoVehiculos,
+			@WebParam(name="inBeneficiarios_JSON")String inBeneficiarios_JSON
+	){
+		HttpServletRequest tmpRequest = (HttpServletRequest) wctx.getMessageContext().get(MessageContext.SERVLET_REQUEST);
+		HttpServletResponse tmpResponse = (HttpServletResponse) wctx.getMessageContext().get(MessageContext.SERVLET_RESPONSE);
+		String outResult = null;
+
+		com.besixplus.sii.objects.Cgg_res_tramite objTramite = new com.besixplus.sii.objects.Cgg_res_tramite();
+		objTramite.setCRTRA_CODIGO("KEYGEN");
+		objTramite.setCRPER_CODIGO(inCrper_codigo);
+		objTramite.setCGG_CRPER_CODIGO(inCgg_crper_codigo);
+		objTramite.setCRTST_CODIGO(inCrtst_codigo);
+		objTramite.setCVVEH_CODIGO(inCvveh_codigo);
+		objTramite.setCGG_CVVEH_CODIGO(inCgg_cvveh_codigo);
+		objTramite.setCGG_CVMTR_CODIGO(inCgg_cvmtr_codigo);
+		objTramite.setCISLA_CODIGO(inCisla_codigo);
+		objTramite.setCVMTR_CODIGO(inCvmtr_codigo);
+		objTramite.setCRTRA_ANIO(new BigDecimal(Calendar.getInstance().get(Calendar.YEAR)));
+		objTramite.setCRTRA_NUMERO(new BigDecimal(0));
+		objTramite.setCRTRA_FECHA_RECEPCION(new Date());
+		objTramite.setCRTRA_OBSERVACION(inCrtra_observacion);
+		objTramite.setCRTRA_ATENCION_CLIENTE(inCrtra_atencion_cliente);
+		objTramite.setCRTRA_ESTADO(true);
+		objTramite.setCRTRA_USUARIO_INSERT(tmpRequest.getUserPrincipal().getName());
+		objTramite.setCRTRA_USUARIO_UPDATE(tmpRequest.getUserPrincipal().getName());
+
+		outResult = new Cgg_res_tramite().registrarTramiteTranseunte(
+				objTramite.getCRPER_CODIGO(),
+				objTramite.getCRPJR_CODIGO(),
+				objTramite.getCGG_CRPER_CODIGO(),
+				objTramite.getCRPRO_CODIGO(),
+				objTramite.getCRTST_CODIGO(),
+				objTramite.getCVVEH_CODIGO(),
+				objTramite.getCISLA_CODIGO(),
+				objTramite.getCVMTR_CODIGO(),
+				objTramite.getCGG_CVMTR_CODIGO(),
+				objTramite.getCGG_CVVEH_CODIGO(),
+				objTramite.getCRTRA_ACTIVIDAD_RESIDENCIA(),
+				objTramite.getCRTRA_OBSERVACION(),
+				objTramite.getCRTRA_DIAS_PERMANENCIA(),
+				objTramite.getCRTRA_ATENCION_CLIENTE(),
+				objTramite.getCRTRA_COMUNICADO_RADIAL(),
+				objTramite.getCRTRA_MOTIVO(),
+				objTramite.getCRTRA_FOLIO(),
+				objTramite.getCRTRA_FECHA_INGRESO(),
+				objTramite.getCRTRA_FECHA_SALIDA(),
+				inBeneficiarios_JSON,
+				null,
+				null,
+				null,
+				tmpRequest,
+				tmpResponse);
+
+		return outResult;
+	}
+
 	/**
 	 * INSERTA UN REGISTRO EN LA TABLA Cgg_res_tramite.
 	 * @param inCrper_codigo CODIGO IDENTIFICATIVO DE REGISTRO DE AUSPICIANTE.
