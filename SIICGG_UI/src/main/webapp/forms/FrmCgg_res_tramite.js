@@ -1258,7 +1258,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                             if(tmpFlag==true) {
                                 Ext.Msg.show({
                                     title: tituloCgg_res_tramite,
-                                    msg: 'El tr\u00E1mite ha sido guardado y despachado. El n\u00FAmero de su tr\u00E1mite es: <span class="numeroTramite">'+ numTramite + '</span>.<br>Para mayor informaci\u00F3n consulte el historial del tr\u00E1mite.',
+                                    msg: 'Su trámite ha sido generado correctamente, se enviará a su corre electrónico los datos de su solicitud. El n\u00FAmero de su tr\u00E1mite es: <span style="color:#039BD7"><b>'+ new Date().getFullYear()+'-'+tmpRespuestaTramite[1]/*.split('CRTRA')[1]*/ + '</b></span>.\n A continuaci\u00f3n se gener\u00E1 el detalle de su solicitud.',
                                     buttons: Ext.Msg.OK,
                                     icon: Ext.MessageBox.INFO
                                 });
