@@ -436,7 +436,7 @@ function FrmHistorialTramite(inDesktop){
         name:'btnReporteHistorialTramite',
         text:'Reportes',
         iconCls:'iconImprimir',
-        menu:[actHstRptTramitePersonal,actHstRptFormularioPentacontrol,actHstRptInformeTecnico,actHstRptComprobanteTramite,'-',actHstRptCompDevGrn]
+        menu:[actHstRptTramitePersonal,actHstRptFormularioPentacontrol,actHstRptInformeTecnico,actHstRptComprobanteTramite]
     });
     var btnRevisarTramite = new Ext.Button({
         id:'btnRevisarTramite',

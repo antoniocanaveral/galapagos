@@ -27,7 +27,7 @@ function FrmListadoCgg_res_tramite(inDesktop){
             }
         }
     });
-//MO
+
     var btnNuevoTranseunte = new Ext.Button({
         id:'btnNuevoTranseunte',
         text:'Nuevo transe\u00fante',
@@ -42,8 +42,6 @@ function FrmListadoCgg_res_tramite(inDesktop){
             }
         }
     });
-
-//
 
 
     /**

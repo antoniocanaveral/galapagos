@@ -1319,15 +1319,17 @@ public class Cgg_res_persona implements Serializable{
 						tmpObj.setCRPER_APELLIDO_MATERNO(apellidos.get(1));
 						tmpObj.setCRPER_NOMBRES(apellidos.get(2));
 					}
-					SimpleDateFormat sdf = new SimpleDateFormat("DD/MM/YYYY");
+					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 					tmpObj.setCRPER_FECHA_NACIMIENTO(sdf.parse(registroCivil.getFechaNacimiento()));
 
 					if(registroCivil.getNacionalidad().equals("ECUATORIANA")){
-
 						tmpObj.setCPAIS_CODIGO("61");
-
 					}
-
+					if(registroCivil.getGenero().equals("FEMENINO")){
+						tmpObj.setCRPER_GENERO(1);
+					}/*else{
+						tmpObj.setCRPER_GENERO(0);
+					}*/
 
 					/*
 					* Creamos la cedula en BG

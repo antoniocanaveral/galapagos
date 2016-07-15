@@ -1194,6 +1194,18 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
         }
     });
 
+   /* var param=new SOAPClientParameters();
+    param.add("inCusu_codigo",in)*/
+
+   /* var tmpTipoUsuario = SOAPClient.invoke(URL_WS+'Cgg_usuario', 'select', scpUsuario, false, null);
+
+    if(tmpTipoUsuario.CRPER_TIPO_PERSONA){
+        txtCrper_codigo.disabled=true;
+        btnCrper_codigoCgg_res_tramite.disabled=true;
+        txtCgg_crper_codigo.disabled=true;
+        btnCgg_crper_codigoCgg_res_tramite.disabled=true;
+    }*/
+
     /**
      * Boton que permite almacenar la informacion de la ventana winFrmCgg_res_tramite
      */
@@ -1246,7 +1258,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                             if(tmpFlag==true) {
                                 Ext.Msg.show({
                                     title: tituloCgg_res_tramite,
-                                    msg: 'El tr\u00E1mite ha sido guardado y despachado. El n\u00FAmero de su tr\u00E1mite es: <span class="numeroTramite">'+ numTramite + '</span>.<br>Para mayor informaci\u00F3n consulte el historial del tr\u00E1mite.',
+                                    msg: 'Su trámite ha sido generado correctamente, se enviará a su corre electrónico los datos de su solicitud. El n\u00FAmero de su tr\u00E1mite es: <span style="color:#039BD7"><b>'+ new Date().getFullYear()+'-'+tmpRespuestaTramite[1]/*.split('CRTRA')[1]*/ + '</b></span>.\n A continuaci\u00f3n se gener\u00E1 el detalle de su solicitud.',
                                     buttons: Ext.Msg.OK,
                                     icon: Ext.MessageBox.INFO
                                 });
@@ -2580,11 +2592,11 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                     id: 'miChkEmitirComprobante',
                     checked: true,
                     text: 'Emitir comprobante'
-                }, {
+                }/*, {
                     id: 'miChkEmitirGarantia',
                     checked: true,
                     text: 'Emitir garant\u00EDa'
-                }, '-', {
+                }*/, '-', {
                     id: 'miChkSugerirSumilla',
                     checked: true,
                     text: 'Sugerir a comentario/sumilla vac\u00EDa'

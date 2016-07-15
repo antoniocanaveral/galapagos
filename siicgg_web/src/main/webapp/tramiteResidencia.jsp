@@ -295,9 +295,9 @@
         <div id="tabs">
             <ul>
                 <li id="liAuspiciado"><a href="#divAuspiciado" class="tabBeneficiario"><b>Informaci&oacute;n Beneficiario</b></a></li>
-                <li><a href="#divContacto"><b>Contacto</b></a></li>
-                <li><a href="#divRequisitos"><b>Requisitos</b></a></li>
-                <li><a href="#divDocumentacion"><b>Documentaci&oacute;n</b></a></li>
+                <li><a href="#divContacto"><b>Contactos del Auspiciante</b></a></li>
+                <li><a href="#divRequisitos"><b>Requisitos del tramite</b></a></li>
+                <li><a href="#divDocumentacion"><b>Documentos para el tramite</b></a></li>
             </ul>
             <div id="divAuspiciado" style="width: 100%" class="tabBeneficiario">
                 <div id="personaForm">
@@ -478,8 +478,11 @@
                                         <thead
                                                 style="display: block; border-bottom: 1px solid #CCCCCC; width: 100%">
                                         <tr>
-                                            <th width="600px">
+                                            <th width="800px">
                                                 <div align="left">Requisitos</div>
+                                            </th>
+                                            <th width="300px">
+                                                <div align="left">Participante</div>
                                             </th>
                                         </tr>
                                         </thead>

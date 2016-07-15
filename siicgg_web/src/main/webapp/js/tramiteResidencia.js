@@ -761,19 +761,38 @@ $(function() {
 
     //AC
     //Requisitos
+
+    var dsTipoParticipante = [[0,'Auspiciante'],[1,'Beneficiario'],[2,'Conyuge/Conviviente'],[3,'Padre/Madre'],[4,'General']];
+
+    function getParticipante(codParticipante){
+        for(var i=0;i<dsTipoParticipante.length;i++){
+            var item=dsTipoParticipante[i];
+            if(item[0]==codParticipante){
+                return item[1];
+            }
+        }
+        return "";
+    }
+
     function cargarRequisitos(crtst_codigo){
         function callBackCgg_res_requisitos(r) {
             var a = eval('('+r+')');
             var tbodyDocumentacionSolicitada = document.getElementById("tblRequisitos").tBodies[0];
-
-            for(i=0;i<a.length;i++){
+            for(var i=0;i<a.length;i++){
                 var fila = insertarFila();
                 //Tipo de Documento
                 var celda= fila.insertCell(0);
                 celda.id = a[i].CRREQ_CODIGO;
                 celda.innerHTML = a[i].CRREQ_DESCRIPCION;
-                celda.width = 600;
+                celda.width = 400;
+
+                //Participante
+                celda= fila.insertCell(1);
+                celda.id = a[i].CRREQ_CODIGO;
+                celda.innerHTML = getParticipante(a[i].CRSRQ_PARTICIPANTE);
+                celda.width = 170;
             }
+
         }
         limpiarRequisitos();
         var param = new SOAPClientParameters();
@@ -1074,7 +1093,8 @@ $(function() {
                             $("#txtApellidoMaternoBeneficiario").val(tmpRecordPersona[0].CRPER_APELLIDO_MATERNO);
                             $("#dtFechaNacimiento").val(tmpRecordPersona[0].CRPER_FECHA_NACIMIENTO != undefined?$.format.date(tmpRecordPersona[0].CRPER_FECHA_NACIMIENTO, "dd/MM/yyyy") : '' );
                             $("#cbxNacionalidad").val(tmpRecordPersona[0].CPAIS_CODIGO);
-                            $("#cbxPaisResidencia").val(tmpRecordPersona[0].CGG_CPAIS_CODIGO);
+                            //$("#cbxPaisResidencia").val(tmpRecordPersona[0].CGG_CPAIS_CODIGO);
+                            $("input[name='rdbtnGenero']")[tmpRecordPersona[0].CRPER_GENERO].checked = true;
                             tmpRecordBeneficiario = tmpRecordPersona;
                             manejarCtrlsBeneficiario(true);
                         }
@@ -1093,7 +1113,6 @@ $(function() {
                                     limpiarCtrlsAuspiciante();
                                 }
                             });
-
                         }
                         else
                         {
@@ -1104,9 +1123,14 @@ $(function() {
                             $("#txtApellidoMaternoBeneficiario").val(tmpRecordPersona[0].CRPER_APELLIDO_MATERNO);
                             $("#dtFechaNacimiento").val(tmpRecordPersona[0].CRPER_FECHA_NACIMIENTO != undefined?$.format.date(tmpRecordPersona[0].CRPER_FECHA_NACIMIENTO, "dd/MM/yyyy") : '' );
                             $("#cbxNacionalidad").val(tmpRecordPersona[0].CPAIS_CODIGO);
+                            if(tmpRecordPersona[0].CRPER_GENERO == 1){
+                                $("#rdFemenino").checked(true);
+                                $("#rdMasculino").checked(false);
+                            }else{
+                                $("#rdMasculino").checked(true);
+                                $("#rdFemenino").checked(false);
+                            }
                         }
-
-
                     }
 
                 }
@@ -1153,6 +1177,7 @@ $(function() {
         $("#rdbtnGenero").attr("readonly", enable);
         $("#cbxNacionalidad").attr("readonly", enable);
         $("#cbxPaisResidencia").attr("readonly", enable);
+
     }
 
     function limpiarCtrlsAuspiciante()
