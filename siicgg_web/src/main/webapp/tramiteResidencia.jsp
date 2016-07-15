@@ -109,7 +109,7 @@
 
             <%--MO--%>
             <li class="form-line"><label class="form-label-left"
-                                         id="lblTipoTramite" for="divTipoTramite"> Tipo de tramite:</label>
+                                         id="lblTipoTramite" for="divTipoTramite"> Tipo de solicitud:</label>
                 <div class="form-input">
                     <div id='divTipoTramite'></div>
                 </div>
@@ -117,7 +117,7 @@
             <%----%>
 
             <li class="form-line"><label class="form-label-left"
-                                         id="lblIslaTramite" for="divIslaTramite"> Lugar registro:</label>
+                                         id="lblIslaTramite" for="divIslaTramite"> Lugar de tr&aacute;mite:</label>
                 <div class="form-input">
                     <div id='divIslaTramite'></div>
                 </div>
@@ -196,9 +196,9 @@
         <div id="tabs">
             <ul>
                 <li><a href="#divAuspiciado"><b>Informaci&oacute;n Beneficiario</b></a></li>
-                <li><a href="#divContacto"><b>Contacto</b></a></li>
-                <li><a href="#divRequisitos"><b>Requisitos</b></a></li>
-                <li><a href="#divDocumentacion"><b>Documentaci&oacute;n</b></a></li>
+                <li><a href="#divContacto"><b>Contacto Auspiciante</b></a></li>
+                <li><a href="#divRequisitos"><b>Requisitos del tr&aacute;mite</b></a></li>
+                <li><a href="#divDocumentacion"><b>Documentos para el tr&aacute;mite</b></a></li>
             </ul>
             <div id="divAuspiciado">
                 <ul class="form-section">
@@ -267,13 +267,18 @@
                     </li>
 
                     <li class="form-line"><label class="form-label-left"
-                                                 id="llblGenero" for="divTipoSolicitudResidencia"> Genero </label>
+                                                 id="llblGenero"> Genero </label>
                         <input
                                 type="radio" name="rdbtnGenero" value="0" checked="checked"
                                 id="rdMasculino"/> <label for="rdMasculino">Masculino</label> <input
                                 type="radio" name="rdbtnGenero" value="1" id="rdFemenino"/> <label
                                 for="rdFemenino">Femenino</label></li>
                 </ul>
+
+
+
+
+
 <span class="obligatorio"> Los campos marcados con (*) son
 obligatorios</span></div>
 
@@ -373,8 +378,11 @@ obligatorios</span></div>
                                         <thead
                                                 style="display: block; border-bottom: 1px solid #CCCCCC; width: 100%">
                                         <tr>
-                                            <th width="600px">
+                                            <th width="800px">
                                                 <div align="left">Requisitos</div>
+                                            </th>
+                                            <th width="300px">
+                                                <div align="left">Participante</div>
                                             </th>
                                         </tr>
                                         </thead>
@@ -447,6 +455,12 @@ obligatorios</span></div>
         <div id='divMotivoResidencia'></div>
 
     </div>
+
+    <%--<div id="dlgTipoActividad" title="Tipo Actividad">
+        <div id='divTipoActividad'></div>
+
+    </div>--%>
+
     <div id="dlgReglaValidacion" title="Regla validacion">
         <div id="divReglaValidacion" class="divTramite"></div>
     </div>

@@ -2290,7 +2290,7 @@ VALORES:
 					objNuevoBeneficiario.setCRPER_FECHA_NACIMIENTO( fechaNacimiento );
 					objNuevoBeneficiario.setCRPER_ESTADO(true);
 					objNuevoBeneficiario.setCRPER_USUARIO_INSERT(tmpRequest.getUserPrincipal().getName());
-					objNuevoBeneficiario.setCRPER_USUARIO_UPDATE(tmpRequest.getUserPrincipal().getName());									
+					objNuevoBeneficiario.setCRPER_USUARIO_UPDATE(tmpRequest.getUserPrincipal().getName());
 					cggCrperCodigo = new com.besixplus.sii.db.Cgg_res_persona(objNuevoBeneficiario).insert(con);
 				}
 

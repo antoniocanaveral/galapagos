@@ -1194,6 +1194,18 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
         }
     });
 
+   /* var param=new SOAPClientParameters();
+    param.add("inCusu_codigo",in)*/
+
+   /* var tmpTipoUsuario = SOAPClient.invoke(URL_WS+'Cgg_usuario', 'select', scpUsuario, false, null);
+
+    if(tmpTipoUsuario.CRPER_TIPO_PERSONA){
+        txtCrper_codigo.disabled=true;
+        btnCrper_codigoCgg_res_tramite.disabled=true;
+        txtCgg_crper_codigo.disabled=true;
+        btnCgg_crper_codigoCgg_res_tramite.disabled=true;
+    }*/
+
     /**
      * Boton que permite almacenar la informacion de la ventana winFrmCgg_res_tramite
      */
@@ -2580,11 +2592,11 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                     id: 'miChkEmitirComprobante',
                     checked: true,
                     text: 'Emitir comprobante'
-                }, {
+                }/*, {
                     id: 'miChkEmitirGarantia',
                     checked: true,
                     text: 'Emitir garant\u00EDa'
-                }, '-', {
+                }*/, '-', {
                     id: 'miChkSugerirSumilla',
                     checked: true,
                     text: 'Sugerir a comentario/sumilla vac\u00EDa'
