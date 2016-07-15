@@ -160,10 +160,8 @@ Gal&aacute;pagos</div>
 
 		<tr>
 			<td colspan="3">
-			<fieldset style="font-size: 11px"><legend><b>Listado
-			de personas</b></legend>
-			<table style="width: 100%;" border="0" align="center" cellspacing="0"
-				cellpadding="0">
+			<fieldset style="font-size: 11px"><legend><b>Listado de personas</b></legend>
+			<table style="width: 100%;" border="0" align="center" cellspacing="0" cellpadding="0">
 				<tbody>
 					<tr>
 						<td>

@@ -24,8 +24,7 @@
     <link rel="stylesheet" type="text/css" href="css/form.css"/>
     <link rel="stylesheet" type="text/css" href="css/bsxTablaGE.css"/>
     <link rel="stylesheet" type="text/css" href="css/bsxMessageBox.css"/>
-    <link rel="stylesheet" type="text/css"
-          href="css/jquery/jstree/style.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jquery/jstree/style.css"/>
     <style type="text/css">
         .Visible {
             display: block;
@@ -52,12 +51,20 @@
         }
 
         .form-all {
-            width: 650px;
+            /*width: 650px;*/
             /*)color:#000000 !important;
                         (*/
             /*) font-family:"Arial Black";
                            (*/
             font-size: 10px;
+        }
+
+        .form-all > fieldset {
+            margin-bottom: 5px;
+        }
+
+        #tabs {
+            margin-top: 5px;
         }
 
         td.hovered {
@@ -67,6 +74,12 @@
 
         div.divTramite {
             font-size: 10px;
+        }
+        .divTranseuntes{
+            display:none;
+        }
+        .tabBeneficiario{
+            display:block;
         }
     </style>
     <!--ALFRESCO-->
@@ -90,9 +103,13 @@
         }
     </script>
 </head>
-<BODY>
+<body>
 <input type="hidden" id="txtUsuario"
-       value=<% try{ out.println(request.getUserPrincipal().getName()); }catch(Exception ex){ out.println(false); } %>/></input>
+       value=<% try {
+    out.println(request.getUserPrincipal().getName());
+} catch (Exception ex) {
+    out.println(false);
+} %>/></input>
 <div class="tituloPrincipal" style="padding-top: 8px">Registro de
     tr&aacute;mites de residencia
 </div>
@@ -101,6 +118,7 @@
 </div>
 <br/>
 <br/>
+<div id="divBgModal" class="bgtransparent" style="z-index:10; width: 100%; height: 100%"></div>
 <div id="divLogineo" style="display: none; width: 646px" class="divAviso"></div>
 <div class="jotform-form" id="myForm" style="display: none">
     <div class="form-all">
@@ -108,28 +126,28 @@
             <legend><b>Datos tr&aacute;mite</b></legend>
 
             <%--MO--%>
-            <li class="form-line"><label class="form-label-left"
+            <div class="form-line"><label class="form-label-left"
                                          id="lblTipoTramite" for="divTipoTramite"> Tipo de tramite:</label>
                 <div class="form-input">
                     <div id='divTipoTramite'></div>
                 </div>
-                <label class="obligatorio">(*)</label></li>
+                <label class="obligatorio">(*)</label></div>
             <%----%>
 
-            <li class="form-line"><label class="form-label-left"
+            <div class="form-line"><label class="form-label-left"
                                          id="lblIslaTramite" for="divIslaTramite"> Lugar registro:</label>
                 <div class="form-input">
                     <div id='divIslaTramite'></div>
                 </div>
-                <label class="obligatorio">(*)</label></li>
+                <label class="obligatorio">(*)</label></div>
 
-            <li class="form-line"><label class="form-label-left"
+            <div class="form-line"><label class="form-label-left"
                                          id="lblTipoResidencia" for="divTipoResidenciaPadre"> Tipo
                 residencia </label>
                 <div class="form-input">
                     <div id='divTipoResidenciaPadre'></div>
                 </div>
-                <label class="obligatorio">(*)</label></li>
+                <label class="obligatorio">(*)</label></div>
             <!--li class="form-line">
                                     <label class="form-label-left" id="llblMotivoResidencia" for="divTipoSolicitudResidencia">
                                         Motivo residencia
@@ -139,7 +157,7 @@
                                     </div>
                                     <label class="obligatorio">(*)</label>
                                 </li-->
-            <li class="form-line"><label class="form-label-left"
+            <div class="form-line"><label class="form-label-left"
                                          id="llblMotivoResidencia" for="txtMotivoResidencia"> Motivo
                 residencia </label>
                 <div class="form-input"><input type="text" class="form-textbox"
@@ -148,7 +166,7 @@
                     <button id="btnBuscarMotivo" title="Buscar motivo"><img
                             src="css/icon/buscar.png"/></button>
                 </div>
-            </li>
+            </div>
         </fieldset>
         <fieldset>
             <legend><b>Informaci&oacute;n auspiciante</b></legend>
@@ -184,104 +202,191 @@
            name="txtNombreAuspiciantePJ" id="txtNombreAuspiciantePJ"/> </span></div>
                 </div>
 
-                <li class="form-line"><label class="form-label-left"
+                <div class="form-line"><label class="form-label-left"
                                              id="lblNumResidenciaAuspiciante" for="txtNumResidenciaAuspiciante">
                     No. residencia </label>
                     <div class="form-input"><input type="text" class="form-textbox"
                                                    id="txtNumResidenciaAuspiciante" name="txtNumResidenciaAuspiciante"
                                                    size="20"/></div>
-                </li>
+                </div>
             </ul>
         </fieldset>
+
+
+        <div id="divMultiTranseuntes" style="width: 100%" class="divTranseuntes">
+            <fieldset style="font-size: 11px"><legend><b>Listado de beneficiarios transeuntes</b></legend>
+                <table style="width: 100%;" border="0" align="center" cellspacing="0" cellpadding="0">
+                    <tbody>
+                    <tr>
+                        <td>
+                            <table style="font-size: 11px; border: 1px solid transparent"
+                                   border="0" cellspacing="0">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <button id="btnTranAgregar" type="button"><img src="css/icon/add.png" alt="add" />A&ntilde;adir</button>
+                                    </td>
+                                    <td>
+                                        <button id="btnTranEliminar" type="button"><img src="css/icon/remove.png" alt="remove" />Borrar</button>
+                                    </td>
+                                    <td>
+                                        <button id="btnTranEditar" type="button"><img src="css/icon/edit.png" alt="edit" />Editar</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <form action="" id="frmPersonaRegistro" method="get">
+                                <table class="tabla" cellspacing="0" width="100%" border="0" id='tblPersona' style="font-size: 11px; border: 1px solid #CCCCCC">
+                                    <thead style="border-bottom: 1px solid #CCCCCC; width: 100%">
+                                        <tr height="30px">
+                                            <th width="80">
+                                                <div align="left">Tipo</div>
+                                            </th>
+                                            <th width="80">
+                                                <div align="left">N&uacute;mero D.</div>
+                                            </th>
+                                            <th width="110">
+                                                <div align="left">Nombres</div>
+                                            </th>
+                                            <th width="110">
+                                                <div align="left">Primer Apellido</div>
+                                            </th>
+                                            <th width="110">
+                                                <div align="left">Segundo Apellido</div>
+                                            </th>
+                                            <th width="80">
+                                                <div align="left">Pa&iacute;s Residencia</div>
+                                            </th>
+                                            <th width="80">
+                                                <div align="left">Nacionalidad</div>
+                                            </th>
+                                            <th width="100">
+                                                <div align="left">F. nacimiento</div>
+                                            </th>
+                                            <th width="50">
+                                                <div align="left">G&eacute;nero</div>
+                                            </th>
+                                            <th width="80" class="Invisible">
+                                                <div align="left">Estado</div>
+                                            </th>
+                                            <th class="Invisible">
+                                                <div align="left">Codigo Tramite</div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="width: 100%; height: 120; overflow: auto; display: block"></tbody>
+                                </table>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+        </div>
+
+
+
+
+
         <div id="tabs">
             <ul>
-                <li><a href="#divAuspiciado"><b>Informaci&oacute;n Beneficiario</b></a></li>
+                <li id="liAuspiciado"><a href="#divAuspiciado" class="tabBeneficiario"><b>Informaci&oacute;n Beneficiario</b></a></li>
                 <li><a href="#divContacto"><b>Contacto</b></a></li>
                 <li><a href="#divRequisitos"><b>Requisitos</b></a></li>
                 <li><a href="#divDocumentacion"><b>Documentaci&oacute;n</b></a></li>
             </ul>
-            <div id="divAuspiciado">
-                <ul class="form-section">
-                    <li class="form-line"><label class="form-label-left"
-                                                 id="lblIdentificacionBeneficiario"
-                                                 for="divTipoIdentificacionBeneficiario"> Tipo
-                        identificaci&oacute;n </label>
-                        <div class="form-input">
-                            <div id='divTipoIdentificacionBeneficiario'></div>
+            <div id="divAuspiciado" style="width: 100%" class="tabBeneficiario">
+                <div id="personaForm">
+                    <ul class="form-section">
+                        <div class="form-line">
+                            <label class="form-label-left"
+                                   id="lblIdentificacionBeneficiario"
+                                   for="divTipoIdentificacionBeneficiario"> Tipo identificaci&oacute;n </label>
+                            <div class="form-input">
+                                <div id='divTipoIdentificacionBeneficiario'></div>
+                            </div>
+                            <label class="obligatorio">(*)</label>
                         </div>
-                        <label class="obligatorio">(*)</label></li>
-                    <li class="form-line"><label class="form-label-left"
-                                                 id="lblNumDocBeneficiario" for="txtNumDocBeneficiario"> No.
-                        doc. identific </label>
-                        <div class="form-input"><input type="text" class="form-textbox"
-                                                       id="txtNumDocBeneficiario" name="txtNumDocBeneficiario"
-                                                       size="20"/>
-                            <button id="btnBuscarBeneficiario" title="Buscar beneficiario"><img
-                                    src="css/icon/buscar.png"/></button>
+                        <div class="form-line">
+                            <label class="form-label-left"
+                                   id="lblNumDocBeneficiario" for="txtNumDocBeneficiario"> No. doc. identific </label>
+                            <div class="form-input">
+                                <input type="text" class="form-textbox"
+                                       id="txtNumDocBeneficiario" name="txtNumDocBeneficiario"
+                                       size="20"/>
+                                <button id="btnBuscarBeneficiario" title="Buscar beneficiario"><img
+                                        src="css/icon/buscar.png"/></button>
+                            </div>
+                            <label class="obligatorio">(*)</label>
                         </div>
-                        <label class="obligatorio">(*)</label></li>
-                    <li class="form-line" id="id_1"><label class="form-label-left"
-                                                           id="lblBeneficiario" for="txtNombreBeneficiario">
-                        Beneficiario
-                    </label>
-                        <div class="form-input"><span class="form-sub-label-container">
-	<input class="form-textbox" type="text" size="25"
-           name="txtNombreBeneficiario" id="txtNombreBeneficiario"/> <label
-                                class="obligatorio">(*)</label> <label class="form-sub-label"
-                                                                       for="txtNombreBeneficiario" id="sublabel_first"> Nombres </label> </span> <span
-                                class="form-sub-label-container"> <input class="form-textbox"
-                                                                         type="text" size="15"
-                                                                         name="txtApellidoPaternoBeneficiario"
-                                                                         id="txtApellidoPaternoBeneficiario"/> <label
-                                class="obligatorio">(*)</label>
-	<label class="form-sub-label" for="txtApellidoPaternoBeneficiario"
-           id="sublabel_middle"> Primer Apellido </label> </span> <span
-                                class="form-sub-label-container"> <input class="form-textbox"
-                                                                         type="text" size="15"
-                                                                         name="txtApellidoMaternoBeneficiario"
-                                                                         id="txtApellidoMaternoBeneficiario"/> <label
-                                class="form-sub-label"
-                                for="txtApellidoMaternoBeneficiario" id="sublabel_last">
-	Segundo Apellido </label> </span></div>
-                    </li>
-
-                    <li class="form-line"><label class="form-label-left"
-                                                 id="lblPaisResidencia" for="divPaisResidencia"> Pa&iacute;s
-                        residencia </label>
-                        <div class="form-input">
-                            <div id='divPaisResidencia'></div>
+                        <div class="form-line" id="id_1">
+                            <label class="form-label-left" id="lblBeneficiario" for="txtNombreBeneficiario">Beneficiario</label>
+                            <div class="form-input"><span class="form-sub-label-container">
+                            <input class="form-textbox" type="text" size="25"
+                                   name="txtNombreBeneficiario" id="txtNombreBeneficiario"/> <label
+                                    class="obligatorio">(*)</label>
+                                <label class="form-sub-label" for="txtNombreBeneficiario" id="sublabel_first"> Nombres </label> </span>
+                                <span
+                                        class="form-sub-label-container"> <input class="form-textbox"
+                                                                                 type="text" size="15"
+                                                                                 name="txtApellidoPaternoBeneficiario"
+                                                                                 id="txtApellidoPaternoBeneficiario"/> <label class="obligatorio">(*)</label>
+                                <label class="form-sub-label" for="txtApellidoPaternoBeneficiario"
+                                       id="sublabel_middle"> Primer Apellido </label> </span> <span
+                                        class="form-sub-label-container"> <input class="form-textbox"
+                                                                                 type="text" size="15"
+                                                                                 name="txtApellidoMaternoBeneficiario"
+                                                                                 id="txtApellidoMaternoBeneficiario"/> <label
+                                        class="form-sub-label"
+                                        for="txtApellidoMaternoBeneficiario" id="sublabel_last">Segundo Apellido </label> </span></div>
                         </div>
-                        <label class="obligatorio">(*)</label></li>
-                    <li class="form-line"><label class="form-label-left"
-                                                 id="lblNacionalidadBeneficiario" for="divNacionalidadBeneficiario">
-                        Nacionalidad </label>
-                        <div class="form-input">
-                            <div id='divNacionalidadBeneficiario'></div>
+                        <div class="form-line">
+                            <label class="form-label-left"
+                                   id="lblPaisResidencia" for="divPaisResidencia"> Pa&iacute;s
+                                residencia </label>
+                            <div class="form-input">
+                                <div id='divPaisResidencia'></div>
+                            </div>
+                            <label class="obligatorio">(*)</label>
                         </div>
-                        <label class="obligatorio">(*)</label></li>
-
-                    <li class="form-line"><label class="form-label-left"
-                                                 id="lblFechaNacimiento" for="dtFechaNacimiento"> Fecha de
-                        nacimiento </label> <input type="text" id="dtFechaNacimiento"
-                                                   name='dtFechaNacimiento'/> <label class="obligatorio">(*)</label>
-                    </li>
-
-                    <li class="form-line"><label class="form-label-left"
-                                                 id="llblGenero" for="divTipoSolicitudResidencia"> Genero </label>
-                        <input
-                                type="radio" name="rdbtnGenero" value="0" checked="checked"
-                                id="rdMasculino"/> <label for="rdMasculino">Masculino</label> <input
+                        <div class="form-line">
+                            <label class="form-label-left"
+                                   id="lblNacionalidadBeneficiario" for="divNacionalidadBeneficiario">
+                                Nacionalidad </label>
+                            <div class="form-input">
+                                <div id='divNacionalidadBeneficiario'></div>
+                            </div>
+                            <label class="obligatorio">(*)</label>
+                        </div>
+                        <div class="form-line">
+                            <label class="form-label-left"
+                                   id="lblFechaNacimiento" for="dtFechaNacimiento"> Fecha de
+                                nacimiento </label> <input type="text" id="dtFechaNacimiento"
+                                                           name='dtFechaNacimiento'/> <label class="obligatorio">(*)</label>
+                        </div>
+                        <div class="form-line">
+                            <label class="form-label-left"
+                                   id="llblGenero" for="divTipoSolicitudResidencia"> Genero </label>
+                            <input
+                                    type="radio" name="rdbtnGenero" value="0" checked="checked"
+                                    id="rdMasculino"/> <label for="rdMasculino">Masculino</label> <input
                                 type="radio" name="rdbtnGenero" value="1" id="rdFemenino"/> <label
-                                for="rdFemenino">Femenino</label></li>
-                </ul>
-<span class="obligatorio"> Los campos marcados con (*) son
-obligatorios</span></div>
+                                for="rdFemenino">Femenino</label>
+                        </div>
+                    </ul>
+                    <span class="obligatorio"> Los campos marcados con (*) son obligatorios</span>
+                </div>
+            </div>
 
             <div id="divContacto">
                 <div class="form-line cssTabButton">
-                    <div id="divBgModal" class="bgtransparent"
-                         style="width: 100%; height: 100%"></div>
-                    <table width="200" border="0" style="font-size: 11px">
+                    <!--div id="divBgModal" class="bgtransparent"
+                         style="width: 100%; height: 100%"></div-->
+                    <table width="100%" border="0" style="font-size: 11px">
                         <tr>
                             <td><!--  -->
                                 <div id="divBtnControlesContactoPersona" class="cssTabButton"
@@ -401,11 +506,12 @@ obligatorios</span></div>
                 <div class="form-line cssTabButton">
                     <div id="infoDocs" style="width: 100%">
                         <div style="font: 12px 'Helvetica'" class="divAviso">
-                            Los documentos listados a continuaci&oacute;n se le solicitar&aacute;n al guardar el formulario.<br/>
+                            Los documentos listados a continuaci&oacute;n se le solicitar&aacute;n al guardar el
+                            formulario.<br/>
                             Por favor tengalos a la mano en formato digital.
                         </div>
                     </div>
-                    <table width="200" border="0" style="font-size: 11px">
+                    <table width="100%" border="0" style="font-size: 11px">
                         <tr>
                             <td><!--  -->
                                 <br/>
@@ -459,5 +565,19 @@ obligatorios</span></div>
         </button>
     </div>
 </div>
+
+<!--INGRESO PERSONA TRANSEUNTES-->
+<div id="FrmIngresoPersona" class="componetHide" style="z-index:999; position: fixed; top: 100px; background-color: #fff;">
+    <div class="cssFormularioBorde"><span class="cssFormularioTitulo"><b>Datos de la persona</b></span>
+        <div id="contentPersona"></div>
+        <div id="divBtnControlesIngresoPersona" class="cssTabButton">
+            <button id="btnAceptarIngreso">
+                <img src="css/icon/apply.png" />Aceptar</button>
+            <button id="btnSalirIngreso" type="reset">
+                <img src="css/icon/salir.png" />Salir</button>
+        </div>
+    </div>
+</div>
+
 </BODY>
 </html>

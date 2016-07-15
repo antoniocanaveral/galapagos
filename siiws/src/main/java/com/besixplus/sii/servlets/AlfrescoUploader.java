@@ -10,6 +10,7 @@ import com.bmlaurus.alfresco.utils.InputStreamDataSource;
 import com.google.gson.Gson;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
@@ -88,33 +89,39 @@ public class AlfrescoUploader extends HttpServlet implements Serializable {
                             table_name = item.getString();
                         else if(item.getFieldName().equals("RECORD_ID_NAME"))
                             record_id = item.getString();
-                        else if(item.getFieldName().equals("CADUCIDAD_NAME"))
-                            caducidad = new Date(item.getString());
-                        else
+                        else if(item.getFieldName().equals("CADUCIDAD_NAME")) {
+                            try {
+                                caducidad = new Date(item.getString());
+                            }catch(Exception e){
+                                caducidad = null;
+                            }
+                        }else
                             System.out.println("NOT SUPPORTED: "+item.getFieldName() + " = " + item.getString());
-                    }else{ // es un archivo
+                    }else { // es un archivo
                         System.out.print("Es un archivo");
-                        String fileName = item.getFieldName();
-                        if(modelFile!=null && modelFile.getFileName()!=null) {
-                            String ext = item.getName().substring(item.getName().lastIndexOf("."));
-                            fileName = modelFile.getFileName()+ext;
+                        if (item instanceof DiskFileItem) {
+                            String fileName = ((DiskFileItem)item).getName();
+                            if (modelFile != null && modelFile.getFileName() != null) {
+                                String ext = item.getName().substring(item.getName().lastIndexOf("."));
+                                fileName = modelFile.getFileName() + ext;
+                            }
+                            dh = new DataHandler(new InputStreamDataSource(item.getInputStream(), fileName));
+                            //Agregamos nombre del archivo y propiedades
+                            Connection tmpCon = ManagerConnection.getConnection();
+                            try {
+                                if (document == null && filesRepository != null) {
+                                    document = new SiiRespaldoDocument("FreeUploader");
+                                    String repo = SiiDataLoader.repoResolver(tmpCon, table_name, record_id, filesRepository);
+                                    document.setPath(repo);
+                                } else
+                                    document.setPath(modelFile.resolveFileRepository(tmpCon, table_name, record_id));
+                                tmpCon.close();
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                            if (document != null)
+                                document.setFileName(item.getName());
                         }
-                        dh = new DataHandler(new InputStreamDataSource(item.getInputStream(),fileName));
-                        //Agregamos nombre del archivo y propiedades
-                        Connection tmpCon = ManagerConnection.getConnection();
-                        try {
-                            if (document == null && filesRepository != null) {
-                                document = new SiiRespaldoDocument("FreeUploader");
-                                String repo = SiiDataLoader.repoResolver(tmpCon, table_name, record_id, filesRepository);
-                                document.setPath(repo);
-                            } else
-                                document.setPath(modelFile.resolveFileRepository(tmpCon, table_name, record_id));
-                            tmpCon.close();
-                        }catch (SQLException e){
-                            e.printStackTrace();
-                        }
-                        if(document!=null)
-                            document.setFileName(item.getName());
                     }
                 }
                 if(document!=null && dh!=null){

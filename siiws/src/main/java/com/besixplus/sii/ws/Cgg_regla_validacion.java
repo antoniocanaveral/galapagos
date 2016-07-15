@@ -32,6 +32,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /*import javax.servlet.http.HttpServletResponse;*/
 
@@ -616,11 +617,32 @@ public class Cgg_regla_validacion implements Serializable{
 	/**
 	 * Ejecuta una regla de validacion y devuelve su evaluacion.\
 	 * @param inJSON_reglas_validacion Cadena de datos en formato JSON de la regla de validacion a ejecutar.
+	 * @param jsonData  jsonData es un arreglo de Datos de los Beneficiarios
 	 * @return Cadena de datos de la evaluacion.
 	 * @throws SOAPException 
 	 */
 	@WebMethod
-	public String ejecutarReglaTipoSolicitud(		
+	public String ejecutarReglaTranseuntesTipoSolicitud(
+			@WebParam(name="inJSON_reglas_validacion")String inJSON_reglas_validacion,
+			@WebParam(name="jsonData")String jsonData
+	) throws SOAPException{
+		StringBuilder result = new StringBuilder();
+		List data = new Gson().fromJson(jsonData,ArrayList.class);
+		for(int i=0;i<data.size();i++){
+			String oneData = new Gson().toJson(data.get(i));
+			result.append(ejecutarReglaTipoSolicitudLocal(inJSON_reglas_validacion, oneData));
+		}
+		return result.toString();
+	}
+
+	/**
+	 * Ejecuta una regla de validacion y devuelve su evaluacion.\
+	 * @param inJSON_reglas_validacion Cadena de datos en formato JSON de la regla de validacion a ejecutar.
+	 * @return Cadena de datos de la evaluacion.
+	 * @throws SOAPException
+	 */
+	@WebMethod
+	public String ejecutarReglaTipoSolicitud(
 			@WebParam(name="inJSON_reglas_validacion")String inJSON_reglas_validacion,
 			@WebParam(name="jsonData")String jsonData
 	) throws SOAPException{

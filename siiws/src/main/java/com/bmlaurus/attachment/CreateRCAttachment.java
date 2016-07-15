@@ -40,7 +40,7 @@ public class CreateRCAttachment extends ReportToAttachment {
 
         Properties globals = Env.getExternalProperties("alfresco/globals.properties");
         if(globals!=null) {
-            fileName = globals.getProperty("personales.cedula.fileName");
+            fileName = globals.getProperty("alfpath.identificacion.fileName");
             DataHandler stream = getReportExecutation("generated","rptDinardapCedula");
             if(stream!=null){
                 dh = stream;
@@ -48,7 +48,7 @@ public class CreateRCAttachment extends ReportToAttachment {
                 document.addAspect(new SiiIdentificable(tableName,recordId));
                 document.setFileName(fileName+".pdf");
                 Connection tmpCon = ManagerConnection.getConnection();
-                document.setPath(SiiDataLoader.repoResolver(tmpCon,tableName,recordId,globals.getProperty("personales.cedula.path")));
+                document.setPath(SiiDataLoader.repoResolver(tmpCon,tableName,recordId,globals.getProperty("alfpath.identificacion.path")));
                 tmpCon.close();
                 if(uploadAttachment())
                     return "true";
