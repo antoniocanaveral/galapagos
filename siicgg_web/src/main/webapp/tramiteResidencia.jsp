@@ -118,7 +118,6 @@
 </div>
 <br/>
 <br/>
-<div id="divBgModal" class="bgtransparent" style="z-index:10; width: 100%; height: 100%"></div>
 <div id="divLogineo" style="display: none; width: 646px" class="divAviso"></div>
 <div class="jotform-form" id="myForm" style="display: none">
     <div class="form-all">
@@ -141,13 +140,14 @@
                 </div>
                 <label class="obligatorio">(*)</label></div>
 
-            <div class="form-line"><label class="form-label-left"
-                                         id="lblTipoResidencia" for="divTipoResidenciaPadre"> Tipo
-                residencia </label>
+            <div class="form-line">
+                <label class="form-label-left"
+                                         id="lblTipoResidencia" for="divTipoResidenciaPadre"> Tipo residencia </label>
                 <div class="form-input">
                     <div id='divTipoResidenciaPadre'></div>
                 </div>
-                <label class="obligatorio">(*)</label></div>
+                <label class="obligatorio">(*)</label>
+            </div>
             <!--li class="form-line">
                                     <label class="form-label-left" id="llblMotivoResidencia" for="divTipoSolicitudResidencia">
                                         Motivo residencia
@@ -157,14 +157,48 @@
                                     </div>
                                     <label class="obligatorio">(*)</label>
                                 </li-->
-            <div class="form-line"><label class="form-label-left"
-                                         id="llblMotivoResidencia" for="txtMotivoResidencia"> Motivo
-                residencia </label>
-                <div class="form-input"><input type="text" class="form-textbox"
-                                               name="txtMotivoResidencia" id="txtMotivoResidencia" size="30"/> <label
-                        class="obligatorio">(*)</label>
+            <div class="form-line">
+                <label class="form-label-left"
+                                         id="llblMotivoResidencia" for="txtMotivoResidencia"> Motivo residencia </label>
+                <div class="form-input">
+                    <input type="text" class="form-textbox"
+                                               name="txtMotivoResidencia" id="txtMotivoResidencia" size="42"/>
+                    <label class="obligatorio">(*)</label>
                     <button id="btnBuscarMotivo" title="Buscar motivo"><img
                             src="css/icon/buscar.png"/></button>
+                </div>
+            </div>
+            <div id="divDatosTranseunte" style="display: none;">
+                <div class="form-line">
+                    <label class="form-label-left" id="lblFechasResidencia" for="dtFechaIngreso">Tiempo Autorizado</label>
+                    <div class="form-input">
+                        <span class="form-sub-label-container">
+                            <input class="form-textbox" type="text" name="dtFechaIngreso" id="dtFechaIngreso" size="19"/>
+                            <label class="obligatorio">(*)</label>
+                            <label class="form-sub-label" id="llblFechaIngreso" for="dtFechaIngreso">Fecha ingreso</label>
+                        </span>
+                        <span class="form-sub-label-container">
+                            <input class="form-textbox" type="text" name="dtFechaSalida" id="dtFechaSalida" size="19"/>
+                            <label class="obligatorio">(*)</label>
+                            <label class="form-sub-label" id="llblFechaSalida" for="dtFechaSalida">Fecha salida</label>
+                        </span>
+                        <span class="form-sub-label-container">
+                            <input class="form-textbox" type="text" name="txtTiempoAutorizado" id="txtTiempoAutorizado" disabled/>
+                            <label class="form-sub-label" id="llblTiempoAutorizado" for="txtTiempoAutorizado">D&iacute;as</label>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-line">
+                    <label class="form-label-left" id="lblActividad" for="divActividad"> Actividad:</label>
+                    <div class="form-input"><div id='divActividad'></div></div>
+                    <label class="obligatorio">(*)</label>
+                </div>
+                <div class="form-line">
+                    <label class="form-label-left" id="lblObservacion" for="txtObservacion"> Observaci&oacute;n:</label>
+                    <div class="form-input">
+                        <textarea class="form-textarea-limit" cols=36 rows = 5 type="text" name="txtObservacion" id="txtObservacion"></textarea>
+                    </div>
+                    <label class="obligatorio">(*)</label>
                 </div>
             </div>
         </fieldset>
@@ -175,7 +209,7 @@
                                               id="lblCrper_identificacion"> Tipo identificaci&oacute;n </label>
                     <div class="form-input"><input type="text" class="form-textbox"
                                                    id="txtIdentificacionAuspiciante" name="txtIdentificacionAuspiciante"
-                                                   size="20"/></div>
+                                                   size="42"/></div>
                 </div>
                 <div id="divCargando1" class="cargando"
                      style="display: none; position: fixed;"><span>Cargando...</span></div>
@@ -183,13 +217,13 @@
                                               id="lblNumDocAuspiciante" for="txtNumDocAuspiciante"> No. doc.
                     identific </label>
                     <div class="form-input"><input type="text" class="form-textbox"
-                                                   id="txtNumDocAuspiciante" name="txtNumDocAuspiciante" size="20"/>
+                                                   id="txtNumDocAuspiciante" name="txtNumDocAuspiciante" size="42"/>
                     </div>
                 </div>
                 <div class="form-line"><label class="form-label-left"
                                               id="lblAuspiciante" for="txtNombreAuspiciante"> Auspiciante </label>
                     <div class="form-input"><span class="form-sub-label-container">
-	<input class="form-textbox" type="text" size="40"
+	<input class="form-textbox" type="text" size="42"
            name="txtNombreAuspiciante" id="txtNombreAuspiciante"/> <label
                             class="form-sub-label" for="txtNombreAuspiciante"
                             id="lblNombreAuspiciante1"> Nombres y Apellidos </label> </span></div>
@@ -198,7 +232,7 @@
                         class="form-label-left" id="lblAuspiciantePJ"
                         for="txtNombreAuspiciantePJ"> Empresa </label>
                     <div class="form-input"><span class="form-sub-label-container">
-	<input class="form-textbox" type="text" size="20"
+	<input class="form-textbox" type="text" size="42"
            name="txtNombreAuspiciantePJ" id="txtNombreAuspiciantePJ"/> </span></div>
                 </div>
 
@@ -207,7 +241,7 @@
                     No. residencia </label>
                     <div class="form-input"><input type="text" class="form-textbox"
                                                    id="txtNumResidenciaAuspiciante" name="txtNumResidenciaAuspiciante"
-                                                   size="20"/></div>
+                                                   size="42"/></div>
                 </div>
             </ul>
         </fieldset>
@@ -317,7 +351,7 @@
                             <div class="form-input">
                                 <input type="text" class="form-textbox"
                                        id="txtNumDocBeneficiario" name="txtNumDocBeneficiario"
-                                       size="20"/>
+                                       size="36"/>
                                 <button id="btnBuscarBeneficiario" title="Buscar beneficiario"><img
                                         src="css/icon/buscar.png"/></button>
                             </div>
@@ -366,7 +400,7 @@
                             <label class="form-label-left"
                                    id="lblFechaNacimiento" for="dtFechaNacimiento"> Fecha de
                                 nacimiento </label> <input type="text" id="dtFechaNacimiento"
-                                                           name='dtFechaNacimiento'/> <label class="obligatorio">(*)</label>
+                                                           name='dtFechaNacimiento' size="19"/> <label class="obligatorio">(*)</label>
                         </div>
                         <div class="form-line">
                             <label class="form-label-left"
@@ -426,7 +460,7 @@
                                     </table>
                                 </div>
                                 <div id="FrmContactoPersona" class="bgmodal componetHide"
-                                     style="position: fixed; left: 140; top: 315; background-color: #fff;">
+                                     style="z-index: 10;position: fixed; left: 140; top: 315; background-color: #fff;">
                                     <div class="cssFormularioBorde"><span
                                             class="cssFormularioTitulo"><b>Contactos</b></span> <input
                                             type="hidden" id="txtCrprc_codigo" name="txtCrprc_codigo"/>
@@ -438,10 +472,10 @@
                                             <tr>
                                                 <th>Contacto:</th>
                                                 <td><input name="txtCrprc_contacto" type="text"
-                                                           id="txtCrprc_contacto" style="width: 180px"/></td>
+                                                           id="txtCrprc_contacto" style="width: 280px; margin: 10px;"/></td>
                                             </tr>
                                         </table>
-                                        <div class="cssTabButton">
+                                        <div class="cssTabButton" style="margin-top: 10px; position: relative; display: inline-flex;">
                                             <button id="btnGuardarCgg_gem_contacto_persona"><img
                                                     src="css/icon/save.png"/>Guardar
                                             </button>
@@ -478,10 +512,10 @@
                                         <thead
                                                 style="display: block; border-bottom: 1px solid #CCCCCC; width: 100%">
                                         <tr>
-                                            <th width="800px">
+                                            <th width="70%">
                                                 <div align="left">Requisitos</div>
                                             </th>
-                                            <th width="300px">
+                                            <th width="30%">
                                                 <div align="left">Participante</div>
                                             </th>
                                         </tr>
@@ -568,9 +602,9 @@
         </button>
     </div>
 </div>
-
+<div id="divBgModal" class="bgtransparent" style="width: 100%; height: 100%"></div>
 <!--INGRESO PERSONA TRANSEUNTES-->
-<div id="FrmIngresoPersona" class="componetHide" style="z-index:999; position: fixed; top: 100px; background-color: #fff;">
+<div id="FrmIngresoPersona" class="componetHide" style="position: fixed; top: 100px; background-color: #fff;">
     <div class="cssFormularioBorde"><span class="cssFormularioTitulo"><b>Datos de la persona</b></span>
         <div id="contentPersona"></div>
         <div id="divBtnControlesIngresoPersona" class="cssTabButton">

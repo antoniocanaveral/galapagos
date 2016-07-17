@@ -1,5 +1,21 @@
 package com.besixplus.sii.servlets;
 
+import com.besixplus.sii.db.Cgg_configuracion;
+import com.besixplus.sii.db.ManagerConnection;
+import com.besixplus.sii.objects.Cgg_res_adjunto;
+import com.besixplus.sii.objects.ServerResponse;
+import com.besixplus.sii.ws.Cgg_res_tramite;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.json.JSONObject;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -11,24 +27,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.json.JSONObject;
-
-import com.besixplus.sii.db.Cgg_configuracion;
-import com.besixplus.sii.db.ManagerConnection;
-import com.besixplus.sii.objects.Cgg_res_adjunto;
-import com.besixplus.sii.objects.ServerResponse;
-import com.besixplus.sii.ws.Cgg_res_tramite;
 
 /**
  * Servlet implementation class TramiteTranseunte
@@ -153,6 +151,7 @@ public class TramiteTranseunte extends HttpServlet {
 				}
 
 				outResult = new Cgg_res_tramite().registrarTramiteTranseunte(
+						false,
 						objTramite.getCRPER_CODIGO(), 
 						objTramite.getCRPJR_CODIGO(), 
 						objTramite.getCGG_CRPER_CODIGO(), 

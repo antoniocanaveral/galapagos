@@ -33,6 +33,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /*import javax.servlet.http.HttpServletResponse;*/
 
@@ -628,9 +629,13 @@ public class Cgg_regla_validacion implements Serializable{
 	) throws SOAPException{
 		List result = new ArrayList();
 		List data = new Gson().fromJson(jsonData,ArrayList.class);
+		List reglas = new Gson().fromJson(inJSON_reglas_validacion,ArrayList.class);
 		for(int i=0;i<data.size();i++){
 			String oneData = new Gson().toJson(data.get(i));
-			result.add(ejecutarReglaTipoSolicitudLocal(inJSON_reglas_validacion, oneData));
+			String oneRegla = (String) reglas.get(i);
+
+			Object ruleRes = new Gson().fromJson(ejecutarReglaTipoSolicitudLocal(oneRegla, oneData), Map.class);
+			result.add(ruleRes);
 		}
 		return new Gson().toJson(result);
 	}

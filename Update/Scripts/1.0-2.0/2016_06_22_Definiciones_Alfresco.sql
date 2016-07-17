@@ -4,7 +4,7 @@
 INSERT INTO sii.cgg_ecm_metadata(
             code, table_name, filter, files_repository, is_list,
             estado, usuario_insert, usuario_update)
-    VALUES (sii.f_keygen('Cgg_ECM_Metadata','code','ECM'), 'Cgg_res_informe_seguimiento', null, 'Tramites/@crseg_codigo;cgg_res_seguimiento.crtra_codigo@/informes', false,
+    VALUES (sii.f_keygen('Cgg_ECM_Metadata','code','ECM'), 'Cgg_res_informe_seguimiento', null, 'Tramites/@crseg_codigo;cgg_res_seguimiento.crtra_codigo@/informes/@crise_numero_informe@', false,
             true, 'admin', 'admin');
 
 

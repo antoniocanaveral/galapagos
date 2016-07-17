@@ -190,6 +190,71 @@ $(function() {
         cbxNacionalidad.dom.value= null;
         $('#dtFechaNacimiento').val(null);
     }
+
+    //CAMPOS DE FECHAS Y ACTIVIDAD:
+    $('#dtFechaIngreso').datepicker({
+        showOn: 'button',
+        buttonImage: 'css/icon/date.gif',
+        buttonImageOnly: false,
+        appendText: '(dd/mm/yyyy)',
+        dateFormat: 'dd/mm/yy',
+        currentText: 'Now',
+        defaultDate:null,
+        minDate: new Date(),
+        changeYear: false,
+        changeMonth: true,
+        showButtonPanel: false,
+        nextText: 'Siguiente',
+        prevText: 'Anterior',
+        beforeShow: function(input, inst)
+        {
+            inst.dpDiv.css({marginLeft: (input.offsetWidth+50) + 'px'});
+        }
+    });
+    $('#dtFechaSalida').datepicker({
+        showOn: 'button',
+        buttonImage: 'css/icon/date.gif',
+        buttonImageOnly: false,
+        appendText: '(dd/mm/yyyy)',
+        dateFormat: 'dd/mm/yy',
+        currentText: 'Now',
+        defaultDate:null,
+        minDate: new Date(),
+        changeYear: false,
+        changeMonth: true,
+        showButtonPanel: false,
+        nextText: 'Siguiente',
+        prevText: 'Anterior',
+        beforeShow: function(input, inst)
+        {
+            inst.dpDiv.css({marginLeft: (input.offsetWidth+50) + 'px'});
+        }
+    });
+
+    var codigoActividad='';
+    var cbxActividad = new bsxComboBox({
+        id:"cbxActividad",
+        renderTo:"divActividad",
+        displayField:"CGCRG_NOMBRE",
+        valueField:"CGCRG_CODIGO",
+        webService:{
+            url:URL_WS+"Cgg_gem_cargo",
+            method:"selectAll",
+            params:[
+                {name:"format",value:"JSON"}
+
+            ]
+        },
+        events:{
+            load:function(v){
+
+                $('#cbxActividad').prepend("<option value=></option>");
+                $("#cbxActividad").val(0);
+
+            }
+        }
+    });
+    cbxActividad.reload();
     
     
     var tmpConfiguracion;//Variable utilizada para almacenar datos de configuracion consultados en la base;
@@ -257,7 +322,7 @@ $(function() {
         RESIDENCIA_PERMANENTE:'03',
         RESIDENCIA_TEMPORAL:'04',
         TRANSEUNTE:'05'
-    }
+    };
 
 
 
@@ -273,7 +338,7 @@ $(function() {
         minDate: new Date(1930, 1 - 1, 1),
         changeYear: true,
         changeMonth: true,
-        showButtonPanel: false,
+        showButtonPanel: true,
         nextText: 'Siguiente',
         prevText: 'Anterior',
         beforeShow: function(input, inst)
@@ -592,7 +657,7 @@ $(function() {
          **/
         var cbxTipoContacto = new bsxComboBox({
             id:"cbxTipoContacto",
-            width:"180",
+            style:"width: 280px; margin: 10px;",
             renderTo:"tdCbxTipoContacto",
             displayField:"CRTCO_NOMBRE",
             valueField:"CRTCO_CODIGO",
@@ -784,13 +849,11 @@ $(function() {
                 var celda= fila.insertCell(0);
                 celda.id = a[i].CRREQ_CODIGO;
                 celda.innerHTML = a[i].CRREQ_DESCRIPCION;
-                celda.width = 400;
 
                 //Participante
                 celda= fila.insertCell(1);
                 celda.id = a[i].CRREQ_CODIGO;
                 celda.innerHTML = getParticipante(a[i].CRSRQ_PARTICIPANTE);
-                celda.width = 170;
             }
 
         }
@@ -896,6 +959,7 @@ $(function() {
             document.getElementById("divMultiTranseuntes").style.display = "block";
             document.getElementById("divAuspiciado").style.display = "none";
             document.getElementById("liAuspiciado").style.display = "none";
+            document.getElementById("divDatosTranseunte").style.display = "block";
             var contentPersona = document.getElementById("contentPersona");
             contentPersona.appendChild(personaForm);
         }else if(modeTranseuntes){
@@ -904,6 +968,7 @@ $(function() {
             document.getElementById("divMultiTranseuntes").style.display = "none";
             auspiciado.style.display = "block";
             document.getElementById("liAuspiciado").style.display = "block";
+            document.getElementById("divDatosTranseunte").style.display = "none";
             auspiciado.appendChild(personaForm);
             $("#tabs").tabs("select",0);
         }
@@ -1207,6 +1272,8 @@ $(function() {
     });
     $('#btnGuardarTramiteResidencia').click(function() {
         var inContactosJSON = obtenerJSONContactos();
+        codigoActividad = cbxActividad.getRowSelected().CGCRG_CODIGO;
+
         if (!modeTranseuntes) {
             if (verificarInformacionTramite() == false) {
                 //alert('');
@@ -1345,7 +1412,7 @@ $(function() {
             param.add('inCrtst_codigo', tmpMotivoResidenciaId);
             param.add('inCisla_codigo', $("#cbxIslaTramite").val());
             param.add('inCrtt_codigo', $("#cbxTipoTramite").val());
-            param.add('inCrtra_observacion', 'Registro desde Atencion al Cliente');
+            param.add('inCrtra_observacion', $("#txtObservacion").val());
             param.add('inCvveh_codigo', null);
             param.add('inCvmtr_codigo', null);
             param.add('inCgg_cvveh_codigo', null);
@@ -1355,6 +1422,9 @@ $(function() {
             param.add('inContactoPersonaJSON', inContactosJSON);//'[]') ;
             param.add('inInfoVehiculos', null);
             param.add('inBeneficiarios_JSON', objBeneficiarioJSON);
+            param.add('inCrtra_fecha_ingreso', $('#dtFechaIngreso').val());
+            param.add('inCrtra_fecha_salida', $('#dtFechaSalida').val());
+            param.add('inCrtra_actividad_residencia', codigoActividad);
 
             SOAPClient.invoke(URL_WS + "Cgg_res_tramite", 'registrarTramiteTranseunteLite', param, true, CallBackCgg_res_tramite);
         }
@@ -1388,7 +1458,7 @@ $(function() {
      *Funcion. Evalua las reglas de validacion del tramite.
      *@return Cadena de datos con informacion de las reglas validadas.
      */
-    function evaluarReglaTramite(){
+    function evaluarReglaTramite(_benef){
         var res = null;
         colReglaValidacion=eval(reglaValidacion);
         if(colReglaValidacion!==null){
@@ -1396,6 +1466,12 @@ $(function() {
                 var objTmp = eval(colReglaValidacion[i].CRTSE_CAMPO_EVALUACION)[0];
                 for (var key in objTmp) {
                     objTmp[key] = eval(objTmp[key]);
+                }
+                if(objTmp[key]==null && _benef!=null){
+                    if(key.toString().search("IN_")==0)
+                        objTmp[key] = _benef[key.toString().slice(3)];
+                    else
+                        objTmp[key] = _benef[key];
                 }
                 colReglaValidacion[i].CRTSE_CAMPO_EVALUACION ='['+JSON.stringify(objTmp)+']';
             }
@@ -1462,12 +1538,15 @@ $(function() {
         var flagRegla = false;
         $('#divCargando1').html('Validando..');
         $('#divCargando1').show();
+
+        crperCodigo = tmpRecordAuspiciante[0].CRPER_CODIGO;
         try{
             var beneficiarios = [];
+            var multiReglas = [];
             if (tblPersona.rows.length > 1) {
                 for (var i = 1; i < tblPersona.rows.length; i++) {
                     var objBeneficiario = {
-                        CRPER_CODIGO: tmpRecordAuspiciante[0].CRPER_CODIGO,
+                        CRPER_CODIGO: crperCodigo,
                         CGGCRPER_CODIGO: tblPersona.rows[i].cells[1].id,
                         CRPER_NUM_DOC_IDENTIFIC: tblPersona.rows[i].cells[1].innerHTML,
                         CRDID_CODIGO: tblPersona.rows[i].cells[0].id,
@@ -1480,7 +1559,12 @@ $(function() {
                         CRDPT_CODIGO: crdptCodigo,
                         CGG_CPAIS_CODIGO: tblPersona.rows[i].cells[5].id
                     };
-                    beneficiarios.push(objBeneficiario);
+                    var resultadoRegla = evaluarReglaTramite(objBeneficiario);
+                    if(resultadoRegla!=null){
+                        multiReglas.push(resultadoRegla);
+
+                        beneficiarios.push(objBeneficiario);
+                    }
                 }
             }
             if(beneficiarios.length<=0){
@@ -1493,10 +1577,10 @@ $(function() {
             }
             var objBeneficiarioJSON = JSON.stringify(beneficiarios);
 
-            var resultadoRegla = evaluarReglaTramite();
-            if(resultadoRegla!==null){
+
+            if(multiReglas!==null && multiReglas.length>0){
                 var param = new SOAPClientParameters();
-                param.add('inJSON_reglas_validacion',resultadoRegla);
+                param.add('inJSON_reglas_validacion',JSON.stringify(multiReglas));
                 param.add('jsonData',objBeneficiarioJSON);
                 var validacion = SOAPClient.invoke(URL_WS+'Cgg_regla_validacion' ,'ejecutarReglaTranseuntesTipoSolicitud',param, false, null);
                 validacion = eval('('+validacion+')');
@@ -1649,7 +1733,7 @@ $(function() {
     };
 
     viewDialogRegla();
-    $("select").width('140');
+    $("select").width('240');
 
 
 
