@@ -985,6 +985,8 @@ $(function() {
         param.add('inNuevoBeneficiarioJSON',null) ;
         param.add('inContactoPersonaJSON',inContactosJSON);//'[]') ;
         param.add('inInfoVehiculos',objVehiculo?objVehiculo:null) ;
+        param.add('inCrtra_fecha_ingreso', null);
+        param.add('inCrtra_fecha_salida', null);
         SOAPClient.invoke(URL_WS+"Cgg_res_tramite",'registrarTramiteLite',param, true, CallBackCgg_res_tramite);
     });
     /*

@@ -1405,7 +1405,10 @@ VALORES:
 
 			//Consulta del estado inicial de un tramite para su registro.
 			confTramiteRegistro = new Cgg_configuracion();
-			confTramiteRegistro.setCGCNF_CONFIGURACION("ESTADO TRAMITE REGISTRADO");
+			if(ingresoWeb)
+				confTramiteRegistro.setCGCNF_CONFIGURACION("ESTADO TRAMITE SOLO GUARDADO");
+			else
+				confTramiteRegistro.setCGCNF_CONFIGURACION("ESTADO TRAMITE REGISTRADO");
 			confTramiteRegistro= new com.besixplus.sii.db.Cgg_configuracion(confTramiteRegistro).selectCGCNF_CONFIGURACION(objConn);
 
 			arrayJsonBeneficiarios = new JSONArray(inBeneficiarios_JSON);
@@ -2308,8 +2311,9 @@ VALORES:
 			@WebParam(name="inCrtra_atencion_cliente")boolean inCrtra_atencion_cliente,
 			@WebParam(name="inNuevoBeneficiarioJSON")String inNuevoBeneficiarioJSON,
 			@WebParam(name="inContactoPersonaJSON")String inContactoPersonaJSON,
-			@WebParam(name="inInfoVehiculos")String inInfoVehiculos
-
+			@WebParam(name="inInfoVehiculos")String inInfoVehiculos,
+			@WebParam(name="inCrtra_fecha_ingreso")Date inCrtra_fecha_ingreso,
+			@WebParam(name="inCrtra_fecha_salida")Date inCrtra_fecha_salida
 
 			){
 		String [] res = new String[2];	
@@ -2352,8 +2356,8 @@ VALORES:
 		//	obj.setCRTRA_FOLIO(inCrtra_folio);
 		//	obj.setCRTRA_GRUPO(inCrtra_grupo);
 		//	obj.setCRTRA_ORDEN(inCrtra_orden);
-		//	obj.setCRTRA_FECHA_INGRESO(inCrtra_fecha_ingreso);
-		//	obj.setCRTRA_FECHA_SALIDA(inCrtra_fecha_salida);
+		obj.setCRTRA_FECHA_INGRESO(inCrtra_fecha_ingreso);
+		obj.setCRTRA_FECHA_SALIDA(inCrtra_fecha_salida);
 		obj.setCRTRA_ESTADO(true);
 		obj.setCRTRA_USUARIO_INSERT(tmpRequest.getUserPrincipal().getName());
 		obj.setCRTRA_USUARIO_UPDATE(tmpRequest.getUserPrincipal().getName());
