@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptDinardapCedula" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="faf0c0ac-9091-4e29-8120-c456bf763229">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="org.json.JSONObject"/>
+	<parameter name="CEDULA_DATOS" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select 1]]>
+	</queryString>
+	<field name="?column?" class="java.lang.Integer"/>
+	<summary>
+		<band height="238" splitType="Stretch">
+			<frame>
+				<reportElement x="11" y="44" width="527" height="166" uuid="e1cb7328-b38e-4732-a74b-29d4b6a99936"/>
+				<box>
+					<topPen lineWidth="2.0" lineColor="#999999"/>
+					<leftPen lineWidth="2.0" lineColor="#999999"/>
+					<bottomPen lineWidth="2.0" lineColor="#999999"/>
+					<rightPen lineWidth="2.0" lineColor="#999999"/>
+				</box>
+			</frame>
+			<staticText>
+				<reportElement x="42" y="113" width="132" height="20" forecolor="#006699" uuid="08a37860-e49f-4b6d-bec2-1569ee2e94a9"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[APELLIDOS Y NOMBRES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="42" y="145" width="132" height="20" forecolor="#006699" uuid="7d677be4-4b47-46ca-a1c0-9fc64084a6d0"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[PROVINCIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="42" y="83" width="132" height="20" forecolor="#006699" uuid="b9357a5a-291d-47eb-bab5-eb9669e46512"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[CEDULA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="189" y="113" width="311" height="20" uuid="a04b116b-e0a3-4e34-b84b-9cdfc161def3"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("nombre")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="189" y="83" width="311" height="20" uuid="dbdd5497-c8ab-40bb-a9a0-95325effaba7"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("cedula")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="189" y="145" width="311" height="20" uuid="ef815f73-89fd-4487-b31f-807043311c1a"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("provincia")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="16" uuid="b38a111d-1577-4905-99a0-d109841eac6d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Este Documento Sustituye al Certificado de Votación, válido solamente para el Sistema Integral del CGG ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="16" width="555" height="20" uuid="eb583b77-efc4-477d-ba09-fd9f22060d70"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Documento Generado a partir de los datos obtenidos del Servicio del CNE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="307" y="218" width="128" height="20" uuid="8934d128-9cc4-43c7-bdc0-f2c3900cdf0e"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha de Generación:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy h.mm a">
+				<reportElement x="435" y="218" width="120" height="20" uuid="bd7b089d-f1a2-41d6-ba5b-9e513020fe55"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="42" y="53" width="132" height="20" forecolor="#006699" uuid="3c3f1b6c-dce7-45ca-840d-7a46e30df125"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[NÚMERO DE CERTIFICADO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="189" y="53" width="311" height="20" uuid="06d00bc9-11de-4a90-b021-eba2bd4a662b"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("certificado")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="42" y="175" width="132" height="20" forecolor="#006699" uuid="1ef68f71-40e2-4482-bed8-470845e08822"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[SUFRAGÓ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="189" y="175" width="60" height="20" uuid="d76ef821-f762-4c70-8105-d782520824b0"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("sufrago")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="369" y="175" width="128" height="20" uuid="b233e2c4-70df-4663-9fcd-7e28472f9db2"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("multa")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="307" y="175" width="47" height="20" forecolor="#006699" uuid="b3d9e559-24c6-4c1c-b425-e42edbd3dea3"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[MULTA]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>
