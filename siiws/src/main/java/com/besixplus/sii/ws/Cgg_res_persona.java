@@ -1312,34 +1312,52 @@ public class Cgg_res_persona implements Serializable{
 
 			//MO
 
-			RegistroCivil registroCivil = new RegistroCivil(tmpObj.getCRPER_NUM_DOC_IDENTIFIC());//cedula del beneficiario
-			if(registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_OK)) {
-				if (registroCivil.getCedula() != null && !registroCivil.getCedula().trim().isEmpty()) {
-					List<String> apellidos = Utils.buildNombresApellidos(registroCivil.getNombre(), registroCivil.getNombrePadre(),registroCivil.getNombreMadre());
-					if(apellidos!=null && apellidos.size()==3) {
-						tmpObj.setCRPER_APELLIDO_PATERNO(apellidos.get(0));
-						tmpObj.setCRPER_APELLIDO_MATERNO(apellidos.get(1));
-						tmpObj.setCRPER_NOMBRES(apellidos.get(2));
-					}
-					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-					tmpObj.setCRPER_FECHA_NACIMIENTO(sdf.parse(registroCivil.getFechaNacimiento()));
+			try {
+				RegistroCivil registroCivil = new RegistroCivil(tmpObj.getCRPER_NUM_DOC_IDENTIFIC());//cedula del beneficiario
+				if (registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_OK)) {
+					if (registroCivil.getCedula() != null && !registroCivil.getCedula().trim().isEmpty()) {
+						List<String> apellidos = Utils.buildNombresApellidos(registroCivil.getNombre(), registroCivil.getNombrePadre(), registroCivil.getNombreMadre());
+						if (apellidos != null && apellidos.size() == 3) {
+							tmpObj.setCRPER_APELLIDO_PATERNO(apellidos.get(0));
+							tmpObj.setCRPER_APELLIDO_MATERNO(apellidos.get(1));
+							tmpObj.setCRPER_NOMBRES(apellidos.get(2));
+						}
+						SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+						tmpObj.setCRPER_FECHA_NACIMIENTO(sdf.parse(registroCivil.getFechaNacimiento()));
 
-					if(registroCivil.getNacionalidad().equals("ECUATORIANA")){
-						tmpObj.setCPAIS_CODIGO("61");
-					}
-					if(registroCivil.getGenero().equals("FEMENINO")){
-						tmpObj.setCRPER_GENERO(1);
-					}/*else{
-						tmpObj.setCRPER_GENERO(0);
-					}*/
+						if (registroCivil.getNacionalidad().equals("ECUATORIANA")) {
+							tmpObj.setCPAIS_CODIGO("61");
+						}
+						if (registroCivil.getGenero().equals("FEMENINO")) {
+							tmpObj.setCRPER_GENERO(1);
+						}else{
+							tmpObj.setCRPER_GENERO(0);
+						}
 
 					/*
 					* Creamos la cedula en BG
 					* */
+						final String crper_codigo = tmpObj.getCRPER_CODIGO();
+						Thread t = new Thread() {
+							public void run() {
+								CreateRCAttachment attachment = new CreateRCAttachment(registroCivil, crper_codigo);
+								try {
+									attachment.attachReport();
+								} catch (SQLException e) {
+									e.printStackTrace();
+								}
+							}
+						};
+						t.start();
+					}
+				}
+
+				CNE cne = new CNE(tmpObj.getCRPER_NUM_DOC_IDENTIFIC());
+				if (cne.callServiceAsObject().equals(CNE.CALL_OK)) {
 					final String crper_codigo = tmpObj.getCRPER_CODIGO();
 					Thread t = new Thread() {
 						public void run() {
-							CreateRCAttachment attachment = new CreateRCAttachment(registroCivil,crper_codigo);
+							CreateCNEAttachment attachment = new CreateCNEAttachment(cne, crper_codigo);
 							try {
 								attachment.attachReport();
 							} catch (SQLException e) {
@@ -1349,24 +1367,10 @@ public class Cgg_res_persona implements Serializable{
 					};
 					t.start();
 				}
+				//
+			}catch (Exception ex){
+				com.besixplus.sii.db.SQLErrorHandler.errorHandler(ex);
 			}
-
-			CNE cne = new CNE(tmpObj.getCRPER_NUM_DOC_IDENTIFIC());
-			if(cne.callServiceAsObject().equals(CNE.CALL_OK)){
-				final String crper_codigo = tmpObj.getCRPER_CODIGO();
-				Thread t = new Thread() {
-					public void run() {
-						CreateCNEAttachment attachment = new CreateCNEAttachment(cne,crper_codigo);
-						try {
-							attachment.attachReport();
-						} catch (SQLException e) {
-							e.printStackTrace();
-						}
-					}
-				};
-				t.start();
-			}
-			//
 
 			ArrayList<com.besixplus.sii.objects.Cgg_res_persona> tmpArray = new ArrayList<com.besixplus.sii.objects.Cgg_res_persona>();
 			tmpArray.add(tmpObj);
@@ -1375,8 +1379,6 @@ public class Cgg_res_persona implements Serializable{
 		}catch(SQLException inException){
 			com.besixplus.sii.db.SQLErrorHandler.errorHandler(inException);
 			throw new SOAPFaultException(SOAPFactory.newInstance().createFault(inException.getMessage(), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
-		} catch (ParseException e) {
-			e.printStackTrace();
 		}
 		if (tmpObj != null)
 			return tmpFormat.getData().toString();
