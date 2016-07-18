@@ -1329,9 +1329,9 @@ public class Cgg_res_persona implements Serializable{
 					}
 					if(registroCivil.getGenero().equals("FEMENINO")){
 						tmpObj.setCRPER_GENERO(1);
-					}/*else{
+					}else{
 						tmpObj.setCRPER_GENERO(0);
-					}*/
+					}
 
 					/*
 					* Creamos la cedula en BG
