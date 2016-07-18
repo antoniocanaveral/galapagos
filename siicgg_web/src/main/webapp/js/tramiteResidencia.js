@@ -187,8 +187,8 @@ $(function() {
             $('#txtNombreBeneficiario').val("");
             $('#txtApellidoPaternoBeneficiario').val("");
             $('#txtApellidoMaternoBeneficiario').val("");
-            cbxPaisResidencia.dom.value= null;
-            cbxNacionalidad.dom.value= null;
+            cbxPaisResidencia.dom.value= "";
+            cbxNacionalidad.dom.value= "";
             $('#dtFechaNacimiento').val(null);
         }catch(e){
             console.log(e.message);
