@@ -1276,7 +1276,8 @@ $(function() {
     });
     $('#btnGuardarTramiteResidencia').click(function() {
         var inContactosJSON = obtenerJSONContactos();
-        codigoActividad = cbxActividad.getRowSelected().CGCRG_CODIGO;
+        if(cbxActividad != null && cbxActividad.getRowSelected()!=null)
+            codigoActividad = cbxActividad.getRowSelected().CGCRG_CODIGO;
 
         if (!modeTranseuntes) {
             if (verificarInformacionTramite() == false) {
