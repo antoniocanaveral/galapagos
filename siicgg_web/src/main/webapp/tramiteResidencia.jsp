@@ -188,6 +188,8 @@
                         </span>
                     </div>
                 </div>
+            </div>
+            <div id="divDatosActividad" style="display: none;">
                 <div class="form-line">
                     <label class="form-label-left" id="lblActividad" for="divActividad"> Actividad:</label>
                     <div class="form-input"><div id='divActividad'></div></div>
@@ -411,6 +413,7 @@
                                 type="radio" name="rdbtnGenero" value="1" id="rdFemenino"/> <label
                                 for="rdFemenino">Femenino</label>
                         </div>
+
                     </ul>
                     <span class="obligatorio"> Los campos marcados con (*) son obligatorios</span>
                 </div>
@@ -590,6 +593,7 @@
         <div id='divMotivoResidencia'></div>
 
     </div>
+
     <div id="dlgReglaValidacion" title="Regla validacion">
         <div id="divReglaValidacion" class="divTramite"></div>
     </div>

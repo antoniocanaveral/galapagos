@@ -957,6 +957,13 @@ $(function() {
         //AC -> QUEMADO! Cambiar a Modo Transeuntes si fuese el caso (CRTST7)
         var personaForm = document.getElementById("personaForm");
         personaForm.style.display = "block";
+
+        if($(this).val()=='CRTST2'){
+            document.getElementById("divDatosTranseunte").style.display = "block";
+        }else{
+            document.getElementById("divDatosTranseunte").style.display = "none";
+        }
+
         if($(this).val()==='CRTST7'){
             modeTranseuntes = true;
             $("#tabs").tabs("select",1);
@@ -964,6 +971,7 @@ $(function() {
             document.getElementById("divAuspiciado").style.display = "none";
             document.getElementById("liAuspiciado").style.display = "none";
             document.getElementById("divDatosTranseunte").style.display = "block";
+            document.getElementById("divDatosActividad").style.display = "block";
             var contentPersona = document.getElementById("contentPersona");
             contentPersona.appendChild(personaForm);
         }else if(modeTranseuntes){
@@ -973,6 +981,7 @@ $(function() {
             auspiciado.style.display = "block";
             document.getElementById("liAuspiciado").style.display = "block";
             document.getElementById("divDatosTranseunte").style.display = "none";
+            document.getElementById("divDatosActividad").style.display = "none";
             auspiciado.appendChild(personaForm);
             $("#tabs").tabs("select",0);
         }
@@ -1381,6 +1390,8 @@ $(function() {
             param.add('inNuevoBeneficiarioJSON', objBeneficiarioJSON);
             param.add('inContactoPersonaJSON', inContactosJSON);//'[]') ;
             param.add('inInfoVehiculos', null);
+            param.add('inCrtra_fecha_ingreso', $('#dtFechaIngreso').val());
+            param.add('inCrtra_fecha_salida', $('#dtFechaSalida').val());
             SOAPClient.invoke(URL_WS + "Cgg_res_tramite", 'registrarTramiteLite', param, true, CallBackCgg_res_tramite);
         }else{
             var beneficiarios = [];
