@@ -28,44 +28,52 @@ public class GenerarResolucion extends RulePhase {
 
     @Override
     public String executeRule(Cgg_res_seguimiento objSeguimiento, Cgg_res_tramite tramite, String inUserName) {
-        String tmpMsg = new com.besixplus.sii.db.Cgg_res_seguimiento().ejecutarFuncionSeguimiento(connection,FUNCTION_NAME,objSeguimiento.getCRSEG_CODIGO(),inUserName);
+        //PRIMERO LA RESOLUCION
 
-        if(tmpMsg!=null && !tmpMsg.equalsIgnoreCase("false")){//Se generó la residencia. Ahora hacemos la resolucion
-            //Supongo que para cada tipo de residencia habrá un reporte distinto. Lo ponemos como parametro.
-            Properties props = Env.getExternalProperties("rules/resolucion.properties");
-            if(props!=null){
-                String reportName = props.get("DEFAULT").toString();
-                if(props.get(tramite.getCRTST_CODIGO())!=null)
-                    reportName = (String) props.get(tramite.getCRTST_CODIGO());
+        String tmpMsg = "false";
+        try {
+            //INSERT EN RESOLUCION - INSERT RES_TRAMITE
+            Cgg_res_resolucion resolucion = new Cgg_res_resolucion();
+            resolucion.setCRRES_CODIGO("KEYGEN");
+            resolucion.setCRRES_TIPO(CGGEnumerators.TipoResolucion.Aprobacion.getValue());
+            resolucion.setCRRES_ESTADO(true);
+            resolucion.setCRRES_FECHA_EMISION(new Date());
+            resolucion.setCRRES_ESTADO_RESOLUCION(CGGEnumerators.EstadoResolucion.Aprobada.getValue());
+            resolucion.setCRRES_EXTRACTO_RESOLUCION("Tramite No. " + tramite.getCRTRA_NUMERO() + "\nResolucion Generada automáticamente por el sistema integral");
+            resolucion.setCRRES_USUARIO_INSERT("sii");
+            resolucion.setCRRES_USUARIO_UPDATE(inUserName);
+            try {
+                String inCrres_numero_resolucion = com.besixplus.sii.db.Cgg_res_resolucion.numeroResolucion(connection, tramite.getCISLA_CODIGO(), tramite.getCRTRA_CODIGO());
+                if(inCrres_numero_resolucion!=null)
+                    resolucion.setCRRES_NUMERO_RESOLUCION(inCrres_numero_resolucion);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            String outResult = new com.besixplus.sii.db.Cgg_res_resolucion(resolucion).insert(connection);
 
-                //Obtenemos el Numero de Resolucion Secuencial y la fecha. Lo ponemos en la residencia
-                try {
-                    //INSERT EN RESOLUCION - INSERT RES_TRAMITE
-                    Cgg_res_resolucion resolucion = new Cgg_res_resolucion();
-                    resolucion.setCRRES_CODIGO("KEYGEN");
-                    resolucion.setCRRES_TIPO(CGGEnumerators.TipoResolucion.Aprobacion.getValue());
-                    resolucion.setCRRES_ESTADO(true);
-                    resolucion.setCRRES_FECHA_EMISION(new Date());
-                    resolucion.setCRRES_ESTADO_RESOLUCION(CGGEnumerators.EstadoResolucion.Aprobada.getValue());
-                    resolucion.setCRRES_EXTRACTO_RESOLUCION("Tramite No. " + tramite.getCRTRA_NUMERO() + "\nResolucion Generada automáticamente por el sistema integral");
-                    resolucion.setCRRES_USUARIO_INSERT("sii");
-                    resolucion.setCRRES_USUARIO_UPDATE(inUserName);
-                    String outResult = new com.besixplus.sii.db.Cgg_res_resolucion(resolucion).insert(connection);
+            Cgg_res_resol_tramite resol_tramite = null;
+            if(outResult.equals("true")) {
+                resol_tramite = new Cgg_res_resol_tramite();
+                resol_tramite.setCRRST_CODIGO("KEYGEN");
+                resol_tramite.setCRRES_CODIGO(resolucion.getCRRES_CODIGO());
+                resol_tramite.setCRTRA_CODIGO(tramite.getCRTRA_CODIGO());
+                resol_tramite.setCRRST_ESTADO(true);
+                resol_tramite.setCRRST_USUARIO_INSERT("sii");
+                resol_tramite.setCRRST_USUARIO_UPDATE(inUserName);
+                String outResolTra = new com.besixplus.sii.db.Cgg_res_resol_tramite(resol_tramite).insert(connection);
+            }
 
-                    Cgg_res_resol_tramite resol_tramite = null;
-                    if(outResult.equals("true")) {
-                        resol_tramite = new Cgg_res_resol_tramite();
-                        resol_tramite.setCRRST_CODIGO("KEYGEN");
-                        resol_tramite.setCRRES_CODIGO(resolucion.getCRRES_CODIGO());
-                        resol_tramite.setCRTRA_CODIGO(tramite.getCRTRA_CODIGO());
-                        resol_tramite.setCRRST_USUARIO_INSERT("sii");
-                        resol_tramite.setCRRST_USUARIO_UPDATE(inUserName);
-                        String outResolTra = new com.besixplus.sii.db.Cgg_res_resol_tramite(resol_tramite).insert(connection);
-                    }
+            tmpMsg = new com.besixplus.sii.db.Cgg_res_seguimiento().ejecutarFuncionSeguimiento(connection,FUNCTION_NAME,objSeguimiento.getCRSEG_CODIGO(),inUserName);
+            if(tmpMsg!=null && !tmpMsg.equalsIgnoreCase("false")) {//Se generó la residencia.
 
+                Properties props = Env.getExternalProperties("rules/resolucion.properties");
+                if(props!=null) {
+                    String reportName = props.get("DEFAULT").toString();
+                    if (props.get(tramite.getCRTST_CODIGO()) != null)
+                        reportName = (String) props.get(tramite.getCRTST_CODIGO());
                     //Ya tenemos el reporte que hay que hacer. Lo invocamos y guardamos en BG.
                     //El reporte generado lo ponemos en Alfresco* Requiere llamar al Servlet de BackendInvoker.
-                    if(resol_tramite!=null && !resol_tramite.getCRRST_CODIGO().equals("KEYGEN")) {
+                    if (resol_tramite != null && !resol_tramite.getCRRST_CODIGO().equals("KEYGEN")) {
                         final Map<String, String> param = new HashMap<>();
                         param.put("CRRST_CODIGO", resol_tramite.getCRRST_CODIGO());
                         param.put("CRRES_CODIGO", resolucion.getCRRES_CODIGO());
@@ -83,13 +91,13 @@ public class GenerarResolucion extends RulePhase {
                         };
                         t.start();
                     }
-
-                }catch (SQLException e){
-                    com.besixplus.sii.db.SQLErrorHandler.errorHandler(e);
                 }
+
             }
+
+        }catch (SQLException e){
+            com.besixplus.sii.db.SQLErrorHandler.errorHandler(e);
         }
-        //FIXME: Controlar el return de la funcion.
         return tmpMsg;
     }
 }
