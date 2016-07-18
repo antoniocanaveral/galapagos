@@ -64,7 +64,7 @@ public class GenerarResolucion extends RulePhase {
                     }
 
                     //Ya tenemos el reporte que hay que hacer. Lo invocamos y guardamos en BG.
-                    //El reporte generado lo ponemos en Alfresco* Tal vez requiera llamar a un WS o un Servlet.
+                    //El reporte generado lo ponemos en Alfresco* Requiere llamar al Servlet de BackendInvoker.
                     if(resol_tramite!=null && !resol_tramite.getCRRST_CODIGO().equals("KEYGEN")) {
                         final Map<String, String> param = new HashMap<>();
                         param.put("CRRST_CODIGO", resol_tramite.getCRRST_CODIGO());
