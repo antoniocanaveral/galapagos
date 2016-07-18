@@ -643,12 +643,10 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
         sm:new Ext.grid.RowSelectionModel({
             singleSelect:true
         }),
-        tbar:[{
-            iconCls:'iconNuevo',
-            id:'btnAgregarInforme',
-            tooltip:'Agregar informe',
-            handler:function() {
-                var objCgg_res_informe = new FrmCgg_res_informe('Insert', INRECORD_CGG_RES_SEGUIMIENTO.get('CRSEG_CODIGO'));
+        listeners:{
+            rowdblclick:function(inGridComponent, inRowIndex, inEventObject){
+                var r=grdCgg_res_informe_seguimiento.getSelectionModel().getSelected();
+                var objCgg_res_informe = new FrmCgg_res_informe('Update', INRECORD_CGG_RES_SEGUIMIENTO.get('CRSEG_CODIGO'),r);
                 objCgg_res_informe.closeHandler(function() {
                     gsCgg_res_informe_seguimiento.reload();
                     gsCgg_res_adjunto.reload();
@@ -656,44 +654,58 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
                 objCgg_res_informe.show();
             }
         },
-        {
-            id:'btnEliminarInforme',
-			disabled:true,
-            iconCls:'iconEliminar',
-            tooltip:'Eliminar informe',
-            listeners:{
-                click:function() {
-                    var rInformeSeguimiento = grdCgg_res_informe_seguimiento.getSelectionModel().getSelected();
-                    if (rInformeSeguimiento !== null && rInformeSeguimiento !== undefined) {
-                        if(rInformeSeguimiento.get('CRISE_USUARIO_INSERT') == tmpUsuarioConectado && rInformeSeguimiento.get('CRSEG_CODIGO') == inRecordCgg_res_seguimiento.get('CRSEG_CODIGO')){
-                            Ext.Msg.show({
-                                title:tituloCgg_res_seguimiento,
-                                msg:'Est\u00e1 seguro de eliminar el informe?',
-                                buttons: Ext.Msg.YESNO,
-                                fn:function(inBtn) {
-                                    if (inBtn == 'yes') {
-                                        var scpEliminarInforme = new SOAPClientParameters();
-                                        scpEliminarInforme.add('inCrise_codigo', rInformeSeguimiento.get('CRISE_CODIGO'));
-                                        SOAPClient.invoke(URL_WS + "Cgg_res_informe_seguimiento", 'delete', scpEliminarInforme, true, function(inServiceResponse) {
-                                            if (inServiceResponse == 'true') {
-                                                Ext.MsgPopup.msg(tituloCgg_res_seguimiento, 'El informe ha sido eliminado.', MsgPopup.INFO);
-                                                gsCgg_res_informe_seguimiento.reload();
-                                            } else {
-                                                Ext.MsgPopup.msg(tituloCgg_res_seguimiento, 'El informe ha sido eliminado.\nError:' + inServiceResponse, MsgPopup.WARNING);
-                                            }
-                                        })
+        tbar:[
+            {
+                iconCls:'iconNuevo',
+                id:'btnAgregarInforme',
+                tooltip:'Agregar informe',
+                handler:function() {
+                        var objCgg_res_informe = new FrmCgg_res_informe('Insert', INRECORD_CGG_RES_SEGUIMIENTO.get('CRSEG_CODIGO'));
+                        objCgg_res_informe.closeHandler(function() {
+                            gsCgg_res_informe_seguimiento.reload();
+                            gsCgg_res_adjunto.reload();
+                        });
+                        objCgg_res_informe.show();
+                    }
+            },
+            {
+                id:'btnEliminarInforme',
+                disabled:true,
+                iconCls:'iconEliminar',
+                tooltip:'Eliminar informe',
+                listeners:{
+                    click:function() {
+                        var rInformeSeguimiento = grdCgg_res_informe_seguimiento.getSelectionModel().getSelected();
+                        if (rInformeSeguimiento !== null && rInformeSeguimiento !== undefined) {
+                            if(rInformeSeguimiento.get('CRISE_USUARIO_INSERT') == tmpUsuarioConectado && rInformeSeguimiento.get('CRSEG_CODIGO') == inRecordCgg_res_seguimiento.get('CRSEG_CODIGO')){
+                                Ext.Msg.show({
+                                    title:tituloCgg_res_seguimiento,
+                                    msg:'Est\u00e1 seguro de eliminar el informe?',
+                                    buttons: Ext.Msg.YESNO,
+                                    fn:function(inBtn) {
+                                        if (inBtn == 'yes') {
+                                            var scpEliminarInforme = new SOAPClientParameters();
+                                            scpEliminarInforme.add('inCrise_codigo', rInformeSeguimiento.get('CRISE_CODIGO'));
+                                            SOAPClient.invoke(URL_WS + "Cgg_res_informe_seguimiento", 'delete', scpEliminarInforme, true, function(inServiceResponse) {
+                                                if (inServiceResponse == 'true') {
+                                                    Ext.MsgPopup.msg(tituloCgg_res_seguimiento, 'El informe ha sido eliminado.', MsgPopup.INFO);
+                                                    gsCgg_res_informe_seguimiento.reload();
+                                                } else {
+                                                    Ext.MsgPopup.msg(tituloCgg_res_seguimiento, 'El informe ha sido eliminado.\nError:' + inServiceResponse, MsgPopup.WARNING);
+                                                }
+                                            })
 
-                                    }
-                                },
-                                icon: Ext.MessageBox.QUESTION
-                            });
-                        }else{
-                            Ext.MsgPopup.msg(tituloCgg_res_seguimiento, 'El informe no puede ser modificado.', MsgPopup.INFO);
+                                        }
+                                    },
+                                    icon: Ext.MessageBox.QUESTION
+                                });
+                            }else{
+                                Ext.MsgPopup.msg(tituloCgg_res_seguimiento, 'El informe no puede ser modificado.', MsgPopup.INFO);
+                            }
                         }
                     }
                 }
             }
-        }
         ]
     });
 	grdCgg_res_informe_seguimiento.getSelectionModel().on("selectionchange",function(sm){
@@ -705,6 +717,17 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
 					Ext.getCmp('btnEliminarInforme').setDisabled(true);				
 		}
 	});
+
+    grdCgg_res_informe_seguimiento.getSelectionModel().on("selectionchange",function(sm){
+        if (sm.hasSelection()){
+            var rInforme=sm.getSelected();
+            if(rInforme.get('CRISE_USUARIO_INSERT') == tmpUsuarioConectado && rInforme.get('CRSEG_CODIGO') == inRecordCgg_res_seguimiento.get('CRSEG_CODIGO'))
+                Ext.getCmp('btnEliminarInforme').setDisabled(false);
+            else
+                Ext.getCmp('btnEliminarInforme').setDisabled(true);
+        }
+    });
+
     gsCgg_res_informe_seguimiento.load();
 
     /**

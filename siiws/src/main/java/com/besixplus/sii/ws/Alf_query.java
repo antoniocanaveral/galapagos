@@ -19,6 +19,7 @@ import javax.xml.bind.annotation.XmlMimeType;
 import javax.xml.ws.WebServiceContext;
 import java.io.Serializable;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -93,34 +94,39 @@ public class Alf_query implements Serializable {
             @WebParam(name = "filter") String filter
     ){
         String json = "";
-        Connection con = ManagerConnection.getConnection();
-        SiiModelMetadata modelMetadata = SiiDataLoader.getAlfrescoMetadata(con,tableName,filter);
-        if(modelMetadata!=null){
-            //Si es de subida libre, obtenemos los archivos del repositorio
-            if(!modelMetadata.isList()){
-                SiiFolderResult result = AlfrescoActions.getFolderContent(modelMetadata.resolveFileRepository(con,recordID));
-                modelMetadata.setFolderResult(result);
-            }else{//Si es lista de archivos, vamos poniendo los datos de los archivos en cada sitio
-                Map<String,SiiFolderResult> remotePaths = new HashMap<>();
-                for(SiiModelFile file:modelMetadata.getFileList()){
-                    String realRepo = file.resolveFileRepository(con,tableName,recordID);
-                    if(!remotePaths.containsKey(realRepo)){
-                        SiiFolderResult result = AlfrescoActions.getFolderContent(realRepo);
-                        remotePaths.put(realRepo,result);
-                    }
-                    if(remotePaths.size()>0) {
-                        SiiFolderResult fileFolder = remotePaths.get(realRepo);
-                        if (fileFolder != null) {
-                            for (SiiFileResult fileResult : fileFolder.getFiles()) {
-                                if (fileResult.getName().contains(file.getFileName()))
-                                    file.setFileResult(fileResult);
+        try {
+            Connection con = ManagerConnection.getConnection();
+            SiiModelMetadata modelMetadata = SiiDataLoader.getAlfrescoMetadata(con,tableName,filter);
+            if(modelMetadata!=null){
+                //Si es de subida libre, obtenemos los archivos del repositorio
+                if(!modelMetadata.isList()){
+                    SiiFolderResult result = AlfrescoActions.getFolderContent(modelMetadata.resolveFileRepository(con,recordID));
+                    modelMetadata.setFolderResult(result);
+                }else{//Si es lista de archivos, vamos poniendo los datos de los archivos en cada sitio
+                    Map<String,SiiFolderResult> remotePaths = new HashMap<>();
+                    for(SiiModelFile file:modelMetadata.getFileList()){
+                        String realRepo = file.resolveFileRepository(con,tableName,recordID);
+                        if(!remotePaths.containsKey(realRepo)){
+                            SiiFolderResult result = AlfrescoActions.getFolderContent(realRepo);
+                            remotePaths.put(realRepo,result);
+                        }
+                        if(remotePaths.size()>0) {
+                            SiiFolderResult fileFolder = remotePaths.get(realRepo);
+                            if (fileFolder != null) {
+                                for (SiiFileResult fileResult : fileFolder.getFiles()) {
+                                    if (fileResult.getName().contains(file.getFileName()))
+                                        file.setFileResult(fileResult);
+                                }
                             }
                         }
                     }
-                }
 
+                }
+                json = gson.toJson(modelMetadata);
             }
-            json = gson.toJson(modelMetadata);
+            con.close();
+        } catch (SQLException e) {
+            com.besixplus.sii.db.SQLErrorHandler.errorHandler(e);
         }
         return json;
     }
@@ -137,10 +143,15 @@ public class Alf_query implements Serializable {
             @WebParam(name = "filter") String filter
     ){
         String json = "[]";
-        Connection con = ManagerConnection.getConnection();
-        SiiModelMetadata modelMetadata = SiiDataLoader.getAlfrescoMetadata(con,tableName,filter);
-        if(modelMetadata!=null){
-            json = gson.toJson(modelMetadata.getFileList());
+        try{
+            Connection con = ManagerConnection.getConnection();
+            SiiModelMetadata modelMetadata = SiiDataLoader.getAlfrescoMetadata(con,tableName,filter);
+            if(modelMetadata!=null){
+                json = gson.toJson(modelMetadata.getFileList());
+            }
+            con.close();
+        } catch (SQLException e) {
+            com.besixplus.sii.db.SQLErrorHandler.errorHandler(e);
         }
         return json;
     }

@@ -6,7 +6,7 @@
 * @base FrmListadoCgg_res_informe
 * @author Besixplus Cia. Ltda.
 */
-function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
+function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo, currentRecord){
     var tituloCgg_res_informe='Informe';
     var descCgg_res_informe='El formulario permite administrar informaci\u00f3n del informe';
     
@@ -19,7 +19,7 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
         fieldLabel :'Codigo',
         anchor:'98%',
         allowBlank :false,
-        value:"KEYGEN",
+        value:(currentRecord!=null?currentRecord.get('CRISE_CODIGO'):null)!=null?currentRecord.get('CRISE_CODIGO'):"KEYGEN",
         hidden:true,
         hideLabel:true,
         maxLength :20
@@ -32,6 +32,7 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
         name:'txtCrseg_codigo',
         fieldLabel :'Seguimiento',
         anchor:'98%',
+        value: (currentRecord!=null?currentRecord.get('CRSEG_CODIGO'):null)!=null?currentRecord.get('CRSEG_CODIGO'):null,
         allowBlank :false,
         readOnly:'true',
         maxLength :20
@@ -66,6 +67,7 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
         name:'txtCrsec_codigo',
         fieldLabel :'Seccci\u00F3n',
         anchor:'98%',
+        value:(currentRecord!=null?currentRecord.get('CRSEC_CODIGO'):null)!=null?currentRecord.get('CRSEC_CODIGO'):null,
         allowBlank :false,
         readOnly:'true',
         maxLength :20
@@ -99,6 +101,7 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
         id:'txtCrinf_numero_informe',
         name:'txtCrinf_numero_informe',
         fieldLabel :'N\u00FAmero',
+        value:(currentRecord!=null?currentRecord.get('CRISE_NUMERO_INFORME'):null)!=null?currentRecord.get('CRISE_NUMERO_INFORME'):null,
         anchor:'60%',
         allowBlank :false,
         maxLength :20
@@ -111,7 +114,7 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
         name:'dtCrinf_fecha_informe',
         fieldLabel :'Fecha',
         allowBlank :false,
-        value:CURRENT_DATE,
+        value:(currentRecord!=null?currentRecord.get('CRISE_FECHA_INFORME'):null)!=null?currentRecord.get('CRISE_FECHA_INFORME'):CURRENT_DATE,
         format:'d/m/Y',
 		maxValue:CURRENT_DATE
     });
@@ -123,6 +126,7 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
         name:'txtCrinf_asunto_informe',
         fieldLabel :'Asunto',
         anchor:'98%',
+        value:(currentRecord!=null?currentRecord.get('CRISE_ASUNTO_INFORME'):null)!=null?currentRecord.get('CRISE_ASUNTO_INFORME'):null,
         allowBlank :true,
         maxLength :100
     });
@@ -134,6 +138,7 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
         name:'txtCrinf_extracto_informe',
         fieldLabel :'Extracto',
         anchor:'98%',
+        value:(currentRecord!=null?currentRecord.get('CRISE_EXTRACTO_INFORME'):null)!=null?currentRecord.get('CRISE_EXTRACTO_INFORME'):null,
         enableFontSize:false,
         enableLinks:false,
         height:100,
@@ -312,37 +317,37 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
 */
     this.getWindow = function(){
         return winFrmCgg_res_informe;
-    }
+    };
     /**
 * Funcion miembro que carga los controles de la ventana winFrmCgg_res_informe.
 * @base FrmCgg_res_informe.prototype.loadData
 */
     this.loadData = function(){
         cargarCgg_res_informeCtrls();
-    }
+    };
 }
 /**
 * Funcion prototipo. Permite mostrar la ventana winFrmCgg_res_informe desde una instancia.
 */
 FrmCgg_res_informe.prototype.show = function(){
     this.getWindow().show();
-}
+};
 /**
 *Funcion prototipo. Permite cerrar la ventana winFrmCgg_res_informe desde una instancia.
 */
 FrmCgg_res_informe.prototype.close = function(){
     this.getWindow().close();
-}
+};
 /**
 * Funcion prototipo. Permite saber si se ha cerrado la ventana winFrmCgg_res_informe,
 * con el fin de realizar otras acciones desde una instancia.
 */
 FrmCgg_res_informe.prototype.closeHandler = function(inFunctionHandler){
     this.getWindow().on('close',inFunctionHandler);
-}
+};
 /**
 * Funcion prototipo. Permite cargar los controles de la ventana winFrmCgg_res_informe desde una instancia.
 */
 FrmCgg_res_informe.prototype.loadData = function(){
     this.loadData();
-}
+};

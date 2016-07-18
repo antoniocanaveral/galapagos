@@ -2,11 +2,8 @@
  * Created by acanaveral on 15/6/16.
  */
 
-import com.bmlaurus.attachment.CreateRCAttachment;
-import com.bmlaurus.ws.dinardap.RegistroCivil;
+import com.bmlaurus.ws.dinardap.CNE;
 import org.junit.Test;
-
-import java.sql.SQLException;
 
 public class TestRules {
 
@@ -22,8 +19,11 @@ public class TestRules {
 
         ///REPORT ATTACHMENT
 
-
-        RegistroCivil registroCivil = new RegistroCivil("1710679968");
+        CNE cne = new CNE("1710679968");
+        if(cne.callServiceAsObject().equals(CNE.CALL_OK)){
+            System.out.println(cne.toString());
+        }
+        /*RegistroCivil registroCivil = new RegistroCivil("1710679968");
         if(registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_OK)){
             System.out.println(registroCivil.toString());
             CreateRCAttachment attachment = new CreateRCAttachment(registroCivil,"CRPER766646");
@@ -32,6 +32,6 @@ public class TestRules {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 }

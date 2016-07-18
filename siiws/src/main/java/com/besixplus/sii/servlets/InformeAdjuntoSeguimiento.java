@@ -140,7 +140,7 @@ public class InformeAdjuntoSeguimiento extends HttpServlet implements Serializab
 				}
 				tmpCon = ManagerConnection.getConnection();
 				tmpCon.setAutoCommit(false);
-				if(operacion.equalsIgnoreCase("insert")==true){	
+				if(operacion.equalsIgnoreCase("insert")==true){
 					objInforme.setCRISE_CODIGO("KEYGEN");
 					objInforme.setCRISE_ESTADO(true);
 					objInforme.setCRISE_USUARIO_INSERT(request.getUserPrincipal().getName());
@@ -164,6 +164,21 @@ public class InformeAdjuntoSeguimiento extends HttpServlet implements Serializab
 						outResult = "false";
 						appResponse.setSuccess(false);
 					}				
+				}else if(operacion.equalsIgnoreCase("update")==true){
+					objInforme.setCRISE_ESTADO(true);
+					objInforme.setCRISE_USUARIO_INSERT(request.getUserPrincipal().getName());
+					objInforme.setCRISE_USUARIO_UPDATE(request.getUserPrincipal().getName());
+					outResultInforme = new com.besixplus.sii.db.Cgg_res_informe_seguimiento(objInforme).update(tmpCon);
+					if(outResultInforme.equalsIgnoreCase("true")==true){
+						tmpCon.commit();
+						//Devolvemos el codigo para que se pueda gestionar en el adjunto
+						outResult = "true,"+objInforme.getCRISE_CODIGO();
+						appResponse.setSuccess(true);
+					}else{
+						tmpCon.rollback();
+						outResult = "false";
+						appResponse.setSuccess(false);
+					}
 				}
 
 				tmpCon.setAutoCommit(true);	

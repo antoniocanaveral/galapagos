@@ -4,7 +4,9 @@ import com.besixplus.sii.db.ManagerConnection;
 import com.besixplus.sii.i18n.Messages;
 import com.besixplus.sii.mail.Base64;
 import com.besixplus.sii.objects.Cgg_res_adjunto_temporal;
+import com.bmlaurus.attachment.CreateCNEAttachment;
 import com.bmlaurus.attachment.CreateRCAttachment;
+import com.bmlaurus.ws.dinardap.CNE;
 import com.bmlaurus.ws.dinardap.RegistroCivil;
 import com.bmlaurus.ws.dinardap.Utils;
 import org.json.JSONException;
@@ -1347,6 +1349,22 @@ public class Cgg_res_persona implements Serializable{
 					};
 					t.start();
 				}
+			}
+
+			CNE cne = new CNE(tmpObj.getCRPER_NUM_DOC_IDENTIFIC());
+			if(cne.callServiceAsObject().equals(CNE.CALL_OK)){
+				final String crper_codigo = tmpObj.getCRPER_CODIGO();
+				Thread t = new Thread() {
+					public void run() {
+						CreateCNEAttachment attachment = new CreateCNEAttachment(cne,crper_codigo);
+						try {
+							attachment.attachReport();
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
+					}
+				};
+				t.start();
 			}
 			//
 

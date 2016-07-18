@@ -19,10 +19,17 @@
 					<bottomPen lineWidth="2.0" lineColor="#999999"/>
 					<rightPen lineWidth="2.0" lineColor="#999999"/>
 				</box>
+				<staticText>
+					<reportElement x="272" y="211" width="125" height="20" forecolor="#006699" uuid="039a5447-e3ba-4458-ab6e-072ef18a9fb8"/>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[CEDULA CONYUGE]]></text>
+				</staticText>
 			</frame>
 			<image>
 				<reportElement x="32" y="53" width="115" height="146" uuid="f774ab50-d093-43d7-9453-fabe7ff4fdd7"/>
-				<imageExpression><![CDATA[net.sf.jasperreports.engine.util.JRImageLoader.getInstance(new SimpleJasperReportsContext()).loadAwtImageFromBytes(javax.xml.bind.DatatypeConverter.parseBase64Binary((new org.json.JSONObject($P{CEDULA_DATOS})).getString("fotografia")))]]></imageExpression>
+				<imageExpression><![CDATA[((new org.json.JSONObject($P{CEDULA_DATOS})).has("fotografia")?
+net.sf.jasperreports.engine.util.JRImageLoader.getInstance(new SimpleJasperReportsContext()).loadAwtImageFromBytes(javax.xml.bind.DatatypeConverter.parseBase64Binary((new org.json.JSONObject($P{CEDULA_DATOS})).getString("fotografia")))
+:null)]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="157" y="83" width="205" height="20" forecolor="#006699" uuid="08a37860-e49f-4b6d-bec2-1569ee2e94a9"/>
@@ -163,7 +170,9 @@
 			</textField>
 			<image>
 				<reportElement x="197" y="440" width="177" height="51" uuid="01170dbe-a86d-4a6a-a71c-891d736db42d"/>
-				<imageExpression><![CDATA[net.sf.jasperreports.engine.util.JRImageLoader.getInstance(new SimpleJasperReportsContext()).loadAwtImageFromBytes(javax.xml.bind.DatatypeConverter.parseBase64Binary((new org.json.JSONObject($P{CEDULA_DATOS})).getString("firma")))]]></imageExpression>
+				<imageExpression><![CDATA[((new org.json.JSONObject($P{CEDULA_DATOS})).has("firma")?
+net.sf.jasperreports.engine.util.JRImageLoader.getInstance(new SimpleJasperReportsContext()).loadAwtImageFromBytes(javax.xml.bind.DatatypeConverter.parseBase64Binary((new org.json.JSONObject($P{CEDULA_DATOS})).getString("firma")))
+:null)]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="207" y="492" width="167" height="20" forecolor="#006699" uuid="77405a04-ab5a-4781-b610-ed80ca5cd8d8"/>
@@ -197,6 +206,22 @@
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="415" y="259" width="125" height="20" forecolor="#006699" uuid="5b35bd30-6c1e-45b1-8943-b076dd4d6fde"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[FECHA DE MATRIMONIO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="23" y="78" width="125" height="20" uuid="d986acf5-0957-492e-86b4-545a7c034aa4"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("cedulaConyuge")]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="415" y="279" width="125" height="20" uuid="5ba4826f-fc23-48d5-89cf-c98c7f232e83"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).has("fechaMatrimonio")?
+(new org.json.JSONObject($P{CEDULA_DATOS})).getString("fechaMatrimonio"):null]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>
