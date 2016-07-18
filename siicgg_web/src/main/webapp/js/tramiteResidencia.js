@@ -179,16 +179,20 @@ $(function() {
     }
 
     function clearFormPersona(){
-        cbxTipoDocumentoBeneficiario.dom.value = null;
-        cbxTipoDocumentoBeneficiario.dom.value = null;
-        tmpRecordBeneficiario= null;
-        $('#txtNumDocBeneficiario').val("");
-        $('#txtNombreBeneficiario').val("");
-        $('#txtApellidoPaternoBeneficiario').val("");
-        $('#txtApellidoMaternoBeneficiario').val("");
-        tcbxPaisResidencia.dom.value= null;
-        cbxNacionalidad.dom.value= null;
-        $('#dtFechaNacimiento').val(null);
+        try{
+            cbxTipoDocumentoBeneficiario.dom.value = null;
+            cbxTipoDocumentoBeneficiario.dom.value = null;
+            tmpRecordBeneficiario= null;
+            $('#txtNumDocBeneficiario').val("");
+            $('#txtNombreBeneficiario').val("");
+            $('#txtApellidoPaternoBeneficiario').val("");
+            $('#txtApellidoMaternoBeneficiario').val("");
+            cbxPaisResidencia.dom.value= null;
+            cbxNacionalidad.dom.value= null;
+            $('#dtFechaNacimiento').val(null);
+        }catch(e){
+            console.log(e.message);
+        }
     }
 
     //CAMPOS DE FECHAS Y ACTIVIDAD:
