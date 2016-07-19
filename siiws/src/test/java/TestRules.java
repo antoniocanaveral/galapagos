@@ -3,6 +3,7 @@
  */
 
 import com.bmlaurus.ws.dinardap.CNE;
+import com.bmlaurus.ws.dinardap.RegistroCivil;
 import org.junit.Test;
 
 public class TestRules {
@@ -19,7 +20,7 @@ public class TestRules {
 
         ///REPORT ATTACHMENT
 
-        CNE cne = new CNE("1710679968");
+        RegistroCivil cne = new RegistroCivil("2000152815");
         if(cne.callServiceAsObject().equals(CNE.CALL_OK)){
             System.out.println(cne.toString());
         }

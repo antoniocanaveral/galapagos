@@ -646,7 +646,18 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
         listeners:{
             rowdblclick:function(inGridComponent, inRowIndex, inEventObject){
                 var r=grdCgg_res_informe_seguimiento.getSelectionModel().getSelected();
-                var objCgg_res_informe = new FrmCgg_res_informe('Update', INRECORD_CGG_RES_SEGUIMIENTO.get('CRSEG_CODIGO'),r);
+                var objCgg_res_informe = null;
+
+                var rInformeSeguimiento = grdCgg_res_informe_seguimiento.getSelectionModel().getSelected();
+                if (rInformeSeguimiento !== null && rInformeSeguimiento !== undefined) {
+                    if (rInformeSeguimiento.get('CRISE_USUARIO_INSERT') == tmpUsuarioConectado && rInformeSeguimiento.get('CRSEG_CODIGO') == inRecordCgg_res_seguimiento.get('CRSEG_CODIGO')) {
+                        objCgg_res_informe = new FrmCgg_res_informe('Update', INRECORD_CGG_RES_SEGUIMIENTO.get('CRSEG_CODIGO'),r, false);
+                    }else{
+                        objCgg_res_informe = new FrmCgg_res_informe('Update', INRECORD_CGG_RES_SEGUIMIENTO.get('CRSEG_CODIGO'),r, true);
+                    }
+                }else{
+                    objCgg_res_informe = new FrmCgg_res_informe('Update', INRECORD_CGG_RES_SEGUIMIENTO.get('CRSEG_CODIGO'),r, false);
+                }
                 objCgg_res_informe.closeHandler(function() {
                     gsCgg_res_informe_seguimiento.reload();
                     gsCgg_res_adjunto.reload();

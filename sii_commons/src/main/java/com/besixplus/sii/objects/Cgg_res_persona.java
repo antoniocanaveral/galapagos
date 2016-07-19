@@ -228,6 +228,29 @@ public class Cgg_res_persona implements Serializable{
 	*/
 	private String myCrper_usuario_update;
 	/**
+	 * CAMPOS ADICIONALES V2
+	 * Matrimonio/Conyuge
+	 * */
+	private String crper_conyuge;
+	private java.util.Date crper_fecha_matrimonio;
+
+	public String getCRPER_CONYUGE() {
+		return crper_conyuge;
+	}
+
+	public void setCRPER_CONYUGE(String crper_conyuge) {
+		this.crper_conyuge = crper_conyuge;
+	}
+
+	public java.util.Date getCRPER_FECHA_MATRIMONIO() {
+		return crper_fecha_matrimonio;
+	}
+
+	public void setCRPER_FECHA_MATRIMONIO(java.util.Date crper_fecha_matrimonio) {
+		this.crper_fecha_matrimonio = crper_fecha_matrimonio;
+	}
+
+	/**
 	* CONSTRUCTOR DE LA CLASE Cgg_res_persona
 	*/
 	public Cgg_res_persona(){}

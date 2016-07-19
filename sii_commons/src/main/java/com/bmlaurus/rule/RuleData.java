@@ -24,6 +24,10 @@ public class RuleData implements Serializable {
 
     private String CRDID_CODIGO; //Código del tipo de identificación del Beneficiario. Puede venir nulo
 
+    private String CRPER_CONYUGE; // Cédula del Conyuge
+
+    private String CRPER_FECHA_MATRIMONIO;//Fecha de Matrimonio
+
     public String getCRTST_CODIGO() {
         return CRTST_CODIGO;
     }
@@ -86,5 +90,21 @@ public class RuleData implements Serializable {
 
     public void setCRDID_CODIGO(String CRDID_CODIGO) {
         this.CRDID_CODIGO = CRDID_CODIGO;
+    }
+
+    public String getCRPER_CONYUGE() {
+        return CRPER_CONYUGE;
+    }
+
+    public void setCRPER_CONYUGE(String CRPER_CONYUGE) {
+        this.CRPER_CONYUGE = CRPER_CONYUGE;
+    }
+
+    public String getCRPER_FECHA_MATRIMONIO() {
+        return CRPER_FECHA_MATRIMONIO;
+    }
+
+    public void setCRPER_FECHA_MATRIMONIO(String CRPER_FECHA_MATRIMONIO) {
+        this.CRPER_FECHA_MATRIMONIO = CRPER_FECHA_MATRIMONIO;
     }
 }

@@ -351,6 +351,27 @@ $(function() {
         }
     });
 
+    $('#dtFechaMatrimonio').datepicker({
+        showOn: 'button',
+        buttonImage: 'css/icon/date.gif',
+        buttonImageOnly: false,
+        appendText: '(dd/mm/yyyy)',
+        dateFormat: 'dd/mm/yy',
+        currentText: 'Now',
+        defaultDate:null,
+        maxDate: new Date(),
+        minDate: new Date(1930, 1 - 1, 1),
+        changeYear: true,
+        changeMonth: true,
+        showButtonPanel: true,
+        nextText: 'Siguiente',
+        prevText: 'Anterior',
+        beforeShow: function(input, inst)
+        {
+            inst.dpDiv.css({marginLeft: (input.offsetWidth+50) + 'px'});
+        }
+    });
+
     //PRUEBA ADJUNTO
 
    /* var adjunto = new Ext.ux.form.AlfrescoFM({
@@ -1173,6 +1194,22 @@ $(function() {
                             $("#cbxNacionalidad").val(tmpRecordPersona[0].CPAIS_CODIGO);
                             //$("#cbxPaisResidencia").val(tmpRecordPersona[0].CGG_CPAIS_CODIGO);
                             $("input[name='rdbtnGenero']")[tmpRecordPersona[0].CRPER_GENERO].checked = true;
+                            if(tmpRecordPersona[0].CRPER_CONYUGE!=null){
+                                $("#txtCiConyuge").val(tmpRecordPersona[0].CRPER_CONYUGE);
+                                $("#txtCiConyuge").attr('disabled', 'disabled');
+                            }else{
+                                $("#txtCiConyuge").val("");
+                                $("#txtCiConyuge").removeAttr('disabled');
+                            }
+                            if(tmpRecordPersona[0].CRPER_FECHA_MATRIMONIO){
+                                $("#dtFechaMatrimonio").val(tmpRecordPersona[0].CRPER_FECHA_MATRIMONIO != undefined?$.format.date(tmpRecordPersona[0].CRPER_FECHA_MATRIMONIO, "dd/MM/yyyy") : '' );
+                                $("#dtFechaMatrimonio").attr('disabled', 'disabled');
+                                $("#dtFechaMatrimonio").datepicker( "disable" );
+                            }else {
+                                $("#dtFechaMatrimonio").val("");
+                                $("#dtFechaMatrimonio").removeAttr('disabled');
+                                $("#dtFechaMatrimonio").datepicker( "enable" );
+                            }
                             tmpRecordBeneficiario = tmpRecordPersona;
                             manejarCtrlsBeneficiario(true);
                         }
@@ -1201,6 +1238,23 @@ $(function() {
                             $("#txtApellidoMaternoBeneficiario").val(tmpRecordPersona[0].CRPER_APELLIDO_MATERNO);
                             $("#dtFechaNacimiento").val(tmpRecordPersona[0].CRPER_FECHA_NACIMIENTO != undefined?$.format.date(tmpRecordPersona[0].CRPER_FECHA_NACIMIENTO, "dd/MM/yyyy") : '' );
                             $("#cbxNacionalidad").val(tmpRecordPersona[0].CPAIS_CODIGO);
+                            if(tmpRecordPersona[0].CRPER_CONYUGE!=null){
+                                $("#txtCiConyuge").val(tmpRecordPersona[0].CRPER_CONYUGE);
+                                $("#txtCiConyuge").attr('disabled', 'disabled');
+                            }else{
+                                $("#txtCiConyuge").val("");
+                                $("#txtCiConyuge").removeAttr('disabled');
+                            }
+                            if(tmpRecordPersona[0].CRPER_FECHA_MATRIMONIO){
+                                $("#dtFechaMatrimonio").val(tmpRecordPersona[0].CRPER_FECHA_MATRIMONIO != undefined?$.format.date(tmpRecordPersona[0].CRPER_FECHA_MATRIMONIO, "dd/MM/yyyy") : '' );
+                                $("#dtFechaMatrimonio").attr('disabled', 'disabled');
+                                $("#dtFechaMatrimonio").datepicker( "disable" );
+                            }else {
+                                $("#dtFechaMatrimonio").val("");
+                                $("#dtFechaMatrimonio").removeAttr('disabled');
+                                $("#dtFechaMatrimonio").datepicker( "enable" );
+                            }
+
                             if(tmpRecordPersona[0].CRPER_GENERO == 1){
                                 $("#rdFemenino").checked(true);
                                 $("#rdMasculino").checked(false);
@@ -1522,7 +1576,9 @@ $(function() {
                 'CGGCRPER_CODIGO':cggcrperCodigo,
                 'CRPER_NUM_DOC_IDENTIFIC':crperNumDocIdentific,
                 'CRPER_FECHA_NACIMIENTO':cggCrperFechaNacimiento,
-                'CRDPT_CODIGO':crdptCodigo
+                'CRDPT_CODIGO':crdptCodigo,
+                'CRPER_CONYUGE':$("#txtCiConyuge").val(),
+                'CRPER_FECHA_MATRIMONIO':$("#dtFechaMatrimonio").val()
             };
             var resultadoRegla = evaluarReglaTramite();
             if(resultadoRegla!==null){

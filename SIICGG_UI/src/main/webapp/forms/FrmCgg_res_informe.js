@@ -6,9 +6,10 @@
 * @base FrmListadoCgg_res_informe
 * @author Besixplus Cia. Ltda.
 */
-function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo, currentRecord){
+function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME, inCrseg_codigo, currentRecord, isReadOnly){
     var tituloCgg_res_informe='Informe';
     var descCgg_res_informe='El formulario permite administrar informaci\u00f3n del informe';
+    var readOnly = (isReadOnly!=null && isReadOnly==true)?true:false;
     
     /**
 * Ext.form.TextField IDENTIFICATIVO UNICO DE REGISTRO DE INFORME
@@ -19,6 +20,7 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo, currentR
         fieldLabel :'Codigo',
         anchor:'98%',
         allowBlank :false,
+        disabled : readOnly,
         value:(currentRecord!=null?currentRecord.get('CRISE_CODIGO'):null)!=null?currentRecord.get('CRISE_CODIGO'):"KEYGEN",
         hidden:true,
         hideLabel:true,
@@ -32,6 +34,7 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo, currentR
         name:'txtCrseg_codigo',
         fieldLabel :'Seguimiento',
         anchor:'98%',
+        disabled : readOnly,
         value: (currentRecord!=null?currentRecord.get('CRSEG_CODIGO'):null)!=null?currentRecord.get('CRSEG_CODIGO'):null,
         allowBlank :false,
         readOnly:'true',
@@ -67,6 +70,7 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo, currentR
         name:'txtCrsec_codigo',
         fieldLabel :'Seccci\u00F3n',
         anchor:'98%',
+        disabled : readOnly,
         value:(currentRecord!=null?currentRecord.get('CRSEC_CODIGO'):null)!=null?currentRecord.get('CRSEC_CODIGO'):null,
         allowBlank :false,
         readOnly:'true',
@@ -101,7 +105,9 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo, currentR
         id:'txtCrinf_numero_informe',
         name:'txtCrinf_numero_informe',
         fieldLabel :'N\u00FAmero',
+        disabled : readOnly,
         value:(currentRecord!=null?currentRecord.get('CRISE_NUMERO_INFORME'):null)!=null?currentRecord.get('CRISE_NUMERO_INFORME'):null,
+        readOnly:((currentRecord!=null?currentRecord.get('CRISE_NUMERO_INFORME'):null)!=null?true:false),
         anchor:'60%',
         allowBlank :false,
         maxLength :20
@@ -109,12 +115,20 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo, currentR
     /**
 * Ext.form.DateField FECHA DE REALIZACION DEL INFORME
 */
+    var selectedDate = (currentRecord!=null?currentRecord.get('CRISE_FECHA_INFORME'):null);
+    console.log("SelectedDate: "+selectedDate);
+    if(selectedDate!=null)
+        selectedDate = selectedDate.split(" ")[0].split('-').reverse().join('/');
+    else
+        selectedDate = CURRENT_DATE;
+
     var dtCrinf_fecha_informe = new Ext.form.DateField({
         id:'dtCrinf_fecha_informe',
         name:'dtCrinf_fecha_informe',
         fieldLabel :'Fecha',
         allowBlank :false,
-        value:(currentRecord!=null?currentRecord.get('CRISE_FECHA_INFORME'):null)!=null?currentRecord.get('CRISE_FECHA_INFORME'):CURRENT_DATE,
+        disabled : readOnly,
+        value: selectedDate,
         format:'d/m/Y',
 		maxValue:CURRENT_DATE
     });
@@ -126,6 +140,7 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo, currentR
         name:'txtCrinf_asunto_informe',
         fieldLabel :'Asunto',
         anchor:'98%',
+        disabled : readOnly,
         value:(currentRecord!=null?currentRecord.get('CRISE_ASUNTO_INFORME'):null)!=null?currentRecord.get('CRISE_ASUNTO_INFORME'):null,
         allowBlank :true,
         maxLength :100
@@ -138,6 +153,7 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo, currentR
         name:'txtCrinf_extracto_informe',
         fieldLabel :'Extracto',
         anchor:'98%',
+        disabled : readOnly,
         value:(currentRecord!=null?currentRecord.get('CRISE_EXTRACTO_INFORME'):null)!=null?currentRecord.get('CRISE_EXTRACTO_INFORME'):null,
         enableFontSize:false,
         enableLinks:false,
@@ -194,6 +210,7 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo, currentR
         fieldLabel :'Adjuntos',         //(opcional -> Despliega la etiqueta del comoponente. Si no se define, aparece solo el botón)
         text: 'Adjunto',                //(opcional -> Texto del botón)
         tableName : 'Cgg_res_informe_seguimiento',
+        isReadOnly: readOnly,
         validateRecordID:true,
         recordID : txtCrinf_codigo.value
     });

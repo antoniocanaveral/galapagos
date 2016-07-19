@@ -3225,7 +3225,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
             return false;
         }
 
-        if (inCrtst_data.data.CRTST_APLICA_GRUPO ==true){
+        if (inCrtst_data.data.CRTST_APLICA_GRUPO ==true && inCrtst_data.data.CRTRA_ATENCION_CLIENTE==false){
             Ext.Msg.show({
                 title: tituloCgg_res_tramite,
                 msg: 'Este formulario no aplica para solicitudes grupales de tr\u00E1mites, seleccione otro por favor.',

@@ -83,7 +83,11 @@ public class InformeAdjuntoSeguimiento extends HttpServlet implements Serializab
 							if(item.getFieldName().equals("inCrseg_codigo")){
 								String codigoSeguimiento=item.getString(); 
 								objInforme.setCRSEG_CODIGO(codigoSeguimiento);
-							}													
+							}
+							if(item.getFieldName().equals("inCrise_codigo")){
+								String codigoInforme=item.getString();
+								objInforme.setCRISE_CODIGO(codigoInforme);
+							}
 							if(item.getFieldName().equals("inCrise_numero_informe")){								
 								objInforme.setCRISE_NUMERO_INFORME(item.getString());
 							}							

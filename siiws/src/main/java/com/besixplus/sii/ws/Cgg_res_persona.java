@@ -1324,6 +1324,10 @@ public class Cgg_res_persona implements Serializable{
 						}
 						SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 						tmpObj.setCRPER_FECHA_NACIMIENTO(sdf.parse(registroCivil.getFechaNacimiento()));
+						if(registroCivil.getFechaMatrimonio()!=null && registroCivil.getFechaMatrimonio().length()>0)
+							tmpObj.setCRPER_FECHA_MATRIMONIO(sdf.parse(registroCivil.getFechaMatrimonio()));
+						if(registroCivil.getCedulaConyuge()!=null && registroCivil.getCedulaConyuge().length()>0)
+							tmpObj.setCRPER_CONYUGE(registroCivil.getCedulaConyuge());
 
 						if (registroCivil.getNacionalidad().equals("ECUATORIANA")) {
 							tmpObj.setCPAIS_CODIGO("61");

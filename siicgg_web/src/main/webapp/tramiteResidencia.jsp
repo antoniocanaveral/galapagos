@@ -381,6 +381,18 @@
                                         for="txtApellidoMaternoBeneficiario" id="sublabel_last">Segundo Apellido </label> </span></div>
                         </div>
                         <div class="form-line">
+                            <label class="form-label-left" id="lblCiConyuge" for="txtCiConyuge"> C&eacute;dula conyuge </label>
+                            <div class="form-input">
+                                <input type="text" class="form-textbox" id="txtCiConyuge" name="txtCiConyuge" size="42"/>
+                            </div>
+                        </div>
+                        <div class="form-line">
+                            <label class="form-label-left" id="lblFechaMatrimonio" for="dtFechaMatrimonio"> Fecha matrimonio/uni&oacute;n de echo </label>
+                            <div class="form-input">
+                                <input type="text" class="form-textbox" id="dtFechaMatrimonio" name="dtFechaMatrimonio" size="42"/>
+                            </div>
+                        </div>
+                        <div class="form-line">
                             <label class="form-label-left"
                                    id="lblPaisResidencia" for="divPaisResidencia"> Pa&iacute;s
                                 residencia </label>

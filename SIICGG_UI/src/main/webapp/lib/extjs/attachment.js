@@ -4,10 +4,11 @@ Ext.namespace("Ext.ux","Ext.ux.form");
 
 Ext.ux.form.AlfrescoFM = Ext.extend(Ext.Button, {
     disabled :false,
-    tableName:undefined,
+    tableName:null,
     validateRecordID:false,
-    recordID:undefined,
-    filter:undefined,
+    recordID:null,
+    filter:null,
+    isReadOnly : false,
     width:'80px',
     allowBlank:false,
     iconCls: 'iconAdjunto',
@@ -29,7 +30,7 @@ Ext.ux.form.AlfrescoFM = Ext.extend(Ext.Button, {
 
         if(isValid){
             //Abrimos la ventana
-            var alfrescoMng = new AlfrescoMng(this.tableName, this.recordID, this.filter);
+            var alfrescoMng = new AlfrescoMng(this.tableName, this.recordID, this.filter, this.isReadOnly);
             alfrescoMng.show();
         }else
             Ext.MsgPopup.msg("Adjunto","Guarde o Seleccione el registro, para abrir Adjuntos.", MsgPopup.ERROR);

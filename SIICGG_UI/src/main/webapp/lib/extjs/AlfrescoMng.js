@@ -8,15 +8,17 @@ var tableName;
 var recordID;
 var filter;
 var alfrescoResponse = null;
+var readOnly = false;
 //Panel de Propiedades
 var east;
 var isList;
 
-function AlfrescoMng(_tableName, _recordID, _filter){
+function AlfrescoMng(_tableName, _recordID, _filter, isReadOnly){
 
     tableName = _tableName;
     recordID = _recordID;
     filter = _filter;
+    readOnly = (isReadOnly!=null && isReadOnly==true)?true:false;
 
     var comps=[]; //variable donde pondremos los componentes
     var store;
@@ -31,6 +33,10 @@ function AlfrescoMng(_tableName, _recordID, _filter){
 
 
     freeUpload = function(_this, e){
+        if(readOnly){
+            Ext.Msg.alert('Alfresco', 'No se permite actualizar ni cargar archivos');
+            return;
+        }
         var btnUpload = _this;
         var uploader = null;
         if(isList && btnUpload.fileObj){
@@ -289,7 +295,7 @@ function AlfrescoMng(_tableName, _recordID, _filter){
         }
     };
 
-    if(tableName && recordID) {
+    if(tableName!=null && recordID!=null) {
         if (loadStoreFromServer()) {
             var tituloAlfrescoMng = 'Administraci&oacute;n de Adjuntos';
             var descAlfrescoMng = 'El formulario permite administrar sus adjuntos con el repositorio de Alfresco';
