@@ -214,7 +214,7 @@
                                                    size="42"/></div>
                 </div>
                 <div id="divCargando1" class="cargando"
-                     style="display: none; position: fixed;"><span>Cargando...</span></div>
+                     style="z-index: 10;display: none; position: fixed;"><span>Cargando...</span></div>
                 <div class="form-line"><label class="form-label-left"
                                               id="lblNumDocAuspiciante" for="txtNumDocAuspiciante"> No. doc.
                     identific </label>

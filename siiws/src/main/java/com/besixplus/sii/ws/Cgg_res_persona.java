@@ -1311,40 +1311,57 @@ public class Cgg_res_persona implements Serializable{
 			tmpObj = new com.besixplus.sii.db.Cgg_res_persona(tmpObj).selectNumDoc(con);
 
 			//MO
+			if(tmpObj.getCRPER_CODIGO()==null || tmpObj.getCRPER_CODIGO().equals("KEYGEN")) {
+				try {
+					RegistroCivil registroCivil = new RegistroCivil(tmpObj.getCRPER_NUM_DOC_IDENTIFIC());//cedula del beneficiario
+					if (registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_OK)) {
+						if (registroCivil.getCedula() != null && !registroCivil.getCedula().trim().isEmpty()) {
+							List<String> apellidos = Utils.buildNombresApellidos(registroCivil.getNombre(), registroCivil.getNombrePadre(), registroCivil.getNombreMadre());
+							if (apellidos != null && apellidos.size() == 3) {
+								tmpObj.setCRPER_APELLIDO_PATERNO(apellidos.get(0));
+								tmpObj.setCRPER_APELLIDO_MATERNO(apellidos.get(1));
+								tmpObj.setCRPER_NOMBRES(apellidos.get(2));
+							}
+							SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+							tmpObj.setCRPER_FECHA_NACIMIENTO(sdf.parse(registroCivil.getFechaNacimiento()));
+							if (registroCivil.getFechaMatrimonio() != null && registroCivil.getFechaMatrimonio().length() > 0)
+								tmpObj.setCRPER_FECHA_MATRIMONIO(sdf.parse(registroCivil.getFechaMatrimonio()));
+							if (registroCivil.getCedulaConyuge() != null && registroCivil.getCedulaConyuge().length() > 0)
+								tmpObj.setCRPER_CONYUGE(registroCivil.getCedulaConyuge());
 
-			try {
-				RegistroCivil registroCivil = new RegistroCivil(tmpObj.getCRPER_NUM_DOC_IDENTIFIC());//cedula del beneficiario
-				if (registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_OK)) {
-					if (registroCivil.getCedula() != null && !registroCivil.getCedula().trim().isEmpty()) {
-						List<String> apellidos = Utils.buildNombresApellidos(registroCivil.getNombre(), registroCivil.getNombrePadre(), registroCivil.getNombreMadre());
-						if (apellidos != null && apellidos.size() == 3) {
-							tmpObj.setCRPER_APELLIDO_PATERNO(apellidos.get(0));
-							tmpObj.setCRPER_APELLIDO_MATERNO(apellidos.get(1));
-							tmpObj.setCRPER_NOMBRES(apellidos.get(2));
-						}
-						SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-						tmpObj.setCRPER_FECHA_NACIMIENTO(sdf.parse(registroCivil.getFechaNacimiento()));
-						if(registroCivil.getFechaMatrimonio()!=null && registroCivil.getFechaMatrimonio().length()>0)
-							tmpObj.setCRPER_FECHA_MATRIMONIO(sdf.parse(registroCivil.getFechaMatrimonio()));
-						if(registroCivil.getCedulaConyuge()!=null && registroCivil.getCedulaConyuge().length()>0)
-							tmpObj.setCRPER_CONYUGE(registroCivil.getCedulaConyuge());
-
-						if (registroCivil.getNacionalidad().equals("ECUATORIANA")) {
-							tmpObj.setCPAIS_CODIGO("61");
-						}
-						if (registroCivil.getGenero().equals("FEMENINO")) {
-							tmpObj.setCRPER_GENERO(1);
-						}else{
-							tmpObj.setCRPER_GENERO(0);
-						}
+							if (registroCivil.getNacionalidad().equals("ECUATORIANA")) {
+								tmpObj.setCPAIS_CODIGO("61");
+							}
+							if (registroCivil.getGenero().equals("FEMENINO")) {
+								tmpObj.setCRPER_GENERO(1);
+							} else {
+								tmpObj.setCRPER_GENERO(0);
+							}
 
 					/*
 					* Creamos la cedula en BG
 					* */
+							final String crper_codigo = tmpObj.getCRPER_CODIGO();
+							Thread t = new Thread() {
+								public void run() {
+									CreateRCAttachment attachment = new CreateRCAttachment(registroCivil, crper_codigo);
+									try {
+										attachment.attachReport();
+									} catch (SQLException e) {
+										e.printStackTrace();
+									}
+								}
+							};
+							t.start();
+						}
+					}
+
+					CNE cne = new CNE(tmpObj.getCRPER_NUM_DOC_IDENTIFIC());
+					if (cne.callServiceAsObject().equals(CNE.CALL_OK)) {
 						final String crper_codigo = tmpObj.getCRPER_CODIGO();
 						Thread t = new Thread() {
 							public void run() {
-								CreateRCAttachment attachment = new CreateRCAttachment(registroCivil, crper_codigo);
+								CreateCNEAttachment attachment = new CreateCNEAttachment(cne, crper_codigo);
 								try {
 									attachment.attachReport();
 								} catch (SQLException e) {
@@ -1354,28 +1371,11 @@ public class Cgg_res_persona implements Serializable{
 						};
 						t.start();
 					}
+					//
+				} catch (Exception ex) {
+					com.besixplus.sii.db.SQLErrorHandler.errorHandler(ex);
 				}
-
-				CNE cne = new CNE(tmpObj.getCRPER_NUM_DOC_IDENTIFIC());
-				if (cne.callServiceAsObject().equals(CNE.CALL_OK)) {
-					final String crper_codigo = tmpObj.getCRPER_CODIGO();
-					Thread t = new Thread() {
-						public void run() {
-							CreateCNEAttachment attachment = new CreateCNEAttachment(cne, crper_codigo);
-							try {
-								attachment.attachReport();
-							} catch (SQLException e) {
-								e.printStackTrace();
-							}
-						}
-					};
-					t.start();
-				}
-				//
-			}catch (Exception ex){
-				com.besixplus.sii.db.SQLErrorHandler.errorHandler(ex);
 			}
-
 			ArrayList<com.besixplus.sii.objects.Cgg_res_persona> tmpArray = new ArrayList<com.besixplus.sii.objects.Cgg_res_persona>();
 			tmpArray.add(tmpObj);
 			tmpFormat = new com.besixplus.sii.misc.Formatter(format, tmpArray);

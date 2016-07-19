@@ -31,4 +31,4 @@ INSERT INTO sii.cgg_migrationscript (mrgsp_codigo,mrgsp_fecha,mrgsp_usuario_inse
 	mrgsp_releaseno,mrgsp_filename,mrgsp_isapply)
 VALUES(SII.F_KEYGEN('CGG_MIGRATIONSCRIPT','MRGSP_CODIGO','MRGSP'), current_timestamp,'ADMIN', current_timestamp,'ADMIN', current_timestamp,
 	true,'acanaveral','GEM CARGO SORTED','Modifica la consulta GEM CARGO para devolver los datos ordenados.',
-	'2.0','2016_16_07_Cgg_gem_cargo_sorted.sql',true);
+	'2.0','2016_07_16_Cgg_gem_cargo_sorted.sql',true);

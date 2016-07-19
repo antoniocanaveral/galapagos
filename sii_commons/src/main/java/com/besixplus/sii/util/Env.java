@@ -26,7 +26,7 @@ public class Env {
         return SIIHome;
     }
 
-    public static FileInputStream getExternalResource(String resourcePath) throws FileNotFoundException, EnvironmentVariableNotDefinedException {
+    private static FileInputStream getExternalResource(String resourcePath) throws FileNotFoundException, EnvironmentVariableNotDefinedException {
         File searchFile = new File(getHomePath()+File.separator+resourcePath);
         if(searchFile.exists()){
             return new FileInputStream(searchFile);
@@ -36,8 +36,9 @@ public class Env {
 
     public static Properties getExternalProperties(String resourcePath){
         Properties props = null;
+        FileInputStream fis = null;
         try{
-            FileInputStream fis = getExternalResource(resourcePath);
+            fis = getExternalResource(resourcePath);
             props = new Properties();
             props.load(fis);
         }catch (FileNotFoundException ex){
@@ -47,6 +48,13 @@ public class Env {
             props = null;
         } catch (EnvironmentVariableNotDefinedException e) {
             e.printStackTrace();
+        }finally {
+            try {
+                if(fis!=null)
+                    fis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         return props;
@@ -91,6 +99,7 @@ public class Env {
                         script.append(tmpLine+"\n");
                     }
                     tmpBR.close();
+                    resource.close();
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (EnvironmentVariableNotDefinedException e) {

@@ -83,10 +83,10 @@ $(function() {
                     }
                 }
             } else {
-                tblPersona.rows[posicion].cells[0].id = cbxTipoDocumentoBeneficiario.dom.value;
-                tblPersona.rows[posicion].cells[0].innerHTML = cbxTipoDocumentoBeneficiario.dom.options[cbxTipoDocumentoBeneficiario.dom.selectedIndex].text;
-                tblPersona.rows[posicion].cells[1].id = tmpRecordBeneficiario != null ? tmpRecordBeneficiario[0].CRPER_CODIGO : 'KEYGEN';
-                tblPersona.rows[posicion].cells[1].innerHTML = $('#txtNumDocBeneficiario').val();
+                //tblPersona.rows[posicion].cells[0].id = cbxTipoDocumentoBeneficiario.dom.value;
+                //tblPersona.rows[posicion].cells[0].innerHTML = cbxTipoDocumentoBeneficiario.dom.options[cbxTipoDocumentoBeneficiario.dom.selectedIndex].text;
+                //tblPersona.rows[posicion].cells[1].id = tmpRecordBeneficiario != null ? tmpRecordBeneficiario[0].CRPER_CODIGO : 'KEYGEN';
+                //tblPersona.rows[posicion].cells[1].innerHTML = $('#txtNumDocBeneficiario').val();
                 tblPersona.rows[posicion].cells[2].innerHTML = $('#txtNombreBeneficiario').val();
                 tblPersona.rows[posicion].cells[3].innerHTML = $('#txtApellidoPaternoBeneficiario').val();
                 tblPersona.rows[posicion].cells[4].innerHTML = $('#txtApellidoMaternoBeneficiario').val();
@@ -104,9 +104,32 @@ $(function() {
                 //tblPersona.rows[posicion].cells[10].innerHTML = txtCodigoTramite.value;
                 swEdit = false;
                 btnSalirAll($("FrmIngresoPersona"));
-
                 return;
             }
+            //Validamos que el beneficiario pase las reglas
+            var objBeneficiario = {
+                CRPER_CODIGO: tmpRecordAuspiciante[0].CRPER_CODIGO,
+                CGGCRPER_CODIGO: tmpRecordBeneficiario != null ? tmpRecordBeneficiario[0].CRPER_CODIGO : 'KEYGEN',
+                CRPER_NUM_DOC_IDENTIFIC: $('#txtNumDocBeneficiario').val(),
+                CRDID_CODIGO: cbxTipoDocumentoBeneficiario.dom.value,
+                CRPER_NOMBRES: $('#txtNombreBeneficiario').val(),
+                CRPER_APELLIDO_PATERNO: $('#txtApellidoPaternoBeneficiario').val(),
+                CRPER_APELLIDO_MATERNO: $('#txtApellidoMaternoBeneficiario').val(),
+                CRPER_GENERO: $("input[name='rdbtnGenero']:checked").val(),
+                CRPER_FECHA_NACIMIENTO: $('#dtFechaNacimiento').val(),
+                CPAIS_CODIGO: cbxNacionalidad.dom.value,
+                CRDPT_CODIGO: crdptCodigo,
+                CGG_CPAIS_CODIGO: cbxPaisResidencia.dom.value
+            };
+            if(objBeneficiario.CGGCRPER_CODIGO=='KEYGEN'){
+                //TODO: Hacer el insert de la persona y guardar el CRPER_CODIGO en objBeneficiario
+            }
+            if(!validarReglaTranseuntes(objBeneficiario)){
+                $('#divCargando1').hide();
+                $('#divCargando1').html('Cargando..');
+                return;
+            }
+
             var fila = tbodyPersona.insertRow(tblPersona.rows.length - 1);
             fila.id = 'tr' + cont;
             fila.onclick = function () {
@@ -168,11 +191,20 @@ $(function() {
             }
             celda.width = 40;
 
+
+            //LLAMAMOS A ALFRESCO POR CADA PERSONA
+            var _tableName = encodeURIComponent("Cgg_res_persona");
+            var _recordId = encodeURIComponent(objBeneficiario.CGGCRPER_CODIGO);
+            var _filter = encodeURIComponent("tipoResidencia=CRTST7");
+            PopupCenter("alfrescoMng.html?tableName=" + _tableName + "&recordId=" + _recordId + "&filter=" + _filter, 'Adjuntos', '820', '630');
+
             btnSalirAll($("FrmIngresoPersona"));
+            $('#divCargando1').hide();
+            $('#divCargando1').html('Cargando..');
         }else{
             new bsxMessageBox({
                 title:'Alerta',
-                msg: 'Por favor verifique que todos los datos hayan sido ingresados correctamente.',
+                msg: 'Por favor verifique que todos los datos del tramite hayan sido ingresados correctamente, antes de incluir beneficiarios.',
                 icon: "iconInfo"
             });
         }
@@ -189,7 +221,9 @@ $(function() {
             $('#txtApellidoMaternoBeneficiario').val("");
             cbxPaisResidencia.dom.value= "";
             cbxNacionalidad.dom.value= "";
-            $('#dtFechaNacimiento').val(null);
+            $('#dtFechaNacimiento').val("");
+            $('#dtFechaMatrimonio').val("");
+            $('#txtCiConyuge').val("");
         }catch(e){
             console.log(e.message);
         }
@@ -1606,7 +1640,7 @@ $(function() {
         return flagRegla;
     }
 
-    function validarReglaTranseuntes(){
+    function validarReglaTranseuntes(_benef){
         var flagRegla = false;
         $('#divCargando1').html('Validando..');
         $('#divCargando1').show();
@@ -1615,27 +1649,35 @@ $(function() {
         try{
             var beneficiarios = [];
             var multiReglas = [];
-            if (tblPersona.rows.length > 1) {
-                for (var i = 1; i < tblPersona.rows.length; i++) {
-                    var objBeneficiario = {
-                        CRPER_CODIGO: crperCodigo,
-                        CGGCRPER_CODIGO: tblPersona.rows[i].cells[1].id,
-                        CRPER_NUM_DOC_IDENTIFIC: tblPersona.rows[i].cells[1].innerHTML,
-                        CRDID_CODIGO: tblPersona.rows[i].cells[0].id,
-                        CRPER_NOMBRES: tblPersona.rows[i].cells[2].innerHTML,
-                        CRPER_APELLIDO_PATERNO: tblPersona.rows[i].cells[3].innerHTML,
-                        CRPER_APELLIDO_MATERNO: tblPersona.rows[i].cells[4].innerHTML,
-                        CRPER_GENERO: tblPersona.rows[i].cells[8].innerHTML == 'M'?"0":"1",
-                        CRPER_FECHA_NACIMIENTO: tblPersona.rows[i].cells[7].innerHTML,
-                        CPAIS_CODIGO: tblPersona.rows[i].cells[6].id,
-                        CRDPT_CODIGO: crdptCodigo,
-                        CGG_CPAIS_CODIGO: tblPersona.rows[i].cells[5].id
-                    };
-                    var resultadoRegla = evaluarReglaTramite(objBeneficiario);
-                    if(resultadoRegla!=null){
-                        multiReglas.push(resultadoRegla);
+            if(_benef) {
+                var resultadoRegla = evaluarReglaTramite(_benef);
+                if(resultadoRegla!=null) {
+                    multiReglas.push(resultadoRegla);
+                    beneficiarios.push(_benef);
+                }
+            }else{
+                if (tblPersona.rows.length > 1) {
+                    for (var i = 1; i < tblPersona.rows.length; i++) {
+                        var objBeneficiario = {
+                            CRPER_CODIGO: crperCodigo,
+                            CGGCRPER_CODIGO: tblPersona.rows[i].cells[1].id,
+                            CRPER_NUM_DOC_IDENTIFIC: tblPersona.rows[i].cells[1].innerHTML,
+                            CRDID_CODIGO: tblPersona.rows[i].cells[0].id,
+                            CRPER_NOMBRES: tblPersona.rows[i].cells[2].innerHTML,
+                            CRPER_APELLIDO_PATERNO: tblPersona.rows[i].cells[3].innerHTML,
+                            CRPER_APELLIDO_MATERNO: tblPersona.rows[i].cells[4].innerHTML,
+                            CRPER_GENERO: tblPersona.rows[i].cells[8].innerHTML == 'M'?"0":"1",
+                            CRPER_FECHA_NACIMIENTO: tblPersona.rows[i].cells[7].innerHTML,
+                            CPAIS_CODIGO: tblPersona.rows[i].cells[6].id,
+                            CRDPT_CODIGO: crdptCodigo,
+                            CGG_CPAIS_CODIGO: tblPersona.rows[i].cells[5].id
+                        };
+                        var resultadoRegla = evaluarReglaTramite(objBeneficiario);
+                        if(resultadoRegla!=null){
+                            multiReglas.push(resultadoRegla);
 
-                        beneficiarios.push(objBeneficiario);
+                            beneficiarios.push(objBeneficiario);
+                        }
                     }
                 }
             }
@@ -1650,23 +1692,24 @@ $(function() {
             var objBeneficiarioJSON = JSON.stringify(beneficiarios);
 
 
-            if(multiReglas!==null && multiReglas.length>0){
+            if(multiReglas!==null && multiReglas.length>0) {
                 var param = new SOAPClientParameters();
-                param.add('inJSON_reglas_validacion',JSON.stringify(multiReglas));
-                param.add('jsonData',objBeneficiarioJSON);
-                var validacion = SOAPClient.invoke(URL_WS+'Cgg_regla_validacion' ,'ejecutarReglaTranseuntesTipoSolicitud',param, false, null);
-                validacion = eval('('+validacion+')');
-                if(validacion.resultadoValidacion !== undefined){
-                    for(var i=0;i<validacion.length;i++) {
-                        if (validacion[i].resultadoValidacion == 'false') {
-
-                            $("#divReglaValidacion").html($.tmpl("resultadoReglaTemplate", validacion[i]));
-                            $("#dlgReglaValidacion").dialog("open");
+                param.add('inJSON_reglas_validacion', JSON.stringify(multiReglas));
+                param.add('jsonData', objBeneficiarioJSON);
+                var validacion = SOAPClient.invoke(URL_WS + 'Cgg_regla_validacion', 'ejecutarReglaTranseuntesTipoSolicitud', param, false, null);
+                validacion = eval('(' + validacion + ')');
+                if (validacion != null & validacion.length > 0) {
+                    for(var j=0;j<validacion.length;j++){
+                        if (validacion[j].resultadoValidacion !== undefined) {
+                            if (validacion[j].resultadoValidacion == 'false') {
+                                $("#divReglaValidacion").html($.tmpl("resultadoReglaTemplate", validacion[j]));
+                                $("#dlgReglaValidacion").dialog("open");
+                            }
+                            flagRegla = eval(validacion[j].resultadoValidacion);
+                        } else {
+                            flagRegla = null;
                         }
-                        flagRegla = eval(validacion[i].resultadoValidacion);
                     }
-                }else{
-                    flagRegla = null;
                 }
             }
         }catch(inErr){
@@ -1756,6 +1799,33 @@ $(function() {
             $('#txtMotivoResidencia').addClass("form-line-error");
             isComplete = false;
             return isComplete;
+        }
+
+        if(modeTranseuntes){
+            if(!$('#dtFechaIngreso').val())
+            {
+                $('#dtFechaIngreso').addClass("form-line-error");
+                isComplete = false;
+                return isComplete;
+            }
+            if(!$('#dtFechaSalida').val())
+            {
+                $('#dtFechaSalida').addClass("form-line-error");
+                isComplete = false;
+                return isComplete;
+            }
+            if(!$('#cbxActividad').val())
+            {
+                $('#cbxActividad').addClass("form-line-error");
+                isComplete = false;
+                return isComplete;
+            }
+            if(!$('#txtObservacion').val())
+            {
+                $('#txtObservacion').addClass("form-line-error");
+                isComplete = false;
+                return isComplete;
+            }
         }
 
         return isComplete;

@@ -11,6 +11,7 @@ public class CNE extends DinardapService {
     private String certificado;
     private String sufrago;
     private String multa;
+    private String fecha;
 
     public CNE(String numeroIdentificacion) {
         super(SERVICE_CNE, numeroIdentificacion);
@@ -64,5 +65,11 @@ public class CNE extends DinardapService {
         this.multa = multa;
     }
 
+    public String getFecha() {
+        return fecha;
+    }
 
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
+    }
 }

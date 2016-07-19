@@ -15,12 +15,11 @@ public class KindID implements RuleClass {
         String error = regla.getString("CRVAL_SUGERENCIA");;
         String kingID =ruleData.getCRDID_CODIGO();
 
-        if (kingID.equals("3")){
-            return "false, "+error;
+        if (kingID!=null && (kingID.equals("1") || kingID.equals("2")) ){
+            return "true";
         }
 
-            return "true";
-
+        return "false, "+error;
     }
         
-    }
+}
