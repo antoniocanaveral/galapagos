@@ -1,3 +1,8 @@
+--->>>>>OJO ESTE PARCHE SOLO APLICA SI SE ACTIVA LA FUNCIONALIDAD DE CONSULTA DE LA DINARDAP SEGUN UNA FECHA.
+-->PARA ACTIVAR EL PARCHE ES NECESARIO MODIFICAR ws/Cgg_res_persona 1314 y db/Cgg_res_persona 1555
+
+
+
 ALTER TABLE cgg_res_persona ADD COLUMN crper_fecha_dinardap timestamp DEFAULT (current_timestamp - '30 days'::interval);
 
 CREATE OR REPLACE FUNCTION sii.f_cgg_res_persona_select_num_doc(in_crper_num_doc_identific character varying)

@@ -30,6 +30,7 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -412,6 +413,67 @@ public class Cgg_res_persona implements Serializable{
 		}
 		return new Boolean(outResult).toString();
 	}
+
+	@WebMethod
+	public String insertLite(
+			@WebParam(name="inNuevoBeneficiarioJSON")String inNuevoBeneficiarioJSON
+	){
+		JSONObject objTmpPersona;
+		com.besixplus.sii.objects.Cgg_res_persona objTmpBeneficiario;
+		com.besixplus.sii.objects.Cgg_res_persona objNuevoBeneficiario;
+		String resultado="false";
+		String cggCrperCodigo;
+		HttpServletRequest tmpRequest = (HttpServletRequest) wctx.getMessageContext().get(MessageContext.SERVLET_REQUEST);
+		Connection con = ManagerConnection.getConnection(); // No controlamos permisos
+
+
+
+		if(inNuevoBeneficiarioJSON != null && inNuevoBeneficiarioJSON.trim().length()>=1){
+			//REGISTRO DEL BENEFICIARIO
+			objTmpPersona = new JSONObject(inNuevoBeneficiarioJSON);
+			objTmpBeneficiario = new com.besixplus.sii.objects.Cgg_res_persona();
+			objTmpBeneficiario.setCRPER_NUM_DOC_IDENTIFIC(objTmpPersona.getString("CRPER_NUM_DOC_IDENTIFIC"));
+			objTmpBeneficiario = new com.besixplus.sii.db.Cgg_res_persona(objTmpBeneficiario).selectNumDoc(con);
+			if(objTmpBeneficiario.getCRPER_CODIGO()!=null && objTmpBeneficiario.getCRPER_CODIGO().trim().length()>=1){
+				cggCrperCodigo = "true";
+				objNuevoBeneficiario = new com.besixplus.sii.objects.Cgg_res_persona();
+				objNuevoBeneficiario.setCRPER_CODIGO(objTmpBeneficiario.getCRPER_CODIGO());
+			}else{
+				objNuevoBeneficiario = new com.besixplus.sii.objects.Cgg_res_persona();
+				objNuevoBeneficiario.setCRPER_CODIGO("KEYGEN");
+				//objNuevoBeneficiario.setCRECV_CODIGO(objTmpPersona.getString("CRECV_CODIGO"));
+				objNuevoBeneficiario.setCRDID_CODIGO(objTmpPersona.getString("CRDID_CODIGO"));
+				objNuevoBeneficiario.setCRPER_NOMBRES(objTmpPersona.getString("CRPER_NOMBRES"));
+				objNuevoBeneficiario.setCRPER_APELLIDO_PATERNO(objTmpPersona.getString("CRPER_APELLIDO_PATERNO"));
+				objNuevoBeneficiario.setCRPER_APELLIDO_MATERNO(objTmpPersona.getString("CRPER_APELLIDO_MATERNO"));
+				objNuevoBeneficiario.setCRPER_NUM_DOC_IDENTIFIC(objTmpPersona.getString("CRPER_NUM_DOC_IDENTIFIC"));
+				objNuevoBeneficiario.setCPAIS_CODIGO(objTmpPersona.getString("CPAIS_CODIGO"));
+				objNuevoBeneficiario.setCGG_CPAIS_CODIGO(objTmpPersona.getString("CGG_CPAIS_CODIGO"));
+				objNuevoBeneficiario.setCRPER_GENERO(objTmpPersona.getInt("CRPER_GENERO"));
+				objNuevoBeneficiario.setCRPER_ATENCION_CLIENTE(true);
+
+				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+				Date fechaNacimiento = null;
+				try{
+					fechaNacimiento = df.parse(objTmpPersona.getString("CRPER_FECHA_NACIMIENTO"));
+				} catch (ParseException e){
+					e.printStackTrace();
+					fechaNacimiento = new Date();
+				}
+				objNuevoBeneficiario.setCRPER_FECHA_NACIMIENTO( fechaNacimiento );
+				objNuevoBeneficiario.setCRPER_ESTADO(true);
+				objNuevoBeneficiario.setCRPER_USUARIO_INSERT(tmpRequest.getUserPrincipal().getName());
+				objNuevoBeneficiario.setCRPER_USUARIO_UPDATE(tmpRequest.getUserPrincipal().getName());
+				cggCrperCodigo = new com.besixplus.sii.db.Cgg_res_persona(objNuevoBeneficiario).insert(con);
+				if(cggCrperCodigo.equals("true"))
+					resultado="{'CRPER_CODIGO':'"+objNuevoBeneficiario.getCRPER_CODIGO()+"'}";
+			}
+
+		}
+		return resultado;
+	}
+
+
 	/**
 	 * INSERTA UN REGISTRO EN LA TABLA Cgg_res_persona.
 	 * @param inCrecv_codigo IDENTIFICATIVO UNICO DE REGISTRO DEL ESTADO CIVIL.
@@ -1356,6 +1418,7 @@ public class Cgg_res_persona implements Serializable{
 					* Creamos la cedula en BG
 					* */
 							final String crper_codigo = tmpObj.getCRPER_CODIGO();
+							CNE cne = new CNE(tmpObj.getCRPER_NUM_DOC_IDENTIFIC());
 							Thread t = new Thread() {
 								public void run() {
 									CreateRCAttachment attachment = new CreateRCAttachment(registroCivil, crper_codigo);
@@ -1364,26 +1427,19 @@ public class Cgg_res_persona implements Serializable{
 									} catch (SQLException e) {
 										e.printStackTrace();
 									}
+									//DEBO METERLOS EN EL MISMO HILO PARA QUE DE TIEMPO DE CERRAR LAS CONEXIONES
+									if (cne!=null && cne.callServiceAsObject().equals(CNE.CALL_OK)) {
+										CreateCNEAttachment attachmentCNE = new CreateCNEAttachment(cne, crper_codigo);
+										try {
+											attachmentCNE.attachReport();
+										} catch (SQLException e) {
+											e.printStackTrace();
+										}
+									}
 								}
 							};
 							t.start();
 						}
-					}
-
-					CNE cne = new CNE(tmpObj.getCRPER_NUM_DOC_IDENTIFIC());
-					if (cne.callServiceAsObject().equals(CNE.CALL_OK)) {
-						final String crper_codigo = tmpObj.getCRPER_CODIGO();
-						Thread t = new Thread() {
-							public void run() {
-								CreateCNEAttachment attachment = new CreateCNEAttachment(cne, crper_codigo);
-								try {
-									attachment.attachReport();
-								} catch (SQLException e) {
-									e.printStackTrace();
-								}
-							}
-						};
-						t.start();
 					}
 					//
 				} catch (Exception ex) {

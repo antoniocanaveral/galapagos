@@ -2391,7 +2391,6 @@ VALORES:
 
 
 			if(inNuevoBeneficiarioJSON != null && inNuevoBeneficiarioJSON.trim().length()>=1){
-
 				//REGISTRO DEL BENEFICIARIO					
 				objTmpPersona = new JSONObject(inNuevoBeneficiarioJSON);
 				objTmpBeneficiario = new Cgg_res_persona();			
@@ -2401,6 +2400,34 @@ VALORES:
 					cggCrperCodigo = "true";
 					objNuevoBeneficiario = new Cgg_res_persona();
 					objNuevoBeneficiario.setCRPER_CODIGO(objTmpBeneficiario.getCRPER_CODIGO());
+					//Si queremos hacer update, debe ser aqui.
+					//Aplica ahora porque la Dinardap corrige los datos. Comparamos para no matarle a la base cada vez que entra.
+					if(!objTmpBeneficiario.getCRPER_APELLIDO_PATERNO().equals(objTmpPersona.getString("CRPER_APELLIDO_PATERNO")) ||
+							!objTmpBeneficiario.getCRPER_APELLIDO_MATERNO().equals(objTmpPersona.getString("CRPER_APELLIDO_MATERNO")) ||
+							!objTmpBeneficiario.getCRPER_NOMBRES().equals(objTmpPersona.getString("CRPER_NOMBRES"))) {
+						objNuevoBeneficiario.setCRDID_CODIGO(objTmpPersona.getString("CRDID_CODIGO"));
+						objNuevoBeneficiario.setCRPER_NOMBRES(objTmpPersona.getString("CRPER_NOMBRES"));
+						objNuevoBeneficiario.setCRPER_APELLIDO_PATERNO(objTmpPersona.getString("CRPER_APELLIDO_PATERNO"));
+						objNuevoBeneficiario.setCRPER_APELLIDO_MATERNO(objTmpPersona.getString("CRPER_APELLIDO_MATERNO"));
+						objNuevoBeneficiario.setCRPER_NUM_DOC_IDENTIFIC(objTmpPersona.getString("CRPER_NUM_DOC_IDENTIFIC"));
+						objNuevoBeneficiario.setCPAIS_CODIGO(objTmpPersona.getString("CPAIS_CODIGO"));
+						objNuevoBeneficiario.setCGG_CPAIS_CODIGO(objTmpPersona.getString("CGG_CPAIS_CODIGO"));
+						objNuevoBeneficiario.setCRPER_GENERO(objTmpPersona.getInt("CRPER_GENERO"));
+						objNuevoBeneficiario.setCRPER_ATENCION_CLIENTE(inCrtra_atencion_cliente);
+
+						DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+						Date fechaNacimiento = null;
+						try {
+							fechaNacimiento = df.parse(objTmpPersona.getString("CRPER_FECHA_NACIMIENTO"));
+						} catch (ParseException e) {
+							e.printStackTrace();
+							fechaNacimiento = new Date();
+						}
+						objNuevoBeneficiario.setCRPER_FECHA_NACIMIENTO(fechaNacimiento);
+						objNuevoBeneficiario.setCRPER_ESTADO(true);
+						objNuevoBeneficiario.setCRPER_USUARIO_UPDATE(tmpRequest.getUserPrincipal().getName());
+						cggCrperCodigo = new com.besixplus.sii.db.Cgg_res_persona(objNuevoBeneficiario).update(con);
+					}
 				}else{
 					objNuevoBeneficiario = new Cgg_res_persona();
 					objNuevoBeneficiario.setCRPER_CODIGO("KEYGEN");

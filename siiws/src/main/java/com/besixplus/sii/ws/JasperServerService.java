@@ -166,18 +166,26 @@ public class JasperServerService implements Serializable {
             if(reportRoot != null && reportRoot.exists() && reportRoot.isDirectory()) {
                 for(File item:reportRoot.listFiles()){
                     if(item.getName().contains(reportName)){
-                        InputControlService controlService = new InputControlService();
-                        controls = controlService.getOrCreateInputControls(item);
-                        if(!fileService.touchFile(config.getProperty("SII_RESOURCES_PATH") + "/" + reportFolder+"/"+reportName + ".jrxml"))
-                            fileService.uploadFile(config.getProperty("SII_RESOURCES_PATH") + "/" + reportFolder, reportName + ".jrxml", item);
+                        if(!item.getName().endsWith(".jasper")) {//ignoramos los jasper
+                            InputControlService controlService = new InputControlService();
+                            controls = controlService.getOrCreateInputControls(item);
+                            if (!fileService.touchFile(config.getProperty("SII_RESOURCES_PATH") + "/" + reportFolder + "/" + reportName + ".jrxml"))
+                                fileService.uploadFile(config.getProperty("SII_RESOURCES_PATH") + "/" + reportFolder, reportName + ".jrxml", item);
+                        }else{
+                            System.err.println(".jasper found. Please Remove: "+item.getAbsolutePath());
+                        }
                     }else{
-                        if(resources==null)
-                            resources = new ArrayList<>();
-                        //Metemos el recurso en el repositorio.
-                        if(!fileService.touchFile(config.getProperty("SII_RESOURCES_PATH") + "/" + reportFolder +"/"+ item.getName()))
-                            fileService.uploadFile(config.getProperty("SII_RESOURCES_PATH") + "/" + reportFolder, item.getName(), item);
-                        JasperReportResource resource = new JasperReportResource(item.getName(),config.getProperty("SII_RESOURCES_PATH") + "/" + reportFolder + "/"+item.getName());
-                        resources.add(resource);
+                        if(!item.getName().endsWith(".jasper")) {//ignoramos los jasper
+                            if(resources==null)
+                                resources = new ArrayList<>();
+                            //Metemos el recurso en el repositorio.
+                            if(!fileService.touchFile(config.getProperty("SII_RESOURCES_PATH") + "/" + reportFolder +"/"+ item.getName()))
+                                fileService.uploadFile(config.getProperty("SII_RESOURCES_PATH") + "/" + reportFolder, item.getName(), item);
+                            JasperReportResource resource = new JasperReportResource(item.getName(),config.getProperty("SII_RESOURCES_PATH") + "/" + reportFolder + "/"+item.getName());
+                            resources.add(resource);
+                        }else{
+                            System.err.println(".jasper found. Please Remove: "+item.getAbsolutePath());
+                        }
                     }
                 }
             } else {
