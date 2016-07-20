@@ -1446,12 +1446,14 @@ $(function() {
                         //window.open(urlReport);
                     }
                 });
-                //Invocacion Alfresco del FrontEnd
-                var _tableName = encodeURIComponent("Cgg_res_tramite");
-                var _recordId = encodeURIComponent(tmpRespuestaTramite[0]);
-                var _filter = encodeURIComponent("crtst_codigo='" + tmpMotivoResidenciaId + "'");
-                PopupCenter("alfrescoMng.html?tableName=" + _tableName + "&recordId=" + _recordId + "&filter=" + _filter, 'Adjuntos', '820', '630');
-                //Fin Alfresco
+                if(!modeTranseuntes) {
+                    //Invocacion Alfresco del FrontEnd
+                    var _tableName = encodeURIComponent("Cgg_res_tramite");
+                    var _recordId = encodeURIComponent(tmpRespuestaTramite[0]);
+                    var _filter = encodeURIComponent("crtst_codigo='" + tmpMotivoResidenciaId + "'");
+                    PopupCenter("alfrescoMng.html?tableName=" + _tableName + "&recordId=" + _recordId + "&filter=" + _filter, 'Adjuntos', '820', '630');
+                    //Fin Alfresco
+                }
             }else {
                 //alert('');
                 new bsxMessageBox({

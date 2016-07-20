@@ -70,7 +70,8 @@ public class SiiDataLoader {
             while (results.next()){
                 SiiModelFile modelFile = new SiiModelFile(results.getString("CODE"),results.getString("CGG_ECM_METADATA_CODE"),results.getString("FILE_NAME"),results.getString("FILE_DESCRIPTION"),
                         results.getString("DOCUMENT_TYPE"),results.getString("FILE_REPOSITORY"),results.getBoolean("OVERRIDE_NAME"),results.getBoolean("ESTADO"),
-                        results.getString("USUARIO_INSERT"), results.getString("USUARIO_UPDATE"));
+                        results.getString("USUARIO_INSERT"), results.getString("USUARIO_UPDATE"),results.getBoolean("INSERTABLE"),results.getBoolean("UPDATEABLE"),
+                        results.getBoolean("MANDATORY"), results.getString("VISIBLE_ROLE"), results.getString("EDITABLE_ROLE"));
                 if(files==null)
                     files = new ArrayList<>();
                 //

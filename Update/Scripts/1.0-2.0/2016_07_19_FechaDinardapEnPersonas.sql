@@ -3,7 +3,7 @@
 
 
 
-ALTER TABLE cgg_res_persona ADD COLUMN crper_fecha_dinardap timestamp DEFAULT (current_timestamp - '30 days'::interval);
+ALTER TABLE sii.cgg_res_persona ADD COLUMN crper_fecha_dinardap timestamp DEFAULT (current_timestamp - '30 days'::interval);
 
 CREATE OR REPLACE FUNCTION sii.f_cgg_res_persona_select_num_doc(in_crper_num_doc_identific character varying)
   RETURNS SETOF refcursor AS
