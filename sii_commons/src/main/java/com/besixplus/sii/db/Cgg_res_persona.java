@@ -1552,6 +1552,7 @@ public class Cgg_res_persona implements Serializable{
 				this.getCgg_res_persona().setCRPER_TIPO(results.getInt(33));
 				this.getCgg_res_persona().setCRPER_ATENCION_CLIENTE(results.getBoolean(34));
 				this.getCgg_res_persona().setCRPER_ESTADO(results.getBoolean(35));
+				//this.getCgg_res_persona().setMyCRPER_FECHA_DINARDAP(results.getDate(40));
 			}
 			results.close();
 			stmSelect.close();

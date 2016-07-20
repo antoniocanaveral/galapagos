@@ -121,8 +121,27 @@ $(function() {
                 CRDPT_CODIGO: crdptCodigo,
                 CGG_CPAIS_CODIGO: cbxPaisResidencia.dom.value
             };
+            //De una vez hacemos el insert antes de entrar en las reglas de validacion.
             if(objBeneficiario.CGGCRPER_CODIGO=='KEYGEN'){
-                //TODO: Hacer el insert de la persona y guardar el CRPER_CODIGO en objBeneficiario
+                var objBeneficiarioJSON = JSON.stringify(objBeneficiario);
+                var param = new SOAPClientParameters();
+                param.add('inNuevoBeneficiarioJSON', objBeneficiarioJSON);
+                var tmpPersona = SOAPClient.invoke(URL_WS+'Cgg_res_persona','insertLite',param, false,null);
+                try{
+                    var result = eval(tmpPersona);
+                    if(result=="false"){
+                        new bsxMessageBox({
+                            title:'Alerta',
+                            msg: 'Ha ocurrido un error al registrar el beneficiario. No es posible validar la informaci&oacute;n',
+                            icon: "iconInfo"
+                        });
+                        return;
+                    }else{
+                        objBeneficiario.CRPER_CODIGO = result.CRPER_CODIGO;
+                    }
+                }catch(inErr){
+                    console.log(inErr.message);
+                }
             }
             if(!validarReglaTranseuntes(objBeneficiario)){
                 $('#divCargando1').hide();

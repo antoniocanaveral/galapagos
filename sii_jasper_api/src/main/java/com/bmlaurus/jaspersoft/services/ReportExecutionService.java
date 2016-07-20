@@ -56,8 +56,8 @@ public class ReportExecutionService extends BaseAPI {
         return response;
     }
 
+    private HttpResponse syncRes = null;
     public InputStream getReportPDF(ReportExecutionResponse execution){
-        HttpResponse httpRes = null;
         InputStream result = null;
         if(execution!=null && execution.getExports()!=null && execution.getExports().size()==1) {
             try {
@@ -72,10 +72,10 @@ public class ReportExecutionService extends BaseAPI {
                 url.append("/exports/");
                 url.append(execution.getExports().get(0).getId());
                 url.append("/outputResource");
-                httpRes = sendRequest(get, url.toString(), null);
-                if (validateRequest(httpRes)) {
-                    if (httpRes.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                        result = httpRes.getEntity().getContent();
+                syncRes = sendRequest(get, url.toString(), null);
+                if (validateRequest(syncRes)) {
+                    if (syncRes.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                        result = syncRes.getEntity().getContent();
                     }
                 }
             } catch (Exception e) {
@@ -86,7 +86,6 @@ public class ReportExecutionService extends BaseAPI {
     }
 
     public void closeExecution(ReportExecutionResponse execution){
-        HttpResponse httpRes = null;
         if(execution!=null && execution.getExports()!=null && execution.getExports().size()==1) {
             try {
                 //Buscamos el archivo
@@ -99,13 +98,15 @@ public class ReportExecutionService extends BaseAPI {
                 url.append("/");
                 url.append(execution.getRequestId());
                 url.append("/status/");
-                httpRes = sendRequest(put, url.toString(), null);
-
+                syncRes = sendRequest(put, url.toString(), null);
+                releaseConnection(syncRes);
             } catch (Exception e) {
                 log.error(e);
             }
-            logOut();
+        }else{
+            releaseConnection(syncRes);
         }
+        logOut();
 
     }
 

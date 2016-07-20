@@ -35,15 +35,15 @@ public class ResolucionAttachment extends ReportToAttachment {
     public String attachReport() throws SQLException {
 
         reportParams = new HashMap<>();
-        //reportParams.put("CEDULA_DATOS",userData.toString());
+        reportParams.put("CRRST_CODIGO",recordId);
 
         Properties globals = Env.getExternalProperties("alfresco/globals.properties");
         if(globals!=null) {
             fileName = globals.getProperty("alfpath.resolucion.fileName");
-            DataHandler stream = getReportExecutation("generated",reportName);
+            DataHandler stream = getReportExecutation("resoluciones",reportName);
             if(stream!=null){
                 dh = stream;
-                document = new SiiRespaldoDocument("");//userData.getCedula());
+                document = new SiiRespaldoDocument(tableName+"-"+recordId);//userData.getCedula());
                 document.addAspect(new SiiIdentificable(tableName,recordId));
                 document.setFileName(fileName+".pdf");
                 Connection tmpCon = ManagerConnection.getConnection();

@@ -35,6 +35,7 @@ public class ReportToAlfresco extends HttpServlet implements Serializable {
             String CRRES_CODIGO = (String) receiver.get("CRRES_CODIGO");
             String CRTRA_CODIGO = (String) receiver.get("CRTRA_CODIGO");
             String REPORT_NAME = (String) receiver.get("REPORT_NAME");
+
             ResolucionAttachment attachment = new ResolucionAttachment(CRRST_CODIGO, "Cgg_res_resol_tramite", null);
             attachment.setReportName(REPORT_NAME);
             try {
