@@ -906,8 +906,32 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
     });
     var cbcECMOverride =  new Ext.grid.CheckColumn({
         dataIndex:'overrideName',
-        header:'Sobreescribir',
-        width:70,
+        header:'Renombra',
+        width:30,
+        editor:{
+            xtype:'checkbox'
+        }
+    });
+    var cbcECMInsertable =  new Ext.grid.CheckColumn({
+        dataIndex:'insertable',
+        header:'Subir',
+        width:30,
+        editor:{
+            xtype:'checkbox'
+        }
+    });
+    var cbcECMUpdateable =  new Ext.grid.CheckColumn({
+        dataIndex:'updateable',
+        header:'Actualizar',
+        width:30,
+        editor:{
+            xtype:'checkbox'
+        }
+    });
+    var cbcECMMandatory =  new Ext.grid.CheckColumn({
+        dataIndex:'mandatory',
+        header:'Mandatorio',
+        width:30,
         editor:{
             xtype:'checkbox'
         }
@@ -918,7 +942,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
         {
             dataIndex:'code',
             header:'Codigo',
-            width:150,
+            width:10,
             sortable:true,
             hidden:true,
             hideable:false
@@ -926,7 +950,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
         {
             dataIndex:'cgg_ecm_metadata_code',
             header:'Metadata',
-            width:150,
+            width:10,
             sortable:true,
             hidden:true,
             hideable:false
@@ -934,7 +958,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
         {
             dataIndex:'fileName',
             header:'Nombre Archivo',
-            width:150,
+            width:100,
             sortable:true,
             editor:txtECMFileName
         },
@@ -964,7 +988,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
             width:200,
             sortable:true,
             editor:txtECMRepository
-        },cbcECMOverride]);
+        },cbcECMInsertable,cbcECMUpdateable,cbcECMMandatory,cbcECMOverride]);
 
     /**
      * Ext.data.Store Agrupacion de registros de la tabla cgg_ecm_file por un campo especifico.
@@ -1000,6 +1024,18 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
             {
                 name:'overrideName'
             }
+            ,
+            {
+                name:'insertable'
+            }
+            ,
+            {
+                name:'updateable'
+            }
+            ,
+            {
+                name:'mandatory'
+            }
         ]),
         baseParams:{
             tableName:'Cgg_res_tramite',
@@ -1012,10 +1048,12 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
         errorSummary: false,
         listeners:{
             canceledit:function(inRowEditor,inFlag){
-                var inRecord=grdCgg_res_solicitud_adjunto.getStore().getAt(0);
+                /*var inRecord=grdCgg_res_solicitud_adjunto.getStore().getAt(0);
                 if(inRecord.get('codigo')==null){
                     grdCgg_res_solicitud_adjunto.getStore().remove(inRecord);
-                }
+                }*/
+                //DO NOTHING
+                var kk=1;
             },
             afteredit:function(inRowEditor,inObject,inRecord,inRowIndex){
                 if(inRecord.get('codigo').trim().length==0){

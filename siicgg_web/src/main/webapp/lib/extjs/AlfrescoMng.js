@@ -227,16 +227,24 @@ function AlfrescoMng(_tableName, _recordID, _filter, isReadOnly){
                 var files = isList?renderedData.files:renderedData.files.files;
                 lastSelected=null;
                 for(var i=0;i<files.length;i++){
+                    var btnAction;
+                    var updateable = true;
+                    var insertable = true;
+                    var mandatory = false;
+                    if(isList){
+                        updateable = files[i].updateable;
+                        insertable = files[i].insertable;
+                        mandatory = files[i].mandatory;
+                    }
                     var fileName = new Ext.Button({
                         xtype: 'button',
-                        text:isList?files[i].fileDescription:files[i].name,
+                        text:(mandatory?"* ":"")+(isList?files[i].fileDescription:files[i].name),
                         fileObj: files[i],
                         prentPanelId:"tarjet_"+i,
                         width: 120,
                         height:30
                     });
                     fileName.on('click',fileSelected);
-                    var btnAction;
                     if(files[i].fileResult || !isList){
                         btnAction = new Ext.Button({
                             iconCls:'ecmRefresh',
@@ -246,6 +254,8 @@ function AlfrescoMng(_tableName, _recordID, _filter, isReadOnly){
                             margins: '0 0 5 15',
                             listeners:{click:freeUpload}
                         });
+                        if(!updateable)
+                            btnAction.hide();
                     }else{
                         btnAction = new Ext.Button({
                             iconCls:'ecmUpload',
@@ -256,6 +266,8 @@ function AlfrescoMng(_tableName, _recordID, _filter, isReadOnly){
                             margins: '0 0 5 15',
                             listeners:{click:freeUpload}
                         });
+                        if(!insertable)
+                            btnAction.hide();
                     }
 
                     var fileRecord = new Ext.Panel({
@@ -268,7 +280,11 @@ function AlfrescoMng(_tableName, _recordID, _filter, isReadOnly){
                         padding:10,
                         items: [fileName,btnAction]
                     });
-                    comps.push(fileRecord);
+                    //Lo quitamos de la lista cuando no tiene adjunto y no es insertable.
+                    if(isList && (files[i].fileResult==null && !insertable)){
+                        var kk=0; //NO HACEMOS NADA.
+                    }else
+                        comps.push(fileRecord);
                 }
             }
         }else {
@@ -375,10 +391,6 @@ function AlfrescoMng(_tableName, _recordID, _filter, isReadOnly){
                 activityIndicator.hide();
             activityIndicator = null;
             //-->>FIN
-        } else {
-            activityIndicator.hide();
-            activityIndicator = null;
-            Ext.Msg.alert('Alfresco', 'No se ha definido un esquema de archivos para la ventana');
         }
     }else{
         Ext.Msg.alert('Configuracion', 'No es posible iniciar el esquema de archivos. No se han definido los parámetros');
@@ -389,16 +401,20 @@ function AlfrescoMng(_tableName, _recordID, _filter, isReadOnly){
  * Funcion prototipo. Permite mostrar la ventana AlfrescoMng desde una instancia.
  */
 AlfrescoMng.prototype.show = function(){
-    if(this.getWindow())
-        this.getWindow().show();
+    try{
+        if(this.getWindow())
+            this.getWindow().show();
+    }catch (e){
+        console.log("No se han definido adjuntos");
+    }
 };
 
 AlfrescoMng.prototype.beforeClose = function(){
-    activityIndicator = undefined;
-    tableName = undefined;
-    recordID = undefined;
-    filter = undefined;
-    alfrescoResponse = undefined;
+    activityIndicator = null;
+    tableName = null;
+    recordID = null;
+    filter = null;
+    alfrescoResponse = null;
 };
 /**
  *Funcion prototipo. Permite cerrar la ventana AlfrescoMng desde una instancia.
@@ -430,69 +446,6 @@ function LoadJs(url){
 
     document.body.appendChild(js);
 
-}
-
-function freeUpload(_this, e){
-    var btnUpload = _this;
-    if(isList && btnUpload.fileObj){
-        var uploader = new AlfrescoUploader(_this.fileObj,tableName,recordID);
-        uploader.on('hide',function(_that){
-            var result = uploader.result();
-            console.log("HIDE: "+result);
-            if(btnUpload.fileContainer){
-                btnUpload.setIconClass('ecmRefresh');
-                btnUpload.fileContainer.fileObj.fileResult = result;
-            }
-            uploader.destroy();
-        });
-        uploader.on('close',function(p){
-            console.log("CLOSE!!");
-        });
-        uploader.show();
-    }else{//Es subida Libre
-        var indexes = [];
-        indexes.push(
-            {
-                "code": "IDX_IDN",
-                "name": "Identificable",
-                "itemList": [
-                    {
-                        "code": "ITEM_TABLA",
-                        "itemName": "TABLE_NAME_NAME",
-                        "itemDataType": "STRING",
-                        "itemLabel": "Nombre de la Tabla SII",
-                        "isMandatory": true,
-                        "estado": true
-                    },
-                    {
-                        "code": "ITEM_RECORD_ID",
-                        "itemName": "RECORD_ID_NAME",
-                        "itemDataType": "STRING",
-                        "itemLabel": "Identificador del Registro",
-                        "isMandatory": true,
-                        "estado": true
-                    }
-                ],
-                "estado": true
-            }
-        );
-        var jsonFile = {"code":"FREE", "documentType": "D:sii:personales", "fileRepository":alfrescoResponse.filesRepository ,"indexDefinitionList":indexes};
-        var uploader = new AlfrescoUploader(jsonFile,tableName,recordID);
-        uploader.on('hide',function(_that){
-            var result = uploader.result();
-            console.log("HIDE: "+result);
-            if(btnUpload.fileContainer){
-                btnUpload.setIconClass('ecmRefresh');
-                btnUpload.fileContainer.fileObj.fileResult = result;
-            }
-            uploader.destroy();
-        });
-        uploader.on('close',function(p){
-            console.log("CLOSE!!");
-        });
-        uploader.show();
-    }
-    //alert(_this.fileName);
 }
 
 function fileDownload(_this, e){

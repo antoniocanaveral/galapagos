@@ -33,10 +33,19 @@ public class SiiModelFile implements Serializable{
     private String usuario_insert;
     private String usuario_update;
 
+    //Propiedades avanzadas
+    private boolean insertable;
+    private boolean updateable;
+    private boolean mandatory;
+    private String visible_role;
+    private String editable_role;
+
     //Contenido
     private SiiFileResult fileResult;
 
-    public SiiModelFile(String code, String cgg_ecm_metadata_code, String fileName, String fileDescription, String documentType, String fileRepository, boolean overrideName, boolean estado, String usuario_insert, String usuario_update) {
+    public SiiModelFile(String code, String cgg_ecm_metadata_code, String fileName, String fileDescription, String documentType, String fileRepository
+            , boolean overrideName, boolean estado, String usuario_insert, String usuario_update, boolean insertable, boolean updateable, boolean mandatory
+            , String visible_role, String editable_role) {
         this.code = code;
         this.cgg_ecm_metadata_code = cgg_ecm_metadata_code;
         this.fileName = fileName;
@@ -47,6 +56,11 @@ public class SiiModelFile implements Serializable{
         this.estado = estado;
         this.usuario_insert = usuario_insert;
         this.usuario_update = usuario_update;
+        this.editable_role = editable_role;
+        this.visible_role = visible_role;
+        this.mandatory = mandatory;
+        this.updateable = updateable;
+        this.insertable = insertable;
     }
 
     public String getCode() {
@@ -137,6 +151,46 @@ public class SiiModelFile implements Serializable{
         this.usuario_update = usuario_update;
     }
 
+    public boolean isInsertable() {
+        return insertable;
+    }
+
+    public void setInsertable(boolean insertable) {
+        this.insertable = insertable;
+    }
+
+    public boolean isUpdateable() {
+        return updateable;
+    }
+
+    public void setUpdateable(boolean updateable) {
+        this.updateable = updateable;
+    }
+
+    public boolean isMandatory() {
+        return mandatory;
+    }
+
+    public void setMandatory(boolean mandatory) {
+        this.mandatory = mandatory;
+    }
+
+    public String getVisible_role() {
+        return visible_role;
+    }
+
+    public void setVisible_role(String visible_role) {
+        this.visible_role = visible_role;
+    }
+
+    public String getEditable_role() {
+        return editable_role;
+    }
+
+    public void setEditable_role(String editable_role) {
+        this.editable_role = editable_role;
+    }
+
     public SiiFileResult getFileResult() {
         return fileResult;
     }
@@ -171,7 +225,8 @@ public class SiiModelFile implements Serializable{
                 //Empezamos con la persistencia
                 //UPDATE
                 strSQL = "UPDATE sii.cgg_ecm_file SET cgg_ecm_metadata_code=?, file_name=?, file_description=?, document_type=?, file_repository=?," +
-                        "            override_name=?, estado=?, usuario_insert=?, usuario_update=? " +
+                        "            override_name=?, estado=?, usuario_insert=?, usuario_update=? ,insertable=?, updateable=?, mandatory=?," +
+                        "            visible_role=?, editable_role=?" +
                         "WHERE code = ?";
                 statement = conn.prepareStatement(strSQL);
                 statement.setString(1, cgg_ecm_metadata_code);
@@ -183,13 +238,19 @@ public class SiiModelFile implements Serializable{
                 statement.setBoolean(7, estado);
                 statement.setString(8, usuario_insert);
                 statement.setString(9, usuario_update);
+                statement.setBoolean(10,insertable);
+                statement.setBoolean(11,updateable);
+                statement.setBoolean(12,mandatory);
+                statement.setString(13,visible_role);
+                statement.setString(14,editable_role);
                 //
-                statement.setString(10,code);
+                statement.setString(15,code);
             }else{//INSERT
                 strSQL = "INSERT INTO sii.cgg_ecm_file (code, cgg_ecm_metadata_code, file_name, file_description, document_type, file_repository," +
-                        "            override_name, estado, usuario_insert, usuario_update) " +
+                        "            override_name, estado, usuario_insert, usuario_update," +
+                        "            insertable, updateable, mandatory, visible_role, editable_role)" +
                         "    VALUES (?, ?, ?, ?, ?, ?," +
-                        "            ?, ?, ?, ?);";
+                        "            ?, ?, ?, ?,?,?,?,?,?);";
                 statement = conn.prepareStatement(strSQL);
                 statement.setString(1,code);
                 statement.setString(2, cgg_ecm_metadata_code);
@@ -201,6 +262,11 @@ public class SiiModelFile implements Serializable{
                 statement.setBoolean(8, estado);
                 statement.setString(9, usuario_insert);
                 statement.setString(10, usuario_update);
+                statement.setBoolean(11,insertable);
+                statement.setBoolean(12,updateable);
+                statement.setBoolean(13,mandatory);
+                statement.setString(14,visible_role);
+                statement.setString(15,editable_role);
 
                 statement.execute();
                 statement.close();
