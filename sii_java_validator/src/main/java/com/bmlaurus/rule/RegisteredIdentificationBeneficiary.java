@@ -32,9 +32,27 @@ public class RegisteredIdentificationBeneficiary implements RuleClass {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+
+            if (beneficiario.getCRDID_CODIGO().equals("1")){
+
+                RegistroCivil registroCivil = new RegistroCivil(ruleData.getCRPER_NUM_DOC_IDENTIFIC());//cedula del beneficiario
+                if (registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_ERROR)) {
+                    if (registroCivil.getResultMap() != null)
+                        error = (String) registroCivil.getResultMap().get(RegistroCivil.KEY_MENSAJE);
+                    else
+                        return "true," + RegistroCivil.SERVICE_ERROR;
+                } else {
+                    if (registroCivil.getCedula() != null && !registroCivil.getCedula().trim().isEmpty()) {
+                        return "true";
+                    }
+                }
+            }else {
+                return "true";
+            }
+
         }
 
-            if (beneficiario.getCRDID_CODIGO().equals("1") || ruleData.getCRDID_CODIGO().equals("1") ){
+            if (ruleData.getCRDID_CODIGO().equals("1") ){
 
                 RegistroCivil registroCivil = new RegistroCivil(ruleData.getCRPER_NUM_DOC_IDENTIFIC());//cedula del beneficiario
                 if (registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_ERROR)) {
