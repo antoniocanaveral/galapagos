@@ -2312,8 +2312,8 @@ VALORES:
 			@WebParam(name="inNuevoBeneficiarioJSON")String inNuevoBeneficiarioJSON,
 			@WebParam(name="inContactoPersonaJSON")String inContactoPersonaJSON,
 			@WebParam(name="inInfoVehiculos")String inInfoVehiculos,
-			@WebParam(name="inCrtra_fecha_ingreso")Date inCrtra_fecha_ingreso,
-			@WebParam(name="inCrtra_fecha_salida")Date inCrtra_fecha_salida,
+			@WebParam(name="inCrtra_fecha_ingreso")String inCrtra_fecha_ingreso,
+			@WebParam(name="inCrtra_fecha_salida")String inCrtra_fecha_salida,
 			@WebParam(name="inCrtra_actividad_residencia")String inCrtra_actividad_residencia
 			){
 		String [] res = new String[2];	
@@ -2356,8 +2356,15 @@ VALORES:
 		//	obj.setCRTRA_FOLIO(inCrtra_folio);
 		//	obj.setCRTRA_GRUPO(inCrtra_grupo);
 		//	obj.setCRTRA_ORDEN(inCrtra_orden);
-		obj.setCRTRA_FECHA_INGRESO(inCrtra_fecha_ingreso);
-		obj.setCRTRA_FECHA_SALIDA(inCrtra_fecha_salida);
+		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		try{
+			if(inCrtra_fecha_ingreso!=null && inCrtra_fecha_ingreso.trim().length()>0)
+				obj.setCRTRA_FECHA_INGRESO(sdf.parse(inCrtra_fecha_ingreso));
+			if(inCrtra_fecha_salida!=null && inCrtra_fecha_salida.trim().length()>0)
+				obj.setCRTRA_FECHA_SALIDA(sdf.parse(inCrtra_fecha_salida));
+		} catch (ParseException e){
+			e.printStackTrace();
+		}
 		obj.setCRTRA_ESTADO(true);
 		obj.setCRTRA_USUARIO_INSERT(tmpRequest.getUserPrincipal().getName());
 		obj.setCRTRA_USUARIO_UPDATE(tmpRequest.getUserPrincipal().getName());

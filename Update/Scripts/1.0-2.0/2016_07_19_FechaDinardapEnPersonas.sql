@@ -1,0 +1,119 @@
+ALTER TABLE cgg_res_persona ADD COLUMN crper_fecha_dinardap timestamp DEFAULT (current_timestamp - '30 days'::interval);
+
+CREATE OR REPLACE FUNCTION sii.f_cgg_res_persona_select_num_doc(in_crper_num_doc_identific character varying)
+  RETURNS SETOF refcursor AS
+$BODY$
+
+DECLARE
+
+TMP_REF REFCURSOR;
+
+BEGIN
+
+OPEN TMP_REF FOR
+
+SELECT
+
+CRPER_CODIGO,
+
+CRECV_CODIGO,
+
+CRDID_CODIGO,
+
+CRTSG_CODIGO,
+
+CGNCN_CODIGO,
+
+CPRR_CODIGO,
+
+CCTN_CODIGO,
+
+CGG_CCTN_CODIGO,
+
+CRPER_NOMBRES,
+
+CRPER_APELLIDO_PATERNO,
+
+CRPER_APELLIDO_MATERNO,
+
+CRPER_NUM_DOC_IDENTIFIC,
+
+CRPER_FECHA_NACIMIENTO,
+
+CRPER_LUGAR_NACIMIENTO,
+
+CRPER_GENERO,
+
+CRPER_OBSERVACIONES,
+
+CRPER_NUMERO_RESIDENCIA,
+
+CRPER_FOTO,
+
+CRPER_FOTO_CURRICULUM,
+
+CRPER_HUELLA_DACTILAR,
+
+CRPER_FIRMA,
+
+CRPER_AUTORIZADO,
+
+CRPER_NUMERO_EXPEDIENTE,
+
+CRPER_FECHA_ARCHIVO,
+
+CRPER_EMPLEADO,
+
+CRPER_FECHA_ULTIMO_EMPLEO,
+
+CRPER_ASPIRACION_SALARIAL,
+
+CRPER_CUPO_VEHICULAR,
+
+CRPER_TIPO_PERSONA,
+
+CRPER_ESTADO_INTERFECTO,
+
+CRPER_FECHA_DEFUNCION,
+
+CRPER_NUMERO_ACTA,
+
+CRPER_TIPO,
+
+CRPER_ATENCION_CLIENTE,
+
+CRPER_ESTADO,
+
+CRPER_FECHA_INSERT,
+
+CRPER_USUARIO_INSERT,
+
+CRPER_FECHA_UPDATE,
+
+CRPER_USUARIO_UPDATE,
+
+CRPER_FECHA_DINARDAP
+
+FROM SII.CGG_RES_PERSONA
+
+WHERE CRPER_ESTADO = TRUE AND
+
+CRPER_NUM_DOC_IDENTIFIC = IN_CRPER_NUM_DOC_IDENTIFIC;
+
+RETURN NEXT TMP_REF;
+
+END
+
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100
+  ROWS 1000;
+
+
+--> MIGRATION SCRIPT CONTROLLER <--
+INSERT INTO sii.cgg_migrationscript (mrgsp_codigo,mrgsp_fecha,mrgsp_usuario_insert,mrgsp_fecha_insert,mrgsp_usuario_update,mrgsp_fecha_update,
+	mrgsp_estado,mrgsp_developer,mrgsp_name,mrgsp_description,
+	mrgsp_releaseno,mrgsp_filename,mrgsp_isapply)
+VALUES(SII.F_KEYGEN('CGG_MIGRATIONSCRIPT','MRGSP_CODIGO','MRGSP'), current_timestamp,'ADMIN', current_timestamp,'ADMIN', current_timestamp,
+	true,'acanaveral','FECHA DE CONTROL DINARDAP','Fecha de control para actualizar los datos',
+	'2.0','2016_07_19_FechaDinardapEnPersonas.sql',true);

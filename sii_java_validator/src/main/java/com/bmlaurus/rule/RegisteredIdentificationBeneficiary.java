@@ -19,8 +19,9 @@ public class RegisteredIdentificationBeneficiary implements RuleClass {
 
         String error = regla.getString("CRVAL_SUGERENCIA");
         Cgg_res_persona beneficiario = new Cgg_res_persona();
+        String identificacion = null;
 
-        if(ruleData.getCRDID_CODIGO().equals("")) {
+        if(ruleData.getCRDID_CODIGO()==null || ruleData.getCRDID_CODIGO().trim().equals("")) {
             try {
                 Connection con = null;
                 con = ManagerConnection.getConnection();
@@ -28,31 +29,16 @@ public class RegisteredIdentificationBeneficiary implements RuleClass {
 
                 beneficiario.setCRPER_CODIGO(ruleData.getCGGCRPER_CODIGO());
                 beneficiario = new com.besixplus.sii.db.Cgg_res_persona(beneficiario).select(con);
+                identificacion = beneficiario.getCRDID_CODIGO();
                 con.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
-            if (beneficiario.getCRDID_CODIGO().equals("1")){
-
-                RegistroCivil registroCivil = new RegistroCivil(ruleData.getCRPER_NUM_DOC_IDENTIFIC());//cedula del beneficiario
-                if (registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_ERROR)) {
-                    if (registroCivil.getResultMap() != null)
-                        error = (String) registroCivil.getResultMap().get(RegistroCivil.KEY_MENSAJE);
-                    else
-                        return "true," + RegistroCivil.SERVICE_ERROR;
-                } else {
-                    if (registroCivil.getCedula() != null && !registroCivil.getCedula().trim().isEmpty()) {
-                        return "true";
-                    }
-                }
-            }else {
-                return "true";
-            }
-
+        }else{
+            identificacion = ruleData.getCRDID_CODIGO();
         }
 
-            if (ruleData.getCRDID_CODIGO().equals("1") ){
+            if (identificacion.equals("1") ){
 
                 RegistroCivil registroCivil = new RegistroCivil(ruleData.getCRPER_NUM_DOC_IDENTIFIC());//cedula del beneficiario
                 if (registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_ERROR)) {
