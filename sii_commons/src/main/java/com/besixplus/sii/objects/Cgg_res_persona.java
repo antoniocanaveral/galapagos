@@ -2,8 +2,6 @@ package com.besixplus.sii.objects;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
-
 /**
 * CLASE Cgg_res_persona
 * TABLA: PERSONA
@@ -235,7 +233,6 @@ public class Cgg_res_persona implements Serializable{
 	 * */
 	private String crper_conyuge;
 	private java.util.Date crper_fecha_matrimonio;
-	private java.util.Date myCrper_fecha_dinardap;
 
 	public String getCRPER_CONYUGE() {
 		return crper_conyuge;
@@ -251,14 +248,6 @@ public class Cgg_res_persona implements Serializable{
 
 	public void setCRPER_FECHA_MATRIMONIO(java.util.Date crper_fecha_matrimonio) {
 		this.crper_fecha_matrimonio = crper_fecha_matrimonio;
-	}
-
-	public Date getCRPER_FECHA_DINARDAP() {
-		return myCrper_fecha_dinardap;
-	}
-
-	public void setMyCRPER_FECHA_DINARDAP(Date myCrper_fecha_dinardap) {
-		this.myCrper_fecha_dinardap = myCrper_fecha_dinardap;
 	}
 
 	/**

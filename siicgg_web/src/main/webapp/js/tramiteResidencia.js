@@ -1034,8 +1034,10 @@ $(function() {
 
         if($(this).val()=='CRTST2'){
             document.getElementById("divDatosTranseunte").style.display = "block";
+            document.getElementById("divDatosActividad").style.display = "block";
         }else{
             document.getElementById("divDatosTranseunte").style.display = "none";
+            document.getElementById("divDatosActividad").style.display = "none";
         }
 
         if($(this).val()==='CRTST7'){

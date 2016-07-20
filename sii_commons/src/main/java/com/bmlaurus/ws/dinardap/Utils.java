@@ -57,18 +57,17 @@ public class Utils {
         String nombre = persona.substring(paterno.length()+1+materno.length());
 
         if(paterno.length()==0 && materno.length()==0){//No tiene padres. Que decida el usuario
-            paterno = "";
-            materno = "";
-            nombre = "";
+            paterno = persona;
+            materno = persona;
         }
-        if(nombre.length()>0 && paterno.length()==0 && materno.length()>0){//No tiene padre. Dividimos los apellidos maternos
+        if(paterno.length()==0 && materno.length()>0){//No tiene padre. Dividimos los apellidos maternos
             String apellidos[] = materno.split(" ");
             if(apellidos.length>=2){
                 paterno = apellidos[0];
                 materno = materno.substring(paterno.length()+1);
             }
         }
-        if(nombre.length()>0 && materno.length()==0 && paterno.length()>0){//No tiene madre. Dividimos los apellidos paternos
+        if(materno.length()==0 && paterno.length()>0){//No tiene madre. Dividimos los apellidos paternos
             String apellidos[] = paterno.split(" ");
             if(apellidos.length>=2){
                 String tmp1 = apellidos[0];

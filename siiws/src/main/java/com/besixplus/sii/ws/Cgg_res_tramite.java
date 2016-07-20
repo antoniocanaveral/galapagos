@@ -2313,8 +2313,8 @@ VALORES:
 			@WebParam(name="inContactoPersonaJSON")String inContactoPersonaJSON,
 			@WebParam(name="inInfoVehiculos")String inInfoVehiculos,
 			@WebParam(name="inCrtra_fecha_ingreso")String inCrtra_fecha_ingreso,
-			@WebParam(name="inCrtra_fecha_salida")String inCrtra_fecha_salida
-
+			@WebParam(name="inCrtra_fecha_salida")String inCrtra_fecha_salida,
+			@WebParam(name="inCrtra_actividad_residencia")String inCrtra_actividad_residencia
 			){
 		String [] res = new String[2];	
 		String flagRes = "true";
@@ -2345,7 +2345,7 @@ VALORES:
 		obj.setCRTRA_ANIO(new BigDecimal(Calendar.getInstance().get(Calendar.YEAR)));
 		obj.setCRTRA_NUMERO(new BigDecimal(0));
 		obj.setCRTRA_FECHA_RECEPCION(new Date());
-		//	obj.setCRTRA_ACTIVIDAD_RESIDENCIA(inCrtra_actividad_residencia);
+		obj.setCRTRA_ACTIVIDAD_RESIDENCIA(inCrtra_actividad_residencia);
 		obj.setCRTRA_OBSERVACION(inCrtra_observacion);
 		//	obj.setCRTRA_DIAS_PERMANENCIA(inCrtra_dias_permanencia);
 		//	obj.setCRTRA_PENDIENTE(inCrtra_pendiente);
