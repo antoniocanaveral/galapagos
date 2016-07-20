@@ -851,7 +851,7 @@ public class Cgg_res_seguimiento implements Serializable{
 					}
 					if(flagSeguimientoHijo.equalsIgnoreCase("true")==true){										
 						inConnection.commit();
-						ProcessMail mailer = new ProcessMail(objSeguimiento,tramite,objFaseSeguimiento);
+						ProcessMail mailer = new ProcessMail(objSeguimiento,tramite,objFaseSeguimiento, inCrseg_tipo_respuesta);
 						mailer.start();
 					}else{
 						outResult="NO SE PUDO ALMACENAR EL ENVIO DE SEGUIMIENTO.";

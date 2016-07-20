@@ -8,7 +8,8 @@ var APP_TITLE='SIICGG';
 var OUTPUT_REPORT='pdf';
 //var URL_REPORTS_SERVER='/jasperserver/flow.html?_flowId=viewReportFlow&j_username=user&j_password=user';
 //var URL_REPORT='/jasperserver/flow.html?_flowId=viewReportFlow&standAlone=true&j_username=sii&j_password=sii';
-var URL_REPORT='http://190.95.187.82:8081/jasperserver/flow.html?_flowId=viewReportFlow&standAlone=true&j_username=sii&j_password=sii';
+var URL_REPORT='http://'+document.domain+':8081/jasperserver/flow.html?_flowId=viewReportFlow&standAlone=true&j_username=sii&j_password=sii';
+//var URL_REPORT='http://190.95.187.82:8081/jasperserver/flow.html?_flowId=viewReportFlow&standAlone=true&j_username=sii&j_password=sii';
 var MSG_ACCESS_ERROR = 'Acceso no autorizado, por favor consulte con el Administrador del Sistema. ';
 var ERR_MESSAGE='Por favor pongase en contacto con el administrador o proveedor de software informando la secci\u00F3n, fecha y hora del problema.\nLe pedimos disculpas por las molestias ocasionadas.'
 var RECORD_PAGE = 30;

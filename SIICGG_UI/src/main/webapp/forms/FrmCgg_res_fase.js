@@ -962,7 +962,22 @@ function FrmCgg_res_fase(INSENTENCIA_CGG_RES_FASE,INRECORD_PROCESO_FASE,INRECORD
         }
     });
 
-    var dsDestinatarios = [['AUSP','Auspiciante'],['BENF','Beneficiario'], ['USUA','Funcionario Fase'], ['GOB','Gobierno de Gal\u00F1pagos']];
+    var destinatariosData = [['AUSP','Auspiciante'],['BENF','Beneficiario'], ['USUA','Funcionario Fase'], ['GOB','Gobierno de Gal\u00F1pagos']];
+    var dsDestinatarios = new Ext.data.ArrayStore({
+        fields: ['code', 'name'],
+        idIndex: 0
+    });
+    dsDestinatarios.loadData(destinatariosData);
+    var cmbDestinatarios = new Ext.form.ComboBox({
+        id:"cmbDestinatarios",
+        store:dsDestinatarios,
+        displayField : 'name',
+        valueField : 'code',
+        triggerAction:'all',
+        mode: 'local',
+        forceSelection:true
+    });
+
     var dsMensajes = new Ext.data.Store({
         proxy:new Ext.ux.bsx.SoapProxy({
             url:URL_WS+"Cgg_not_mail",
@@ -1002,9 +1017,53 @@ function FrmCgg_res_fase(INSENTENCIA_CGG_RES_FASE,INRECORD_PROCESO_FASE,INRECORD
         tpl: '<tpl for="."><div ext:qtip="{ntml_description}" class="x-combo-list-item">{ntml_name}</div></tpl>',
         valueField:'ntml_codigo'
     });
-    var cmbDestinatarios = new Ext.form.ComboBox({
-        id:"cmbDestinatarios",
-        store:dsDestinatarios,
+
+    var dsTipoSolicitud = new Ext.data.Store({
+        proxy:new Ext.ux.bsx.SoapProxy({
+            url:URL_WS+"Cgg_res_tipo_solicitud_tramite",
+            method:"selectAll",
+            pagin : false
+        }),
+        baseParams: {
+            format: TypeFormat.JSON
+        },
+        remoteSort:false,
+        reader:new Ext.data.JsonReader({},[
+            {name:'CRTST_CODIGO'},
+            {name:'CRTST_DESCRIPCION'},
+            {name:'CRTST_OBSERVACION'}
+        ]),
+        listeners:{
+            load:function(){
+                dsMensajes.sort('CRTST_DESCRIPCION','ASC');
+            }
+        }
+    });
+    dsTipoSolicitud.load();
+    var cmbTipoSolicitud = new Ext.form.ComboBox({
+        id:"cmbTipoSolicitud",
+        store:dsTipoSolicitud,
+        mode: 'local',
+        forceSelection:true,
+        displayField:'CRTST_DESCRIPCION',
+        typeAhead: true,
+        triggerAction:'all',
+        selectOnFocus:true,
+        tpl: '<tpl for="."><div ext:qtip="{CRTST_OBSERVACION}" class="x-combo-list-item">{CRTST_DESCRIPCION}</div></tpl>',
+        valueField:'CRTST_CODIGO'
+    });
+    var respuestaFase = [['AUT','Respuesta Positiva'],['NEGA','Respuesta Negativa']];
+    var dsRespuestaFase = new Ext.data.ArrayStore({
+        fields: ['code', 'name'],
+        idIndex: 0
+    });
+    dsRespuestaFase.loadData(respuestaFase);
+    var cmbRespuestaFase = new Ext.form.ComboBox({
+        id:"cmbRespuestaFase",
+        store:dsRespuestaFase,
+        displayField : 'name',
+        valueField : 'code',
+        triggerAction:'all',
         mode: 'local',
         forceSelection:true
     });
@@ -1027,16 +1086,15 @@ function FrmCgg_res_fase(INSENTENCIA_CGG_RES_FASE,INRECORD_PROCESO_FASE,INRECORD
             width:150,
             sortable:true
         },
-
         {
             dataIndex:'NTML_CODIGO',
             header:'Mensaje',
-            width:400,
+            width:200,
             sortable:true,
             editor:cmbMensajes,
             renderer:function(inNtml_codigo){
                 var i =0;
-                var result = 'no datos';
+                var result = 'requerido';
                 for(i=0;i<dsMensajes.getCount();i++){
                     var rRequisito = dsMensajes.getAt(i);
                     if(rRequisito.get('ntml_codigo') == inNtml_codigo){
@@ -1047,16 +1105,15 @@ function FrmCgg_res_fase(INSENTENCIA_CGG_RES_FASE,INRECORD_PROCESO_FASE,INRECORD
                 return result;
             }
         },
-
         {
             dataIndex:'NTFN_DESTINATARIO',
             header:'Destinatario',
-            width:400,
+            width:200,
             sortable:true,
             editor: cmbDestinatarios,
             renderer:function(inNtml_destinatario){
                 var i =0;
-                var result = 'no datos';
+                var result = 'requerido';
                 for(i=0;i<dsDestinatarios.getCount();i++){
                     var rRequisito = dsDestinatarios.getAt(i);
                     if(rRequisito.get(0) == inNtml_destinatario){
@@ -1066,7 +1123,46 @@ function FrmCgg_res_fase(INSENTENCIA_CGG_RES_FASE,INRECORD_PROCESO_FASE,INRECORD
                 }
                 return result;
             }
-        }]);
+        },
+        {
+            dataIndex:'NTFN_TIPO_SOLICITUD',
+            header:'Tipo Solicitud',
+            width:200,
+            sortable:true,
+            editor: cmbTipoSolicitud,
+            renderer:function(inNtml_tipo_solicitud){
+                var i =0;
+                var result = '';
+                for(i=0;i<dsTipoSolicitud.getCount();i++){
+                    var rRequisito = dsTipoSolicitud.getAt(i);
+                    if(rRequisito.get(0) == inNtml_tipo_solicitud){
+                        result = rRequisito.get(1);
+                        break;
+                    }
+                }
+                return result;
+            }
+        },
+        {
+            dataIndex:'NTFN_RESPUESTA_FASE',
+            header:'Evento',
+            width:200,
+            sortable:true,
+            editor: cmbRespuestaFase,
+            renderer:function(inNtml_destinatario){
+                var i =0;
+                var result = 'requerido';
+                for(i=0;i<dsRespuestaFase.getCount();i++){
+                    var rRequisito = dsRespuestaFase.getAt(i);
+                    if(rRequisito.get(0) == inNtml_destinatario){
+                        result = rRequisito.get(1);
+                        break;
+                    }
+                }
+                return result;
+            }
+        }
+    ]);
 
     //Agrupacion de registros de la tabla Cgg_pra_contacto por un campo especifico.*/
     var gsCgg_not_fase_notification = new Ext.data.Store({
@@ -1081,17 +1177,20 @@ function FrmCgg_res_fase(INSENTENCIA_CGG_RES_FASE,INRECORD_PROCESO_FASE,INRECORD
             {
                 name:'CRPRO_CODIGO'
             },
-
             {
                 name:'CRFAS_CODIGO'
             },
-
             {
                 name:'NTML_CODIGO'
             },
-
             {
                 name:'NTFN_DESTINATARIO'
+            },
+            {
+                name:'NTFN_TIPO_SOLICITUD'
+            },
+            {
+                name:'NTFN_RESPUESTA_FASE'
             }
         ]),
         sortInfo:{
@@ -1129,7 +1228,9 @@ function FrmCgg_res_fase(INSENTENCIA_CGG_RES_FASE,INRECORD_PROCESO_FASE,INRECORD
                         CRPRO_CODIGO: 'KEYGEN',
                         CRFAS_CODIGO: 'KEYGEN',
                         NTML_CODIGO: '',
-                        NTFN_DESTINATARIO: ''
+                        NTFN_DESTINATARIO: '',
+                        NTFN_TIPO_SOLICITUD:'',
+                        NTFN_RESPUESTA_FASE:'AUT'
                     })
                 );
                 grdCgg_res_fase_notificacion.getView().refresh();
@@ -1170,6 +1271,8 @@ function FrmCgg_res_fase(INSENTENCIA_CGG_RES_FASE,INRECORD_PROCESO_FASE,INRECORD
                                     param.add("inCrfas_codigo",grdCgg_res_fase_notificacion.getSelectionModel().getSelected().get('CRFAS_CODIGO'));
                                     param.add("inNtml_codigo",grdCgg_res_fase_notificacion.getSelectionModel().getSelected().get('NTML_CODIGO'));
                                     param.add("inNtfn_destinatario",grdCgg_res_fase_notificacion.getSelectionModel().getSelected().get('NTFN_DESTINATARIO'));
+                                    //param.add("inNtfn_tipo_solicitud",grdCgg_res_fase_notificacion.getSelectionModel().getSelected().get('NTFN_TIPO_SOLICITUD'));
+                                    //param.add("inNtfn_respuesta_fase",grdCgg_res_fase_notificacion.getSelectionModel().getSelected().get('NTFN_RESPUESTA_FASE'));
                                     SOAPClient.invoke(URL_WS+"Cgg_not_fase_notification","deleteTrusted",param, true, CallBackCgg_res_fase_notificacion);
                                 }catch(inErr){
                                     winFrmCgg_res_fase.getEl().unmask();

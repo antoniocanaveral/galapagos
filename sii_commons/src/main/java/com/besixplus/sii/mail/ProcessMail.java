@@ -18,14 +18,16 @@ public class ProcessMail extends Thread{
     private Cgg_res_seguimiento seguimiento;
     private Cgg_res_tramite tramite;
     private Cgg_res_fase fase;
+    private int inCrseg_tipo_respuesta; //NEGADO=0 - APROBADO=1
 
     private final String TIPO_MAIL = "CRTCO1";
     private final String USER_MAIL = "maildaemon";
 
-    public ProcessMail(Cgg_res_seguimiento seguimiento, Cgg_res_tramite tramite, Cgg_res_fase fase) {
+    public ProcessMail(Cgg_res_seguimiento seguimiento, Cgg_res_tramite tramite, Cgg_res_fase fase, int inCrseg_tipo_respuesta) {
         this.seguimiento = seguimiento;
         this.tramite = tramite;
         this.fase = fase;
+        this.inCrseg_tipo_respuesta = inCrseg_tipo_respuesta;
     }
 
     @Override
@@ -35,46 +37,54 @@ public class ProcessMail extends Thread{
             objConn.setAutoCommit(false);
             String crfs_codigo = seguimiento.getCGG_CRFAS_CODIGO();
             Cgg_not_fase_notificacion objNot = new Cgg_not_fase_notificacion();
-            objNot.setCrfas_codigo(crfs_codigo);
+            objNot.setCRFAS_CODIGO(crfs_codigo);
             ArrayList<Cgg_not_fase_notificacion> notifications = new com.besixplus.sii.db.Cgg_not_fase_notificacion(objNot).selectByFase(objConn);
             for(Cgg_not_fase_notificacion not:notifications){
-                String destMail = "draft@mail.com";
-                Cgg_res_persona_contacto contacto = null;
-                switch (not.getNtfn_destinatario()){
-                    case Cgg_not_fase_notificacion.DEST_AUSPICIANTE:
-                        contacto = new Cgg_res_persona_contacto();
-                        contacto.setCRPER_CODIGO(tramite.getCRPER_CODIGO());
-                        for (Cgg_res_persona_contacto current : new com.besixplus.sii.db.Cgg_res_persona_contacto(contacto).selectCGG_RES_PERSONA(objConn)){
-                            if(current.getCRTCO_CODIGO().equals(TIPO_MAIL) && current.getCRPRC_ESTADO()){
-                                destMail = current.getCRPRC_CONTACTO();
-                            }
+                if(not.getNTFN_RESPUESTA_FASE_INT()==inCrseg_tipo_respuesta) {//VALIDAMOS PARA TIPO DE RESPUESTA
+                    boolean enviar = true;
+                    if(not.getNTFN_TIPO_SOLICITUD()!= null && not.getNTFN_TIPO_SOLICITUD().length()>0){
+                        enviar = not.getNTFN_TIPO_SOLICITUD().equals(tramite.getCRTST_CODIGO());
+                    }
+                    if(enviar) {
+                        String destMail = "draft@mail.com";
+                        Cgg_res_persona_contacto contacto = null;
+                        switch (not.getNTFN_DESTINATARIO()) {
+                            case Cgg_not_fase_notificacion.DEST_AUSPICIANTE:
+                                contacto = new Cgg_res_persona_contacto();
+                                contacto.setCRPER_CODIGO(tramite.getCRPER_CODIGO());
+                                for (Cgg_res_persona_contacto current : new com.besixplus.sii.db.Cgg_res_persona_contacto(contacto).selectCGG_RES_PERSONA(objConn)) {
+                                    if (current.getCRTCO_CODIGO().equals(TIPO_MAIL) && current.getCRPRC_ESTADO()) {
+                                        destMail = current.getCRPRC_CONTACTO();
+                                    }
+                                }
+                                break;
+                            case Cgg_not_fase_notificacion.DEST_BENEFICIARIO:
+                                contacto = new Cgg_res_persona_contacto();
+                                contacto.setCRPER_CODIGO(tramite.getCGG_CRPER_CODIGO());
+                                for (Cgg_res_persona_contacto current : new com.besixplus.sii.db.Cgg_res_persona_contacto(contacto).selectCGG_RES_PERSONA(objConn)) {
+                                    if (current.getCRTCO_CODIGO().equals(TIPO_MAIL) && current.getCRPRC_ESTADO()) {
+                                        destMail = current.getCRPRC_CONTACTO();
+                                    }
+                                }
+                                break;
+                            //FIXME: Faltantes
+                            case Cgg_not_fase_notificacion.DEST_FUNCIONARIOFASE:
+                                break;
+                            case Cgg_not_fase_notificacion.DEST_GOBIERNO:
+                                break;
+                            default:
+                                break;
                         }
-                        break;
-                    case Cgg_not_fase_notificacion.DEST_BENEFICIARIO:
-                        contacto = new Cgg_res_persona_contacto();
-                        contacto.setCRPER_CODIGO(tramite.getCGG_CRPER_CODIGO());
-                        for (Cgg_res_persona_contacto current : new com.besixplus.sii.db.Cgg_res_persona_contacto(contacto).selectCGG_RES_PERSONA(objConn)){
-                            if(current.getCRTCO_CODIGO().equals(TIPO_MAIL) && current.getCRPRC_ESTADO()){
-                                destMail = current.getCRPRC_CONTACTO();
-                            }
-                        }
-                        break;
-                    //FIXME: Faltantes
-                    case Cgg_not_fase_notificacion.DEST_FUNCIONARIOFASE:
-                        break;
-                    case Cgg_not_fase_notificacion.DEST_GOBIERNO:
-                        break;
-                    default:
-                        break;
-                }
 
-                Cgg_not_mail correo = new Cgg_not_mail();
-                correo.setNtml_codigo(not.getNtml_codigo());
-                correo = new com.besixplus.sii.db.Cgg_not_mail(correo).selectByCode(objConn);
-                if(correo!=null){
-                    buildMessage(objConn, correo,destMail);
+                        Cgg_not_mail correo = new Cgg_not_mail();
+                        correo.setNtml_codigo(not.getNTML_CODIGO());
+                        correo = new com.besixplus.sii.db.Cgg_not_mail(correo).selectByCode(objConn);
+                        if (correo != null) {
+                            buildMessage(objConn, correo, destMail);
+                        }
+                        System.out.println("NOTIFICACION por MAIL");
+                    }
                 }
-                System.out.println("NOTIFICACION por MAIL");
             }
             objConn.commit();
             objConn.setAutoCommit(true);

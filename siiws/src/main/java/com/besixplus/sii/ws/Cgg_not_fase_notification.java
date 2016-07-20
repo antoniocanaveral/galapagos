@@ -40,9 +40,9 @@ public class Cgg_not_fase_notification implements Serializable {
         HttpServletRequest tmpRequest = (HttpServletRequest) wctx.getMessageContext().get(MessageContext.SERVLET_REQUEST);
         HttpServletResponse tmpResponse = (HttpServletResponse) wctx.getMessageContext().get(MessageContext.SERVLET_RESPONSE);
         com.besixplus.sii.objects.Cgg_not_fase_notificacion tmpObj = new com.besixplus.sii.objects.Cgg_not_fase_notificacion();
-        tmpObj.setCrfas_codigo(inCrfas_codigo);
-        tmpObj.setNtfn_usuario_insert(tmpRequest.getUserPrincipal().getName());
-        tmpObj.setNtfn_usuario_update(tmpRequest.getUserPrincipal().getName());
+        tmpObj.setCRFAS_CODIGO(inCrfas_codigo);
+        tmpObj.setNTFN_USUARIO_INSERT(tmpRequest.getUserPrincipal().getName());
+        tmpObj.setNTFN_USUARIO_UPDATE(tmpRequest.getUserPrincipal().getName());
         try{
             Connection con = ManagerConnection.getConnection();
             if(!com.besixplus.sii.db.Cgg_sec_objeto.isGrant(con, Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getClassName(), tmpRequest.getUserPrincipal().getName(), 1)){
@@ -62,7 +62,7 @@ public class Cgg_not_fase_notification implements Serializable {
             return inException.getMessage();
         }
         if (tmpObj != null)
-            return tmpFormat.getData().toString().toUpperCase();
+            return tmpFormat.getData().toString();
         return null;
     }
 
@@ -79,16 +79,18 @@ public class Cgg_not_fase_notification implements Serializable {
             @WebParam(name="inCrpro_codigo")String inCrpro_codigo,
             @WebParam(name="inCrfas_codigo")String inCrfas_codigo,
             @WebParam(name="inNtml_codigo")String inNtml_codigo,
-            @WebParam(name="inNtfn_destinatario")String inNtfn_destinatario
+            @WebParam(name="inNtfn_destinatario")String inNtfn_destinatario/*,
+            @WebParam(name="inNtfn_tipo_solicitud")String inNtfn_tipo_solicitud,
+            @WebParam(name="inNtfn_respuesta_fase")String inNtfn_respuesta_fase*/
     ){
         boolean outResult = true;
         HttpServletRequest tmpRequest = (HttpServletRequest) wctx.getMessageContext().get(MessageContext.SERVLET_REQUEST);
         HttpServletResponse tmpResponse = (HttpServletResponse) wctx.getMessageContext().get(MessageContext.SERVLET_RESPONSE);
         com.besixplus.sii.objects.Cgg_not_fase_notificacion tmpObj = new com.besixplus.sii.objects.Cgg_not_fase_notificacion();
-        tmpObj.setCrpro_codigo(inCrpro_codigo);
-        tmpObj.setCrfas_codigo(inCrfas_codigo);
-        tmpObj.setNtml_codigo(inNtml_codigo);
-        tmpObj.setNtfn_destinatario(inNtfn_destinatario);
+        tmpObj.setCRPRO_CODIGO(inCrpro_codigo);
+        tmpObj.setCRFAS_CODIGO(inCrfas_codigo);
+        tmpObj.setNTML_CODIGO(inNtml_codigo);
+        tmpObj.setNTFN_DESTINATARIO(inNtfn_destinatario);
         try{
             Connection con = ManagerConnection.getConnection();
             if(!com.besixplus.sii.db.Cgg_sec_objeto.isGrant(con, Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getClassName(), tmpRequest.getUserPrincipal().getName(), 1)){

@@ -235,13 +235,15 @@ public class Cgg_res_fase implements Serializable{
 						res = "false";
 					for (int i = 0 ; i < objNotificacionJSON.length(); i++){
 						com.besixplus.sii.objects.Cgg_not_fase_notificacion objFaseNotificacion = new com.besixplus.sii.objects.Cgg_not_fase_notificacion();
-						objFaseNotificacion.setCrpro_codigo(obj.getCRPRO_CODIGO());
-						objFaseNotificacion.setCrfas_codigo(obj.getCRFAS_CODIGO());
-						objFaseNotificacion.setNtml_codigo(((org.json.JSONObject)objNotificacionJSON.get(i)).get("NTML_CODIGO").toString());
-						objFaseNotificacion.setNtfn_destinatario(((org.json.JSONObject)objNotificacionJSON.get(i)).get("NTFN_DESTINATARIO").toString());
-						objFaseNotificacion.setNtfn_estado(true);
-						objFaseNotificacion.setNtfn_usuario_insert(tmpRequest.getUserPrincipal().getName());
-						objFaseNotificacion.setNtfn_usuario_update(tmpRequest.getUserPrincipal().getName());
+						objFaseNotificacion.setCRPRO_CODIGO(obj.getCRPRO_CODIGO());
+						objFaseNotificacion.setCRFAS_CODIGO(obj.getCRFAS_CODIGO());
+						objFaseNotificacion.setNTML_CODIGO(((org.json.JSONObject)objNotificacionJSON.get(i)).get("NTML_CODIGO").toString());
+						objFaseNotificacion.setNTFN_DESTINATARIO(((org.json.JSONObject)objNotificacionJSON.get(i)).get("NTFN_DESTINATARIO").toString());
+						objFaseNotificacion.setNTFN_TIPO_SOLICITUD(((org.json.JSONObject)objNotificacionJSON.get(i)).get("NTFN_TIPO_SOLICITUD").toString());
+						objFaseNotificacion.setNTFN_RESPUESTA_FASE(((org.json.JSONObject)objNotificacionJSON.get(i)).get("NTFN_RESPUESTA_FASE").toString());
+						objFaseNotificacion.setNTFN_ESTADO(true);
+						objFaseNotificacion.setNTFN_USUARIO_INSERT(tmpRequest.getUserPrincipal().getName());
+						objFaseNotificacion.setNTFN_USUARIO_UPDATE(tmpRequest.getUserPrincipal().getName());
 						res = String.valueOf(new com.besixplus.sii.db.Cgg_not_fase_notificacion(objFaseNotificacion).insert(con));
 					}
 
@@ -626,13 +628,15 @@ public class Cgg_res_fase implements Serializable{
 						res = "false";
 					for (int i = 0 ; i < objNotificacionJSON.length(); i++){
 						com.besixplus.sii.objects.Cgg_not_fase_notificacion objFaseNotificacion = new com.besixplus.sii.objects.Cgg_not_fase_notificacion();
-						objFaseNotificacion.setCrpro_codigo(obj.getCRPRO_CODIGO());
-						objFaseNotificacion.setCrfas_codigo(obj.getCRFAS_CODIGO());
-						objFaseNotificacion.setNtml_codigo(((org.json.JSONObject)objNotificacionJSON.get(i)).get("NTML_CODIGO").toString());
-						objFaseNotificacion.setNtfn_destinatario(((org.json.JSONObject)objNotificacionJSON.get(i)).get("NTFN_DESTINATARIO").toString());
-						objFaseNotificacion.setNtfn_estado(true);
-						objFaseNotificacion.setNtfn_usuario_insert(tmpRequest.getUserPrincipal().getName());
-						objFaseNotificacion.setNtfn_usuario_update(tmpRequest.getUserPrincipal().getName());
+						objFaseNotificacion.setCRPRO_CODIGO(obj.getCRPRO_CODIGO());
+						objFaseNotificacion.setCRFAS_CODIGO(obj.getCRFAS_CODIGO());
+						objFaseNotificacion.setNTML_CODIGO(((org.json.JSONObject)objNotificacionJSON.get(i)).get("NTML_CODIGO").toString());
+						objFaseNotificacion.setNTFN_DESTINATARIO(((org.json.JSONObject)objNotificacionJSON.get(i)).get("NTFN_DESTINATARIO").toString());
+						objFaseNotificacion.setNTFN_TIPO_SOLICITUD(((org.json.JSONObject)objNotificacionJSON.get(i)).get("NTFN_TIPO_SOLICITUD").toString());
+						objFaseNotificacion.setNTFN_RESPUESTA_FASE(((org.json.JSONObject)objNotificacionJSON.get(i)).get("NTFN_RESPUESTA_FASE").toString());
+						objFaseNotificacion.setNTFN_ESTADO(true);
+						objFaseNotificacion.setNTFN_USUARIO_INSERT(tmpRequest.getUserPrincipal().getName());
+						objFaseNotificacion.setNTFN_USUARIO_UPDATE(tmpRequest.getUserPrincipal().getName());
 						res = String.valueOf(new com.besixplus.sii.db.Cgg_not_fase_notificacion(objFaseNotificacion).insert(con));
 					}
 					if (res.equalsIgnoreCase("true")==true){
