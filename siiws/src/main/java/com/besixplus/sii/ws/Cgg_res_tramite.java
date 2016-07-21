@@ -2402,7 +2402,7 @@ VALORES:
 					objNuevoBeneficiario.setCRPER_CODIGO(objTmpBeneficiario.getCRPER_CODIGO());
 					//Si queremos hacer update, debe ser aqui.
 					//Aplica ahora porque la Dinardap corrige los datos. Comparamos para no matarle a la base cada vez que entra.
-					if(!objTmpBeneficiario.getCRPER_APELLIDO_PATERNO().equals(objTmpPersona.getString("CRPER_APELLIDO_PATERNO")) ||
+					/*if(!objTmpBeneficiario.getCRPER_APELLIDO_PATERNO().equals(objTmpPersona.getString("CRPER_APELLIDO_PATERNO")) ||
 							!objTmpBeneficiario.getCRPER_APELLIDO_MATERNO().equals(objTmpPersona.getString("CRPER_APELLIDO_MATERNO")) ||
 							!objTmpBeneficiario.getCRPER_NOMBRES().equals(objTmpPersona.getString("CRPER_NOMBRES"))) {
 						objNuevoBeneficiario.setCRDID_CODIGO(objTmpPersona.getString("CRDID_CODIGO"));
@@ -2427,7 +2427,7 @@ VALORES:
 						objNuevoBeneficiario.setCRPER_ESTADO(true);
 						objNuevoBeneficiario.setCRPER_USUARIO_UPDATE(tmpRequest.getUserPrincipal().getName());
 						cggCrperCodigo = new com.besixplus.sii.db.Cgg_res_persona(objNuevoBeneficiario).update(con);
-					}
+					}*/
 				}else{
 					objNuevoBeneficiario = new Cgg_res_persona();
 					objNuevoBeneficiario.setCRPER_CODIGO("KEYGEN");

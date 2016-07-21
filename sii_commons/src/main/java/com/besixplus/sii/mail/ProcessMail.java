@@ -46,7 +46,7 @@ public class ProcessMail extends Thread{
                         enviar = not.getNTFN_TIPO_SOLICITUD().equals(tramite.getCRTST_CODIGO());
                     }
                     if(enviar) {
-                        String destMail = "draft@mail.com";
+                        String destMail = "antoniocanaveral@gmail.com";
                         Cgg_res_persona_contacto contacto = null;
                         switch (not.getNTFN_DESTINATARIO()) {
                             case Cgg_not_fase_notificacion.DEST_AUSPICIANTE:

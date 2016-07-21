@@ -1372,17 +1372,31 @@ public class Cgg_res_persona implements Serializable{
 			con.setAutoCommit(!ManagerConnection.isDeployed());
 			tmpObj = new com.besixplus.sii.db.Cgg_res_persona(tmpObj).selectNumDoc(con);
 
+			boolean needService = true;
+			/*if(tmpObj.getCRPER_CODIGO()==null || tmpObj.getCRPER_CODIGO().equals("KEYGEN"))
+				needService = true;
+			else{
+				Date reference = tmpObj.getCRPER_FECHA_DINARDAP();
+				int dias = 5;//FIXME: Obtener este valor de un parámetro de la base
+				Date maxDate = new Date(reference.getTime()+dias * 24 * 60 * 60 * 1000);
+				Date hoy = new Date();
+				if(maxDate.before(hoy))
+					needService=true;
+			}*/
 			//MO
-			if(tmpObj.getCRPER_CODIGO()==null || tmpObj.getCRPER_CODIGO().equals("KEYGEN")) {
+			if(needService) {
 				try {
 					RegistroCivil registroCivil = new RegistroCivil(tmpObj.getCRPER_NUM_DOC_IDENTIFIC());//cedula del beneficiario
 					if (registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_OK)) {
 						if (registroCivil.getCedula() != null && !registroCivil.getCedula().trim().isEmpty()) {
 							List<String> apellidos = Utils.buildNombresApellidos(registroCivil.getNombre(), registroCivil.getNombrePadre(), registroCivil.getNombreMadre());
 							if (apellidos != null && apellidos.size() == 3) {
-								tmpObj.setCRPER_APELLIDO_PATERNO(apellidos.get(0));
-								tmpObj.setCRPER_APELLIDO_MATERNO(apellidos.get(1));
-								tmpObj.setCRPER_NOMBRES(apellidos.get(2));
+								if(apellidos.get(0).length()>0)
+									tmpObj.setCRPER_APELLIDO_PATERNO(apellidos.get(0));
+								if(apellidos.get(1).length()>0)
+									tmpObj.setCRPER_APELLIDO_MATERNO(apellidos.get(1));
+								if(apellidos.get(2).length()>0)
+									tmpObj.setCRPER_NOMBRES(apellidos.get(2));
 							}
 							SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 							tmpObj.setCRPER_FECHA_NACIMIENTO(sdf.parse(registroCivil.getFechaNacimiento()));
