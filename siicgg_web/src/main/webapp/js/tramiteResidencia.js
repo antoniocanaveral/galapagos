@@ -288,7 +288,7 @@ $(function() {
         }
     });
 
-    var codigoActividad='';
+    var codigoActividad=null;
     var cbxActividad = new bsxComboBox({
         id:"cbxActividad",
         renderTo:"divActividad",
@@ -1503,6 +1503,7 @@ $(function() {
             param.add('inInfoVehiculos', null);
             param.add('inCrtra_fecha_ingreso', $('#dtFechaIngreso').val());
             param.add('inCrtra_fecha_salida', $('#dtFechaSalida').val());
+            param.add('inCrtra_actividad_residencia', codigoActividad);
             SOAPClient.invoke(URL_WS + "Cgg_res_tramite", 'registrarTramiteLite', param, true, CallBackCgg_res_tramite);
         }else{
             var beneficiarios = [];
