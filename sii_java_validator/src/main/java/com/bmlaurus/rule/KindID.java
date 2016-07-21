@@ -15,7 +15,7 @@ public class KindID implements RuleClass {
         String error = regla.getString("CRVAL_SUGERENCIA");;
         String kingID =ruleData.getCRDID_CODIGO();
 
-        if (kingID!=null && (kingID.equals("1") || kingID.equals("2")) ){
+        if (kingID!=null && (kingID.equals("1") || kingID.equals("2") || kingID.equals("")) ){
             return "true";
         }
 
