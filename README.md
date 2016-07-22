@@ -34,4 +34,5 @@ Documentos de Instalación de la plataforma
 - Servicio para llamadas a la Dinardap [Dinardap][]
 - Procesos Cron y Mailing con archivos de configuración externos. SII_HOME/mailing & SII_HOME/cron
 - Motor de Mensajería: Se define en cada fase el mensaje y los destinatarios a enviar. Defaults en SII_HOME/mailing/format.properties
+- Mensajes HTML con templeta.
 - Permitir funciones java en las fases. [Fases][]

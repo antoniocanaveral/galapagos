@@ -128,8 +128,8 @@ $(function() {
                 param.add('inNuevoBeneficiarioJSON', objBeneficiarioJSON);
                 var tmpPersona = SOAPClient.invoke(URL_WS+'Cgg_res_persona','insertLite',param, false,null);
                 try{
-                    var result = eval(tmpPersona);
-                    if(result=="false"){
+                    var result = eval('('+tmpPersona+')');
+                    if(result==false){
                         new bsxMessageBox({
                             title:'Alerta',
                             msg: 'Ha ocurrido un error al registrar el beneficiario. No es posible validar la informaci&oacute;n',
@@ -137,7 +137,7 @@ $(function() {
                         });
                         return;
                     }else{
-                        objBeneficiario.CRPER_CODIGO = result.CRPER_CODIGO;
+                        objBeneficiario.CGGCRPER_CODIGO = result.CRPER_CODIGO;
                     }
                 }catch(inErr){
                     console.log(inErr.message);
@@ -169,7 +169,7 @@ $(function() {
             celda.width = 80;
 
             celda = fila.insertCell(1);
-            celda.id = tmpRecordBeneficiario != null ? tmpRecordBeneficiario[0].CRPER_CODIGO : 'KEYGEN';
+            celda.id = objBeneficiario.CGGCRPER_CODIGO != null ? objBeneficiario.CGGCRPER_CODIGO : 'KEYGEN';
             celda.innerHTML = $('#txtNumDocBeneficiario').val();
             celda.width = 80;
 
@@ -978,12 +978,14 @@ $(function() {
             var tbodyDocumentacionSolicitada = document.getElementById("tblDocumentacion").tBodies[0];
 
             for(i=0;i<a.length;i++){
-                var fila = insertarFila();
-                //Tipo de Documento
-                var celda= fila.insertCell(0);
-                celda.id = a[i].code;
-                celda.innerHTML = a[i].fileDescription;
-                celda.width = 600;
+                if(a[i].insertable!=null && a[i].insertable==true){
+                    var fila = insertarFila();
+                    //Tipo de Documento
+                    var celda= fila.insertCell(0);
+                    celda.id = a[i].code;
+                    celda.innerHTML = a[i].fileDescription;
+                    celda.width = 600;
+                }
             }
         }
         limpiarTabla();

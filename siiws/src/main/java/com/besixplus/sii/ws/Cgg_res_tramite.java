@@ -943,8 +943,6 @@ VALORES:
 							flagSeguimientoPadre = new com.besixplus.sii.db.Cgg_res_seguimiento(objSeguimientoPadre).insert(objConn);
 							//log+="-9 Seguimiento padre";
 							if(flagSeguimientoPadre.equalsIgnoreCase("true")==true){
-                                ProcessMail mailer = new ProcessMail(objSeguimientoPadre,obj,objFase, objSeguimientoPadre.getCRSEG_TIPO_RESPUESTA());
-                                mailer.start();
 								if(objJsonFasesSeguimientos.length()==0){
 									//REGISTRO DE LA NOVEDAD NOTIFICACION PARA EL SEGUIMIENTO PADRE EN CASO DE SOLO GUARDADO
 									objNotificacionSeguimiento = new Cgg_res_novedad_notificacion();
@@ -1073,7 +1071,9 @@ VALORES:
 									}
 
 									if(flagSeguimientoHijo.equalsIgnoreCase("true")==true){										
-										objConn.commit();																												
+										objConn.commit();
+										ProcessMail mailer = new ProcessMail(null,obj,null, TIPORESPUESTA.APROBADO.getValue());
+										mailer.start();
 									}else{
 										res[0]= null;
 										res[1]="SE PRESENTO UN PROBLEMA AL MOMENTO DE REGISTRAR LOS SEGUIMIENTOS HIJOS DEL TRAMITE.";
@@ -1824,6 +1824,8 @@ VALORES:
 						
 			if(finalFlag == true){
 				objConn.commit();
+				ProcessMail mailer = new ProcessMail(objSeguimientoPadre,objTramite,objFaseDespacho, TIPORESPUESTA.APROBADO.getValue());
+				mailer.start();
 			}else{
 				objConn.rollback();
 				res[0] = null;
@@ -2582,6 +2584,9 @@ VALORES:
 			{
 				con.commit();
 				con.setAutoCommit(true);
+				//Llamamos a la funcion de Correo.
+				ProcessMail mailer = new ProcessMail(null,obj,null, TIPORESPUESTA.APROBADO.getValue());
+				mailer.start();
 			}
 			con.close();
 		}catch(SQLException inException){

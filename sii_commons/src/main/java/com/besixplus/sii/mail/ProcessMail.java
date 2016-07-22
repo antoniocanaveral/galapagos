@@ -1,6 +1,7 @@
 package com.besixplus.sii.mail;
 
 import com.besixplus.sii.db.ManagerConnection;
+import com.besixplus.sii.misc.CGGEnumerators;
 import com.besixplus.sii.objects.*;
 import com.besixplus.sii.util.Env;
 
@@ -33,9 +34,29 @@ public class ProcessMail extends Thread{
     @Override
     public void run() {
         Connection objConn= ManagerConnection.getConnection();
+        if(tramite==null)
+            return;//TODO:Log
         try {
             objConn.setAutoCommit(false);
-            String crfs_codigo = seguimiento.getCGG_CRFAS_CODIGO();
+            String crfs_codigo = null;
+            if(seguimiento!=null) {
+                crfs_codigo = seguimiento.getCGG_CRFAS_CODIGO();
+            }else{
+                if(fase==null) {
+                    fase = new Cgg_res_fase();
+                    fase.setCRPRO_CODIGO(tramite.getCRPRO_CODIGO());
+                    fase = new com.besixplus.sii.db.Cgg_res_fase(fase).selectFaseInicio(objConn, tramite.getCISLA_CODIGO());
+                    if (fase.getCRFAS_CODIGO() != null &&
+                            fase.getCRFAS_CODIGO().trim().length() >= CGGEnumerators.LONGITUDCLAVEPRIMARIA.MINIMO.getValue() &&
+                            fase.getCRFAS_CODIGO().trim().length() <= CGGEnumerators.LONGITUDCLAVEPRIMARIA.MAXIMO.getValue()) {
+                        crfs_codigo = fase.getCRFAS_CODIGO();
+                    } else
+                        return;//TODO:Log
+                }else{
+                    crfs_codigo = fase.getCRFAS_CODIGO();
+                }
+            }
+
             Cgg_not_fase_notificacion objNot = new Cgg_not_fase_notificacion();
             objNot.setCRFAS_CODIGO(crfs_codigo);
             ArrayList<Cgg_not_fase_notificacion> notifications = new com.besixplus.sii.db.Cgg_not_fase_notificacion(objNot).selectByFase(objConn);
@@ -71,6 +92,10 @@ public class ProcessMail extends Thread{
                             case Cgg_not_fase_notificacion.DEST_FUNCIONARIOFASE:
                                 break;
                             case Cgg_not_fase_notificacion.DEST_GOBIERNO:
+                                Cgg_configuracion tmpConf = new Cgg_configuracion();
+                                tmpConf.setCGCNF_CODIGO("CONF42");
+                                tmpConf = new com.besixplus.sii.db.Cgg_configuracion(tmpConf).select(objConn);
+                                destMail = tmpConf.getCGCNF_VALOR_CADENA();
                                 break;
                             default:
                                 break;
@@ -104,7 +129,10 @@ public class ProcessMail extends Thread{
         objCorreo.setCBZC_ENVIADO(false);
         objCorreo.setCBZC_NUMERO_INTENTOS(BigDecimal.ZERO);
         objCorreo.setCBZC_TIPO_CONTENIDO(mail.getNtml_type());
-        objCorreo.setCBZC_MENSAJE(buildMessage(mail));
+        if(mail.getNtml_type().equals("html"))
+            objCorreo.setCBZC_MENSAJE(buildHtmlMessage(conn, mail));
+        else
+            objCorreo.setCBZC_MENSAJE(buildTextMessage(conn, mail));
         objCorreo.setCBZC_USUARIO_INSERT(USER_MAIL);
         objCorreo.setCBZC_USUARIO_UPDATE(USER_MAIL);
         String result = new com.besixplus.sii.db.Cgg_buzon_correo(objCorreo).insert(conn);
@@ -112,7 +140,7 @@ public class ProcessMail extends Thread{
             System.err.println("El correo no sera enviado. ["+destMail+"] "+mail.getNtml_subject() +" :"+result);
     }
 
-    private String buildMessage(Cgg_not_mail mail){
+    private String buildTextMessage(Connection objConn, Cgg_not_mail mail){
         StringBuilder bodyMail = new StringBuilder();
         Properties props = Env.getExternalProperties("mailing/format.properties");
         if(mail.isNtml_sendheader()){
@@ -142,4 +170,46 @@ public class ProcessMail extends Thread{
 
         return bodyMail.toString();
     }
+
+    private String buildHtmlMessage(Connection objConn, Cgg_not_mail mail){
+        StringBuilder bodyMail = new StringBuilder();
+        Properties props = Env.getExternalProperties("mailing/format.properties");
+        String template = Env.getStringResource("mailing/"+props.getProperty("mail.html.template"));
+        if(template!=null){
+            String replacer = props.getProperty("mail.html.content_string");
+            String content = contentBody(mail.getNtml_body());
+            template = template.replaceAll(replacer,content);
+            bodyMail.append(template);
+        }
+        return bodyMail.toString();
+    }
+
+    ///Leer el mensaje buscando @ (arrobas)
+    // FORMATO:
+    //      @T:[campo]@ -> datos del tramite -> puede llamarse a datos relacionados, usando el mismo formato de alfresco (campo_join;tabla.campo_respuesta)
+    //      @S:[campo]@ -> datos del seguimiento
+    //      @F:[campo]@ -> datos de la fase
+    //AUXILIARES:
+    //      @$AUSPICIANTE@ -> Nombres Completos del Auspiciante
+    //      @$AUSPICIANTE_ID@ -> Cédula del Auspiciante
+    //      @$BENEFICIARIO@ -> Nombres Completos del Beneficiario
+    //      @$BENEFICIARIO_ID@ -> Cédula del Beneficiario
+
+    //Obtener el contenido de las @ y reemplazarlo por la ejecución de la base de datos.
+    //Seguir recorriendo el mensaje hasta el final.
+
+    private String contentBody(String mailBody){
+        StringBuilder buffer = new StringBuilder();
+
+        if(mailBody.contains("@")){
+
+        }else{
+            buffer.append(mailBody);
+        }
+
+
+        return buffer.toString();
+    }
+
+
 }

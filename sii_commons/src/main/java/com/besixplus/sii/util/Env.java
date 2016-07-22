@@ -1,6 +1,7 @@
 package com.besixplus.sii.util;
 
 import com.bmlaurus.exception.EnvironmentVariableNotDefinedException;
+import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -32,6 +33,34 @@ public class Env {
             return new FileInputStream(searchFile);
         }else
             return null;
+    }
+
+    public static String getStringResource(String resourcePath){
+        FileInputStream fis = null;
+        StringWriter writer = null;
+        String theString = null;
+        try{
+            fis = getExternalResource(resourcePath);
+            writer = new StringWriter();
+            IOUtils.copy(fis, writer, "UTF-8");
+            theString = writer.toString();
+        }catch (FileNotFoundException ex){
+            ex.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (EnvironmentVariableNotDefinedException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                if(writer!=null)
+                    writer.close();
+                if(fis!=null)
+                    fis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return theString;
     }
 
     public static Properties getExternalProperties(String resourcePath){

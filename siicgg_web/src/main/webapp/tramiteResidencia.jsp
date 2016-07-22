@@ -182,10 +182,10 @@
                             <label class="obligatorio">(*)</label>
                             <label class="form-sub-label" id="llblFechaSalida" for="dtFechaSalida">Fecha salida</label>
                         </span>
-                        <span class="form-sub-label-container">
+                        <!--span class="form-sub-label-container">
                             <input class="form-textbox" type="text" name="txtTiempoAutorizado" id="txtTiempoAutorizado" disabled/>
                             <label class="form-sub-label" id="llblTiempoAutorizado" for="txtTiempoAutorizado">D&iacute;as</label>
-                        </span>
+                        </span-->
                     </div>
                 </div>
             </div>
