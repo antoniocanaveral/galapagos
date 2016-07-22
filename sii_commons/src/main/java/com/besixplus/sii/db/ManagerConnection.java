@@ -53,7 +53,6 @@ public class ManagerConnection {
 					ManagerConnection.DATA_SOURCE = (DataSource)new InitialContext().lookup("java:/sii");
 					ManagerConnection.IS_DEPLOYED= true;
 				} catch (Exception  e) {
-					e.printStackTrace();
 					ManagerConnection.IS_DEPLOYED= false;
 				}
 			}

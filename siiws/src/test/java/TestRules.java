@@ -2,10 +2,12 @@
  * Created by acanaveral on 15/6/16.
  */
 
-import com.bmlaurus.attachment.CreateCNEAttachment;
-import com.bmlaurus.ws.dinardap.CNE;
+import com.besixplus.sii.db.ManagerConnection;
+import com.besixplus.sii.mail.ProcessMail;
+import com.besixplus.sii.misc.CGGEnumerators;
 import org.junit.Test;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
 public class TestRules {
@@ -22,7 +24,7 @@ public class TestRules {
 
         ///REPORT ATTACHMENT
 
-        CNE cne = new CNE("1710679968");
+        /*CNE cne = new CNE("1710679968");
         if (cne.callServiceAsObject().equals(CNE.CALL_OK)) {
             String crper_codigo = "CRPER766646";
             CreateCNEAttachment attachment = new CreateCNEAttachment(cne, crper_codigo);
@@ -31,7 +33,23 @@ public class TestRules {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }*/
+        Connection conn = ManagerConnection.getConnection();
+        com.besixplus.sii.objects.Cgg_res_tramite obj = new com.besixplus.sii.objects.Cgg_res_tramite();
+        obj.setCRTRA_CODIGO("CRTRA82645");
+        obj = new com.besixplus.sii.db.Cgg_res_tramite(obj).select(conn);
+        ProcessMail mailer = new ProcessMail(null,obj,null, CGGEnumerators.TIPORESPUESTA.APROBADO.getValue());
+
+        String data = mailer.contentBody(conn,"@DATO@");
+
+        System.out.println(data);
+        try {
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
+        //mailer.start();
 
         /*RegistroCivil registroCivil = new RegistroCivil("1710679968");
         if(registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_OK)){

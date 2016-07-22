@@ -4,11 +4,13 @@ import com.besixplus.sii.db.ManagerConnection;
 import com.besixplus.sii.misc.CGGEnumerators;
 import com.besixplus.sii.objects.*;
 import com.besixplus.sii.util.Env;
+import com.bmlaurus.alfresco.db.SiiDataLoader;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -33,11 +35,20 @@ public class ProcessMail extends Thread{
 
     @Override
     public void run() {
-        Connection objConn= ManagerConnection.getConnection();
-        if(tramite==null)
-            return;//TODO:Log
         try {
+            Connection objConn= ManagerConnection.getConnection();
             objConn.setAutoCommit(false);
+
+            if(tramite==null || tramite.getCRTRA_CODIGO()==null){
+                if(seguimiento!=null) {
+                    tramite.setCRTRA_CODIGO(seguimiento.getCRTRA_CODIGO());
+                    tramite = new com.besixplus.sii.db.Cgg_res_tramite(tramite).select(objConn);
+                }else
+                    tramite=null;
+            }
+            if(tramite==null)
+                return;//TODO:Log
+
             String crfs_codigo = null;
             if(seguimiento!=null) {
                 crfs_codigo = seguimiento.getCGG_CRFAS_CODIGO();
@@ -140,9 +151,11 @@ public class ProcessMail extends Thread{
             System.err.println("El correo no sera enviado. ["+destMail+"] "+mail.getNtml_subject() +" :"+result);
     }
 
+    private String noDataStr = "NO DATA";
     private String buildTextMessage(Connection objConn, Cgg_not_mail mail){
         StringBuilder bodyMail = new StringBuilder();
         Properties props = Env.getExternalProperties("mailing/format.properties");
+        noDataStr = props.getProperty("mail.no_data");
         if(mail.isNtml_sendheader()){
             if(mail.getNtml_header_override()!=null && mail.getNtml_header_override().length()>=0)
                 bodyMail.append(mail.getNtml_header_override());
@@ -155,7 +168,7 @@ public class ProcessMail extends Thread{
         }
 
         //FIXME: Implementar la construccion dinamica del cuerpo del correo.
-        bodyMail.append(mail.getNtml_body());
+        bodyMail.append(contentBody(objConn,mail.getNtml_body()));
 
         if(mail.isNtml_sendheader()){
             if(mail.getNtml_header_override()!=null && mail.getNtml_header_override().length()>=0)
@@ -174,12 +187,13 @@ public class ProcessMail extends Thread{
     private String buildHtmlMessage(Connection objConn, Cgg_not_mail mail){
         StringBuilder bodyMail = new StringBuilder();
         Properties props = Env.getExternalProperties("mailing/format.properties");
+        noDataStr = props.getProperty("mail.no_data");
         String template = Env.getStringResource("mailing/"+props.getProperty("mail.html.template"));
         if(template!=null){
             String replacer = props.getProperty("mail.html.content_string");
-            String content = contentBody(mail.getNtml_body());
-            template = template.replaceAll(replacer,content);
-            bodyMail.append(template);
+            String content = contentBody(objConn, mail.getNtml_body());
+            String body = template.replace(replacer,content);
+            bodyMail.append(body);
         }
         return bodyMail.toString();
     }
@@ -198,18 +212,107 @@ public class ProcessMail extends Thread{
     //Obtener el contenido de las @ y reemplazarlo por la ejecución de la base de datos.
     //Seguir recorriendo el mensaje hasta el final.
 
-    private String contentBody(String mailBody){
+    public String contentBody(Connection objConn, String mailBody){
         StringBuilder buffer = new StringBuilder();
 
-        if(mailBody.contains("@")){
+        int index = 0;
+        String analizer = null;
+        while (index < mailBody.length()){
+            analizer = mailBody.substring(index);
+            if(analizer.contains("@")){
+                int addIndex = analizer.indexOf("@");
+                //Agregamos lo que esta antes de las arrobas
+                if(addIndex>0)
+                    buffer.append(analizer.substring(0,addIndex));
 
-        }else{
-            buffer.append(mailBody);
+                //Evaluamos las Arrobas
+                String evaluate = analizer.substring(addIndex);
+                int addLimit = evaluate.replaceFirst("@","?").indexOf("@");
+                String result = dataResolver(objConn, evaluate.substring(1,addLimit));
+                buffer.append(result);
+                index = index + addIndex+addLimit+1;
+            }else{
+                buffer.append(analizer);
+                index = index + analizer.length();
+            }
         }
-
-
         return buffer.toString();
     }
 
+
+    private String dataResolver(Connection conn, String dataPath){
+        String result = noDataStr;
+        String tableName = null;
+        String recordId = null;
+        List<String> path = new ArrayList<>();
+        if(dataPath.contains(":")){//ES UNA LLAMADA CON CAMPOS
+            String splitter[] = dataPath.split(":");
+            switch (splitter[0]){
+                case "T":   tableName = "cgg_res_tramite";
+                            recordId = tramite.getCRTRA_CODIGO();
+                    break;
+                case "S":   tableName = "cgg_res_seguimiento";
+                            recordId = seguimiento.getCRSEG_CODIGO();
+                    break;
+                case "F":   tableName = "cgg_res_fase";
+                            recordId = fase.getCRFAS_CODIGO();
+                    break;
+                default:
+                    return result;
+            }
+            path.add("@"+splitter[1]+"@");
+        }else if(dataPath.contains("$")){//ES UNA LLAMADA DIRECTA
+            tableName = "cgg_res_persona";
+            switch (dataPath){
+                case "$AUSPICIANTE":
+                    recordId = tramite.getCRPER_CODIGO();
+                    path.add("@crper_nombres@");
+                    path.add("@crper_apellido_paterno@");
+                    path.add("@crper_apellido_materno@");
+                    break;
+                case "$AUSPICIANTE_ID":
+                    recordId = tramite.getCRPER_CODIGO();
+                    path.add("@crper_num_doc_identific@");
+                    break;
+                case "$BENEFICIARIO":
+                    recordId = tramite.getCGG_CRPER_CODIGO();
+                    path.add("@crper_nombres@");
+                    path.add("@crper_apellido_paterno@");
+                    path.add("@crper_apellido_materno@");
+                    break;
+                case "$BENEFICIARIO_ID":
+                    recordId = tramite.getCGG_CRPER_CODIGO();
+                    path.add("@crper_num_doc_identific@");
+                    break;
+            }
+        }else{
+            System.err.println("EL Parametro del correo no tiene el formato adecuado: "+dataPath);
+        }
+        if(path.size()>0)
+            result="";
+        for(String data:path) {
+            try {
+                result = result + cleanData(SiiDataLoader.repoResolver(conn, tableName, recordId, data))+" ";
+                if(result.trim().length()==0)
+                    result=noDataStr;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+    private String cleanData(String data){
+        String result="";
+        if(data!=null && data.length()>0){
+            try {
+                data = data.substring(0, data.length() - 1);
+                result = data.replace("null", "");
+            }catch (Exception e){
+                System.out.println("algo paso: " +e.getMessage());
+            }
+        }
+        return result;
+    }
 
 }
