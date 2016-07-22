@@ -1,16 +1,12 @@
 package com.bmlaurus.rule;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import com.besixplus.sii.db.ManagerConnection;
 import com.besixplus.sii.objects.Cgg_regla_validacion_metadatos;
 import com.besixplus.sii.objects.Cgg_res_persona;
-import com.bmlaurus.rule.RuleClass;
-import com.bmlaurus.util.Constantes;
-import com.bmlaurus.ws.dinardap.RegistroCivil;
-
 import org.json.JSONObject;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * Created by acanaveral on 15/6/16.
@@ -35,9 +31,18 @@ public class DinardapMarriedValidator implements RuleClass {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}		
-		
+
+		if(ruleData.getCRPER_FECHA_MATRIMONIO()!=null && ruleData.getCRPER_CONYUGE()!=null){
+			if(ruleData.getCRPER_CONYUGE().equals(auspiciante.getCRPER_NUM_DOC_IDENTIFIC())){
+				return "true";
+			}else{
+				error = "El Cónyuge del Beneficiario no coincide con el Auspiciante";
+			}
+		}else{
+			error = "Fecha de Matrimonio y Cédula del Cónyuge deben estar llenos";
+		}
          	
-        RegistroCivil registroCivil = new RegistroCivil(auspiciante.getCRPER_NUM_DOC_IDENTIFIC());//cedula del auspiciante
+        /*RegistroCivil registroCivil = new RegistroCivil(auspiciante.getCRPER_NUM_DOC_IDENTIFIC());//cedula del auspiciante
         if(registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_ERROR)){
 	          if(registroCivil.getResultMap()!=null)
 	              error = (String) registroCivil.getResultMap().get(RegistroCivil.KEY_MENSAJE);
@@ -52,7 +57,7 @@ public class DinardapMarriedValidator implements RuleClass {
               if(registroCivil.getCedulaConyuge()!=null && registroCivil.getCedulaConyuge().trim().equals(ruleData.getCRPER_NUM_DOC_IDENTIFIC())){//cedula del beneficiario
              	  return "true";
               }
-        }
+        }*/
         
         return "false,"+error;
         

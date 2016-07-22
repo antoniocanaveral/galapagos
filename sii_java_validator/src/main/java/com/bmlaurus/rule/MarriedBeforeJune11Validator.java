@@ -1,17 +1,10 @@
 package com.bmlaurus.rule;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Date;
-
-import com.besixplus.sii.db.ManagerConnection;
 import com.besixplus.sii.objects.Cgg_regla_validacion_metadatos;
-import com.besixplus.sii.objects.Cgg_res_persona;
-import com.bmlaurus.rule.RuleClass;
 import com.bmlaurus.util.DateUtil;
-import com.bmlaurus.ws.dinardap.RegistroCivil;
-
 import org.json.JSONObject;
+
+import java.util.Date;
 
 /**
  * Created by xsilva on 20/6/16.
@@ -22,10 +15,10 @@ public class MarriedBeforeJune11Validator implements RuleClass {
     public String executeRule(Cgg_regla_validacion_metadatos metadata,
 			JSONObject regla, RuleData ruleData) {
     	
-        Cgg_res_persona auspiciante = new Cgg_res_persona();
+        //Cgg_res_persona auspiciante = new Cgg_res_persona();
         String error = regla.getString("CRVAL_SUGERENCIA");
         
-        try {
+        /*try {
 	        Connection con = null;
 	        con = ManagerConnection.getConnection();	
 	    	con.setAutoCommit(false);
@@ -36,9 +29,19 @@ public class MarriedBeforeJune11Validator implements RuleClass {
 			con.close();		    		
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}	
-        
-        RegistroCivil registroCivil = new RegistroCivil(auspiciante.getCRPER_NUM_DOC_IDENTIFIC());//cedula del auspiciante
+		}*/
+
+		if(ruleData.getCRPER_FECHA_MATRIMONIO()!=null){
+			try {
+				Date fechaMatrimonio = DateUtil.formatDate(DateUtil.F_ddMMyyyy, ruleData.getCRPER_FECHA_MATRIMONIO());
+				if (fechaMatrimonio.before(DateUtil.formatDate(DateUtil.F_yyyy_MM_dd, DateUtil.FECHA_11JUNIO))) {
+					return "true";
+				}
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+        /*RegistroCivil registroCivil = new RegistroCivil(auspiciante.getCRPER_NUM_DOC_IDENTIFIC());//cedula del auspiciante
         if(registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_ERROR)){
             if(registroCivil.getResultMap()!=null)
                 error = (String) registroCivil.getResultMap().get(RegistroCivil.KEY_MENSAJE);
@@ -75,7 +78,7 @@ public class MarriedBeforeJune11Validator implements RuleClass {
                		
            		}
             }
-        }
+        }*/
         
         return "false,"+error;
     }
