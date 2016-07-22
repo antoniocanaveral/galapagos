@@ -212,11 +212,6 @@ net.sf.jasperreports.engine.util.JRImageLoader.getInstance(new SimpleJasperRepor
 				<textElement verticalAlignment="Middle"/>
 				<text><![CDATA[FECHA DE MATRIMONIO]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="23" y="78" width="125" height="20" uuid="d986acf5-0957-492e-86b4-545a7c034aa4"/>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("cedulaConyuge")]]></textFieldExpression>
-			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="415" y="279" width="125" height="20" uuid="5ba4826f-fc23-48d5-89cf-c98c7f232e83"/>
 				<textElement verticalAlignment="Middle"/>

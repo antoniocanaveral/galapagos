@@ -2,6 +2,7 @@ package com.bmlaurus.rule;
 
 import com.besixplus.sii.objects.Cgg_regla_validacion_metadatos;
 import com.bmlaurus.util.DateUtil;
+import com.bmlaurus.ws.dinardap.RegistroCivil;
 import org.json.JSONObject;
 
 import java.util.Date;
@@ -40,7 +41,21 @@ public class MarriedBeforeJune11Validator implements RuleClass {
 			}catch (Exception e){
 				e.printStackTrace();
 			}
+		}else{
+			RegistroCivil registroCivil = new RegistroCivil(ruleData.getCRPER_NUM_DOC_IDENTIFIC());
+			if(registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_ERROR)){
+				if(registroCivil.getResultMap()!=null)
+					error = (String) registroCivil.getResultMap().get(RegistroCivil.KEY_MENSAJE);
+				else
+					return "true,"+RegistroCivil.SERVICE_ERROR;
+			}else{
+				Date fechaMatrimonio = DateUtil.formatDate(DateUtil.F_ddMMyyyy, registroCivil.getFechaMatrimonio());
+				if (fechaMatrimonio.before(DateUtil.formatDate(DateUtil.F_yyyy_MM_dd, DateUtil.FECHA_11JUNIO))) {
+					return "true";
+				}
+			}
 		}
+
         /*RegistroCivil registroCivil = new RegistroCivil(auspiciante.getCRPER_NUM_DOC_IDENTIFIC());//cedula del auspiciante
         if(registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_ERROR)){
             if(registroCivil.getResultMap()!=null)

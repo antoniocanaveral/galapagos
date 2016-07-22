@@ -3,6 +3,7 @@ package com.bmlaurus.rule;
 import com.besixplus.sii.db.ManagerConnection;
 import com.besixplus.sii.objects.Cgg_regla_validacion_metadatos;
 import com.besixplus.sii.objects.Cgg_res_persona;
+import com.bmlaurus.ws.dinardap.RegistroCivil;
 import org.json.JSONObject;
 
 import java.sql.Connection;
@@ -39,7 +40,19 @@ public class DinardapMarriedValidator implements RuleClass {
 				error = "El Cónyuge del Beneficiario no coincide con el Auspiciante";
 			}
 		}else{
-			error = "Fecha de Matrimonio y Cédula del Cónyuge deben estar llenos";
+			RegistroCivil registroCivil = new RegistroCivil(ruleData.getCRPER_NUM_DOC_IDENTIFIC());
+			if(registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_ERROR)){
+				if(registroCivil.getResultMap()!=null)
+					error = (String) registroCivil.getResultMap().get(RegistroCivil.KEY_MENSAJE);
+				else
+					return "true,"+RegistroCivil.SERVICE_ERROR;
+			}else{
+				if(registroCivil.getCedulaConyuge().equals(auspiciante.getCRPER_NUM_DOC_IDENTIFIC())){
+					return "true";
+				}else{
+					error = "El Cónyuge del Beneficiario no coincide con el Auspiciante";
+				}
+			}
 		}
          	
         /*RegistroCivil registroCivil = new RegistroCivil(auspiciante.getCRPER_NUM_DOC_IDENTIFIC());//cedula del auspiciante
