@@ -208,6 +208,7 @@ public class ProcessMail extends Thread{
     //      @$AUSPICIANTE_ID@ -> Cédula del Auspiciante
     //      @$BENEFICIARIO@ -> Nombres Completos del Beneficiario
     //      @$BENEFICIARIO_ID@ -> Cédula del Beneficiario
+    //      @$TIPO_RESIDENCIA@ -> Tipo de la Solicitud de Residencia
 
     //Obtener el contenido de las @ y reemplazarlo por la ejecución de la base de datos.
     //Seguir recorriendo el mensaje hasta el final.
@@ -283,6 +284,11 @@ public class ProcessMail extends Thread{
                 case "$BENEFICIARIO_ID":
                     recordId = tramite.getCGG_CRPER_CODIGO();
                     path.add("@crper_num_doc_identific@");
+                    break;
+                case "$TIPO_RESIDENCIA":
+                    tableName = "cgg_res_tramite";
+                    recordId = tramite.getCRTRA_CODIGO();
+                    path.add("@crtst_codigo;cgg_res_tipo_solicitud_tramite.#cgg_crtst_codigo!cgg_res_tipo_solicitud_tramite$crtst_descripcion#@");
                     break;
             }
         }else{

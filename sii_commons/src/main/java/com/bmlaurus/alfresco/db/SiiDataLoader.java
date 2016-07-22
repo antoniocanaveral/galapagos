@@ -191,14 +191,22 @@ public class SiiDataLoader {
                             String[] complex = pathItem.replace("@", "").split(";");
                             if (complex.length > 1) {//resultado de una query
                                 String[] linkData = complex[1].split("\\.");
-                                String strSQLLink = "SELECT " + linkData[1] + " FROM " + linkData[0] + " WHERE " + getPKColumng(conn, linkData[0]) + "='" + rs.getObject(complex[0]) + "'";
-                                PreparedStatement linkStatement = conn.prepareStatement(strSQLLink);
-                                ResultSet linkrs = linkStatement.executeQuery();
-                                if (linkrs != null && linkrs.next()) {
-                                    result.append(linkrs.getObject(1));
+                                String returnField = linkData[1];
+                                String tableReference = linkData[0];
+                                Object comparator = rs.getObject(complex[0]);
+                                if(returnField.startsWith("#")){
+                                    String[] subComplex = returnField.replace("#", "").split("!");
+                                    returnField = subComplex[0];
+                                    Object subBase = evaluateSubQuery(conn,returnField,tableReference,comparator);
+                                    if(subBase!=null){
+                                        String[] subLinkData = subComplex[1].split("\\$");
+                                        returnField = subLinkData[1];
+                                        tableReference = subLinkData[0];
+                                        result.append(evaluateSubQuery(conn,returnField,tableReference,subBase));
+                                    }
+                                }else{
+                                    result.append(evaluateSubQuery(conn,returnField,tableReference,comparator));
                                 }
-                                linkrs.close();
-                                linkStatement.close();
                             } else {//solo campo
                                 result.append(rs.getObject(pathItem.replace("@", "").trim()));
                             }
@@ -215,6 +223,18 @@ public class SiiDataLoader {
         return result.toString();
     }
 
+    private static Object evaluateSubQuery(Connection conn, String returnField, String tableReference, Object comparator) throws SQLException {
+        Object ret = null;
+        String strSQLLink = "SELECT " + returnField + " FROM " + tableReference + " WHERE " + getPKColumng(conn, tableReference) + "='" + comparator + "'";
+        PreparedStatement linkStatement = conn.prepareStatement(strSQLLink);
+        ResultSet linkrs = linkStatement.executeQuery();
+        if (linkrs != null && linkrs.next()) {
+            ret = linkrs.getObject(1);
+        }
+        linkrs.close();
+        linkStatement.close();
+        return ret;
+    }
 
     public static String getPKColumng(Connection conn, String tableName) throws SQLException {
         String pk = null;
