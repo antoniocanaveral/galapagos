@@ -63,12 +63,12 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 					});
 					cbxCrcnt_motivo.setValue(2);
 				}
-				if(inIndex > 1 ){	
+			/*	if(inIndex > 1 ){
 					dtCrcnt_fecha_emision.setValue(tmpCrrsdFechaInicio);
 					dtCrcnt_fecha_caducidad.setValue(tmpCrrsdFechaFin);
 				}else if(inIndex == 1){
 					if(tmpResidencia.CRRSD_MODALIDAD == 0){
-						dtCrcnt_fecha_emision.setValue(tmpCrrsdFechaFin);
+						dtCrcnt_fecha_emision.setValue(tmpCrrsdFechaInicio);
 						dtCrcnt_fecha_caducidad.setValue(tmpCrrsdFechaFin.add(Date.MONTH, tmpDuracion).add(Date.DAY,-1));
 					}else{
 						cbxCrcnt_motivo.setValue(2);
@@ -80,7 +80,10 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 						});
 					}
 					
-				}
+				}*/
+
+				dtCrcnt_fecha_emision.setValue(CURRENT_DATE);
+				dtCrcnt_fecha_caducidad.setValue(CURRENT_DATE.add(Date.MONTH, tmpDuracion).add(Date.DAY,-1));
 			}
 		}
     });
@@ -98,14 +101,17 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
     /**
      * Ext.form.DateField FECHA DE EMISION DEL CARNET
      */
-    var dtCrcnt_fecha_emision = new Ext.form.DateField({
-        id: 'dtCrcnt_fecha_emision',
-        name: 'dtCrcnt_fecha_emision',
-        fieldLabel: 'Aprobaci\u00f3n',
-        allowBlank: false,
+
+	var dtCrcnt_fecha_emision = new Ext.form.DateField({
+		id: 'dtCrcnt_fecha_emision',
+		name: 'dtCrcnt_fecha_emision',
+		fieldLabel: 'Aprobaci\u00f3n',
+		allowBlank: false,
 		readOnly:true,
-		submitValue:false
-    });
+		submitValue:false,
+		disabled: true
+	});
+
     /**
      * Ext.form.DateField FECHA DE CADUCIDAD DE LA ESPECIE
      */
@@ -116,8 +122,8 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
         allowBlank: false,
         format: 'd/m/Y',
         value: new Date(),
-		readOnly:true,
-		submitValue:false
+		submitValue:false,
+		disabled:true
     });
     /**
      * Ext.form.DateField FECHA DE REALIZACION DE DEPOSITO POR EL VALOR DE LA ESPECIE
@@ -528,13 +534,16 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 			}else
 				tmpCrrsdFechaFin = Date.parse(tmpResidencia.CRRSD_FECHA_CADUCIDAD.substr(0,tmpResidencia.CRRSD_FECHA_CADUCIDAD.lastIndexOf('.')));
 				
-			dtCrcnt_fecha_emision.setValue(Date.parse(tmpResidencia.CRRSD_FECHA_INICIO.substr(0,tmpResidencia.CRRSD_FECHA_INICIO.lastIndexOf('.'))));
-			dtCrcnt_fecha_caducidad.setValue(tmpCrrsdFechaFin);
+			/*dtCrcnt_fecha_emision.setValue(Date.parse(tmpResidencia.CRRSD_FECHA_INICIO.substr(0,tmpResidencia.CRRSD_FECHA_INICIO.lastIndexOf('.'))));
+			dtCrcnt_fecha_caducidad.setValue(tmpCrrsdFechaFin);*/
+			dtCrcnt_fecha_emision.setValue(CURRENT_DATE);
+			dtCrcnt_fecha_caducidad.setValue(CURRENT_DATE.add(Date.MONTH, tmpDuracion).add(Date.DAY,-1));
 		}else if (tmpResidencia){
 			dtCrcnt_fecha_emision.setReadOnly(tmpResidencia.CRRSD_MODALIDAD == 1);
 			dtCrcnt_fecha_caducidad.setReadOnly(tmpResidencia.CRRSD_MODALIDAD == 1);
 			tmpCrrsdFechaInicio = Date.parse(tmpResidencia.CRRSD_FECHA_INICIO.substr(0,tmpResidencia.CRRSD_FECHA_INICIO.lastIndexOf('.')));
-			dtCrcnt_fecha_emision.setValue(tmpCrrsdFechaInicio);
+			//dtCrcnt_fecha_emision.setValue(tmpCrrsdFechaInicio);
+			dtCrcnt_fecha_emision.setValue(CURRENT_DATE);
 			cbxCrcnt_motivo.setValue(0);
 			cbxCrcnt_motivo.setDisabled(true);
 			if(tmpResidencia.CRRSD_MODALIDAD == 0){
@@ -543,7 +552,8 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 			}else{
 				tmpCrrsdFechaFin = Date.parse(tmpResidencia.CRRSD_FECHA_CADUCIDAD.substr(0,tmpResidencia.CRRSD_FECHA_CADUCIDAD.lastIndexOf('.')));
 			}
-			dtCrcnt_fecha_caducidad.setValue(tmpCrrsdFechaFin);
+			//dtCrcnt_fecha_caducidad.setValue(tmpCrrsdFechaFin);
+			dtCrcnt_fecha_caducidad.setValue(CURRENT_DATE.add(Date.MONTH, tmpDuracion).add(Date.DAY,-1));
 		}
 	}
 	

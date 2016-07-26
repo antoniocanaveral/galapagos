@@ -784,6 +784,7 @@ $(function() {
 
 
         btnNuevoCgg_gem_contacto_persona.onclick=function(){
+            swEdit=false;
             cbxTipoContacto.dom.disabled = false;
             limpiarControlesContactoPersona();
             showForm(FrmContactoPersona);
@@ -808,6 +809,7 @@ $(function() {
             }
         }
         btnEliminarCgg_gem_contacto_persona.onclick = function(){
+            swEdit=false;
             if(filaTablaContacto){
                 if(confirm("Esta seguro que desea eliminar el contacto?")){
                     var tbodyContacto = document.getElementById("tblContactosPersona").tBodies[0];
@@ -855,6 +857,11 @@ $(function() {
             {
                 $('#txtCrprc_contacto').addClass("form-line-error");
                 return;
+            }
+            if (swEdit==true){
+                var tbodyContacto = document.getElementById("tblContactosPersona").tBodies[0];
+                tbodyContacto.removeChild(filaTablaContacto);
+                filaTablaContacto='';
             }
             var fila = insertarFila();
             //Tipo de Contacto
