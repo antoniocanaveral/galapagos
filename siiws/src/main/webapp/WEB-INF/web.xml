@@ -2514,6 +2514,15 @@
         <error-code>403</error-code>
         <location>/login/bad-login.html</location>
     </error-page>
+    <!--filter>
+        <filter-name>CrossDomainControl</filter-name>
+        <filter-class>com.besixplus.sii.filters.CrossDomainControl</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CrossDomainControl</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping-->
     <security-constraint>
         <display-name>Cgg</display-name>
         <web-resource-collection>
@@ -2542,7 +2551,7 @@
     </security-constraint>
     <login-config>
         <auth-method>BASIC</auth-method>
-        <!--realm-name>CGG - SISTEMA INTEGRAL INFORMATICO</realm-name-->
+        <realm-name>SD_SII_WS</realm-name>
     </login-config>
     <security-role>
         <role-name>administrador</role-name>
