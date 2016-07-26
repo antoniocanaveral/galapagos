@@ -2994,7 +2994,7 @@ function FrmCgg_res_notificacion_finan(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_
             show:function()
             {
                 tmpEstado = true;
-                if(rdgCCrper_genero.getValue().getRawValue() == TypeGenero.FEMENINO)
+                if(rdgCCrper_genero.getValue().inputValue == TypeGenero.FEMENINO)
                 {
                     objImageDefault.AVATAR = 'resources/images/female_avatar.jpg';
                 }

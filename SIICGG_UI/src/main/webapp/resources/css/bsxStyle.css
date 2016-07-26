@@ -555,3 +555,4 @@
 .ecmUpload:hover{background-color: #ffeeee}
 .ecmRefresh{background-image:url(../images/ecm/16x16/ecm-refresh.png); !important;}
 .ecmRefresh:hover{background-color: #ffeeee}
+.ecmFile{white-space: normal; float:left; text-align: left;}

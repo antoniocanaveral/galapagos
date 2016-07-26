@@ -28,6 +28,8 @@ public class RuleData implements Serializable {
 
     private String CRPER_FECHA_MATRIMONIO;//Fecha de Matrimonio
 
+    private String CEDULA_REPRESENTANTE; //Cedula del Representante para Temporales
+
     public String getCRTST_CODIGO() {
         return CRTST_CODIGO;
     }
@@ -106,5 +108,13 @@ public class RuleData implements Serializable {
 
     public void setCRPER_FECHA_MATRIMONIO(String CRPER_FECHA_MATRIMONIO) {
         this.CRPER_FECHA_MATRIMONIO = CRPER_FECHA_MATRIMONIO;
+    }
+
+    public String getCEDULA_REPRESENTANTE() {
+        return CEDULA_REPRESENTANTE;
+    }
+
+    public void setCEDULA_REPRESENTANTE(String CEDULA_REPRESENTANTE) {
+        this.CEDULA_REPRESENTANTE = CEDULA_REPRESENTANTE;
     }
 }

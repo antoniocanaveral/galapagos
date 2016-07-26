@@ -238,11 +238,12 @@ function AlfrescoMng(_tableName, _recordID, _filter, isReadOnly){
                     }
                     var fileName = new Ext.Button({
                         xtype: 'button',
+                        iconCls : 'ecmFile',
                         text:(mandatory?"* ":"")+(isList?files[i].fileDescription:files[i].name),
                         fileObj: files[i],
                         prentPanelId:"tarjet_"+i,
-                        width: 120,
-                        height:30
+                        width: 169,
+                        height:40
                     });
                     fileName.on('click',fileSelected);
                     if(files[i].fileResult || !isList){
@@ -251,7 +252,7 @@ function AlfrescoMng(_tableName, _recordID, _filter, isReadOnly){
                             fileObj: files[i],
                             fileContainer:fileName,
                             fileName:isList?files[i].fileName:files[i].name,
-                            margins: '0 0 5 15',
+                            margins: '23 0 0 -2',
                             listeners:{click:freeUpload}
                         });
                         if(!updateable)
@@ -263,7 +264,7 @@ function AlfrescoMng(_tableName, _recordID, _filter, isReadOnly){
                             fileContainer:fileName,
                             fileRecord:fileRecord,
                             fileName:files[i].fileName,
-                            margins: '0 0 5 15',
+                            margins: '23 0 0 -2',
                             listeners:{click:freeUpload}
                         });
                         if(!insertable)
@@ -277,7 +278,7 @@ function AlfrescoMng(_tableName, _recordID, _filter, isReadOnly){
                         border:true,
                         layout:'hbox',
                         overCls:'selected-file-record',
-                        padding:10,
+                        padding:'0 10 10 0',
                         items: [fileName,btnAction]
                     });
                     //Lo quitamos de la lista cuando no tiene adjunto y no es insertable.

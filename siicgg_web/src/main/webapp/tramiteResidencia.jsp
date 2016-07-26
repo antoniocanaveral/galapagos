@@ -168,6 +168,13 @@
                             src="css/icon/buscar.png"/></button>
                 </div>
             </div>
+            <div id="divRepresentante" style="display: none;">
+                <div class="form-line">
+                    <label class="form-label-left" id="lblRepresentante" for="txtRepresentante">Representante</label>
+                    <input class="form-textbox" type="text" name="txtRepresentante" id="txtRepresentante" size="42"/>
+                    <label class="obligatorio">(*)</label>
+                </div>
+            </div>
             <div id="divDatosTranseunte" style="display: none;">
                 <div class="form-line">
                     <label class="form-label-left" id="lblFechasResidencia" for="dtFechaIngreso">Tiempo Autorizado</label>

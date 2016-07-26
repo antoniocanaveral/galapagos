@@ -42,6 +42,28 @@ $(function() {
         $("#btnGuardarTramiteResidencia").attr("disabled", false);
     }
 
+    $('#txtRepresentante').keypress(function(event) {
+        if (event.which == '10')
+            consultarRepresentante();
+    });
+    $('#txtRepresentante').blur(function() {
+        if($('#txtRepresentante').val().length >0)
+            consultarRepresentante();
+    });
+    function consultarRepresentante(){
+        var documentoValido = validarCedula($('#txtRepresentante').val());
+        if(!documentoValido){
+            new bsxMessageBox({
+                title:'Alerta',
+                msg: 'El documento del representante debe ser una c&eacute;dula valida.',
+                icon: "iconInfo",
+                close:function(){
+                    $('#txtRepresentante').val('');
+                }
+            });
+        }
+    }
+
 
     function showForm(frm){
         document.getElementById("divBgModal").style.display="block";
@@ -1077,8 +1099,10 @@ $(function() {
         if($(this).val()=='CRTST2'){
             document.getElementById("divDatosTranseunte").style.display = "block";
             document.getElementById("divDatosActividad").style.display = "block";
+            document.getElementById("divRepresentante").style.display = "block";
             modeTemporal = true;
         }else if(modeTemporal){
+            document.getElementById("divRepresentante").style.display = "none";
             document.getElementById("divDatosTranseunte").style.display = "none";
             document.getElementById("divDatosActividad").style.display = "none";
             modeTemporal = false;
@@ -1454,11 +1478,19 @@ $(function() {
             if(selectedDate.getMilliseconds()>limit.getMilliseconds()){
                 new bsxMessageBox({
                     title: 'Alerta',
-                    msg: 'Ha excedido la fecha permitida. Para este tipo de residencia el tiempo máximo es '+tipoTramiteSelected.CRTST_NUMERO_DIAS + ' días.',
+                    msg: 'Ha excedido la fecha permitida. Para este tipo de residencia el tiempo m&aacute;ximo es '+tipoTramiteSelected.CRTST_NUMERO_DIAS + ' d&iacute;as.',
                     icon: "iconInfo"
                 });
                 return;
             }
+        }
+        if(modeTemporal && ($('#txtRepresentante')==null || $('#txtRepresentante').val()==null || $('#txtRepresentante').val().length<=0)){
+            new bsxMessageBox({
+                title: 'Alerta',
+                msg: 'Debe especificar la c&eacute;dula del representante.',
+                icon: "iconInfo"
+            });
+            return;
         }
 
         var inContactosJSON = obtenerJSONContactos();
@@ -1704,7 +1736,8 @@ $(function() {
                 'CRPER_FECHA_NACIMIENTO':cggCrperFechaNacimiento,
                 'CRDPT_CODIGO':crdptCodigo,
                 'CRPER_CONYUGE':$("#txtCiConyuge").val(),
-                'CRPER_FECHA_MATRIMONIO':$("#dtFechaMatrimonio").val()
+                'CRPER_FECHA_MATRIMONIO':$("#dtFechaMatrimonio").val(),
+                'CEDULA_REPRESENTANTE':$("#txtRepresentante").val()
             };
             var resultadoRegla = evaluarReglaTramite();
             if(resultadoRegla!==null){

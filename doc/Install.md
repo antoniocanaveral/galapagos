@@ -70,6 +70,10 @@ Ejecutar el comando: `keytool -genkey -alias gobiernogalapagos.gob.ec -keyalg RS
 
 ## Compilación
 
+Desde PROJECT_HOME, nos movemos a la carpeta MavenLocalResources, donde ejecutaremos la actualización de nuestro Maven local.
+
+`./mvnLocalInstall.sh`  (puede ser que necesitemos darle permiso de ejecución al archivo: sudo chmod -x mvnLocalInstall.sh)
+
 En la carpeta PROJECT_HOME ejecutamos el comando:
 
 `mvn clean install -DskipTests=true`

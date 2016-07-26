@@ -408,6 +408,28 @@ function FrmListadoCgg_res_carnet(inDesktop) {
             }
         }
     });
+
+
+    //AC==>
+    var btnAdjuntos = new Ext.ux.form.AlfrescoFM({
+        id:'compAdjunto',   //(opcional)
+        name:'compAdjunto', //(opcional)
+        text: 'Adjuntos',    //(opcional -> Texto del botón)
+        tableName: 'Cgg_res_carnet',
+        validateRecordID:true,
+        recordID: null,
+        filter: null
+    });
+    btnAdjuntos.addListener("updateData",function(t){
+        t.recordID = null;
+        var r = grdCgg_res_carnet.getSelectionModel().getSelected();
+        if(r)
+            t.recordID = r.data.CRCNT_CODIGO;
+        t.filter = null;
+        r=null;
+    });
+    //<== AC
+
     /**
      * Ext.Button Boton para obtener reportes, general o individual.
      */
@@ -637,7 +659,7 @@ function FrmListadoCgg_res_carnet(inDesktop) {
         var winFrmListadoCgg_res_carnet = inDesktop.createWindow({
             id: 'winFrmListadoCgg_res_carnet',
             title: tituloListadoCgg_res_carnet,
-            width: 600,
+            width: 800,
             minWidth: 600,
             frame:true,
             height: 600,
@@ -648,7 +670,7 @@ function FrmListadoCgg_res_carnet(inDesktop) {
             layout: 'border',
             tbar: getPanelTitulo(tituloListadoCgg_res_carnet, descListadoCgg_res_carnet),
             items: [pnlPersona,grdCgg_res_carnet],
-            bbar: [btnNuevoCgg_res_carnet,btnActualizarPersonaCgg_res_carnet,btnActualizarAuspicianteCgg_res_carnet,'-',btnPreviewCgg_res_carnet, btnReporteCgg_res_carnet,btnDatosPersonaCgg_res_carnet,'-',btnNotificacionFinanCgg_res_carnet, '->', btnSalirCgg_res_carnet]
+            bbar: [btnNuevoCgg_res_carnet,btnActualizarPersonaCgg_res_carnet,btnActualizarAuspicianteCgg_res_carnet, btnAdjuntos,'-',btnPreviewCgg_res_carnet, btnReporteCgg_res_carnet,btnDatosPersonaCgg_res_carnet,/*'-',btnNotificacionFinanCgg_res_carnet,*/'->', btnSalirCgg_res_carnet]
         });
         /**
          * Funcion que aplica los privilegios del usuario.

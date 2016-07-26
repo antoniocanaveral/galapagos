@@ -69,3 +69,14 @@ Esto generará un botón con el ícono de "attachment" que hará la llamada a lo
 ![alt tag](./botonAlfresco.png)
 
 *Se pueden agregar además todas las propiedades heredadas del componente Ext.Button.*
+
+El evento click se sobreescribe para poder actualizar los parametros de Alfresco si fuera necesario. De la siguiente manera:
+
+<pre>
+	btnAdjuntos.addListener("updateData",function(t){
+		t.recordID = null;
+		t.recordID = txtCrcnt_codigo.getValue();
+		t.filter = null;
+		r=null;
+	});
+</pre>

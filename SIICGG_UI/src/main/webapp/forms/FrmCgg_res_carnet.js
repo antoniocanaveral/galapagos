@@ -170,7 +170,27 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 		anchor:'98%',
         allowBlank: false
     });
-	var filCompDeposito = new Ext.form.FileUploadField({
+
+	//AC==>
+	var btnAdjuntos = new Ext.ux.form.AlfrescoFM({
+		id:'compAdjunto',   //(opcional)
+		name:'compAdjunto', //(opcional)
+		fieldLabel :'Respaldos',
+		text: 'Adjuntos',    //(opcional -> Texto del botón)
+		tableName: 'Cgg_res_carnet',
+		validateRecordID:true,
+		recordID : null,
+		filter : null
+	});
+	btnAdjuntos.addListener("updateData",function(t){
+		t.recordID = null;
+		t.recordID = txtCrcnt_codigo.getValue();
+		t.filter = null;
+		r=null;
+	});
+	//<== AC
+
+	/*var filCompDeposito = new Ext.form.FileUploadField({
 			id:'filCompDeposito',
 			name:'filCompDeposito',
 			fieldLabel :'Comp.',
@@ -180,7 +200,7 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 				text: '',
 				iconCls: 'iconAdjunto'
 			}
-	});
+	});*/
 	/**
 	* Ext.form.TextField IDENTIFICATIVO UNICO DE REGISTRO DE CUENTA BANCARIA EN LA QUE SE REALIZO EL DEPOSITO
 	*/
@@ -218,7 +238,7 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 		items:[{xtype:'panel',layout:'column',items:[
 			{columnWidth:.9,layout:'form',items:[txtCrcpj_codigo]},
 			{columnWidth:.1,layout:'form',items:[btnCrcpj_codigoCgg_res_carnet]}]},
-			txtCrcnt_numero_comp,numCrcnt_valor,dtCrcnt_fecha_deposito,filCompDeposito]
+			txtCrcnt_numero_comp,numCrcnt_valor,dtCrcnt_fecha_deposito,btnAdjuntos]//filCompDeposito]
 	});
     /**
      * Ext.form.TextArea INFORMACION ADICIONAL
