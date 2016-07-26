@@ -9,7 +9,7 @@
             Date.prototype.addHours= function(h){
                 this.setHours(this.getHours()+h);
                 return this;
-            }
+            };
             
             function ManagerCookies(){
 
@@ -22,7 +22,7 @@
                         expires = "";
                     }
                     document.cookie = name+"="+value+expires+"; path=/";
-                }
+                };
 
                 this.read = function Read(name) {
                     var nameEQ = name + "=";
@@ -33,7 +33,7 @@
                         if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
                     }
                     return null;
-                }
+                };
 
                 this.erase = function Erase(name) {
                     this.create(name,"",-3);
@@ -42,15 +42,15 @@
 
             ManagerCookies.prototype.create = function(inName,inValue,inHours){
                 this.create(inName,inValue,inHours);
-            }
+            };
 
             ManagerCookies.prototype.read = function(inName){
                 this.read(inName);
-            }
+            };
 
             ManagerCookies.prototype.erase = function(inName,inValue,inHours){
                 this.erase(inName);
-            }
+            };
 
             function setFocus(inId){
                  document.getElementById(inId).focus();

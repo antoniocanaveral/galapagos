@@ -1,7 +1,12 @@
 $(function() {
-    var swEdit;
+    //Funciones necesarias para calculos de fecha.
+    Date.prototype.addMilliseconds=function(value){this.setMilliseconds(this.getMilliseconds()+value);return this;};
+    Date.prototype.addDays=function(value){return this.addMilliseconds(value*86400000);};
 
+    var swEdit;
+    var tipoTramiteSelected = null;
     var modeTranseuntes = false;
+    var modeTemporal = false;
     //AC****VARIABLES PARA TRANSEUNTE*******/
     var frmPersona = $("#frmPersona");
     var btnAgregar = $("#btnTranAgregar");
@@ -10,6 +15,34 @@ $(function() {
     var btnAceptarIngreso = $("#btnAceptarIngreso");
     var btnSalirIngreso = $("#btnSalirIngreso");
     var tblPersona = document.getElementById("tblPersona");
+
+    function cancelEditing(){
+        $("#cbxActividad").attr("disabled", true);
+        $("#dtFechaIngreso").attr('disabled', 'disabled');
+        $("#dtFechaIngreso").datepicker( "disable" );
+        $("#dtFechaSalida").attr('disabled', 'disabled');
+        $("#dtFechaSalida").datepicker( "disable" );
+        $("#txtObservacion").attr("disabled", true);
+        $("#btnTranAgregar").attr("disabled", true);
+        $("#btnTranEliminar").attr("disabled", true);
+        $("#btnTranEditar").attr("disabled", true);
+        $("#btnGuardarTramiteResidencia").attr("disabled", true);
+    }
+
+    function continueEditing(){
+        $("#cbxActividad").attr("disabled", false);
+        $("#dtFechaIngreso").removeAttr('disabled');
+        $("#dtFechaIngreso").datepicker( "enable" );
+        $("#dtFechaSalida").removeAttr('disabled');
+        $("#dtFechaSalida").datepicker( "enable" );
+        $("#txtObservacion").attr("disabled", false);
+        $("#btnTranAgregar").attr("disabled", false);
+        $("#btnTranEliminar").attr("disabled", false);
+        $("#btnTranEditar").attr("disabled", false);
+        $("#btnGuardarTramiteResidencia").attr("disabled", false);
+    }
+
+
     function showForm(frm){
         document.getElementById("divBgModal").style.display="block";
         document.getElementById(frm.selector).style.display="block";
@@ -266,6 +299,13 @@ $(function() {
         beforeShow: function(input, inst)
         {
             inst.dpDiv.css({marginLeft: (input.offsetWidth+50) + 'px'});
+        },
+        onSelect: function(dateText) {
+            if(tipoTramiteSelected!= null && tipoTramiteSelected.CRTST_NUMERO_DIAS!=null){
+                var today = $(this).datepicker( "getDate" );
+                var limit = today.addDays(tipoTramiteSelected.CRTST_NUMERO_DIAS-1);
+                $("#dtFechaSalida").datepicker( "option", "maxDate", limit );
+            }
         }
     });
     $('#dtFechaSalida').datepicker({
@@ -1044,9 +1084,11 @@ $(function() {
         if($(this).val()=='CRTST2'){
             document.getElementById("divDatosTranseunte").style.display = "block";
             document.getElementById("divDatosActividad").style.display = "block";
-        }else{
+            modeTemporal = true;
+        }else if(modeTemporal){
             document.getElementById("divDatosTranseunte").style.display = "none";
             document.getElementById("divDatosActividad").style.display = "none";
+            modeTemporal = false;
         }
 
         if($(this).val()==='CRTST7'){
@@ -1402,6 +1444,30 @@ $(function() {
         $('#myForm').hide();
     });
     $('#btnGuardarTramiteResidencia').click(function() {
+
+        if((modeTemporal || modeTranseuntes) && tipoTramiteSelected!= null && tipoTramiteSelected.CRTST_NUMERO_DIAS!=null){
+            if(($("#dtFechaIngreso").val() == null || $("#dtFechaIngreso").val().length<=0) ||
+                ($("#dtFechaSalida").val() == null || $("#dtFechaSalida").val().length<=0)){
+                new bsxMessageBox({
+                    title: 'Alerta',
+                    msg: 'Fechas de Ingreso y Salida son obligatorias',
+                    icon: "iconInfo"
+                });
+                return;
+            }
+            var today = $("#dtFechaIngreso").datepicker( "getDate" );
+            var limit = today.addDays(tipoTramiteSelected.CRTST_NUMERO_DIAS-1);
+            var selectedDate = $("#dtFechaSalida").datepicker( "getDate" );
+            if(selectedDate.getMilliseconds()>limit.getMilliseconds()){
+                new bsxMessageBox({
+                    title: 'Alerta',
+                    msg: 'Ha excedido la fecha permitida. Para este tipo de residencia el tiempo máximo es '+tipoTramiteSelected.CRTST_NUMERO_DIAS + ' días.',
+                    icon: "iconInfo"
+                });
+                return;
+            }
+        }
+
         var inContactosJSON = obtenerJSONContactos();
         if(cbxActividad != null && cbxActividad.getRowSelected()!=null)
             codigoActividad = cbxActividad.getRowSelected().CGCRG_CODIGO;
@@ -1919,9 +1985,10 @@ $(function() {
      * Inicializacion de los datos asignados al objeto de tipo dialogo para seleccion de vehiculos
      * */
     function viewDialogMotivoResidencia() {
+        cancelEditing();
         var cancel = function() {
             $("#dlgMotivoResidencia").dialog("close");
-        }
+        };
         var getResponse = function(){
             if(tmpAplicaTramite =='true')
             {
@@ -1930,12 +1997,27 @@ $(function() {
                 consultarReglaValidacion(tmpMotivoResidenciaId);
                 cargarDocumentos(tmpMotivoResidenciaId);
                 cargarRequisitos(tmpMotivoResidenciaId);
-
-                if($('#txtMotivoResidencia').val() == 'Permanente octava transitoria')
-                {
-                    alert('Para iniciar este tr\u00e1mite debe acercarse a ventanilla.\n Seleccione otra para continuar.');
+                /*AC-> Nos traemos los dias permitidos*/
+                var tipoTramiteParams= new SOAPClientParameters();
+                tipoTramiteParams.add('inCrtst_codigo',tmpMotivoResidenciaId);
+                tipoTramiteParams.add('format',TypeFormat.JSON);
+                var tmpTipoTramite = SOAPClient.invoke(URL_WS+'Cgg_res_tipo_solicitud_tramite','select',tipoTramiteParams, false,null);
+                if(tmpTipoTramite!=null){
+                    var tmpSelected = eval("("+tmpTipoTramite+")");
+                    if(tmpSelected.length>0) {
+                        tipoTramiteSelected = tmpSelected[0];
+                        if(tipoTramiteSelected!= null && tipoTramiteSelected.CRTST_NUMERO_DIAS!=null){
+                            var today = new Date();
+                            var limit = today.addDays(tipoTramiteSelected.CRTST_NUMERO_DIAS-1);
+                            $("#dtFechaSalida").datepicker( "option", "maxDate", limit );
+                            //SOLO AQUI DEBERIAMOS LIBERAR LOS CAMPOS BLOQUEADOS.
+                            continueEditing();
+                        }
+                    }
                 }
 
+                if($('#txtMotivoResidencia').val() == 'Permanente octava transitoria')
+                    alert('Para iniciar este tr\u00e1mite debe acercarse a ventanilla.\n Seleccione otra para continuar.');
             }
             else
             {
@@ -1946,7 +2028,7 @@ $(function() {
                  });*/
                 alert('El tipo de solicitud seleccionado no puede iniciar un tramite.\n Seleccione otra para continuar.');
             }
-        }
+        };
         var dialogOpts = {
             modal: true,
             position: 'top',
@@ -1963,8 +2045,7 @@ $(function() {
 
         };
         $("#dlgMotivoResidencia").dialog(dialogOpts);
-
-    };
+    }
 
     viewDialogMotivoResidencia();
     /*
@@ -2020,5 +2101,5 @@ $(function() {
     });
 
     setHeightForm();
-
+    cancelEditing();
 });
