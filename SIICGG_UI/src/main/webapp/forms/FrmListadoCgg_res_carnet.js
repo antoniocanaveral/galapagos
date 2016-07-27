@@ -235,9 +235,11 @@ function FrmListadoCgg_res_carnet(inDesktop) {
 
         function CallbackAdjuntoPersonal(inResponse){
             tmpAdjuntosPersonal = Ext.util.JSON.decode(inResponse);
+            var tmpImgFoto = document.getElementById("imgFotoPersonaCrn");
             if(tmpAdjuntosPersonal[0].CRPER_FOTO){
-                var tmpImgFoto = document.getElementById("imgFotoPersonaCrn");
                 tmpImgFoto.src = 'data:image/jpg;base64,'+tmpAdjuntosPersonal[0].CRPER_FOTO;
+            }else{
+                tmpImgFoto.src = 'resources/images/male_avatar.jpeg';
             }
 
         }

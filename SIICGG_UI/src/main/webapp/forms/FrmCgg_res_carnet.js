@@ -181,7 +181,7 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 	var btnAdjuntos = new Ext.ux.form.AlfrescoFM({
 		id:'compAdjunto',   //(opcional)
 		name:'compAdjunto', //(opcional)
-		fieldLabel :'Respaldos',
+		fieldLabel :'Resp.',
 		text: 'Adjuntos',    //(opcional -> Texto del botón)
 		tableName: 'Cgg_res_carnet',
 		validateRecordID:true,
@@ -351,7 +351,7 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 				txtCrcnt_observacion]
 	});
 	
-	var btnCapturarFoto = new Ext.Button({
+	/*var btnCapturarFoto = new Ext.Button({
 		id:'btnCapturarFoto',
 		text:'Capturar',
 		iconCls:'iconCamara',
@@ -371,7 +371,36 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
                 });
 			}
 		}
+	});*/
+	function LoadJs(url){
+		var js = document.createElement('script');
+
+		js.type = "text/javascript";
+		js.src = url;
+
+		document.body.appendChild(js);
+
+	}
+	var btnCapturarFoto = new Ext.Button({
+		id:'btnCapturarFoto',
+		text:'Capturar',
+		iconCls:'iconCamara',
+		handler:function(){
+			LoadJs("forms/FrmCaptureImage.js");
+			var captura = new FrmCaptureImage();
+			captura.closeHandler(function(){
+				tmpPrsFoto = captura.getImage();
+				if(tmpPrsFoto!=null && tmpPrsFoto.src!=null){
+					var tmpImgFoto = document.getElementById("imgFotoPrsnCrn");
+					tmpImgFoto.src = tmpPrsFoto.src;
+				}
+				//tmpImgFoto.src = 'data:image/jpg;base64,'+tmpPrsFoto;
+
+			});
+			captura.show();
+		}
 	});
+	
 	
 	var btnCapturarFirma = new Ext.Button({
 		id:'btnCapturarFirma',
@@ -444,7 +473,7 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 		frame:true,
 		title:'Foto',
 		iconCls:'iconCamara',
-		html:'<img id="imgFotoPrsnCrn" height="300" width="300" src="resources/images/male_avatar.jpeg"/>',
+		html:'<img id="imgFotoPrsnCrn" height="320" width="240" src="resources/images/male_avatar.jpeg"/>',
 		bbar:[btnCapturarFoto]
 	});
 	
