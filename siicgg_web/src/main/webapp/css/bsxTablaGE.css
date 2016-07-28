@@ -69,6 +69,30 @@ table#grdPreguntas.tabla > thead > tr > th {
 	height: 30px;
 	cursor: pointer;
 }
+
+#tblResidenciaPersona.tabla {
+    border: 1px solid #e0e0e0 !important;
+}
+#tblResidenciaPersona.tabla thead {
+    border-bottom: 1px solid #e0e0e0;
+}
+#tblResidenciaPersona th {
+    color: #7f969f;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.95em;
+}
+#tblResidenciaPersona.tabla tbody {
+    display: table-row-group !important;
+    vertical-align: top !important;
+    height: auto !important;
+}
+#tblResidenciaPersona.tabla tbody td {
+    height: 30px;
+    cursor: pointer;
+}
+
+
 table#grdOfertas.tabla thead th:nth-child(1),
 table#grdOfertas.tabla tbody td:nth-child(1) {
 	width: 15%;

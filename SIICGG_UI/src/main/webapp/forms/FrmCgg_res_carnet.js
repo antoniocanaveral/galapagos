@@ -65,7 +65,7 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 				}else if(inIndex == 1){
 					if(tmpCarnet){
 						if(tmpCarnet.CRCNT_FECHA_CADUCIDAD!=null){
-							var caducidad = new Date(tmpCarnet.CRCNT_FECHA_CADUCIDAD);
+							var caducidad=new Date.parseDate(tmpCarnet.CRCNT_FECHA_CADUCIDAD,"Y-m-d H:i:s.u");
 							var hoy = new Date();
 							if(caducidad.getTime()>hoy.getTime()){
 								Ext.Msg.show({

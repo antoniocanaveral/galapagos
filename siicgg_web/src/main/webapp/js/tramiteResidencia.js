@@ -15,6 +15,7 @@ $(function() {
     var btnAceptarIngreso = $("#btnAceptarIngreso");
     var btnSalirIngreso = $("#btnSalirIngreso");
     var tblPersona = document.getElementById("tblPersona");
+    var tblResidenciaPersona = document.getElementById("tblResidenciaPersona");
 
     var attachView = document.getElementById("attachView");
     var btnAceptarAdjunto = $("#btnAceptarAdjunto");
@@ -59,8 +60,23 @@ $(function() {
         if($('#txtRepresentante').val().length >0)
             consultarRepresentante();
     });
+
+    //Buscador de Beneficiarios en la tabla.
+    $('#txtBuscarBeneficiario').keypress(function(event) {
+        if (event.which == '10'||event.which == '13'){
+            if($('#txtBuscarBeneficiario').val()!=null && $('#txtBuscarBeneficiario').val().length>0){
+                var rows = document.querySelectorAll("tr[id^=\""+$('#txtBuscarBeneficiario').val()+"\"]");
+                if(rows.length>0){
+                    document.getElementById("vigentesSizing").scrollTop = rows[0].offsetTop;
+                    $("#"+rows[0].id).trigger("click");
+                }
+            }
+        }
+    });
+
     function consultarRepresentante(){
         var documentoValido = validarCedula($('#txtRepresentante').val());
+        objRepresentante=null;
         if(!documentoValido){
             new bsxMessageBox({
                 title:'Alerta',
@@ -68,7 +84,6 @@ $(function() {
                 icon: "iconInfo",
                 close:function(){
                     $('#txtRepresentante').val('');
-                    objRepresentante=null;
                 }
             });
         }else{
@@ -300,6 +315,48 @@ $(function() {
                 msg: 'Por favor verifique que todos los datos del tramite hayan sido ingresados correctamente, antes de incluir beneficiarios.',
                 icon: "iconInfo"
             });
+        }
+    }
+
+    function fillTablaResidenciasVigentes(r){
+        var records = eval('('+r+')');
+        if(records!=null && records.length>0){
+            var tbodyPersona = tblResidenciaPersona.tBodies[0];
+            //Limpiamos la consulta anterior.
+            if(tbodyPersona.rows.length>0){
+                for(var j=0;j<tbodyPersona.rows.length;j++)
+                    tbodyPersona.removeChild(tbodyPersona.rows[j]);
+            }
+            for(var i=0;i<records.length;i++){
+                var benef = records[i];
+                var fila = tbodyPersona.insertRow(tblResidenciaPersona.rows.length - 1);
+                fila.id = benef.CRPER_NUM_DOC_IDENTIFIC;
+                fila.onclick = function () {
+                    $('#txtNumDocBeneficiario').val(this.id);
+                    consultarDatosPersona(null,this.id,"BENEFICIARIO");
+                    for (var i = 1; i < tblResidenciaPersona.rows.length; i++) {
+                        tblResidenciaPersona.rows[i].className = "rowNoSelectTable";
+                    }
+                    this.className = "rowSelectTable";
+
+                };
+                var celda = fila.insertCell(0);
+                celda.id = benef.CRPER_CODIGO;
+                celda.innerHTML = "<strong>"+benef.CRPER_NUM_DOC_IDENTIFIC + "</strong> - " + benef.CRPER_APELLIDO_PATERNO.toString().toUpperCase() + " " + benef.CRPER_NOMBRES.toString().toUpperCase();
+                celda.width = 400;
+
+                celda = fila.insertCell(1);
+                celda.innerHTML = "<strong>"+benef.CRTST_TIPO_DESCRIPCION.toString().toUpperCase() + "</strong> - " + benef.CRTST_MOTIVO_DESCRIPCION.toString().toUpperCase();
+                celda.width = 300;
+
+                celda = fila.insertCell(2);
+                celda.innerHTML = benef.CRRSD_FECHA_INICIO?benef.CRRSD_FECHA_INICIO.toString().toUpperCase():"";
+                celda.width = 200;
+
+                celda = fila.insertCell(3);
+                celda.innerHTML = benef.CRRSD_FECHA_CADUCIDAD?benef.CRRSD_FECHA_CADUCIDAD.toString().toUpperCase():"";
+                celda.width = 200;
+            }
         }
     }
 
@@ -718,63 +775,44 @@ $(function() {
         codigoTipoTramite=cbxTipoTramite.getRowSelected().CRTT_CODIGO;
         cargarDocumentos(codigoTipoTramite);
 
-        if(codigoTipoTramite=='CRTT2'){
-            var cbxIT=document.getElementById("cbxIslaTramite")
-            cbxIT.disabled=true
-            var cbxTR=document.getElementById("cbxTipoResidenciaPadre")
-            cbxTR.disabled=true
-            var cbxBM=document.getElementById("btnBuscarMotivo")
-            cbxBM.disabled=true
-            var cbxDB=document.getElementById("cbxTipoDocumentoBeneficiario")
-            cbxDB.disabled=true
-            var cbxNB=document.getElementById("txtNumDocBeneficiario")
-            cbxNB.disabled=true
-            var cbxNombreB=document.getElementById("txtNombreBeneficiario")
-            cbxNombreB.disabled=true
-            var cbxAPB=document.getElementById("txtApellidoPaternoBeneficiario")
-            cbxAPB.disabled=true
-            var cbxAMB=document.getElementById("txtApellidoMaternoBeneficiario")
-            cbxAMB.disabled=true
-            var cbxFN=document.getElementById("dtFechaNacimiento")
-            cbxFN.disabled=true
-            var cbxN=document.getElementById("cbxNacionalidad")
-            cbxN.disabled=true
-            var cbxPR=document.getElementById("cbxPaisResidencia")
-            cbxPR.disabled=true
-            var cbxGM=document.getElementById("rdMasculino")
-            cbxGM.disabled=true
-            var cbxGF=document.getElementById("rdFemenino")
-            cbxGF.disabled=true
-
+        if(codigoTipoTramite=='CRTT7'){
+            var cbxTR=document.getElementById("cbxTipoResidenciaPadre");
+            $('#cbxTipoResidenciaPadre').val('CRTST65').trigger('change');
+            cbxTR.disabled=true;
+            var cbxDB=document.getElementById("cbxTipoDocumentoBeneficiario");
+            cbxDB.disabled=true;
+            var cbxNB=document.getElementById("txtNumDocBeneficiario");
+            cbxNB.disabled=true;
+            var cbxNombreB=document.getElementById("txtNombreBeneficiario");
+            cbxNombreB.disabled=true;
+            var cbxAPB=document.getElementById("txtApellidoPaternoBeneficiario");
+            cbxAPB.disabled=true;
+            var cbxAMB=document.getElementById("txtApellidoMaternoBeneficiario");
+            cbxAMB.disabled=true;
+            var cbxFN=document.getElementById("dtFechaNacimiento");
+            cbxFN.disabled=true;
         }else{
 
-            var cbxIT=document.getElementById("cbxIslaTramite")
-            cbxIT.disabled=false
-            var cbxTR=document.getElementById("cbxTipoResidenciaPadre")
-            cbxTR.disabled=false
-            var cbxBM=document.getElementById("btnBuscarMotivo")
-            cbxBM.disabled=false
-            var cbxDB=document.getElementById("cbxTipoDocumentoBeneficiario")
+            var cbxIT=document.getElementById("cbxIslaTramite");
+            cbxIT.disabled=false;
+            var cbxTR=document.getElementById("cbxTipoResidenciaPadre");
+            $('#cbxTipoResidenciaPadre').val('');
+            cbxTR.disabled=false;
+            var cbxBM=document.getElementById("btnBuscarMotivo");
+            cbxBM.disabled=false;
+            var cbxDB=document.getElementById("cbxTipoDocumentoBeneficiario");
             cbxDB.disabled=false
-            var cbxNB=document.getElementById("txtNumDocBeneficiario")
-            cbxNB.disabled=false
-            var cbxNombreB=document.getElementById("txtNombreBeneficiario")
-            cbxNombreB.disabled=false
-            var cbxAPB=document.getElementById("txtApellidoPaternoBeneficiario")
-            cbxAPB.disabled=false
-            var cbxAMB=document.getElementById("txtApellidoMaternoBeneficiario")
-            cbxAMB.disabled=false
-            var cbxFN=document.getElementById("dtFechaNacimiento")
-            cbxFN.disabled=false
-            var cbxN=document.getElementById("cbxNacionalidad")
-            cbxN.disabled=false
-            var cbxPR=document.getElementById("cbxPaisResidencia")
-            cbxPR.disabled=false
-            var cbxGM=document.getElementById("rdMasculino")
-            cbxGM.disabled=false
-            var cbxGF=document.getElementById("rdFemenino")
-            cbxGF.disabled=false
-
+            var cbxNB=document.getElementById("txtNumDocBeneficiario");
+            cbxNB.disabled=false;
+            var cbxNombreB=document.getElementById("txtNombreBeneficiario");
+            cbxNombreB.disabled=false;
+            var cbxAPB=document.getElementById("txtApellidoPaternoBeneficiario");
+            cbxAPB.disabled=false;
+            var cbxAMB=document.getElementById("txtApellidoMaternoBeneficiario");
+            cbxAMB.disabled=false;
+            var cbxFN=document.getElementById("dtFechaNacimiento");
+            cbxFN.disabled=false;
+            document.getElementById("divResidenciasVigentes").style.display = "none";
         }
     });
     cbxTipoTramite.reload();
@@ -1127,6 +1165,18 @@ $(function() {
         //AC -> QUEMADO! Cambiar a Modo Transeuntes si fuese el caso (CRTST7)
         var personaForm = document.getElementById("personaForm");
         personaForm.style.display = "block";
+
+        if($(this).val()=='CRTST65'){
+            //Consulta en la base de las residencias vigentes que el auspiciante tenga.
+            document.getElementById("divResidenciasVigentes").style.display = "block";
+            //Llenamos la tabla.
+            var param = new SOAPClientParameters();
+            param.add('inCrper_codigo',tmpRecordAuspiciante[0].CRPER_CODIGO);
+            SOAPClient.invoke(URL_WS+"Cgg_res_residencia","selectResidenciasByAuspiciante",param, true, fillTablaResidenciasVigentes);
+
+        }else{
+            document.getElementById("divResidenciasVigentes").style.display = "none";
+        }
 
         if($(this).val()=='CRTST2'){
             document.getElementById("divDatosTranseunte").style.display = "block";
@@ -1505,6 +1555,8 @@ $(function() {
                     msg: 'Fechas de Ingreso y Salida son obligatorias',
                     icon: "iconInfo"
                 });
+                $('#divCargando1').hide();
+                $('#divCargando1').html('Cargando..');
                 return;
             }
             var today = $("#dtFechaIngreso").datepicker( "getDate" );
@@ -1516,6 +1568,8 @@ $(function() {
                     msg: 'Ha excedido la fecha permitida. Para este tipo de residencia el tiempo m&aacute;ximo es '+tipoTramiteSelected.CRTST_NUMERO_DIAS + ' d&iacute;as.',
                     icon: "iconInfo"
                 });
+                $('#divCargando1').hide();
+                $('#divCargando1').html('Cargando..');
                 return;
             }
         }
@@ -1525,6 +1579,8 @@ $(function() {
                 msg: 'Debe especificar la c&eacute;dula de un representante v&aacute;lido y vigente.',
                 icon: "iconInfo"
             });
+            $('#divCargando1').hide();
+            $('#divCargando1').html('Cargando..');
             return;
         }
 
@@ -1540,6 +1596,8 @@ $(function() {
                     msg: 'Por favor verifique que todos los datos hayan sido ingresados correctamente.',
                     icon: "iconInfo"
                 });
+                $('#divCargando1').hide();
+                $('#divCargando1').html('Cargando..');
                 return;
             }
         }
@@ -1550,6 +1608,8 @@ $(function() {
                 icon: "iconInfo"
             });
             $("#tabs").tabs("select", 1);
+            $('#divCargando1').hide();
+            $('#divCargando1').html('Cargando..');
             return;
         }
         if (!modeTranseuntes) {
@@ -1667,6 +1727,8 @@ $(function() {
                     msg: 'Por favor ingrese al menos un beneficiario.',
                     icon: "iconInfo"
                 });
+                $('#divCargando1').hide();
+                $('#divCargando1').html('Cargando..');
                 return;
             }
             var objBeneficiarioJSON = JSON.stringify(beneficiarios);

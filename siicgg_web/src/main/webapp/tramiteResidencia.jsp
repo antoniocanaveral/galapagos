@@ -81,6 +81,10 @@
         .tabBeneficiario{
             display:block;
         }
+
+        #cbxTipoResidenciaPadre > option[value="CRTST65"] {
+            display: none;
+        }
     </style>
     <!--ALFRESCO-->
     <script>
@@ -255,6 +259,43 @@
             </ul>
         </fieldset>
 
+        <div id="divResidenciasVigentes" style="width: 100%; display:none; ">
+            <div class="divAviso" style="margin: 10px;">Seleccione un registro para continuar</div>
+            <fieldset style="font-size: 11px"><legend><b>Listado de Residencias Vigentes</b></legend>
+                <input class="form-textbox" type="text" name="txtBuscarBeneficiario" id="txtBuscarBeneficiario" size="25" style="margin-top: 5px; margin-bottom: 5px;" placeholder='Buscar por No Documento'/>
+                <div id="vigentesSizing" style="display: inline-block; max-height: 300px; overflow-y: scroll; width: 100%;">
+                    <table style="width: 100%;" border="0" align="center" cellspacing="0" cellpadding="0">
+                        <tbody>
+                        <tr>
+                            <td colspan="2">
+                                <form action="" id="frmResidenciaPersona" method="get">
+                                    <table class="tabla" cellspacing="0" width="100%" border="0" id='tblResidenciaPersona' style="font-size: 11px; border: 1px solid #CCCCCC">
+                                        <thead style="border-bottom: 1px solid #CCCCCC; width: 100%">
+                                        <tr height="30px">
+                                            <th width="400">
+                                                <div align="left">Auspiciado</div>
+                                            </th>
+                                            <th width="300">
+                                                <div align="left">Tipo de Residencia</div>
+                                            </th>
+                                            <th width="200">
+                                                <div align="left">Fecha Ingreso</div>
+                                            </th>
+                                            <th width="200">
+                                                <div align="left">Fecha Caducidad</div>
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody style="width: 100%; height: 120; overflow: auto; display: block"></tbody>
+                                    </table>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </fieldset>
+        </div>
 
         <div id="divMultiTranseuntes" style="width: 100%" class="divTranseuntes">
             <fieldset style="font-size: 11px"><legend><b>Listado de beneficiarios transeuntes</b></legend>
@@ -638,12 +679,15 @@
         </div>
     </div>
 </div>
-<div id="attachView" class="componetHide" style="position: fixed; left: 50px; top: 50px; background-color: #fff; width: 820px; height: 680px">
-    <iframe frameborder="0" scrolling="no" id="frameAttachment" src="" style="width: 820px; height: 630px; overflow-x:hidden !important; overflow:hidden; margin: 0; padding: 0">
-    </iframe>
-    <div id="divBtnControlesAdjuntos" class="cssTabButton">
-        <button id="btnAceptarAdjunto">
-            <img src="css/icon/apply.png" />Aceptar</button>
+<div id="attachView" class="componetHide">
+    <div id="divBgAttachModal" style="position:fixed;left:0px; top:0px; background-color:#fff; opacity:0.80;	filter:alpha(opacity=80); width: 100%; height: 100%"></div>
+    <div id="attachContainter" style="z-index: 99; position: fixed; left: 50px; top: 50px; background-color: #fff; height: 675px; border: 1px solid #999999; border-radius: 2px;">
+        <iframe frameborder="0" scrolling="no" id="frameAttachment" src="" style="width: 820px; height: 630px; overflow-x:hidden !important; overflow:hidden; margin: 0; padding: 0">
+        </iframe>
+        <div id="divBtnControlesAdjuntos" class="cssTabButton" style="margin-top: 10px; margin-left: 10px;">
+            <button id="btnAceptarAdjunto">
+                <img src="css/icon/apply.png" />Aceptar</button>
+        </div>
     </div>
 </div>
 </BODY>

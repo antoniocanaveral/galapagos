@@ -660,7 +660,11 @@ VALORES:
 			if(inNuevoBeneficiario != null && inNuevoBeneficiario.trim().length()>=1){
 
 				//REGISTRO DEL BENEFICIARIO					
-				objTmpPersona = new JSONObject(inNuevoBeneficiario);
+				try {
+					objTmpPersona = new JSONObject(inNuevoBeneficiario);
+				}catch (Exception e){
+					objTmpPersona = (new JSONArray(inNuevoBeneficiario)).getJSONObject(0);
+				}
 				objTmpBeneficiario = new Cgg_res_persona();			
 				objTmpBeneficiario.setCRPER_NUM_DOC_IDENTIFIC(objTmpPersona.getString("CRPER_NUM_DOC_IDENTIFIC").toUpperCase());				
 				objTmpBeneficiario = new com.besixplus.sii.db.Cgg_res_persona(objTmpBeneficiario).selectNumDoc(objConn);
