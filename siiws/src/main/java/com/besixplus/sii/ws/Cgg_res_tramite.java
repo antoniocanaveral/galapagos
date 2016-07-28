@@ -547,9 +547,10 @@ VALORES:
 			String inCrtra_comunicado_radial,
 			String inCrtra_motivo,
 			java.math.BigDecimal inCrtra_folio,
+			String inRep_crper_codigo,
+			String inTramiteRequisitos,
 			String inNuevoBeneficiario,
 			String inCrfas_codigo,
-			String inTramiteRequisitos,	
 			String inCrgts_aplica,
 			ArrayList<com.besixplus.sii.objects.Cgg_res_adjunto> inAdjuntos,
 			Date inCrtra_fecha_salida,
@@ -598,6 +599,8 @@ VALORES:
 		obj.setCRPRO_CODIGO(inCrpro_codigo);
 		obj.setCRTST_CODIGO(inCrtst_codigo);
 		obj.setCVVEH_CODIGO(inCvveh_codigo);
+
+		obj.setREP_CRPER_CODIGO(inRep_crper_codigo);
 
 		obj.setCISLA_CODIGO(inCisla_codigo);	
 		obj.setCVMTR_CODIGO(inCvmtr_codigo);
@@ -2316,7 +2319,8 @@ VALORES:
 			@WebParam(name="inInfoVehiculos")String inInfoVehiculos,
 			@WebParam(name="inCrtra_fecha_ingreso")String inCrtra_fecha_ingreso,
 			@WebParam(name="inCrtra_fecha_salida")String inCrtra_fecha_salida,
-			@WebParam(name="inCrtra_actividad_residencia")String inCrtra_actividad_residencia
+			@WebParam(name="inCrtra_actividad_residencia")String inCrtra_actividad_residencia,
+			@WebParam(name="inRep_crper_codigo")String inRep_crper_codigo
 			){
 		String [] res = new String[2];	
 		String flagRes = "true";
@@ -2333,6 +2337,8 @@ VALORES:
 		obj.setCRTRA_CODIGO("KEYGEN");
 		obj.setCRTRA_FOLIO(BigDecimal.ZERO);
 		obj.setCRPER_CODIGO(inCrper_codigo);
+		//REPRESENTANTE
+		obj.setREP_CRPER_CODIGO(inRep_crper_codigo);
 		//	obj.setCRPJR_CODIGO(inCrpjr_codigo);
 		obj.setCGG_CRPER_CODIGO(inCgg_crper_codigo);
 		//	obj.setCRPRO_CODIGO(inCrpro_codigo);
@@ -2939,6 +2945,7 @@ VALORES:
 			String inCrtra_comunicado_radial,
 			String inCrtra_motivo,
 			java.math.BigDecimal inCrtra_folio,
+			String inRep_crper_codigo,
 			String inNuevoBeneficiario,
 			String inCrfas_codigo,
 			String inTramiteRequisitos,	
@@ -3019,6 +3026,7 @@ VALORES:
 				obj.setCRTRA_COMUNICADO_RADIAL(inCrtra_comunicado_radial);
 				obj.setCRTRA_MOTIVO(inCrtra_motivo);
 				obj.setCRTRA_FOLIO(inCrtra_folio);
+				obj.setREP_CRPER_CODIGO(inRep_crper_codigo);
 
 				try {
 					objJsonFasesSeguimientos = new JSONArray(inCrfas_codigo);

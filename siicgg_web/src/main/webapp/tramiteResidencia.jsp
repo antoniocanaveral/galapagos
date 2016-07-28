@@ -638,6 +638,13 @@
         </div>
     </div>
 </div>
-
+<div id="attachView" class="componetHide" style="position: fixed; left: 50px; top: 50px; background-color: #fff; width: 820px; height: 680px">
+    <iframe frameborder="0" scrolling="no" id="frameAttachment" src="" style="width: 820px; height: 630px; overflow-x:hidden !important; overflow:hidden; margin: 0; padding: 0">
+    </iframe>
+    <div id="divBtnControlesAdjuntos" class="cssTabButton">
+        <button id="btnAceptarAdjunto">
+            <img src="css/icon/apply.png" />Aceptar</button>
+    </div>
+</div>
 </BODY>
 </html>

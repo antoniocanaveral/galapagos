@@ -16,6 +16,14 @@ $(function() {
     var btnSalirIngreso = $("#btnSalirIngreso");
     var tblPersona = document.getElementById("tblPersona");
 
+    var attachView = document.getElementById("attachView");
+    var btnAceptarAdjunto = $("#btnAceptarAdjunto");
+
+    btnAceptarAdjunto.click(function(){
+        btnSalirAll($("attachView"));
+    });
+
+
     function cancelEditing(){
         $("#cbxActividad").attr("disabled", true);
         $("#dtFechaIngreso").attr('disabled', 'disabled');
@@ -42,6 +50,7 @@ $(function() {
         $("#btnGuardarTramiteResidencia").attr("disabled", false);
     }
 
+    var objRepresentante = null;
     $('#txtRepresentante').keypress(function(event) {
         if (event.which == '10')
             consultarRepresentante();
@@ -59,8 +68,14 @@ $(function() {
                 icon: "iconInfo",
                 close:function(){
                     $('#txtRepresentante').val('');
+                    objRepresentante=null;
                 }
             });
+        }else{
+            consultarDatosPersona(objRepresentante,$('#txtRepresentante').val(),'REPRESENTANTE');
+            if(objRepresentante!=null){
+                $('#txtRepresentante').val(objRepresentante.CRPER_APELLIDO_PATERNO + " " + objRepresentante.CRPER_NOMBRES);
+            }
         }
     }
 
@@ -267,10 +282,14 @@ $(function() {
 
 
             //LLAMAMOS A ALFRESCO POR CADA PERSONA
-            var _tableName = encodeURIComponent("Cgg_res_persona");
+
+            showAlfrescoUploader("Cgg_res_persona", objBeneficiario.CGGCRPER_CODIGO, "tipoResidencia=CRTST7");
+
+            /*var _tableName = encodeURIComponent("Cgg_res_persona");
             var _recordId = encodeURIComponent(objBeneficiario.CGGCRPER_CODIGO);
             var _filter = encodeURIComponent("tipoResidencia=CRTST7");
             PopupCenter("alfrescoMng.html?tableName=" + _tableName + "&recordId=" + _recordId + "&filter=" + _filter, 'Adjuntos', '820', '630');
+            */
 
             btnSalirAll($("FrmIngresoPersona"));
             $('#divCargando1').hide();
@@ -282,6 +301,12 @@ $(function() {
                 icon: "iconInfo"
             });
         }
+    }
+
+    function showAlfrescoUploader(_tableName, _recordId, _filter){
+        var frame = document.getElementById("frameAttachment");
+        frame.src = "alfrescoMng.html?tableName=" + encodeURIComponent(_tableName) + "&recordId=" + encodeURIComponent(_recordId) + "&filter=" + encodeURIComponent(_filter);
+        showForm($("attachView"));
     }
 
     function clearFormPersona(){
@@ -1308,7 +1333,10 @@ $(function() {
                     $('#divCargando1').hide();
                     if(tmpRecordPersona[0].CRPER_CODIGO != undefined)
                     {
-                        if(inTipoPersona == 'AUSPICIANTE')
+                        if(inTipoPersona == 'REPRESENTANTE'){
+                            objRepresentante = tmpRecordPersona[0];
+                        }
+                        else if(inTipoPersona == 'AUSPICIANTE')
                         {
                             $("#txtNombreAuspiciante").val(tmpRecordPersona[0].CRPER_NOMBRES);
                             $("#txtApellidoAuspiciante").val(tmpRecordPersona[0].CRPER_APELLIDO_PATERNO);
@@ -1491,10 +1519,10 @@ $(function() {
                 return;
             }
         }
-        if(modeTemporal && ($('#txtRepresentante')==null || $('#txtRepresentante').val()==null || $('#txtRepresentante').val().length<=0)){
+        if(modeTemporal && objRepresentante==null && objRepresentante.CRPER_CODIGO!=null){
             new bsxMessageBox({
                 title: 'Alerta',
-                msg: 'Debe especificar la c&eacute;dula del representante.',
+                msg: 'Debe especificar la c&eacute;dula de un representante v&aacute;lido y vigente.',
                 icon: "iconInfo"
             });
             return;
@@ -1556,11 +1584,12 @@ $(function() {
                     }
                 });
                 if(!modeTranseuntes) {
+                    showAlfrescoUploader("Cgg_res_tramite", tmpRespuestaTramite[0],"crtst_codigo='" + tmpMotivoResidenciaId + "'");
                     //Invocacion Alfresco del FrontEnd
-                    var _tableName = encodeURIComponent("Cgg_res_tramite");
+                    /*var _tableName = encodeURIComponent("Cgg_res_tramite");
                     var _recordId = encodeURIComponent(tmpRespuestaTramite[0]);
                     var _filter = encodeURIComponent("crtst_codigo='" + tmpMotivoResidenciaId + "'");
-                    PopupCenter("alfrescoMng.html?tableName=" + _tableName + "&recordId=" + _recordId + "&filter=" + _filter, 'Adjuntos', '820', '630');
+                    PopupCenter("alfrescoMng.html?tableName=" + _tableName + "&recordId=" + _recordId + "&filter=" + _filter, 'Adjuntos', '820', '630');*/
                     //Fin Alfresco
                 }
             }else {
@@ -1611,6 +1640,7 @@ $(function() {
             param.add('inCrtra_fecha_ingreso', $('#dtFechaIngreso').val());
             param.add('inCrtra_fecha_salida', $('#dtFechaSalida').val());
             param.add('inCrtra_actividad_residencia', codigoActividad);
+            param.add('inRep_crper_codigo',objRepresentante!=null?objRepresentante.CRPER_CODIGO:null);
             SOAPClient.invoke(URL_WS + "Cgg_res_tramite", 'registrarTramiteLite', param, true, CallBackCgg_res_tramite);
         }else{
             var beneficiarios = [];
@@ -1744,7 +1774,7 @@ $(function() {
                 'CRDPT_CODIGO':crdptCodigo,
                 'CRPER_CONYUGE':$("#txtCiConyuge").val(),
                 'CRPER_FECHA_MATRIMONIO':$("#dtFechaMatrimonio").val(),
-                'CEDULA_REPRESENTANTE':$("#txtRepresentante").val()
+                'REP_CRPER_CODIGO': objRepresentante!=null?objRepresentante.CRPER_CODIGO:null
             };
             var resultadoRegla = evaluarReglaTramite();
             if(resultadoRegla!==null){

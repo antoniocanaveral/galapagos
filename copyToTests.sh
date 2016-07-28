@@ -12,3 +12,5 @@ scp $ROOT_PATH/siiws/target/siiws.war advance@$REMOTE_SERVER:/home/advance/galap
 scp $ROOT_PATH/JbossEAP/SII_HOME/rules/*.* advance@$REMOTE_SERVER:/home/advance/galapagos/JbossEAP40/SII_HOME/rules
 
 scp $ROOT_PATH/JbossEAP/SII_HOME/mailing/*.* advance@$REMOTE_SERVER:/home/advance/galapagos/JbossEAP40/SII_HOME/mailing
+
+scp $ROOT_PATH/JbossEAP/SII_HOME/alfresco/*.* advance@$REMOTE_SERVER:/home/advance/galapagos/JbossEAP40/SII_HOME/alfresco

@@ -37,6 +37,8 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
     var flagAuspiciante = false;
     var tmpPersonaAuspiciante = new Persona();
     var tmpPersonaBeneficiario = new Persona();
+    var tmpPersonaRepresentante = new Persona();
+    var rFilaRepresentanteNuevo = Ext.data.Record.create(['CRPER_CODIGO', 'CRDID_CODIGO', 'CRPER_NUM_DOC_IDENTIFIC', 'CRPER_NOMBRES', 'CRPER_APELLIDO_PATERNO', 'CRPER_APELLIDO_MATERNO', 'CRPER_GENERO', 'CRECV_CODIGO', 'CRPER_FECHA_NACIMIENTO']);
     var tmpVehiculo = {
         VEHICULO:'KEYGEN',
         MOTOR:'KEYGEN'
@@ -303,6 +305,53 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
             }
         }
     });
+
+    //==>>AC ==> REPRESENTANTE
+    var rRepresentante = new rFilaRepresentanteNuevo({
+        CRPER_CODIGO: '',
+        CRDID_CODIGO: '',
+        CRPER_NUM_DOC_IDENTIFIC: '',
+        CRPER_NOMBRES: '',
+        CRPER_APELLIDO_PATERNO: '',
+        CRPER_APELLIDO_MATERNO: '',
+        CRPER_GENERO: 0,
+        CRECV_CODIGO: '',
+        CRPER_FECHA_NACIMIENTO: ''
+    });
+    /**
+     * Ext.form.TextField CODIGO IDENTIFICATIVO DE REGISTRO DEL REPRESENTANTE
+     */
+    var txtCgg_rep_crper_codigo = new Ext.form.TextField({
+        id: 'txtCgg_rep_crper_codigo',
+        name: 'txtCgg_rep_crper_codigo',
+        fieldLabel: 'Representante',
+        anchor: '98%',
+        allowBlank: false,
+        readOnly: true
+    });
+    /**
+     * CODIGO IDENTIFICATIVO DE REGISTRO DEL REPRESENTANTE
+     */
+    var btnCgg_rep_crper_codigoCgg_res_tramite = new Ext.Button({
+        id: 'btnCgg_rep_crper_codigoCgg_res_tramite',
+        iconCls: 'iconBuscar',
+        tooltip: 'Buscar representante',
+        listeners: {
+            click: function(){
+                var objBusqueda = new DlgBusqueda(tmpPersonaRepresentante.getStore(), new Persona().getColumnModel());
+                objBusqueda.closeHandler(function(){
+                    var tmpRecord = objBusqueda.getSelectedRow();
+                    if (tmpRecord != null && tmpRecord != undefined) {
+                        txtCgg_rep_crper_codigo.setValue(tmpRecord.get('CRPER_NOMBRES') + " " + tmpRecord.get('CRPER_APELLIDO_PATERNO')+ ' ' + (tmpRecord.data.CRPER_APELLIDO_MATERNO?tmpRecord.data.CRPER_APELLIDO_MATERNO:''));
+                        rRepresentante = tmpRecord;
+                    }
+                });
+                objBusqueda.show();
+            }
+        }
+    });
+
+
     /**
      * Ext.form.TextField IDENTIFICATIVO UNICO DE REGISTRO DE PROCESO
      */
@@ -1335,7 +1384,8 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                         inCrgts_aplica:'[]',
                         inCrtra_fecha_salida:dtCrtra_fecha_salida.isVisible()?dtCrtra_fecha_salida.getValue().toString('dd/MM/yyyy'):null,
                         inOperacion:isEdit==false?'registrar':'actualizar',
-                        inVehiculo:crearJSONVehiculo()
+                        inVehiculo:crearJSONVehiculo(),
+                        inRep_crper_codigo: rRepresentante.get('CRPER_CODIGO')=='KEYGEN' ? Ext.util.JSON.encode(rRepresentante.data):null
                     }
                 });
             }catch (inErr) {
@@ -1476,7 +1526,8 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                         inCrgts_aplica:'[]',
                         inCrtra_fecha_salida:dtCrtra_fecha_salida.isVisible()?dtCrtra_fecha_salida.getValue().toString('dd/MM/yyyy'):null,
                         inOperacion:(isEdit==false)?'registrar':'actualizar',
-                        inVehiculo:crearJSONVehiculo()
+                        inVehiculo:crearJSONVehiculo(),
+                        inRep_crper_codigo: rRepresentante.get('CRPER_CODIGO')=='KEYGEN' ? Ext.util.JSON.encode(rRepresentante.data):null
                     }
                 });
 
@@ -1629,6 +1680,22 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                 }]
             }]
 
+        },{
+            columnWidth: .5,
+            items: [{
+                xtype: 'panel',
+                id:'pnlTrmRepresentante',
+                layout: 'column',
+                items: [{
+                    columnWidth: .93,
+                    layout: 'form',
+                    items: [txtCgg_rep_crper_codigo]
+                }, {
+                    columnWidth: .07,
+                    layout: 'form',
+                    items: [btnCgg_rep_crper_codigoCgg_res_tramite]
+                }]
+            }]
         }, {
             id:'pnlTrmComRadial',
             columnWidth: .5,
@@ -3170,14 +3237,16 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                 crperNumDocIdentific = rBeneficiario.get('CRPER_NUM_DOC_IDENTIFIC');
                 cggCrperFechaNacimiento = rBeneficiario.get('CRPER_FECHA_NACIMIENTO');
                 var crdidCodigo = rBeneficiario.get('CRDID_CODIGO');
+                var rep_cper_codigo = (rRepresentante)?rRepresentante.get('CRPER_CODIGO'):null;
                 //crdptCodigo = tmpDepositoGarantia.data.CRDPT_CODIGO;
                 jsonData = {'CRTST_CODIGO':crtstCodigo,
                             'CRDID_CODIGO':crdidCodigo,
                             'CRPER_CODIGO':crperCodigo,
                             'CGGCRPER_CODIGO':cggcrperCodigo,
                             'CRPER_NUM_DOC_IDENTIFIC':crperNumDocIdentific,
-                            'CRPER_FECHA_NACIMIENTO':cggCrperFechaNacimiento
-                            };
+                            'CRPER_FECHA_NACIMIENTO':cggCrperFechaNacimiento,
+                            'REP_CRPER_CODIGO':rep_cper_codigo
+                };
             }catch(inErr){}
 
             var resultadoRegla = evaluarReglaTramite();

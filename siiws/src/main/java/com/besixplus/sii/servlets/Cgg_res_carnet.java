@@ -1,7 +1,5 @@
 package com.besixplus.sii.servlets;
 
-import com.besixplus.biometric.types.FingerDevice;
-import com.besixplus.enbsp.win.Lector;
 import com.besixplus.sii.db.Cgg_configuracion;
 import com.besixplus.sii.db.ManagerConnection;
 import com.besixplus.sii.mail.Base64;
@@ -30,15 +28,15 @@ import java.util.List;
 
 public class Cgg_res_carnet extends HttpServlet implements Serializable{
 	private static final long serialVersionUID = 1340778175;
-	private FingerDevice myLector = null;
+	//private FingerDevice myLector = null;
 
 	public Cgg_res_carnet() {
 		super();
 		 
-		if(System.getProperty("os.name").contains("Windows"))
+		/*if(System.getProperty("os.name").contains("Windows"))
 			myLector = new Lector();
 		else
-			myLector = new com.besixplus.enbsp.unix.Lector();
+			myLector = new com.besixplus.enbsp.unix.Lector();*/
 	}
 	
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -170,8 +168,8 @@ public class Cgg_res_carnet extends HttpServlet implements Serializable{
 								tmpPersona.setCRPER_FIRMA(Base64.decode(tmpFirma));
 								tmpPersona.setCRPER_HUELLA_DACTILAR(tmpFirText!=null?tmpFirText:null);
 								tmpPersona.setCRPER_HUELLA_CADENA(tmpFirAuditText!=null?tmpFirAuditText:null);
-								tmpPersona.setCRPER_HUELLA_IMAGEN(tmpFirAuditText!=null?myLector.getImage(myLector.getExportAuditData(tmpFirAuditText)):null);
-								tmpPersona.setCRPER_HUELLA_IMAGEN(null);
+								//tmpPersona.setCRPER_HUELLA_IMAGEN(tmpFirAuditText!=null?myLector.getImage(myLector.getExportAuditData(tmpFirAuditText)):null);
+								//tmpPersona.setCRPER_HUELLA_IMAGEN(null);
 								if(tmpFoto != null)
 									tmpRes = new com.besixplus.sii.db.Cgg_res_persona(tmpPersona).updateFoto(tmpCon);
 								if(tmpFirma != null)
@@ -209,7 +207,7 @@ public class Cgg_res_carnet extends HttpServlet implements Serializable{
 
 	@Override
 	public void destroy() {
-		myLector.terminate();
+		//myLector.terminate();
 		super.destroy();
 	}
 }

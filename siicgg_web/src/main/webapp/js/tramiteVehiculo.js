@@ -987,6 +987,8 @@ $(function() {
         param.add('inInfoVehiculos',objVehiculo?objVehiculo:null) ;
         param.add('inCrtra_fecha_ingreso', null);
         param.add('inCrtra_fecha_salida', null);
+        param.add('inCrtra_actividad_residencia', null);
+        param.add('inRep_crper_codigo',null);
         SOAPClient.invoke(URL_WS+"Cgg_res_tramite",'registrarTramiteLite',param, true, CallBackCgg_res_tramite);
     });
     /*

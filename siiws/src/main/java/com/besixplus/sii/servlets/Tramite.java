@@ -1,5 +1,20 @@
 package com.besixplus.sii.servlets;
 
+import com.besixplus.sii.db.Cgg_configuracion;
+import com.besixplus.sii.db.ManagerConnection;
+import com.besixplus.sii.objects.Cgg_res_adjunto;
+import com.besixplus.sii.objects.ServerResponse;
+import com.besixplus.sii.ws.Cgg_res_tramite;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.json.JSONObject;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -12,23 +27,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.json.JSONObject;
-
-import com.besixplus.sii.db.Cgg_configuracion;
-import com.besixplus.sii.db.ManagerConnection;
-import com.besixplus.sii.objects.Cgg_res_adjunto;
-import com.besixplus.sii.objects.ServerResponse;
-import com.besixplus.sii.ws.Cgg_res_tramite;
 
 /**
  * Clase. Clase de servlet para manejo de informacion para registro de tramite.
@@ -125,7 +123,7 @@ public class Tramite extends HttpServlet implements Serializable {
 							objTramite.setCRTRA_OBSERVACION((item.getString().trim().length() == 0)?null:item.getString().trim());
 						if(item.getFieldName().equals("inCrtra_dias_permanencia"))
 							objTramite.setCRTRA_DIAS_PERMANENCIA(Integer.parseInt(item.getString()));
-						if(item.getFieldName().equals("inCrtra_atencion_cliente"))
+						if(item.getFieldName().equals("inCrtra_atencion_cliente") && inOperacion.equalsIgnoreCase("registrar")==true)
 							objTramite.setCRTRA_ATENCION_CLIENTE(Boolean.parseBoolean(item.getString()));
 						if(item.getFieldName().equals("inCrtra_comunicado_radial"))
 							objTramite.setCRTRA_COMUNICADO_RADIAL((item.getString().trim().length() == 0)?null:item.getString().trim());
@@ -134,7 +132,9 @@ public class Tramite extends HttpServlet implements Serializable {
 						if(item.getFieldName().equals("inCrtra_motivo"))
 							objTramite.setCRTRA_MOTIVO((item.getString().trim().length() == 0)?null:item.getString().trim()); 
 						if(item.getFieldName().equals("inCrtra_folio"))
-							objTramite.setCRTRA_FOLIO(new BigDecimal(item.getString()));						
+							objTramite.setCRTRA_FOLIO(new BigDecimal(item.getString()));
+						if(item.getFieldName().equals("inRep_crper_codigo"))
+							objTramite.setREP_CRPER_CODIGO((item.getString().trim().length() == 0)?null:item.getString().trim());
 						if(item.getFieldName().equals("inTramiteRequisitos"))
 							inTramiteRequisitos=item.getString();
 						if(item.getFieldName().equals("inCrfas_codigo"))							
@@ -197,7 +197,8 @@ public class Tramite extends HttpServlet implements Serializable {
 							objTramite.getCRTRA_ATENCION_CLIENTE(), 
 							objTramite.getCRTRA_COMUNICADO_RADIAL(), 
 							objTramite.getCRTRA_MOTIVO(), 
-							objTramite.getCRTRA_FOLIO(), 
+							objTramite.getCRTRA_FOLIO(),
+							objTramite.getREP_CRPER_CODIGO(),
 							inNuevoBeneficiario, 
 							inCrfas_codigo, 
 							inTramiteRequisitos, 						
@@ -232,7 +233,8 @@ public class Tramite extends HttpServlet implements Serializable {
 							objTramite.getCRTRA_ATENCION_CLIENTE(), 
 							objTramite.getCRTRA_COMUNICADO_RADIAL(), 
 							objTramite.getCRTRA_MOTIVO(), 
-							objTramite.getCRTRA_FOLIO(), 
+							objTramite.getCRTRA_FOLIO(),
+							objTramite.getREP_CRPER_CODIGO(),
 							inNuevoBeneficiario, 
 							inCrfas_codigo, 
 							inTramiteRequisitos, 						

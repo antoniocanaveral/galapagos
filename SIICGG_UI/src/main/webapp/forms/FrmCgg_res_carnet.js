@@ -62,6 +62,22 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 						icon: Ext.MessageBox.INFO
 					});
 					cbxCrcnt_motivo.setValue(2);
+				}else if(inIndex == 1){
+					if(tmpCarnet){
+						if(tmpCarnet.CRCNT_FECHA_CADUCIDAD!=null){
+							var caducidad = new Date(tmpCarnet.CRCNT_FECHA_CADUCIDAD);
+							var hoy = new Date();
+							if(caducidad.getTime()>hoy.getTime()){
+								Ext.Msg.show({
+									title:tituloCgg_res_carnet,
+									msg: 'La persona mantiene un carnet vigente. Elija otro motivo.',
+									buttons: Ext.Msg.OK,
+									icon: Ext.MessageBox.INFO
+								});
+								cbxCrcnt_motivo.setValue(2);
+							}
+						}
+					}
 				}
 			/*	if(inIndex > 1 ){
 					dtCrcnt_fecha_emision.setValue(tmpCrrsdFechaInicio);
