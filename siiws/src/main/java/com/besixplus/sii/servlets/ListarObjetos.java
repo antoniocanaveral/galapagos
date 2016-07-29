@@ -38,7 +38,7 @@ public class ListarObjetos extends HttpServlet implements Serializable{
 			if(request.getParameter("request")!= null && request.getParameter("request").equals("fill")){
 				if(classNames==null || classNames.size()==0){
 					Reflections reflections = new Reflections("com.besixplus.sii.ws");
-					Set<Class<? extends Object>> allClasses = reflections.getSubTypesOf(Object.class);
+					Set<Class<? extends Serializable>> allClasses = reflections.getSubTypesOf(Serializable.class);
 					for(Class c:allClasses){
 						classNames.add(c.getCanonicalName());
 					}

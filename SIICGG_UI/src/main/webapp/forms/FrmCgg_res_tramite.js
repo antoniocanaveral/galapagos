@@ -450,6 +450,8 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                         Ext.getCmp('pnlTrmAuspiciante').setVisible(tmpTSTOpciones[i].APLICA);
                     else if(tmpTSTOpciones[i].CRTSO_CODIGO == 'CRTSO1')
                         Ext.getCmp('pnlTrmEmpresa').setVisible(tmpTSTOpciones[i].APLICA);
+                    else if(tmpTSTOpciones[i].CRTSO_CODIGO == 'CRTSO15')
+                        Ext.getCmp('pnlTrmRepresentante').setVisible(tmpTSTOpciones[i].APLICA);
                     else if(tmpTSTOpciones[i].CRTSO_CODIGO == 'CRTSO7' && tmpTSTOpciones[i].APLICA){
                         tmpSWAuspicianteTodos = true;
                         tmpPersonaAuspiciante.getStore().baseParams.inCrtst_codigo = '';

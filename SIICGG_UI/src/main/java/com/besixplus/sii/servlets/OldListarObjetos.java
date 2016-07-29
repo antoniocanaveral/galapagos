@@ -1,19 +1,17 @@
 package com.besixplus.sii.servlets;
 
-import java.io.IOException;
-import java.io.Serializable;
+import com.besixplus.sii.objects.ServerResponse;
+import org.json.JSONObject;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.Serializable;
 
-import org.json.JSONObject;
-
-import com.besixplus.sii.objects.ServerResponse;
-
-public class ListarObjetos extends HttpServlet implements Serializable{
+public class OldListarObjetos extends HttpServlet implements Serializable{
 	private static final long serialVersionUID = 3617013655726283946L;
 
 	private static final String CONTENT_TYPE = "text/html; charset=windows-1252";
