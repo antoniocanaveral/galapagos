@@ -14,7 +14,7 @@ INSERT INTO sii.cgg_regla_validacion(crval_codigo, cgcnf_codigo, crval_nombre, c
   VALUES('CRVAL36', NULL, 'Hijo menor de edad', 'Verifica que el hijo del solicitante sea menor de edad', 'com.bmlaurus.rule.temporal.MinorChild', '=', 'TRUE', 'TRUE', 'El hijo del solicitante no es menor de edad', 1, '2011-03-13 01:00:00.0', '2011-03-13 01:00:00.0', NULL, NULL, true, '2011-03-18 14:11:12.165745', 'patricia', NULL, NULL);
 
 INSERT INTO sii.cgg_regla_validacion(crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update)
-  VALUES('CRVAL37', NULL, 'Tiempo permitido en categoría de turista', 'Verifica que si el solicitante está en la provincia como turista no deberá estar excedido de días.', 'F_TIEMPO_ESTADIA_TURISTA_TRANSEUNTE', '<=', '90', 'TRUE', 'El solicitante ha exedido los días permitidos como turista', 1, NULL, NULL, NULL, NULL, true, NULL, NULL, NULL, NULL);
+  VALUES('CRVAL37', NULL, 'Tiempo permitido en categoría de turista', 'Verifica que si el solicitante está en la provincia como turista no deberá estar excedido de días.', 'F_TIEMPO_ESTADIA_TURISTA', '<=', '90', 'TRUE', 'El solicitante ha exedido los días permitidos como turista', 1, NULL, NULL, NULL, NULL, true, NULL, NULL, NULL, NULL);
 
 INSERT INTO sii.cgg_regla_validacion(crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update)
   VALUES('CRVAL38', NULL, 'Transeunte vigente', 'Verifica que si el solicitante está en la provincia como transeúnte tenga su transeúnte vigente. ', 'F_RESIDENTE_TRANSEUNTE', '=', 'TRUE', 'TRUE', 'La persona debe tener su transeunte vigente', 1, '2011-03-13 01:00:00.0', '2011-03-13 01:00:00.0', NULL, NULL, true, '2011-03-18 14:11:12.165745', 'patricia', NULL, NULL);
@@ -26,7 +26,7 @@ INSERT INTO sii.cgg_regla_validacion(crval_codigo, cgcnf_codigo, crval_nombre, c
   VALUES('CRVAL40', NULL, 'Oferta laboral tenga vacantes', 'Verifica que la oferta laborar tenga vacantes libres para contratar', 'com.bmlaurus.rule.temporal.LaborSupplyFreeVacancies', '=', 'TRUE', 'TRUE', 'La oferta laboral no tiene vacantes para contratar', 1, '2011-03-13 01:00:00.0', '2011-03-13 01:00:00.0', NULL, NULL, true, '2011-03-18 14:11:12.165745', 'patricia', NULL, NULL);
 
 INSERT INTO sii.cgg_regla_validacion(crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update)
-  VALUES('CRVAL41', NULL, 'Tiempo permitido en categoría de transeúnte', 'Verifica que si el solicitante está en la provincia como transeunte no deberá estar excedido de días.', 'F_TIEMPO_ESTADIA_TURISTA_TRANSEUNTE', '<=', '90', 'TRUE', 'El solicitante ha exedido los días permitidos como transeunte', 1, '2011-03-13 01:00:00.0', '2011-03-13 01:00:00.0', NULL, NULL, true, '2011-03-18 14:11:12.165745', NULL, NULL, NULL);
+  VALUES('CRVAL41', NULL, 'Tiempo permitido en categoría de transeúnte', 'Verifica que si el solicitante está en la provincia como transeunte no deberá estar excedido de días.', 'F_TIEMPO_ESTADIA_TRANSEUNTE', '<=', '90', 'TRUE', 'El solicitante ha exedido los días permitidos como transeunte', 1, '2011-03-13 01:00:00.0', '2011-03-13 01:00:00.0', NULL, NULL, true, '2011-03-18 14:11:12.165745', NULL, NULL, NULL);
 
 INSERT INTO sii.cgg_regla_validacion(crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update)
   VALUES('CRVAL42', NULL, 'Tiempo permitido en categoría de transeúnte por motivo(Trabajadora Sexual)', 'Verifica que el solicitante no exceda el tiempo permitido en la categoría de transeúnte, definido para éste motivo específico.', 'F_TRANSEUNTE_MOTIVO_TRABAJADORA', '<=', '90', 'TRUE', 'El solicitante ha excedido el tiempo permitido en la categoría de transeúnte, definido para éste motivo específico.', 1, '2011-03-13 01:00:00.0', '2011-03-13 01:00:00.0', NULL, NULL, true, '2011-03-18 14:11:12.165745', NULL, NULL, NULL);
@@ -80,11 +80,153 @@ $BODY$
 ALTER FUNCTION f_residente_transeunte(character varying, character varying, character varying)
   OWNER TO sii;
 
--- Function: f_tiempo_estadia_turista_transeunte(character varying, character varying, character varying)
 
--- DROP FUNCTION f_tiempo_estadia_turista_transeunte(character varying, character varying, character varying);
 
-CREATE OR REPLACE FUNCTION f_tiempo_estadia_turista_transeunte(in_crper_codigo character varying, in_operador character varying, in_valor_comparacion character varying)
+-- Function: f_calculo_dias_estadia_turista(timestamp with time zone, character varying)
+
+-- DROP FUNCTION f_calculo_dias_estadia_turista(timestamp with time zone, character varying);
+
+CREATE OR REPLACE FUNCTION f_calculo_dias_estadia_turista(in_fecha_ingreso timestamp with time zone, in_crper_codigo character varying)
+  RETURNS integer AS
+$BODY$
+DECLARE
+TMP_RECORD RECORD;
+TMP_VALOR_DIAS_TRANSCURRIDO INT;
+TMP_CRTST_CODIGO VARCHAR;
+TMP_FECHA_ACTUAL_INGRESO DATE;
+TMP_SW BOOLEAN;
+TMP_FECHA_OLD DATE;
+BEGIN
+TMP_FECHA_ACTUAL_INGRESO = IN_FECHA_INGRESO::DATE - 365;
+TMP_VALOR_DIAS_TRANSCURRIDO := 0;
+TMP_SW = FALSE;
+FOR TMP_RECORD IN (SELECT
+PER.CRPER_CODIGO,
+MOV.CRMOV_FECHA_VIAJE,
+MOV.CRMOV_TIPO_OPERACION,
+MOV.CRRSD_CODIGO
+FROM SII.CGG_RES_PERSONA PER 
+INNER JOIN SII.CGG_RES_MOVILIDAD MOV ON MOV.CRPER_CODIGO = PER.CRPER_CODIGO
+WHERE MOV.CRMOV_FECHA_VIAJE::DATE >= TMP_FECHA_ACTUAL_INGRESO AND
+PER.CRPER_CODIGO = IN_CRPER_CODIGO AND MOV.CRMOV_ESTADO
+ORDER BY MOV.CRMOV_FECHA_VIAJE, MOV.CRMOV_TIPO_OPERACION ASC)
+LOOP
+SELECT CRTST_CODIGO INTO TMP_CRTST_CODIGO 
+FROM SII.CGG_RES_RESIDENCIA
+WHERE CRPER_CODIGO = TMP_RECORD.CRPER_CODIGO AND 
+CRRSD_CODIGO = TMP_RECORD.CRRSD_CODIGO AND 
+CRTST_CODIGO IN (WITH RECURSIVE TIPO(CRTST_CODIGO, CGG_CRTST_CODIGO, CRTST_DESCRIPCION)AS(
+SELECT CRTST_CODIGO, CGG_CRTST_CODIGO, CRTST_DESCRIPCION FROM CGG_RES_TIPO_SOLICITUD_TRAMITE WHERE (CRTST_CODIGO = (SELECT CGCNF_VALOR_CADENA
+FROM CGG_CONFIGURACION
+WHERE CGCNF_CODIGO = '06')) 
+UNION SELECT TST.CRTST_CODIGO, TST.CGG_CRTST_CODIGO, TP.CRTST_DESCRIPCION FROM CGG_RES_TIPO_SOLICITUD_TRAMITE TST, TIPO TP
+WHERE TST.CGG_CRTST_CODIGO = TP.CRTST_CODIGO
+) SELECT CRTST_CODIGO  FROM TIPO);
+IF (TMP_CRTST_CODIGO IS NOT NULL) THEN
+TMP_SW = (TMP_RECORD.CRMOV_TIPO_OPERACION = 0);
+IF (TMP_FECHA_OLD IS NOT NULL AND TMP_RECORD.CRMOV_TIPO_OPERACION = 1 ) THEN
+TMP_VALOR_DIAS_TRANSCURRIDO := TMP_VALOR_DIAS_TRANSCURRIDO + (TMP_RECORD.CRMOV_FECHA_VIAJE::DATE - TMP_FECHA_OLD) + 1;
+END IF;
+
+IF (TMP_RECORD.CRMOV_TIPO_OPERACION = 1 AND TMP_FECHA_OLD IS NULL) THEN
+SELECT CRMOV_FECHA_VIAJE INTO TMP_FECHA_OLD FROM SII.CGG_RES_MOVILIDAD 
+WHERE CRPER_CODIGO = TMP_RECORD.CRPER_CODIGO AND CRMOV_FECHA_VIAJE < TMP_RECORD.CRMOV_FECHA_VIAJE
+ORDER BY CRMOV_FECHA_VIAJE DESC LIMIT 1;
+TMP_VALOR_DIAS_TRANSCURRIDO := (TMP_RECORD.CRMOV_FECHA_VIAJE::DATE - TMP_FECHA_OLD) + 1;
+ELSE 
+TMP_FECHA_OLD = TMP_RECORD.CRMOV_FECHA_VIAJE::DATE;
+END IF;
+END IF;
+END LOOP;
+IF (TMP_CRTST_CODIGO IS NOT NULL AND TMP_SW) THEN
+TMP_VALOR_DIAS_TRANSCURRIDO := TMP_VALOR_DIAS_TRANSCURRIDO + (CURRENT_DATE - TMP_FECHA_OLD)+1;
+END IF;
+RETURN TMP_VALOR_DIAS_TRANSCURRIDO;
+END
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION f_calculo_dias_estadia_turista(timestamp with time zone, character varying)
+  OWNER TO postgres;
+
+
+
+
+
+-- Function: f_calculo_dias_estadia_transeunte(timestamp with time zone, character varying)
+
+-- DROP FUNCTION f_calculo_dias_estadia_transeunte(timestamp with time zone, character varying);
+
+CREATE OR REPLACE FUNCTION f_calculo_dias_estadia_transeunte(in_fecha_ingreso timestamp with time zone, in_crper_codigo character varying)
+  RETURNS integer AS
+$BODY$
+DECLARE
+TMP_RECORD RECORD;
+TMP_VALOR_DIAS_TRANSCURRIDO INT;
+TMP_CRTST_CODIGO VARCHAR;
+TMP_FECHA_ACTUAL_INGRESO DATE;
+TMP_SW BOOLEAN;
+TMP_FECHA_OLD DATE;
+BEGIN
+TMP_FECHA_ACTUAL_INGRESO = IN_FECHA_INGRESO::DATE - 365;
+TMP_VALOR_DIAS_TRANSCURRIDO := 0;
+TMP_SW = FALSE;
+FOR TMP_RECORD IN (SELECT
+PER.CRPER_CODIGO,
+MOV.CRMOV_FECHA_VIAJE,
+MOV.CRMOV_TIPO_OPERACION,
+MOV.CRRSD_CODIGO
+FROM SII.CGG_RES_PERSONA PER 
+INNER JOIN SII.CGG_RES_MOVILIDAD MOV ON MOV.CRPER_CODIGO = PER.CRPER_CODIGO
+WHERE MOV.CRMOV_FECHA_VIAJE::DATE >= TMP_FECHA_ACTUAL_INGRESO AND
+PER.CRPER_CODIGO = IN_CRPER_CODIGO AND MOV.CRMOV_ESTADO
+ORDER BY MOV.CRMOV_FECHA_VIAJE, MOV.CRMOV_TIPO_OPERACION ASC)
+LOOP
+SELECT CRTST_CODIGO INTO TMP_CRTST_CODIGO 
+FROM SII.CGG_RES_RESIDENCIA
+WHERE CRPER_CODIGO = TMP_RECORD.CRPER_CODIGO AND 
+CRRSD_CODIGO = TMP_RECORD.CRRSD_CODIGO AND 
+CRTST_CODIGO IN (WITH RECURSIVE TIPO(CRTST_CODIGO, CGG_CRTST_CODIGO, CRTST_DESCRIPCION)AS(
+SELECT CRTST_CODIGO, CGG_CRTST_CODIGO, CRTST_DESCRIPCION FROM CGG_RES_TIPO_SOLICITUD_TRAMITE WHERE (CRTST_CODIGO = (SELECT CGCNF_VALOR_CADENA
+FROM CGG_CONFIGURACION
+WHERE CGCNF_CODIGO = '05')) 
+UNION SELECT TST.CRTST_CODIGO, TST.CGG_CRTST_CODIGO, TP.CRTST_DESCRIPCION FROM CGG_RES_TIPO_SOLICITUD_TRAMITE TST, TIPO TP
+WHERE TST.CGG_CRTST_CODIGO = TP.CRTST_CODIGO
+) SELECT CRTST_CODIGO  FROM TIPO);
+IF (TMP_CRTST_CODIGO IS NOT NULL) THEN
+TMP_SW = (TMP_RECORD.CRMOV_TIPO_OPERACION = 0);
+IF (TMP_FECHA_OLD IS NOT NULL AND TMP_RECORD.CRMOV_TIPO_OPERACION = 1 ) THEN
+TMP_VALOR_DIAS_TRANSCURRIDO := TMP_VALOR_DIAS_TRANSCURRIDO + (TMP_RECORD.CRMOV_FECHA_VIAJE::DATE - TMP_FECHA_OLD) + 1;
+END IF;
+
+IF (TMP_RECORD.CRMOV_TIPO_OPERACION = 1 AND TMP_FECHA_OLD IS NULL) THEN
+SELECT CRMOV_FECHA_VIAJE INTO TMP_FECHA_OLD FROM SII.CGG_RES_MOVILIDAD 
+WHERE CRPER_CODIGO = TMP_RECORD.CRPER_CODIGO AND CRMOV_FECHA_VIAJE < TMP_RECORD.CRMOV_FECHA_VIAJE
+ORDER BY CRMOV_FECHA_VIAJE DESC LIMIT 1;
+TMP_VALOR_DIAS_TRANSCURRIDO := (TMP_RECORD.CRMOV_FECHA_VIAJE::DATE - TMP_FECHA_OLD) + 1;
+ELSE 
+TMP_FECHA_OLD = TMP_RECORD.CRMOV_FECHA_VIAJE::DATE;
+END IF;
+END IF;
+END LOOP;
+IF (TMP_CRTST_CODIGO IS NOT NULL AND TMP_SW) THEN
+TMP_VALOR_DIAS_TRANSCURRIDO := TMP_VALOR_DIAS_TRANSCURRIDO + (CURRENT_DATE - TMP_FECHA_OLD)+1;
+END IF;
+RETURN TMP_VALOR_DIAS_TRANSCURRIDO;
+END
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION f_calculo_dias_estadia_transeunte(timestamp with time zone, character varying)
+  OWNER TO postgres;
+
+
+
+-- Function: f_tiempo_estadia_turista(character varying, character varying, character varying)
+
+-- DROP FUNCTION f_tiempo_estadia_turista(character varying, character varying, character varying);
+
+CREATE OR REPLACE FUNCTION f_tiempo_estadia_turista(in_crper_codigo character varying, in_operador character varying, in_valor_comparacion character varying)
   RETURNS character varying AS
 $BODY$
 DECLARE
@@ -92,10 +234,10 @@ DECLARE
         OUT_RESULTADO VARCHAR;
 BEGIN
 	
-	SELECT SII.F_CALCULO_DIAS_ESTADIA(CURRENT_TIMESTAMP, IN_CRPER_CODIGO) INTO TMP_ESTADIA;
+	SELECT SII.F_CALCULO_DIAS_ESTADIA_TURISTA(CURRENT_TIMESTAMP, IN_CRPER_CODIGO) INTO TMP_ESTADIA;
 	
-	IF (TMP_ESTADIA IS NULL) THEN
-		OUT_RESULTADO := 'false';
+	IF (TMP_ESTADIA = 0) THEN
+            OUT_RESULTADO := 'true';
 	ELSE
 	    SELECT SII.F_CGG_REGLA_VALIDACION(TMP_ESTADIA::VARCHAR,IN_OPERADOR,IN_VALOR_COMPARACION) INTO OUT_RESULTADO;
 	END IF;
@@ -105,8 +247,41 @@ END
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
-ALTER FUNCTION f_tiempo_estadia_turista_transeunte(character varying, character varying, character varying)
+ALTER FUNCTION f_tiempo_estadia_turista(character varying, character varying, character varying)
   OWNER TO sii;
+
+
+
+-- Function: f_tiempo_estadia_transeunte(character varying, character varying, character varying)
+
+-- DROP FUNCTION f_tiempo_estadia_transeunte(character varying, character varying, character varying);
+
+CREATE OR REPLACE FUNCTION f_tiempo_estadia_transeunte(in_crper_codigo character varying, in_operador character varying, in_valor_comparacion character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+	TMP_ESTADIA INT;
+        OUT_RESULTADO VARCHAR;
+BEGIN
+	
+	SELECT SII.F_CALCULO_DIAS_ESTADIA_TRANSEUNTE(CURRENT_TIMESTAMP, IN_CRPER_CODIGO) INTO TMP_ESTADIA;
+	
+	IF (TMP_ESTADIA = 0) THEN
+            OUT_RESULTADO := 'true';
+	ELSE
+	    SELECT SII.F_CGG_REGLA_VALIDACION(TMP_ESTADIA::VARCHAR,IN_OPERADOR,IN_VALOR_COMPARACION) INTO OUT_RESULTADO;
+	END IF;
+	
+	RETURN OUT_RESULTADO;
+END
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION f_tiempo_estadia_transeunte(character varying, character varying, character varying)
+  OWNER TO sii;
+
+
+
 
 -- Function: f_transeunte_motivo_trabajadora(character varying, character varying, character varying)
 
