@@ -89,8 +89,10 @@ public class SiiDataSaver {
 
     public void save(){
         if(metadata.save(inConnection)){
-            for(SiiModelFile file: modelFiles){
-                file.save(inConnection);
+            if(modelFiles!=null) {
+                for (SiiModelFile file : modelFiles) {
+                    file.save(inConnection);
+                }
             }
         }
     }

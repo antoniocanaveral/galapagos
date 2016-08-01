@@ -1791,14 +1791,26 @@ $(function() {
         if(colReglaValidacion!==null){
             for(var i=0;i<colReglaValidacion.length;i++){
                 var objTmp = eval(colReglaValidacion[i].CRTSE_CAMPO_EVALUACION)[0];
+                var searchVal=null;
                 for (var key in objTmp) {
+                    searchVal = objTmp[key];
                     objTmp[key] = eval(objTmp[key]);
                 }
                 if(objTmp[key]==null && _benef!=null){
-                    if(key.toString().search("IN_")==0)
-                        objTmp[key] = _benef[key.toString().slice(3)];
-                    else
-                        objTmp[key] = _benef[key];
+                    if(searchVal!=null && searchVal=='cggcrperCodigo'){
+                        objTmp[key] = _benef.CGGCRPER_CODIGO;
+                    }else if(searchVal!=null && searchVal=='crperNumDocIdentific'){
+                        objTmp[key] = _benef.CRPER_NUM_DOC_IDENTIFIC;
+                    }else if(searchVal!=null && searchVal=='crperCodigo'){
+                        objTmp[key] = _benef.CRPER_CODIGO;
+                    }else if(searchVal!=null && searchVal=='cggCrperFechaNacimiento'){
+                        objTmp[key] = _benef.CRPER_FECHA_NACIMIENTO;
+                    }else{
+                        if(key.toString().search("IN_")==0)
+                            objTmp[key] = _benef[key.toString().slice(3)];
+                        else
+                            objTmp[key] = _benef[key];
+                    }
                 }
                 colReglaValidacion[i].CRTSE_CAMPO_EVALUACION ='['+JSON.stringify(objTmp)+']';
             }

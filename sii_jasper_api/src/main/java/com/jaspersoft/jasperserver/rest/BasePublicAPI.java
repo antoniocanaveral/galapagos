@@ -118,8 +118,10 @@ public abstract class BasePublicAPI {
     public void releaseConnection (HttpResponse res){
         InputStream is = null;
         try {
-            is = res.getEntity().getContent();
-            is.close();
+            if(res!=null && res.getEntity()!=null) {//Hay casos en que la repuesta llega sin entidad
+                is = res.getEntity().getContent();
+                is.close();
+            }
         } catch (IOException e) {
             log.error(e);
         }
