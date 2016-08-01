@@ -52,40 +52,44 @@ public class JasperServerService implements Serializable {
                 UserService userService = new UserService();
                 if (userService.loginToServer()) {
                     userService.verifyUser();
-                    //CREAMOS LAS CARPETAS BASE
-                    folderService = new FolderService();
+                    userService.logOut();
+                }
+                //CREAMOS LAS CARPETAS BASE
+                folderService = new FolderService();
+                if(folderService.loginToServer()) {
                     folderService.getOrCreateFolder(config.getProperty("SII_RESOURCES_PATH"), "sii");
-
-                    folderService = new FolderService();
                     folderService.getOrCreateFolder(config.getProperty("SII_REPORTS_PATH"), "sii");
-
-                    folderService = new FolderService();
                     folderService.getOrCreateFolder(config.getProperty("SII_DATASOURCE_PATH"), "sii");
-
-                    folderService = new FolderService();
                     folderService.getOrCreateFolder(config.getProperty("SII_DATATYPES_PATH"), "sii");
-
-                    folderService = new FolderService();
                     folderService.getOrCreateFolder(config.getProperty("SII_CONTROLS_PATH"), "sii");
-                    //CREAMOS EL DATASOURCE
-                    DataSourceService dataSourceService = new DataSourceService();
+                    folderService.logOut();
+                }
+                //CREAMOS EL DATASOURCE
+                DataSourceService dataSourceService = new DataSourceService();
+                if(dataSourceService.loginToServer()) {
                     dataSourceService.getOrCreateDataSource();
-                    //CREAMOS LOS DATATYPES BASE
-                    String dataTypes = config.getProperty("SII_DATA_TYPES");
-                    if(dataTypes!=null && dataTypes.length()>0) {
-                        Type dataTypesListType = new TypeToken<ArrayList<JasperDataType>>() {
-                        }.getType();
-                        List<JasperDataType> types = gson.fromJson(dataTypes,dataTypesListType);
-                        for(JasperDataType type:types){
-                            DataTypeService service = new DataTypeService();
+                    dataSourceService.logOut();
+                }
+                //CREAMOS LOS DATATYPES BASE
+                String dataTypes = config.getProperty("SII_DATA_TYPES");
+                if(dataTypes!=null && dataTypes.length()>0) {
+                    Type dataTypesListType = new TypeToken<ArrayList<JasperDataType>>() {
+                    }.getType();
+                    List<JasperDataType> types = gson.fromJson(dataTypes,dataTypesListType);
+                    DataTypeService service = new DataTypeService();
+                    if(service.loginToServer()) {
+                        for (JasperDataType type : types) {
                             service.getOrCreateDataType(type);
                         }
+                        service.logOut();
                     }
-                    //AGREGAMOS LOS RECURSOS EXISTENTES EN SII_HOME
-                    File localResourceDir = new File(Env.getHomePath() + config.getProperty("SII_LOCAL_REPOSITORY") + config.getProperty("SII_RESOURCES_PATH"));
-                    if (localResourceDir != null && localResourceDir.exists()) {
+                }
+                //AGREGAMOS LOS RECURSOS EXISTENTES EN SII_HOME
+                File localResourceDir = new File(Env.getHomePath() + config.getProperty("SII_LOCAL_REPOSITORY") + config.getProperty("SII_RESOURCES_PATH"));
+                if (localResourceDir != null && localResourceDir.exists()) {
+                    FileService fileService = new FileService();
+                    if(fileService.loginToServer()){
                         for (File resource : getAllFiles(localResourceDir.getPath())) {
-                            FileService fileService = new FileService();
                             if (resource.isFile()) {
                                 String remotePath = resource.getPath().replace(Env.getHomePath() + config.getProperty("SII_LOCAL_REPOSITORY"), "");
                                 if (!fileService.touchFile(remotePath)) {
@@ -94,9 +98,9 @@ public class JasperServerService implements Serializable {
                                     if (resource.getName().endsWith("jrxml")) {
                                         fileService.uploadFile(remotePath.replace("/" + resource.getName(), ""), resource.getName(), resource);
                                         List<InputControl> controls = null;
-                                        InputControlService controlService = new InputControlService();
+                                        InputControlService controlService = new InputControlService(fileService.getHttpContext());
                                         controls = controlService.getOrCreateInputControls(resource);
-                                        JasperService jasperService = new JasperService(controls);
+                                        JasperService jasperService = new JasperService(controls,fileService.getHttpContext());
                                         int beginIndex = remotePath.replace("/" + resource.getName(), "").lastIndexOf("/");
                                         String parentPath = remotePath.replace("/" + resource.getName(), "").substring(beginIndex + 1);
                                         String basePath = remotePath.replace("/" + resource.getName(), "").substring(0, beginIndex);
@@ -111,63 +115,69 @@ public class JasperServerService implements Serializable {
                                 }
                             }
                         }
+                        fileService.logOut();
                     }
+                }
 
-                    //AGREGAMOS LOS RECURSOS ADICIONALES DEFINIDOS EN EL CONFIG.PROPERTIES
-                    Type resoucesListType = new TypeToken<ArrayList<ExtraResource>>() {
-                    }.getType();
-                    Type excludesListType = new TypeToken<ArrayList<String>>() {
-                    }.getType();
-                    List<ExtraResource> resources = (List<ExtraResource>) gson.fromJson(config.getProperty("SII_EXTRA_RESOURCES_PATHS"), resoucesListType);
-                    List<String> excludes = gson.fromJson(config.getProperty("SII_EXCLUDE_RESOURCES"), excludesListType);
-                    if (resources != null) {
-                        for (ExtraResource resource : resources) {
-                            String lastFolder = resource.getRemoteFolder().substring(resource.getRemoteFolder().lastIndexOf("/") + 1, resource.getRemoteFolder().length());
-                            List<String> filesToUpload = new ArrayList<>();
-                            if (resource.getLocalFile() == null) {
-                                File folder = new File(Env.getHomePath() + config.getProperty("SII_LOCAL_REPOSITORY") + "/" + resource.getLocalFolder());
-                                if (folder.exists()) {
-                                    File[] folders = folder.listFiles();
-                                    if (folders != null) {
-                                        for (File inFile : folders) {
-                                            if (excludes != null) {
-                                                if (inFile.isFile() && !excludes.contains(inFile.getName()))
-                                                    filesToUpload.add(inFile.getName());
-                                            } else {
-                                                if (inFile.isFile())
-                                                    filesToUpload.add(inFile.getName());
-                                            }
+                //AGREGAMOS LOS RECURSOS ADICIONALES DEFINIDOS EN EL CONFIG.PROPERTIES
+                Type resoucesListType = new TypeToken<ArrayList<ExtraResource>>() {
+                }.getType();
+                Type excludesListType = new TypeToken<ArrayList<String>>() {
+                }.getType();
+                List<ExtraResource> resources = (List<ExtraResource>) gson.fromJson(config.getProperty("SII_EXTRA_RESOURCES_PATHS"), resoucesListType);
+                List<String> excludes = gson.fromJson(config.getProperty("SII_EXCLUDE_RESOURCES"), excludesListType);
+                if (resources != null) {
+                    for (ExtraResource resource : resources) {
+                        String lastFolder = resource.getRemoteFolder().substring(resource.getRemoteFolder().lastIndexOf("/") + 1, resource.getRemoteFolder().length());
+                        List<String> filesToUpload = new ArrayList<>();
+                        if (resource.getLocalFile() == null) {
+                            File folder = new File(Env.getHomePath() + config.getProperty("SII_LOCAL_REPOSITORY") + "/" + resource.getLocalFolder());
+                            if (folder.exists()) {
+                                File[] folders = folder.listFiles();
+                                if (folders != null) {
+                                    for (File inFile : folders) {
+                                        if (excludes != null) {
+                                            if (inFile.isFile() && !excludes.contains(inFile.getName()))
+                                                filesToUpload.add(inFile.getName());
+                                        } else {
+                                            if (inFile.isFile())
+                                                filesToUpload.add(inFile.getName());
                                         }
                                     }
                                 }
-                            } else
-                                filesToUpload.add(resource.getLocalFile());
+                            }
+                        } else
+                            filesToUpload.add(resource.getLocalFile());
 
-                            FileService fileService = new FileService();
-                            for (String localFile : filesToUpload) {
-                                if (!fileService.touchFile(resource.getRemoteFolder() + "/" + localFile)) {
-                                    folderService = new FolderService();
-                                    folderService.getOrCreateFolder(resource.getRemoteFolder(), lastFolder);
+                        FileService fileService = new FileService();
+                        if (fileService.loginToServer()){
+                            folderService = new FolderService();
+                            if(folderService.loginToServer()) {
+                                for (String localFile : filesToUpload) {
+                                    if (!fileService.touchFile(resource.getRemoteFolder() + "/" + localFile)) {
+                                        folderService.getOrCreateFolder(resource.getRemoteFolder(), lastFolder);
 
-                                    File f = new File(Env.getHomePath() + config.getProperty("SII_LOCAL_REPOSITORY") + "/" + resource.getLocalFolder() + "/" + localFile);
-                                    if (f.exists())
-                                        fileService.uploadFile(resource.getRemoteFolder(), localFile, f);
-                                    else {
-                                        response.setResult(false);
-                                        response.setErrorMessage("RECURSOS ADICIONALES: El archivo " + localFile + " NO existe localmente");
+                                        File f = new File(Env.getHomePath() + config.getProperty("SII_LOCAL_REPOSITORY") + "/" + resource.getLocalFolder() + "/" + localFile);
+                                        if (f.exists())
+                                            fileService.uploadFile(resource.getRemoteFolder(), localFile, f);
+                                        else {
+                                            response.setResult(false);
+                                            response.setErrorMessage("RECURSOS ADICIONALES: El archivo " + localFile + " NO existe localmente");
+                                        }
+                                    }
+                                    if (resource.isReport()) {
+                                        List<InputControl> controls = null;
+                                        InputControlService controlService = new InputControlService(folderService.getHttpContext());
+                                        controls = controlService.getOrCreateInputControls(new File(resource.getLocalFile()));
+                                        JasperService jasperService = new JasperService(controls, folderService.getHttpContext());
+                                        jasperService.getOrCreateJasperReport(lastFolder, localFile.substring(0, localFile.lastIndexOf(".")), null);
                                     }
                                 }
-                                if (resource.isReport()) {
-                                    List<InputControl> controls = null;
-                                    InputControlService controlService = new InputControlService();
-                                    controls = controlService.getOrCreateInputControls(new File(resource.getLocalFile()));
-                                    JasperService jasperService = new JasperService(controls);
-                                    jasperService.getOrCreateJasperReport(lastFolder, localFile.substring(0, localFile.lastIndexOf(".")), null);
-                                }
+                                folderService.logOut();
                             }
+                            fileService.logOut();
                         }
                     }
-                    userService.logOut();
                 }
             }
             //Desde aqui el validador normal.
@@ -175,7 +185,7 @@ public class JasperServerService implements Serializable {
             if(fileService.loginToServer()){
                 List<JasperReportResource> resources = null;
                 if (!fileService.touchFile(config.getProperty("SII_RESOURCES_PATH") + "/" + reportFolder + "/" + reportName + ".jrxml")) {
-                    folderService = new FolderService();
+                    folderService = new FolderService(fileService.getHttpContext());
                     folderService.getOrCreateFolder(config.getProperty("SII_RESOURCES_PATH") + "/" + reportFolder, reportFolder);
                 }
                 List<InputControl> controls = null;
@@ -184,7 +194,7 @@ public class JasperServerService implements Serializable {
                     for (File item : reportRoot.listFiles()) {
                         if (item.getName().contains(reportName)) {
                             if (!item.getName().endsWith(".jasper")) {//ignoramos los jasper
-                                InputControlService controlService = new InputControlService();
+                                InputControlService controlService = new InputControlService(fileService.getHttpContext());
                                 controls = controlService.getOrCreateInputControls(item);
                                 if (!fileService.touchFile(config.getProperty("SII_RESOURCES_PATH") + "/" + reportFolder + "/" + reportName + ".jrxml"))
                                     fileService.uploadFile(config.getProperty("SII_RESOURCES_PATH") + "/" + reportFolder, reportName + ".jrxml", item);
@@ -210,7 +220,7 @@ public class JasperServerService implements Serializable {
                     response.setErrorMessage("El archivo " + reportName + ".jrxml NO existe localmente");
                 }
 
-                JasperService jasperService = new JasperService(controls);
+                JasperService jasperService = new JasperService(controls,fileService.getHttpContext());
                 jasperService.getOrCreateJasperReport(reportFolder, reportName, resources);
 
                 fileService.logOut();
