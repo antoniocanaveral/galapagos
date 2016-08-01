@@ -2,7 +2,6 @@ package com.bmlaurus.jaspersoft.services;
 
 import com.bmlaurus.jaspersoft.BaseAPI;
 import com.bmlaurus.jaspersoft.model.*;
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -23,40 +22,38 @@ public class ReportExecutionService extends BaseAPI {
     public ReportExecutionResponse prepareReport(Map<String,String> reportParameters, String reportFolder, String reportName){
 
         ReportExecutionResponse response = null;
-        HttpResponse httpRes = null;
-        if(loginToServer()) {
-            try {
-                ReportExecution execution = new ReportExecution();
-                List<Parameter> params = new ArrayList<>();
-                for(Map.Entry<String,String> entry:reportParameters.entrySet()){
-                    List<String> paramValue = new ArrayList<>();
-                    paramValue.add(entry.getValue());
-                    params.add(new Parameter(entry.getKey(), paramValue));
-                }
-                if(params!=null && params.size()>0)
-                    execution.setParameters(new ReportParameters(params));
-                execution.setReportUnitUri(config.getProperty("SII_REPORTS_PATH")+"/"+reportFolder+"/"+reportName);
-                HttpPost post = new HttpPost();
-                post.setHeader(ReportExecution.HDR_CONTENT_TYPE, "application/json");
-                post.setHeader("Accept", execution.getConten_type());
-                post.setEntity(new StringEntity(getGsonEngine().getGson().toJson(execution), "UTF-8"));
-                httpRes = sendRequest(post, "/reportExecutions",null);
-                if(validateRequest(httpRes)) {
-                    if (httpRes.getStatusLine().getStatusCode() == HttpStatus.SC_OK
-                            ||httpRes.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED) {
-                        response = getEntity(httpRes, ReportExecutionResponse.class);
-                    }
-                }
-            } catch (Exception e) {
-                log.error(e);
-            } finally {
-                releaseConnection(httpRes);
+        //HttpResponse httpRes = null;
+        try {
+            ReportExecution execution = new ReportExecution();
+            List<Parameter> params = new ArrayList<>();
+            for(Map.Entry<String,String> entry:reportParameters.entrySet()){
+                List<String> paramValue = new ArrayList<>();
+                paramValue.add(entry.getValue());
+                params.add(new Parameter(entry.getKey(), paramValue));
             }
+            if(params!=null && params.size()>0)
+                execution.setParameters(new ReportParameters(params));
+            execution.setReportUnitUri(config.getProperty("SII_REPORTS_PATH")+"/"+reportFolder+"/"+reportName);
+            HttpPost post = new HttpPost();
+            post.setHeader(ReportExecution.HDR_CONTENT_TYPE, "application/json");
+            post.setHeader("Accept", execution.getConten_type());
+            post.setEntity(new StringEntity(getGsonEngine().getGson().toJson(execution), "UTF-8"));
+            httpRes = sendRequest(post, "/reportExecutions",null);
+            if(validateRequest(httpRes)) {
+                if (httpRes.getStatusLine().getStatusCode() == HttpStatus.SC_OK
+                        ||httpRes.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED) {
+                    response = getEntity(httpRes, ReportExecutionResponse.class);
+                }
+            }
+        } catch (Exception e) {
+            log.error(e);
+        } finally {
+            releaseConnection(httpRes);
         }
         return response;
     }
 
-    private HttpResponse syncRes = null;
+    //private HttpResponse syncRes = null;
     public InputStream getReportPDF(ReportExecutionResponse execution){
         InputStream result = null;
         if(execution!=null && execution.getExports()!=null && execution.getExports().size()==1) {
@@ -72,14 +69,15 @@ public class ReportExecutionService extends BaseAPI {
                 url.append("/exports/");
                 url.append(execution.getExports().get(0).getId());
                 url.append("/outputResource");
-                syncRes = sendRequest(get, url.toString(), null);
-                if (validateRequest(syncRes)) {
-                    if (syncRes.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                        result = syncRes.getEntity().getContent();
+                httpRes = sendRequest(get, url.toString(), null);
+                if (validateRequest(httpRes)) {
+                    if (httpRes.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                        result = httpRes.getEntity().getContent();
                     }
                 }
             } catch (Exception e) {
                 log.error(e);
+                releaseConnection(httpRes);
             }
         }
         return result;
@@ -98,16 +96,14 @@ public class ReportExecutionService extends BaseAPI {
                 url.append("/");
                 url.append(execution.getRequestId());
                 url.append("/status/");
-                syncRes = sendRequest(put, url.toString(), null);
-                releaseConnection(syncRes);
+                httpRes = sendRequest(put, url.toString(), null);
+                releaseConnection(httpRes);
             } catch (Exception e) {
                 log.error(e);
             }
         }else{
-            releaseConnection(syncRes);
+            releaseConnection(httpRes);
         }
-        logOut();
-
     }
 
 

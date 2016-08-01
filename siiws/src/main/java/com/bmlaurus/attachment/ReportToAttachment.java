@@ -62,11 +62,14 @@ public abstract class ReportToAttachment {
         String valid = reportService.validateReport(reportFolder,reportName);
         if(valid.equals("{\"result\":true}")) {
             ReportExecutionService executionService = new ReportExecutionService();
-            ReportExecutionResponse executionResponse = executionService.prepareReport(reportParams, reportFolder, reportName);
-            if(executionResponse!=null){
-                InputStream resultStream = executionService.getReportPDF(executionResponse);
-                handler = new DataHandler(new InputStreamDataSource(resultStream,fileName + ".pdf"));
-                executionService.closeExecution(executionResponse);
+            if(executionService.loginToServer()) {
+                ReportExecutionResponse executionResponse = executionService.prepareReport(reportParams, reportFolder, reportName);
+                if (executionResponse != null) {
+                    InputStream resultStream = executionService.getReportPDF(executionResponse);
+                    handler = new DataHandler(new InputStreamDataSource(resultStream, fileName + ".pdf"));
+                    executionService.closeExecution(executionResponse);
+                }
+                executionService.logOut();
             }
         }
         return handler;

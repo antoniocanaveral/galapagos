@@ -31,6 +31,9 @@ public class Cgg_res_tramite implements Serializable{
 	/*AC Campo para Representante en Temporales*/
 	private String myRep_crper_codigo;
 
+	/*AC Campo para Cambio de Motivo*/
+	private String myChange_crtst_codigo;
+
 	/**
 	* IDENTIFICATIVO UNICO DE REGISTRO DE PROCESO
 	*/
@@ -327,6 +330,14 @@ VALORES:
 
 	public String getREP_CRPER_CODIGO() {
 		return myRep_crper_codigo;
+	}
+
+	public String getCHANGE_CRTST_CODIGO() {
+		return myChange_crtst_codigo;
+	}
+
+	public void setCHANGE_CRTST_CODIGO(String myChange_crtst_codigo) {
+		this.myChange_crtst_codigo = myChange_crtst_codigo;
 	}
 
 	public void setREP_CRPER_CODIGO(String myRep_crper_codigo) {

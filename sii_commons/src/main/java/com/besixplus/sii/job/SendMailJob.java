@@ -91,6 +91,9 @@ class SendMailThread extends Thread{
 				mailBody.setContent( myCorreo.getCBZC_MENSAJE()!=null?myCorreo.getCBZC_MENSAJE():"<h1>Omita este correo</h1>", "text/html; charset=utf-8" );
 			}else if(myCorreo.getCBZC_TIPO_CONTENIDO().equals("text")){
 				mailBody.setText(myCorreo.getCBZC_MENSAJE()!=null?myCorreo.getCBZC_MENSAJE():"Omita este correo","utf-8");
+			}else{
+				//Intentamos enviarlo como html
+				mailBody.setContent( myCorreo.getCBZC_MENSAJE()!=null?myCorreo.getCBZC_MENSAJE():"<h1>Omita este correo</h1>", "text/html; charset=utf-8" );
 			}
 			multipart.addBodyPart(mailBody);
 			tmpMessage.setContent(multipart);

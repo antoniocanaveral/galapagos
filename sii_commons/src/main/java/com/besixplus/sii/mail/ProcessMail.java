@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -23,18 +24,57 @@ public class ProcessMail extends Thread{
     private Cgg_res_fase fase;
     private int inCrseg_tipo_respuesta; //NEGADO=0 - APROBADO=1
 
+    private Cgg_not_mail externalMail;
+    private String externalDestinatario;
+    Map<String,String> externalAuxData;
+
     private final String TIPO_MAIL = "CRTCO1";
     private final String USER_MAIL = "maildaemon";
+
+    private boolean isTramite=false;
 
     public ProcessMail(Cgg_res_seguimiento seguimiento, Cgg_res_tramite tramite, Cgg_res_fase fase, int inCrseg_tipo_respuesta) {
         this.seguimiento = seguimiento;
         this.tramite = tramite;
         this.fase = fase;
         this.inCrseg_tipo_respuesta = inCrseg_tipo_respuesta;
+        isTramite = true;
+    }
+
+    public ProcessMail(Cgg_not_mail mail, String destinatario, Map<String,String> auxData){
+        externalMail = mail;
+        externalDestinatario=destinatario;
+        externalAuxData = auxData;
     }
 
     @Override
     public void run() {
+        if(isTramite)
+            tramiteMail();
+
+        if(externalMail!=null)
+            externalMail();
+    }
+
+    private void externalMail(){
+        try {
+            Connection objConn = ManagerConnection.getConnection();
+            objConn.setAutoCommit(false);
+
+            if (externalMail != null) {
+                buildMessage(objConn, externalMail, externalDestinatario);
+            }
+            System.out.println("NOTIFICACION por MAIL (EXTERNAL)");
+
+            objConn.commit();
+            objConn.setAutoCommit(true);
+            objConn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void tramiteMail(){
         try {
             Connection objConn= ManagerConnection.getConnection();
             objConn.setAutoCommit(false);
@@ -203,6 +243,7 @@ public class ProcessMail extends Thread{
     //      @T:[campo]@ -> datos del tramite -> puede llamarse a datos relacionados, usando el mismo formato de alfresco (campo_join;tabla.campo_respuesta)
     //      @S:[campo]@ -> datos del seguimiento
     //      @F:[campo]@ -> datos de la fase
+    //      Cualquier otra tabla mediante el formato @[Nombre_Tabla]*[record_id]:[campo]@
     //AUXILIARES:
     //      @$AUSPICIANTE@ -> Nombres Completos del Auspiciante
     //      @$AUSPICIANTE_ID@ -> Cédula del Auspiciante
@@ -258,8 +299,15 @@ public class ProcessMail extends Thread{
                 case "F":   tableName = "cgg_res_fase";
                             recordId = fase.getCRFAS_CODIGO();
                     break;
-                default:
-                    return result;
+                default:    String comparator = splitter[0];
+                            if(comparator.contains("*")){
+                                String dinamic[] = comparator.split("\\*");
+                                tableName = dinamic[0];
+                                recordId = dinamic[1];
+                            }else
+                                return result;
+                    break;
+
             }
             path.add("@"+splitter[1]+"@");
         }else if(dataPath.contains("$")){//ES UNA LLAMADA DIRECTA
@@ -290,6 +338,12 @@ public class ProcessMail extends Thread{
                     recordId = tramite.getCRTRA_CODIGO();
                     path.add("@crtst_codigo;cgg_res_tipo_solicitud_tramite.#cgg_crtst_codigo!cgg_res_tipo_solicitud_tramite$crtst_descripcion#@");
                     break;
+                default:
+                    if(externalAuxData!=null && externalAuxData.size()>0){
+                        if(externalAuxData.get(dataPath)!=null)
+                            path.add(externalAuxData.get(dataPath));
+                    }
+                    break;
             }
         }else{
             System.err.println("EL Parametro del correo no tiene el formato adecuado: "+dataPath);
@@ -298,7 +352,10 @@ public class ProcessMail extends Thread{
             result="";
         for(String data:path) {
             try {
-                result = result + cleanData(SiiDataLoader.repoResolver(conn, tableName, recordId, data))+" ";
+                if(data.startsWith("@"))
+                    result = result + cleanData(SiiDataLoader.repoResolver(conn, tableName, recordId, data))+" ";
+                else
+                    result = data;
                 if(result.trim().length()==0)
                     result=noDataStr;
             } catch (SQLException e) {

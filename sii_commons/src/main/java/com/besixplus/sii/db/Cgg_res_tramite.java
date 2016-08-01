@@ -318,7 +318,7 @@ public class Cgg_res_tramite implements Serializable{
 	){
 		String outResult = "true";
 		try{
-			CallableStatement stmUpdate = inConnection.prepareCall("{ call sii.F_CGG_RES_TRAMITE_UPDATE(?,?,?,?,?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?::smallint, ?::smallint, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?) }");
+			CallableStatement stmUpdate = inConnection.prepareCall("{ call sii.F_CGG_RES_TRAMITE_UPDATE(?,?,?,?,?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?::smallint, ?::smallint, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?) }");
 			stmUpdate.setString(1, this.getCgg_res_tramite().getCRTRA_CODIGO());
 			stmUpdate.setString(2, this.getCgg_res_tramite().getCRPER_CODIGO());
 			stmUpdate.setString(3, this.getCgg_res_tramite().getCRPJR_CODIGO());
@@ -350,6 +350,7 @@ public class Cgg_res_tramite implements Serializable{
 			stmUpdate.setBoolean(29, this.getCgg_res_tramite().getCRTRA_ESTADO());
 			stmUpdate.setString(30, this.getCgg_res_tramite().getCRTRA_USUARIO_UPDATE());
 			stmUpdate.setString(31, this.getCgg_res_tramite().getREP_CRPER_CODIGO());
+			stmUpdate.setString(32, this.getCgg_res_tramite().getCHANGE_CRTST_CODIGO());
 			stmUpdate.executeUpdate();
 			stmUpdate.close();
 		}catch(SQLException e){
@@ -403,6 +404,9 @@ public class Cgg_res_tramite implements Serializable{
 				this.getCgg_res_tramite().setCRTRA_FECHA_INGRESO(results.getTimestamp(27));
 				this.getCgg_res_tramite().setCRTRA_FECHA_SALIDA(results.getTimestamp(28));
 				this.getCgg_res_tramite().setCRTRA_ESTADO(results.getBoolean(29));
+
+				this.getCgg_res_tramite().setREP_CRPER_CODIGO(results.getString(35));
+				this.getCgg_res_tramite().setCHANGE_CRTST_CODIGO(results.getString(36));
 			}
 			results.close();
 			stmSelect.close();
@@ -1302,7 +1306,7 @@ public class Cgg_res_tramite implements Serializable{
 	){
 		String [] outResult = null;
 		try{
-			CallableStatement stmInsert = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_TRAMITE_INSERT_1(?,?,?,?,?,?,?,?,?,?,?,?,?, ?, ?, ?, ?, ?::smallint,?::smallint, ?, ?, ?, ?, ?, ?, ?, ?,?,?) }");
+			CallableStatement stmInsert = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_TRAMITE_INSERT_1(?,?,?,?,?,?,?,?,?,?,?,?,?, ?, ?, ?, ?, ?::smallint,?::smallint, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?) }");
 			stmInsert.registerOutParameter(1, java.sql.Types.VARCHAR);
 			stmInsert.setString(2, this.getCgg_res_tramite().getCRTRA_CODIGO());
 			stmInsert.setString(3, this.getCgg_res_tramite().getCRPER_CODIGO());
@@ -1333,6 +1337,7 @@ public class Cgg_res_tramite implements Serializable{
 			stmInsert.setString(28, this.getCgg_res_tramite().getCRTRA_USUARIO_INSERT());
 			stmInsert.setString(29, this.getCgg_res_tramite().getCRTRA_USUARIO_UPDATE());
 			stmInsert.setString(30, this.getCgg_res_tramite().getREP_CRPER_CODIGO());
+			stmInsert.setString(31, this.getCgg_res_tramite().getCHANGE_CRTST_CODIGO());
 			stmInsert.execute();
 			String aux = stmInsert.getString(1);						
 			outResult = aux.split(",");						

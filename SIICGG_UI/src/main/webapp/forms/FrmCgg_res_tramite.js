@@ -306,6 +306,37 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
         }
     });
 
+    //==>>AC ==> Nuevo Tipo Solicitud
+    var txtChangeCrtst_codigo = new Ext.form.TextField({
+        id: 'txtChangeCrtst_codigo',
+        name: 'txtChangeCrtst_codigo',
+        fieldLabel:'Tipo solicitud',
+        anchor: '98%',
+        allowBlank: false,
+        readOnly: 'true'
+    });
+    var valChangeCrtst_codigo=null;
+    var btnChangeCrtst_codigo = new Ext.Button({
+        id: 'btnChangeCrtst_codigo',
+        iconCls: 'iconBuscar',
+        listeners: {
+            click: function(){
+                var tmpFLCgg_res_tipo_solicitud_tramite = new FrmListadoCgg_res_tipo_solicitud_tramite();
+                var tmpStore = tmpFLCgg_res_tipo_solicitud_tramite.getStore();
+                tmpStore.baseParams.inSW = true;
+                if(isVehiculo){
+                    tmpStore.baseParams.inCrtst_codigo = SCGG_CONFIGURACION.getAt(SCGG_CONFIGURACION.findExact('CGCNF_CODIGO','12')).get('CGCNF_VALOR_CADENA');
+                }
+                var objBusqueda = new DlgBusqueda(tmpStore, tmpFLCgg_res_tipo_solicitud_tramite.getColumnModel());
+                objBusqueda.closeHandler(function(){
+                    txtChangeCrtst_codigo.setValue(objBusqueda.getSelectedRow().get('CRTST_DESCRIPCION'));
+                    valChangeCrtst_codigo = objBusqueda.getSelectedRow().get('CRTST_CODIGO');
+                });
+                objBusqueda.show();
+            }
+        }
+    });
+
     //==>>AC ==> REPRESENTANTE
     var rRepresentante = new rFilaRepresentanteNuevo({
         CRPER_CODIGO: '',
@@ -452,6 +483,8 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                         Ext.getCmp('pnlTrmEmpresa').setVisible(tmpTSTOpciones[i].APLICA);
                     else if(tmpTSTOpciones[i].CRTSO_CODIGO == 'CRTSO15')
                         Ext.getCmp('pnlTrmRepresentante').setVisible(tmpTSTOpciones[i].APLICA);
+                    else if(tmpTSTOpciones[i].CRTSO_CODIGO == 'CRTSO16')
+                        Ext.getCmp('pnlChangeTipoSolicitud').setVisible(tmpTSTOpciones[i].APLICA);
                     else if(tmpTSTOpciones[i].CRTSO_CODIGO == 'CRTSO7' && tmpTSTOpciones[i].APLICA){
                         tmpSWAuspicianteTodos = true;
                         tmpPersonaAuspiciante.getStore().baseParams.inCrtst_codigo = '';
@@ -1387,7 +1420,8 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                         inCrtra_fecha_salida:dtCrtra_fecha_salida.isVisible()?dtCrtra_fecha_salida.getValue().toString('dd/MM/yyyy'):null,
                         inOperacion:isEdit==false?'registrar':'actualizar',
                         inVehiculo:crearJSONVehiculo(),
-                        inRep_crper_codigo: rRepresentante.get('CRPER_CODIGO')=='KEYGEN' ? Ext.util.JSON.encode(rRepresentante.data):null
+                        inRep_crper_codigo: rRepresentante.get('CRPER_CODIGO')=='KEYGEN' ? Ext.util.JSON.encode(rRepresentante.data):null,
+                        inChange_crtst_codigo: valChangeCrtst_codigo
                     }
                 });
             }catch (inErr) {
@@ -1529,7 +1563,8 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                         inCrtra_fecha_salida:dtCrtra_fecha_salida.isVisible()?dtCrtra_fecha_salida.getValue().toString('dd/MM/yyyy'):null,
                         inOperacion:(isEdit==false)?'registrar':'actualizar',
                         inVehiculo:crearJSONVehiculo(),
-                        inRep_crper_codigo: rRepresentante.get('CRPER_CODIGO')=='KEYGEN' ? Ext.util.JSON.encode(rRepresentante.data):null
+                        inRep_crper_codigo: rRepresentante.get('CRPER_CODIGO')=='KEYGEN' ? Ext.util.JSON.encode(rRepresentante.data):null,
+                        inChange_crtst_codigo: valChangeCrtst_codigo
                     }
                 });
 
@@ -1696,6 +1731,22 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                     columnWidth: .07,
                     layout: 'form',
                     items: [btnCgg_rep_crper_codigoCgg_res_tramite]
+                }]
+            }]
+        },{
+            columnWidth: .5,
+            items: [{
+                xtype: 'panel',
+                id:'pnlChangeTipoSolicitud',
+                layout: 'column',
+                items: [{
+                    columnWidth: .93,
+                    layout: 'form',
+                    items: [txtChangeCrtst_codigo]
+                }, {
+                    columnWidth: .07,
+                    layout: 'form',
+                    items: [btnChangeCrtst_codigo]
                 }]
             }]
         }, {
@@ -2810,6 +2861,8 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
             }
 
             txtCrpjr_codigo.setValue(inRecordCgg_res_tramite.get('CRPJR_CODIGO'));
+            txtChangeCrtst_codigo.setValue(inRecordCgg_res_tramite.get('CHANGE_CRTST_CODIGO'));
+
             var tmpPersonaJuridicaRazonS = Ext.util.Format.undef(inRecordCgg_res_tramite.get('CRPJR_CODIGO'));
             var scpPersonaJuridica = new SOAPClientParameters();
             scpPersonaJuridica.add('inCrpjr_codigo', tmpPersonaJuridicaRazonS);
@@ -3247,7 +3300,8 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                             'CGGCRPER_CODIGO':cggcrperCodigo,
                             'CRPER_NUM_DOC_IDENTIFIC':crperNumDocIdentific,
                             'CRPER_FECHA_NACIMIENTO':cggCrperFechaNacimiento,
-                            'REP_CRPER_CODIGO':rep_cper_codigo
+                            'REP_CRPER_CODIGO':rep_cper_codigo,
+                            'CHANGE_CRTST_CODIGO':valChangeCrtst_codigo
                 };
             }catch(inErr){}
 

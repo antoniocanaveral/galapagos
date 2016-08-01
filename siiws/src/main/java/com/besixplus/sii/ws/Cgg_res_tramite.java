@@ -548,6 +548,7 @@ VALORES:
 			String inCrtra_motivo,
 			java.math.BigDecimal inCrtra_folio,
 			String inRep_crper_codigo,
+			String inChange_crtst_codigo,
 			String inTramiteRequisitos,
 			String inNuevoBeneficiario,
 			String inCrfas_codigo,
@@ -601,6 +602,7 @@ VALORES:
 		obj.setCVVEH_CODIGO(inCvveh_codigo);
 
 		obj.setREP_CRPER_CODIGO(inRep_crper_codigo);
+		obj.setCHANGE_CRTST_CODIGO(inChange_crtst_codigo);
 
 		obj.setCISLA_CODIGO(inCisla_codigo);	
 		obj.setCVMTR_CODIGO(inCvmtr_codigo);
@@ -2950,6 +2952,7 @@ VALORES:
 			String inCrtra_motivo,
 			java.math.BigDecimal inCrtra_folio,
 			String inRep_crper_codigo,
+			String inChange_crtst_codigo,
 			String inNuevoBeneficiario,
 			String inCrfas_codigo,
 			String inTramiteRequisitos,	
@@ -3031,6 +3034,7 @@ VALORES:
 				obj.setCRTRA_MOTIVO(inCrtra_motivo);
 				obj.setCRTRA_FOLIO(inCrtra_folio);
 				obj.setREP_CRPER_CODIGO(inRep_crper_codigo);
+				obj.setCHANGE_CRTST_CODIGO(inChange_crtst_codigo);
 
 				try {
 					objJsonFasesSeguimientos = new JSONArray(inCrfas_codigo);

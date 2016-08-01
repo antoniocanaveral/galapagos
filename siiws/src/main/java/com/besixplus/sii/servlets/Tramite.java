@@ -135,6 +135,8 @@ public class Tramite extends HttpServlet implements Serializable {
 							objTramite.setCRTRA_FOLIO(new BigDecimal(item.getString()));
 						if(item.getFieldName().equals("inRep_crper_codigo"))
 							objTramite.setREP_CRPER_CODIGO((item.getString().trim().length() == 0)?null:item.getString().trim());
+						if(item.getFieldName().equals("inChange_crtst_codigo"))
+							objTramite.setCHANGE_CRTST_CODIGO((item.getString().trim().length() == 0)?null:item.getString().trim());
 						if(item.getFieldName().equals("inTramiteRequisitos"))
 							inTramiteRequisitos=item.getString();
 						if(item.getFieldName().equals("inCrfas_codigo"))							
@@ -199,6 +201,7 @@ public class Tramite extends HttpServlet implements Serializable {
 							objTramite.getCRTRA_MOTIVO(), 
 							objTramite.getCRTRA_FOLIO(),
 							objTramite.getREP_CRPER_CODIGO(),
+							objTramite.getCHANGE_CRTST_CODIGO(),
 							inTramiteRequisitos,
 							inNuevoBeneficiario,
 							inCrfas_codigo, 
@@ -235,6 +238,7 @@ public class Tramite extends HttpServlet implements Serializable {
 							objTramite.getCRTRA_MOTIVO(), 
 							objTramite.getCRTRA_FOLIO(),
 							objTramite.getREP_CRPER_CODIGO(),
+							objTramite.getCHANGE_CRTST_CODIGO(),
 							inNuevoBeneficiario, 
 							inCrfas_codigo, 
 							inTramiteRequisitos, 						
