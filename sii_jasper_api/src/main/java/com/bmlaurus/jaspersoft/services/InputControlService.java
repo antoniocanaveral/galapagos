@@ -2,11 +2,11 @@ package com.bmlaurus.jaspersoft.services;
 
 import com.bmlaurus.jaspersoft.BaseAPI;
 import com.bmlaurus.jaspersoft.model.InputControl;
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.protocol.HttpContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -27,6 +27,10 @@ import static com.bmlaurus.jaspersoft.model.BaseRestModel.HDR_CONTENT_TYPE;
  * Created by acanaveral on 26/6/16.
  */
 public class InputControlService extends BaseAPI {
+
+    public InputControlService(HttpContext httpContext) {
+        super(httpContext);
+    }
 
     public List<InputControl> getOrCreateInputControls(File jrxml){
         List<InputControl> inputControls = null;
@@ -73,34 +77,30 @@ public class InputControlService extends BaseAPI {
 
     public InputControl getOrCreateInputControl(String controlName, String className){
         InputControl inputControl = null;
-        HttpResponse httpRes = null;
-        if(loginToServer()){
-            try {
-                //Buscamos el control
-                HttpGet get = new HttpGet();
-                inputControl = new InputControl();
-                get.setHeader(HDR_CONTENT_TYPE, inputControl.getConten_type());
-                get.setHeader("Accept", "application/json");
-                httpRes = sendRequest(get, config.getProperty("RESOURCE") + config.getProperty("SII_CONTROLS_PATH") + "/"+ controlName, null);
-                if (validateRequest(httpRes)) {
-                    if (httpRes.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
-                        releaseConnection(httpRes);
-                        inputControl = createInputControl(controlName,className);
-                    } else {
-                        inputControl = getEntity(httpRes, InputControl.class);
-                        releaseConnection(httpRes);
-                    }
+        try {
+            //Buscamos el control
+            HttpGet get = new HttpGet();
+            inputControl = new InputControl();
+            get.setHeader(HDR_CONTENT_TYPE, inputControl.getConten_type());
+            get.setHeader("Accept", "application/json");
+            httpRes = sendRequest(get, config.getProperty("RESOURCE") + config.getProperty("SII_CONTROLS_PATH") + "/"+ controlName, null);
+            if (validateRequest(httpRes)) {
+                if (httpRes.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+                    releaseConnection(httpRes);
+                    inputControl = createInputControl(controlName,className);
+                } else {
+                    inputControl = getEntity(httpRes, InputControl.class);
+                    releaseConnection(httpRes);
                 }
-            }catch (Exception e){
-                log.error(e);
             }
+        }catch (Exception e){
+            log.error(e);
         }
         return inputControl;
     }
 
     private InputControl createInputControl(String controlName, String className){
         InputControl result = null;
-        HttpResponse httpRes = null;
         try {
             //Buscamos la carpeta
             HttpPut put = new HttpPut();

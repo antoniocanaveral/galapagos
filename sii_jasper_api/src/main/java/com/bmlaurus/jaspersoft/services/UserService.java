@@ -3,7 +3,6 @@ package com.bmlaurus.jaspersoft.services;
 import com.bmlaurus.jaspersoft.BaseAPI;
 import com.bmlaurus.jaspersoft.model.Role;
 import com.bmlaurus.jaspersoft.model.User;
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
@@ -19,34 +18,29 @@ public class UserService extends BaseAPI {
     private final String USERS_URI = "/users";
 
     public void verifyUser(){
-        HttpResponse httpRes = null;
-        if(loginToServer()){
-            try {
-                HttpGet get = new HttpGet();
-                get.setHeader("Content_Type","application/json");
-                get.setHeader("Accept", "application/json");
+        try {
+            HttpGet get = new HttpGet();
+            get.setHeader("Content_Type","application/json");
+            get.setHeader("Accept", "application/json");
 
-                httpRes = sendRequest(get, USERS_URI+"/"+config.getProperty("SII_NAME"),null);
-                if(validateRequest(httpRes)) {
-                    if (httpRes.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
-                        releaseConnection(httpRes);
-                        createUser();
-                    } else {
-                        User exinting = getEntity(httpRes, User.class);
-                        log.info("User exists: " + exinting.toString());
-                        releaseConnection(httpRes);
-                    }
+            httpRes = sendRequest(get, USERS_URI+"/"+config.getProperty("SII_NAME"),null);
+            if(validateRequest(httpRes)) {
+                if (httpRes.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+                    releaseConnection(httpRes);
+                    createUser();
+                } else {
+                    User exinting = getEntity(httpRes, User.class);
+                    log.info("User exists: " + exinting.toString());
+                    releaseConnection(httpRes);
                 }
-
-            }catch (Exception e){
-                log.error(e);
             }
-            logOut();
+
+        }catch (Exception e){
+            log.error(e);
         }
     }
 
     private void createUser(){
-        HttpResponse httpRes = null;
         User user = null;
         try {
             user =  new User(config.getProperty("SII_FULL_NAME"),config.getProperty("SII_NAME"),config.getProperty("SII_PASSW"));

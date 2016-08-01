@@ -46,6 +46,17 @@ public abstract class BasePublicAPI {
     private CookieStore cookieStore;
 
     public BasePublicAPI() {
+        initBaseAPI();
+        httpContext = new BasicHttpContext();
+        httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+    }
+
+    public BasePublicAPI(HttpContext httpContext){
+        initBaseAPI();
+        this.httpContext = httpContext;
+    }
+
+    private void initBaseAPI(){
         PropertyConfigurator.configure(Env.getExternalProperties("loggin/log4j.properties"));
         log = LogFactory.getLog(getClass());
         config = Env.getExternalProperties("jasper/config.properties");
@@ -54,9 +65,11 @@ public abstract class BasePublicAPI {
 
         httpClient = new DefaultHttpClient();
         cookieStore = new BasicCookieStore();
-        httpContext = new BasicHttpContext();
-        httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+    }
 
+
+    public HttpContext getHttpContext() {
+        return httpContext;
     }
 
     public boolean loginToServer() {
@@ -88,6 +101,8 @@ public abstract class BasePublicAPI {
             HttpGet req = new HttpGet();
             req.setURI(createURI(config.getProperty("SERVER_HANDLE")+"/logout.html",null));
             log.info("Login Out");
+            //Liberamos porsiacaso
+            releaseConnection(httpRes);
             httpRes = httpClient.execute(req, httpContext);
             log.info("response status line: " + httpRes.getStatusLine());
 

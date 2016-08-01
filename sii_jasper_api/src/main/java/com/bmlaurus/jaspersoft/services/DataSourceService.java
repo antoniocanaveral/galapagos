@@ -3,7 +3,6 @@ package com.bmlaurus.jaspersoft.services;
 import com.bmlaurus.jaspersoft.BaseAPI;
 import com.bmlaurus.jaspersoft.model.Folder;
 import com.bmlaurus.jaspersoft.model.JasperDataSource;
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
@@ -16,38 +15,32 @@ public class DataSourceService extends BaseAPI {
 
     public JasperDataSource getOrCreateDataSource(){
         String datasourceName = config.getProperty("SII_DATASOURCE_NAME");
-        HttpResponse httpRes = null;
         JasperDataSource dataSource = null;
-        if(loginToServer()){
-            try {
-                dataSource = new JasperDataSource();
+        try {
+            dataSource = new JasperDataSource();
 
-                HttpGet get = new HttpGet();
-                get.setHeader(Folder.HDR_CONTENT_TYPE,dataSource.getConten_type());
-                get.setHeader("Accept", "application/json");
+            HttpGet get = new HttpGet();
+            get.setHeader(Folder.HDR_CONTENT_TYPE,dataSource.getConten_type());
+            get.setHeader("Accept", "application/json");
 
-                httpRes = sendRequest(get, config.getProperty("RESOURCE") + config.getProperty("SII_DATASOURCE_PATH")+"/" + datasourceName,null);
-                if(validateRequest(httpRes)) {
-                    if (httpRes.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
-                        releaseConnection(httpRes);
-                        dataSource = createDataSource(datasourceName);
-                    } else {
-                        dataSource = getEntity(httpRes, JasperDataSource.class);
-                        releaseConnection(httpRes);
-                    }
+            httpRes = sendRequest(get, config.getProperty("RESOURCE") + config.getProperty("SII_DATASOURCE_PATH")+"/" + datasourceName,null);
+            if(validateRequest(httpRes)) {
+                if (httpRes.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+                    releaseConnection(httpRes);
+                    dataSource = createDataSource(datasourceName);
+                } else {
+                    dataSource = getEntity(httpRes, JasperDataSource.class);
+                    releaseConnection(httpRes);
                 }
-            } catch (Exception e) {
-                log.error(e);
             }
-
-            logOut();
+        } catch (Exception e) {
+            log.error(e);
         }
         return dataSource;
     }
 
 
     private JasperDataSource createDataSource(String datasourceName){
-        HttpResponse httpRes = null;
         JasperDataSource dataSource = null;
         try {
             dataSource = new JasperDataSource();

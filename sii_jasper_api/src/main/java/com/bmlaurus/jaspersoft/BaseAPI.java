@@ -7,6 +7,7 @@ import com.google.gson.JsonSyntaxException;
 import com.jaspersoft.jasperserver.rest.BasePublicAPI;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
@@ -21,6 +22,12 @@ public class BaseAPI extends BasePublicAPI {
     private final String JASPER_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
     private GsonEngine gsonEngine;
+
+    public BaseAPI(HttpContext httpContext){
+        super(httpContext);
+        Map<String,Object> typeAdapters = new HashMap<>();
+        gsonEngine = new GsonEngineImp(null, JASPER_DATE_FORMAT);
+    }
 
     public BaseAPI() {
         Map<String,Object> typeAdapters = new HashMap<>();
