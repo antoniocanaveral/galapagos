@@ -42,7 +42,10 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
         CRTRA_FOLIO:0,
         CRPER_CODIGO:'',
         CRFAS_NOMBRE:'',
-        CRTRA_MOTIVO:''
+        CRTRA_MOTIVO:'',
+        REP_CRPER_CODIGO:'',
+        CHANGE_CRTST_CODIGO:'',
+        CRTT_CODIGO:''
     };
 
     var datosSeguimiento = {
@@ -59,7 +62,7 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
 
     };
     var tplTramite = new Ext.Template(
-            '<table id="ver-zebra2" width="100%" border="0"> <colgroup> <col class="vzebra-odd-strong"/> <col class="vzebra-even-tight"/> <col class="vzebra-odd-strong"/> <col class="vzebra-even-tight"/> </colgroup> <tr> <td width=80> N&uacute;mero:</td> <td width="33%"> {CRTRA_ANIO}-{CRTRA_NUMERO}</td> <td width=80> Tipo solicitud:</td> <td width="33%"> {CRTST_DESCRIPCION}</td> </tr> <tr> <td> <div id="idDivBeneficiario">{ETIQUETA}</div></td> <td> {CRPER_BENEFICIARIO}<br>{CGG_CRPER_NUM_DOC_IDENTIFIC}<a id ="lnkPersona" href="#" onClick="abrirPersona(\'{CRPER_CODIGO}\')"> Ver mas...</a></td> <td> Isla:</td> <td> {CISLA_NOMBRE}</td> </tr> <tr> <td> Auspiciante:</td> <td> {CRPER_AUSPICIANTE}</td> <td> Recepci&oacute;n:</td> <td> {CRTRA_FECHA_RECEPCION}</td> </tr> <tr> <td> Pers. jur&iacute;dica:</td> <td> {CRPJR_RAZON_SOCIAL}</td> <td> N. folios:</td> <td> {CRTRA_FOLIO}</td> </tr> <tr> <td> Observaci&oacute;n:</td> <td> {CRTRA_OBSERVACION}</td> <td> Comunicado(R):</td> <td> {CRTRA_COMUNICADO_RADIAL}</td> </tr> <tr> <td>Actividad:</td> <td>{CRTRA_ACTIVIDAD_RESIDENCIA}</td> <td>Permanencia:</td> <td>{CRTRA_DIAS_PERMANENCIA}</td> </tr> <tr> <td>Fase:</td> <td><span class="textoResultado">{CRFAS_NOMBRE}</span></td> <td>Recalificaci\u00f3n</td> <td>{CRTRA_MOTIVO}</td> </tr> <tr> <td></td> <td></td> <td></td> <td> <a id ="lnkSeguimiento" href="#" onClick="abrirTramite(\'{CRTRA_CODIGO}\')"> Ver mas...</a> </td> </tr> </table>'
+            '<table id="ver-zebra2" width="100%" border="0"> <colgroup> <col class="vzebra-odd-strong"/> <col class="vzebra-even-tight"/> <col class="vzebra-odd-strong"/> <col class="vzebra-even-tight"/> </colgroup> <tr> <td width=80> N&uacute;mero:</td> <td width="33%"> {CRTRA_ANIO}-{CRTRA_NUMERO}</td> <td width=80> Tipo solicitud:</td> <td width="33%"> {CRTST_DESCRIPCION} <br> {CHANGE_CRTST_CODIGO}</td> </tr> <tr> <td> <div id="idDivBeneficiario">{ETIQUETA}</div></td> <td> {CRPER_BENEFICIARIO}<br>{CGG_CRPER_NUM_DOC_IDENTIFIC}<a id ="lnkPersona" href="#" onClick="abrirPersona(\'{CRPER_CODIGO}\')"> Ver mas...</a></td> <td> Isla:</td> <td> {CISLA_NOMBRE}</td> </tr> <tr> <td> Auspiciante:</td> <td> {CRPER_AUSPICIANTE}</td> <td> Recepci&oacute;n:</td> <td> {CRTRA_FECHA_RECEPCION}</td> </tr> <tr> <td> Pers. jur&iacute;dica:</td> <td> {CRPJR_RAZON_SOCIAL}</td><td> Representante:</td><td> {REP_CRPER_CODIGO}</td></tr><tr><td> Tipo de tramite:</td><td> {CRTT_CODIGO}</td><td> N. folios:</td> <td> {CRTRA_FOLIO}</td> </tr> <tr> <td> Observaci&oacute;n:</td> <td> {CRTRA_OBSERVACION}</td> <td> Comunicado(R):</td> <td> {CRTRA_COMUNICADO_RADIAL}</td> </tr> <tr> <td>Actividad:</td> <td>{CRTRA_ACTIVIDAD_RESIDENCIA}</td> <td>Permanencia:</td> <td>{CRTRA_DIAS_PERMANENCIA}</td> </tr> <tr> <td>Fase:</td> <td><span class="textoResultado">{CRFAS_NOMBRE}</span></td> <td>Recalificaci\u00f3n</td> <td>{CRTRA_MOTIVO}</td> </tr> <tr> <td></td> <td></td> <td></td> <td> <a id ="lnkSeguimiento" href="#" onClick="abrirTramite(\'{CRTRA_CODIGO}\')"> Ver mas...</a> </td> </tr> </table>'
             );
 
     var tplSeguimientoFase = new Ext.Template(
@@ -1786,6 +1789,10 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
             datosTramite.CRTRA_OBSERVACION = Ext.util.Format.undef(inRecordCgg_res_seguimiento.get('CRTRA_OBSERVACION'));
             datosTramite.CRTRA_COMUNICADO_RADIAL = inRecordCgg_res_seguimiento.get('CRTRA_COMUNICADO_RADIAL') == 'null' ? '' : inRecordCgg_res_seguimiento.get('CRTRA_COMUNICADO_RADIAL');
             datosTramite.CRTRA_DIAS_PERMANENCIA = inRecordCgg_res_seguimiento.get('CRTRA_DIAS_PERMANENCIA') != 0?inRecordCgg_res_seguimiento.get('CRTRA_DIAS_PERMANENCIA') +' dias':inRecordCgg_res_seguimiento.get('CRTRA_FECHA_SALIDA')?truncDate(inRecordCgg_res_seguimiento.get('CRTRA_FECHA_SALIDA')):'INDEFINIDO';
+            datosTramite.REP_CRPER_CODIGO = inRecordCgg_res_seguimiento.get('REP_CRPER_CODIGO') != null ? inRecordCgg_res_seguimiento.get('REP_CRPER_CODIGO'):'';
+            datosTramite.CHANGE_CRTST_CODIGO = inRecordCgg_res_seguimiento.get('CHANGE_CRTST_CODIGO') != null ? inRecordCgg_res_seguimiento.get('CHANGE_CRTST_CODIGO'):'';
+            datosTramite.CRTT_CODIGO = inRecordCgg_res_seguimiento.get('CRTT_CODIGO') != null ? inRecordCgg_res_seguimiento.get('CRTT_CODIGO'):'';
+
 
             var scpTramite = new SOAPClientParameters({
                 inCrtra_codigo:inRecordCgg_res_seguimiento.get('CRTRA_CODIGO'),

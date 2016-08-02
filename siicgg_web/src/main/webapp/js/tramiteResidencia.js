@@ -7,6 +7,7 @@ $(function() {
     var tipoTramiteSelected = null;
     var modeTranseuntes = false;
     var modeTemporal = false;
+    var isRenovacion = false;
     //AC****VARIABLES PARA TRANSEUNTE*******/
     var frmPersona = $("#frmPersona");
     var btnAgregar = $("#btnTranAgregar");
@@ -39,6 +40,9 @@ $(function() {
     }
 
     function continueEditing(){
+        document.getElementById('btnTranAgregar').style.display='block';
+        document.getElementById('btnTranEliminar').style.display='block';
+        document.getElementById('btnTranEditar').style.display='block';
         $("#cbxActividad").attr("disabled", false);
         $("#dtFechaIngreso").removeAttr('disabled');
         $("#dtFechaIngreso").datepicker( "enable" );
@@ -125,7 +129,7 @@ $(function() {
     });
 
     btnAceptarIngreso.click(function(){
-        fnLlenarPersona();
+        fnLlenarPersona(false);
     });
 
     btnEditar.click(function(){
@@ -151,9 +155,18 @@ $(function() {
     });
 
     var cont = 1;
-    function fnLlenarPersona(){
+    function limpiarTablaPersonas(){
+        while(tblPersona.rows.length > 1) {
+            tblPersona.deleteRow(1);
+        }
+    }
+    function fnLlenarPersona(_isAuto){
+        if(_isAuto!=null && _isAuto==true)
+            _isAuto = true;
+        else
+            _isAuto = false;
         var tbodyPersona = tblPersona.tBodies[0];
-        if(verificarInformacionTramite()) {
+        if(_isAuto || verificarInformacionTramite()) {
             if (swEdit == false) {
                 if (tblPersona.rows.length > 1) {
                     for (var i = 1; i < tblPersona.rows.length; i++) {
@@ -207,33 +220,35 @@ $(function() {
                 CGG_CPAIS_CODIGO: cbxPaisResidencia.dom.value
             };
             //De una vez hacemos el insert antes de entrar en las reglas de validacion.
-            if(objBeneficiario.CGGCRPER_CODIGO=='KEYGEN'){
-                var objBeneficiarioJSON = JSON.stringify(objBeneficiario);
-                var param = new SOAPClientParameters();
-                param.add('inNuevoBeneficiarioJSON', objBeneficiarioJSON);
-                var tmpPersona = SOAPClient.invoke(URL_WS+'Cgg_res_persona','insertLite',param, false,null);
-                try{
-                    var result = eval('('+tmpPersona+')');
-                    if(result==false){
-                        new bsxMessageBox({
-                            title:'Alerta',
-                            msg: 'Ha ocurrido un error al registrar el beneficiario. No es posible validar la informaci&oacute;n',
-                            icon: "iconInfo"
-                        });
-                        return;
-                    }else{
-                        objBeneficiario.CGGCRPER_CODIGO = result.CRPER_CODIGO;
+            if(!_isAuto) {
+                if (objBeneficiario.CGGCRPER_CODIGO == 'KEYGEN') {
+                    var objBeneficiarioJSON = JSON.stringify(objBeneficiario);
+                    var param = new SOAPClientParameters();
+                    param.add('inNuevoBeneficiarioJSON', objBeneficiarioJSON);
+                    var tmpPersona = SOAPClient.invoke(URL_WS + 'Cgg_res_persona', 'insertLite', param, false, null);
+                    try {
+                        var result = eval('(' + tmpPersona + ')');
+                        if (result == false) {
+                            new bsxMessageBox({
+                                title: 'Alerta',
+                                msg: 'Ha ocurrido un error al registrar el beneficiario. No es posible validar la informaci&oacute;n',
+                                icon: "iconInfo"
+                            });
+                            return;
+                        } else {
+                            objBeneficiario.CGGCRPER_CODIGO = result.CRPER_CODIGO;
+                        }
+                    } catch (inErr) {
+                        console.log(inErr.message);
                     }
-                }catch(inErr){
-                    console.log(inErr.message);
+                }
+
+                if(!validarReglaTranseuntes(objBeneficiario)){
+                    $('#divCargando1').hide();
+                    $('#divCargando1').html('Cargando..');
+                    return;
                 }
             }
-            if(!validarReglaTranseuntes(objBeneficiario)){
-                $('#divCargando1').hide();
-                $('#divCargando1').html('Cargando..');
-                return;
-            }
-
             var fila = tbodyPersona.insertRow(tblPersona.rows.length - 1);
             fila.id = 'tr' + cont;
             fila.onclick = function () {
@@ -297,8 +312,8 @@ $(function() {
 
 
             //LLAMAMOS A ALFRESCO POR CADA PERSONA
-
-            showAlfrescoUploader("Cgg_res_persona", objBeneficiario.CGGCRPER_CODIGO, "tipoResidencia=CRTST7");
+            if(!_isAuto)
+                showAlfrescoUploader("Cgg_res_persona", objBeneficiario.CGGCRPER_CODIGO, "tipoResidencia=CRTST7");
 
             /*var _tableName = encodeURIComponent("Cgg_res_persona");
             var _recordId = encodeURIComponent(objBeneficiario.CGGCRPER_CODIGO);
@@ -318,6 +333,11 @@ $(function() {
         }
     }
 
+    function limpiarTablaResidenciasVigentes(){
+        while(tblResidenciaPersona.rows.length > 1) {
+            tblResidenciaPersona.deleteRow(1);
+        }
+    }
     function fillTablaResidenciasVigentes(r){
         var records = eval('('+r+')');
         if(records!=null && records.length>0){
@@ -327,40 +347,70 @@ $(function() {
                 for(var j=0;j<tbodyPersona.rows.length;j++)
                     tbodyPersona.removeChild(tbodyPersona.rows[j]);
             }
-            for(var i=0;i<records.length;i++){
+            for(var i=0;i<records.length;i++) {
                 var benef = records[i];
-                var fila = tbodyPersona.insertRow(tblResidenciaPersona.rows.length - 1);
-                fila.id = benef.CRPER_NUM_DOC_IDENTIFIC;
-                fila.onclick = function () {
-                    $('#txtNumDocBeneficiario').val(this.id);
-                    consultarDatosPersona(null,this.id,"BENEFICIARIO");
-                    for (var i = 1; i < tblResidenciaPersona.rows.length; i++) {
-                        tblResidenciaPersona.rows[i].className = "rowNoSelectTable";
-                    }
-                    this.className = "rowSelectTable";
+                var agregarFila = true;
+                if (isRenovacion)
+                    agregarFila = benef.CRTST_PARENT_CODIGO!="CRTST1";
+                if (agregarFila) {
+                    var fila = tbodyPersona.insertRow(tblResidenciaPersona.rows.length - 1);
+                    fila.id = benef.CRPER_NUM_DOC_IDENTIFIC;
+                    fila.onclick = function () {
+                        $('#txtNumDocBeneficiario').val(this.id);
+                        consultarDatosPersona(null, this.id, "BENEFICIARIO");
+                        if (isRenovacion) {
+                            tmpAplicaTramite = 'true';//En la consulta vienen solo los que se pueden hacer en atencion al cliente
+                            $('#cbxTipoResidenciaPadre').val(this.cells[2].id).trigger('change');
+                            tmpMotivoResidenciaId = this.cells[1].id;//Seteamos a mano el ID
+                            getResponse();
+                            $('#txtMotivoResidencia').val(this.cells[1].CRTST_TIPO_DESCRIPCION);
+                            tmpAplicaTramite = 'false';
+                            //Por si es Transeuntes
+                            if (this.cells[2].id == 'CRTST7') {
+                                swEdit = false;
+                                limpiarTablaPersonas();
+                                fnLlenarPersona(true);
+                                document.getElementById('btnTranAgregar').style.display='none';
+                                document.getElementById('btnTranEliminar').style.display='none';
+                                document.getElementById('btnTranEditar').style.display='none';
+                            }
+                        }
+                        for (var i = 1; i < tblResidenciaPersona.rows.length; i++) {
+                            tblResidenciaPersona.rows[i].className = "rowNoSelectTable";
+                        }
+                        this.className = "rowSelectTable";
 
-                };
-                var celda = fila.insertCell(0);
-                celda.id = benef.CRPER_CODIGO;
-                celda.innerHTML = "<strong>"+benef.CRPER_NUM_DOC_IDENTIFIC + "</strong> - " + benef.CRPER_APELLIDO_PATERNO.toString().toUpperCase() + " " + benef.CRPER_NOMBRES.toString().toUpperCase();
-                celda.width = 400;
+                    };
+                    var celda = fila.insertCell(0);
+                    celda.id = benef.CRPER_CODIGO;
+                    celda.innerHTML = "<strong>" + benef.CRPER_NUM_DOC_IDENTIFIC + "</strong> - " + benef.CRPER_APELLIDO_PATERNO.toString().toUpperCase() + " " + benef.CRPER_NOMBRES.toString().toUpperCase();
+                    celda.width = 400;
 
-                celda = fila.insertCell(1);
-                celda.innerHTML = "<strong>"+benef.CRTST_TIPO_DESCRIPCION.toString().toUpperCase() + "</strong> - " + benef.CRTST_MOTIVO_DESCRIPCION.toString().toUpperCase();
-                celda.width = 300;
+                    celda = fila.insertCell(1);
+                    celda.id = benef.CRTST_CODIGO;
+                    celda.CRTST_TIPO_DESCRIPCION = benef.CRTST_TIPO_DESCRIPCION.toString();
+                    celda.innerHTML = "<strong>" + benef.CRTST_TIPO_DESCRIPCION.toString().toUpperCase() + "</strong> - " + benef.CRTST_MOTIVO_DESCRIPCION.toString().toUpperCase();
+                    celda.width = 300;
 
-                celda = fila.insertCell(2);
-                celda.innerHTML = benef.CRRSD_FECHA_INICIO?benef.CRRSD_FECHA_INICIO.toString().toUpperCase():"";
-                celda.width = 200;
+                    celda = fila.insertCell(2);
+                    celda.id = benef.CRTST_PARENT_CODIGO;
+                    celda.innerHTML = benef.CRRSD_FECHA_INICIO ? benef.CRRSD_FECHA_INICIO.toString().toUpperCase() : "";
+                    celda.width = 200;
 
-                celda = fila.insertCell(3);
-                celda.innerHTML = benef.CRRSD_FECHA_CADUCIDAD?benef.CRRSD_FECHA_CADUCIDAD.toString().toUpperCase():"";
-                celda.width = 200;
+                    celda = fila.insertCell(3);
+                    celda.innerHTML = benef.CRRSD_FECHA_CADUCIDAD ? benef.CRRSD_FECHA_CADUCIDAD.toString().toUpperCase() : "";
+                    celda.width = 200;
+                }
             }
         }
     }
 
     function showAlfrescoUploader(_tableName, _recordId, _filter){
+        /*$("#frameAttachment").load("alfrescoMng.html?tableName=" + encodeURIComponent(_tableName) + "&recordId=" + encodeURIComponent(_recordId) + "&filter=" + encodeURIComponent(_filter), function(){
+            showForm($("attachView"));
+        });*/
+
+
         var frame = document.getElementById("frameAttachment");
         frame.src = "alfrescoMng.html?tableName=" + encodeURIComponent(_tableName) + "&recordId=" + encodeURIComponent(_recordId) + "&filter=" + encodeURIComponent(_filter);
         showForm($("attachView"));
@@ -775,11 +825,42 @@ $(function() {
         limpiarTabla();
         codigoTipoTramite=cbxTipoTramite.getRowSelected().CRTT_CODIGO;
         cargarDocumentos(codigoTipoTramite);
-
-        if(codigoTipoTramite=='CRTT7'){
+        isRenovacion = false;
+        if(codigoTipoTramite=='CRTT7'){//REVOCATORIA
             var cbxTR=document.getElementById("cbxTipoResidenciaPadre");
             $('#cbxTipoResidenciaPadre').val('CRTST65').trigger('change');
             cbxTR.disabled=true;
+            var cbxDB=document.getElementById("cbxTipoDocumentoBeneficiario");
+            cbxDB.disabled=true;
+            var btnMotivo = document.getElementById("btnBuscarMotivo");
+            btnMotivo.disabled=false;
+            var txtMotivo = document.getElementById("txtMotivoResidencia");
+            txtMotivo.disabled=false;
+            var cbxNB=document.getElementById("txtNumDocBeneficiario");
+            cbxNB.disabled=true;
+            var cbxNombreB=document.getElementById("txtNombreBeneficiario");
+            cbxNombreB.disabled=true;
+            var cbxAPB=document.getElementById("txtApellidoPaternoBeneficiario");
+            cbxAPB.disabled=true;
+            var cbxAMB=document.getElementById("txtApellidoMaternoBeneficiario");
+            cbxAMB.disabled=true;
+            var cbxFN=document.getElementById("dtFechaNacimiento");
+            cbxFN.disabled=true;
+        }else if(codigoTipoTramite=='CRTT6'){//RENOVACION
+            isRenovacion = true;
+            //Consulta en la base de las residencias vigentes que el auspiciante tenga.
+            document.getElementById("divResidenciasVigentes").style.display = "block";
+            //Llenamos la tabla.
+            limpiarTablaResidenciasVigentes();
+            var param = new SOAPClientParameters();
+            param.add('inCrper_codigo',tmpRecordAuspiciante[0].CRPER_CODIGO);
+            SOAPClient.invoke(URL_WS+"Cgg_res_residencia","selectResidenciasByAuspiciante",param, true, fillTablaResidenciasVigentes);
+            var cbxTR=document.getElementById("cbxTipoResidenciaPadre");
+            cbxTR.disabled=true;
+            var btnMotivo = document.getElementById("btnBuscarMotivo");
+            btnMotivo.disabled=true;
+            var txtMotivo = document.getElementById("txtMotivoResidencia");
+            txtMotivo.disabled=true;
             var cbxDB=document.getElementById("cbxTipoDocumentoBeneficiario");
             cbxDB.disabled=true;
             var cbxNB=document.getElementById("txtNumDocBeneficiario");
@@ -793,12 +874,15 @@ $(function() {
             var cbxFN=document.getElementById("dtFechaNacimiento");
             cbxFN.disabled=true;
         }else{
-
             var cbxIT=document.getElementById("cbxIslaTramite");
             cbxIT.disabled=false;
             var cbxTR=document.getElementById("cbxTipoResidenciaPadre");
             $('#cbxTipoResidenciaPadre').val('');
             cbxTR.disabled=false;
+            var btnMotivo = document.getElementById("btnBuscarMotivo");
+            btnMotivo.disabled=false;
+            var txtMotivo = document.getElementById("txtMotivoResidencia");
+            txtMotivo.disabled=false;
             var cbxBM=document.getElementById("btnBuscarMotivo");
             cbxBM.disabled=false;
             var cbxDB=document.getElementById("cbxTipoDocumentoBeneficiario");
@@ -1167,7 +1251,53 @@ $(function() {
         var personaForm = document.getElementById("personaForm");
         personaForm.style.display = "block";
 
-        if($(this).val()=='CRTST65'){
+        if(!isRenovacion)
+            document.getElementById("divResidenciasVigentes").style.display = "none";
+
+        document.getElementById("divRepresentante").style.display = "none";
+        document.getElementById("divDatosTranseunte").style.display = "none";
+        document.getElementById("divDatosActividad").style.display = "none";
+        modeTemporal = false;
+
+        modeTranseuntes = false;
+        var auspiciado = document.getElementById("divAuspiciado");
+        document.getElementById("divMultiTranseuntes").style.display = "none";
+        auspiciado.style.display = "block";
+        document.getElementById("liAuspiciado").style.display = "block";
+        auspiciado.appendChild(personaForm);
+        $("#tabs").tabs("select",0);
+
+        switch ($(this).val()){
+            case 'CRTST65':
+                //Consulta en la base de las residencias vigentes que el auspiciante tenga.
+                document.getElementById("divResidenciasVigentes").style.display = "block";
+                //Llenamos la tabla.
+                limpiarTablaResidenciasVigentes();
+                var param = new SOAPClientParameters();
+                param.add('inCrper_codigo',tmpRecordAuspiciante[0].CRPER_CODIGO);
+                SOAPClient.invoke(URL_WS+"Cgg_res_residencia","selectResidenciasByAuspiciante",param, true, fillTablaResidenciasVigentes);
+                break;
+            case 'CRTST2':
+                document.getElementById("divDatosTranseunte").style.display = "block";
+                document.getElementById("divDatosActividad").style.display = "block";
+                document.getElementById("divRepresentante").style.display = "block";
+                modeTemporal = true;
+                break;
+            case 'CRTST7':
+                modeTranseuntes = true;
+                $("#tabs").tabs("select",1);
+                document.getElementById("divMultiTranseuntes").style.display = "block";
+                document.getElementById("divAuspiciado").style.display = "none";
+                document.getElementById("liAuspiciado").style.display = "none";
+                document.getElementById("divDatosTranseunte").style.display = "block";
+                document.getElementById("divDatosActividad").style.display = "block";
+                var contentPersona = document.getElementById("contentPersona");
+                contentPersona.appendChild(personaForm);
+                break;
+
+        }
+
+        /*if($(this).val()=='CRTST65'){
             //Consulta en la base de las residencias vigentes que el auspiciante tenga.
             document.getElementById("divResidenciasVigentes").style.display = "block";
             //Llenamos la tabla.
@@ -1211,7 +1341,7 @@ $(function() {
             document.getElementById("divDatosActividad").style.display = "none";
             auspiciado.appendChild(personaForm);
             $("#tabs").tabs("select",0);
-        }
+        }*/
     });
 
 
@@ -1396,6 +1526,8 @@ $(function() {
                         }
                         else
                         {
+                            if($("#cbxTipoDocumentoBeneficiario").val()==null||$("#cbxTipoDocumentoBeneficiario").val()=='')
+                                $("#cbxTipoDocumentoBeneficiario").val(tmpRecordPersona[0].CRDID_CODIGO);
                             $("#txtNombreBeneficiario").val(tmpRecordPersona[0].CRPER_NOMBRES);
                             $("#txtApellidoPaternoBeneficiario").val(tmpRecordPersona[0].CRPER_APELLIDO_PATERNO);
                             $("#txtApellidoMaternoBeneficiario").val(tmpRecordPersona[0].CRPER_APELLIDO_MATERNO);
@@ -2121,7 +2253,50 @@ $(function() {
 
 
 
+    var getResponse = function(){
+        if(tmpAplicaTramite =='true')
+        {
+            $("#txtMotivoResidencia").val(tmpMotivoResidencia);
+            try{
+                $("#dlgMotivoResidencia").dialog("close");
+            }catch (e){}
+            var cbxTipoTramite = $("#cbxTipoTramite").val();
+            consultarReglaValidacion(tmpMotivoResidenciaId,cbxTipoTramite);
 
+            cargarDocumentos(tmpMotivoResidenciaId);
+            cargarRequisitos(tmpMotivoResidenciaId);
+            /*AC-> Nos traemos los dias permitidos*/
+            var tipoTramiteParams= new SOAPClientParameters();
+            tipoTramiteParams.add('inCrtst_codigo',tmpMotivoResidenciaId);
+            tipoTramiteParams.add('format',TypeFormat.JSON);
+            var tmpTipoTramite = SOAPClient.invoke(URL_WS+'Cgg_res_tipo_solicitud_tramite','select',tipoTramiteParams, false,null);
+            if(tmpTipoTramite!=null){
+                var tmpSelected = eval("("+tmpTipoTramite+")");
+                if(tmpSelected.length>0) {
+                    tipoTramiteSelected = tmpSelected[0];
+                    if(tipoTramiteSelected!= null && tipoTramiteSelected.CRTST_NUMERO_DIAS!=null){
+                        var today = new Date();
+                        var limit = today.addDays(tipoTramiteSelected.CRTST_NUMERO_DIAS-1);
+                        $("#dtFechaSalida").datepicker( "option", "maxDate", limit );
+                        //SOLO AQUI DEBERIAMOS LIBERAR LOS CAMPOS BLOQUEADOS.
+                        continueEditing();
+                    }
+                }
+            }
+
+            if($('#txtMotivoResidencia').val() == 'Permanente octava transitoria')
+                alert('Para iniciar este tr\u00e1mite debe acercarse a ventanilla.\n Seleccione otra para continuar.');
+        }
+        else
+        {
+            /* new bsxMessageBox({
+             title:'Error',
+             msg: 'El tipo de solicitud seleccionado no puede iniciar un tr\u00e1mite. <br> Seleccione otra para continuar.',
+             icon: "iconError"
+             });*/
+            alert('El tipo de solicitud seleccionado no puede iniciar un tramite.\n Seleccione otra para continuar.');
+        }
+    };
 
     /*
      * Inicializacion de los datos asignados al objeto de tipo dialogo para seleccion de vehiculos
@@ -2131,48 +2306,7 @@ $(function() {
         var cancel = function() {
             $("#dlgMotivoResidencia").dialog("close");
         };
-        var getResponse = function(){
-            if(tmpAplicaTramite =='true')
-            {
-                $("#txtMotivoResidencia").val(tmpMotivoResidencia);
-                $("#dlgMotivoResidencia").dialog("close");
-                var cbxTipoTramite = $("#cbxTipoTramite").val();
-                consultarReglaValidacion(tmpMotivoResidenciaId,cbxTipoTramite);
 
-                cargarDocumentos(tmpMotivoResidenciaId);
-                cargarRequisitos(tmpMotivoResidenciaId);
-                /*AC-> Nos traemos los dias permitidos*/
-                var tipoTramiteParams= new SOAPClientParameters();
-                tipoTramiteParams.add('inCrtst_codigo',tmpMotivoResidenciaId);
-                tipoTramiteParams.add('format',TypeFormat.JSON);
-                var tmpTipoTramite = SOAPClient.invoke(URL_WS+'Cgg_res_tipo_solicitud_tramite','select',tipoTramiteParams, false,null);
-                if(tmpTipoTramite!=null){
-                    var tmpSelected = eval("("+tmpTipoTramite+")");
-                    if(tmpSelected.length>0) {
-                        tipoTramiteSelected = tmpSelected[0];
-                        if(tipoTramiteSelected!= null && tipoTramiteSelected.CRTST_NUMERO_DIAS!=null){
-                            var today = new Date();
-                            var limit = today.addDays(tipoTramiteSelected.CRTST_NUMERO_DIAS-1);
-                            $("#dtFechaSalida").datepicker( "option", "maxDate", limit );
-                            //SOLO AQUI DEBERIAMOS LIBERAR LOS CAMPOS BLOQUEADOS.
-                            continueEditing();
-                        }
-                    }
-                }
-
-                if($('#txtMotivoResidencia').val() == 'Permanente octava transitoria')
-                    alert('Para iniciar este tr\u00e1mite debe acercarse a ventanilla.\n Seleccione otra para continuar.');
-            }
-            else
-            {
-                /* new bsxMessageBox({
-                 title:'Error',
-                 msg: 'El tipo de solicitud seleccionado no puede iniciar un tr\u00e1mite. <br> Seleccione otra para continuar.',
-                 icon: "iconError"
-                 });*/
-                alert('El tipo de solicitud seleccionado no puede iniciar un tramite.\n Seleccione otra para continuar.');
-            }
-        };
         var dialogOpts = {
             modal: true,
             position: 'top',

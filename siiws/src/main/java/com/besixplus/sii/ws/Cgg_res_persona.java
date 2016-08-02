@@ -1415,7 +1415,7 @@ public class Cgg_res_persona implements Serializable{
 							if (registroCivil.getNacionalidad().equals("ECUATORIANA")) {
 								tmpObj.setCPAIS_CODIGO("61");
 							}
-							if (registroCivil.getGenero().equals("FEMENINO")) {
+							if (registroCivil.getGenero().equals("MUJER")) {
 								tmpObj.setCRPER_GENERO(1);
 							} else {
 								tmpObj.setCRPER_GENERO(0);
