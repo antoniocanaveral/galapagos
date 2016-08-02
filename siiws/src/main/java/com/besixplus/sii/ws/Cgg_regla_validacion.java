@@ -462,6 +462,7 @@ public class Cgg_regla_validacion implements Serializable{
 	@WebMethod
 	public String selectReglaTipoSolicitud(		
 			@WebParam(name="inCrtst_codigo")String inCrtst_codigo,
+			@WebParam(name="inCrtt_codigo") String inCrtt_codigo,
 			@WebParam(name="format")String format
 	) throws SOAPException{
 		HttpServletRequest tmpRequest = (HttpServletRequest) wctx.getMessageContext().get(MessageContext.SERVLET_REQUEST);
@@ -478,7 +479,7 @@ public class Cgg_regla_validacion implements Serializable{
 			}
 
 			con.setAutoCommit(!ManagerConnection.isDeployed());
-			obj = new com.besixplus.sii.db.Cgg_regla_validacion().selectReglaTipoSolicitud(con,inCrtst_codigo);
+			obj = new com.besixplus.sii.db.Cgg_regla_validacion().selectReglaTipoSolicitud(con,inCrtst_codigo,inCrtt_codigo);
 			tmpFormat = new com.besixplus.sii.misc.Formatter(format, obj);
 			outCadena = tmpFormat.getData();
 			con.close();

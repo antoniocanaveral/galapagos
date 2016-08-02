@@ -362,7 +362,8 @@ function FrmListadoCgg_res_tipo_solicitud_tramite(inDesktop){
         {name:'CRRES_CODIGO'},
         {name:'CRTST_APLICA_OTRO'},
         {name:'CRTST_APLICA_BENEFICIARIO'},
-        {name:'CRTST_INDICE'}
+        {name:'CRTST_INDICE'},
+        {name:'CRTT_CODIGO'}
         ]),
         sortInfo:{
             field: 'CGG_CRTST_CODIGO',

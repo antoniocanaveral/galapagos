@@ -2343,6 +2343,7 @@ VALORES:
 		obj.setCRTRA_CODIGO("KEYGEN");
 		obj.setCRTRA_FOLIO(BigDecimal.ZERO);
 		obj.setCRPER_CODIGO(inCrper_codigo);
+		obj.setCRTT_CODIGO(inCrtt_codigo);
 		//REPRESENTANTE
 		obj.setREP_CRPER_CODIGO(inRep_crper_codigo);
 		//	obj.setCRPJR_CODIGO(inCrpjr_codigo);

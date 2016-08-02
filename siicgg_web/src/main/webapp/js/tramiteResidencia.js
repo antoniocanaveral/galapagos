@@ -708,11 +708,12 @@ $(function() {
 
      });*/
 
-    function consultarReglaValidacion(inCrtst_codigo_select)
+    function consultarReglaValidacion(inCrtst_codigo_select, inCrtt_codigo_select)
     {
         //Consulta de regla de validacion.
         var scpReglaValidacion= new SOAPClientParameters();
         scpReglaValidacion.add('inCrtst_codigo',inCrtst_codigo_select);
+        scpReglaValidacion.add('inCrtt_codigo',inCrtt_codigo_select);
         scpReglaValidacion.add('format',TypeFormat.JSON);
         var tmpReglaValidacion = SOAPClient.invoke(URL_WS+'Cgg_regla_validacion','selectReglaTipoSolicitud',scpReglaValidacion, false,null);
         try{
@@ -2131,7 +2132,9 @@ $(function() {
             {
                 $("#txtMotivoResidencia").val(tmpMotivoResidencia);
                 $("#dlgMotivoResidencia").dialog("close");
-                consultarReglaValidacion(tmpMotivoResidenciaId);
+                var cbxTipoTramite = $("#cbxTipoTramite").val();
+                consultarReglaValidacion(tmpMotivoResidenciaId,cbxTipoTramite);
+
                 cargarDocumentos(tmpMotivoResidenciaId);
                 cargarRequisitos(tmpMotivoResidenciaId);
                 /*AC-> Nos traemos los dias permitidos*/

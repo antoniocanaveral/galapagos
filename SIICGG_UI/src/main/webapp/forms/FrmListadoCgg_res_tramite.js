@@ -292,7 +292,10 @@ function FrmListadoCgg_res_tramite(inDesktop){
 		{name:'CRTRA_FECHA_SALIDA'},
         {name:'CRTRA_FOLIO'},
 		{name:'CRTRA_GRUPO'},
-        {name:'CRTRA_ORDEN'}
+        {name:'CRTRA_ORDEN'},
+        {name:'REP_CRPER_CODIGO'},
+        {name:'CHANGE_CRTST_CODIGO'},
+        {name:'CRTT_CODIGO'}
         ]),
         groupField:'CRTRA_FECHA_RECEPCION',
         sortInfo:{

@@ -34,6 +34,9 @@ public class Cgg_res_tramite implements Serializable{
 	/*AC Campo para Cambio de Motivo*/
 	private String myChange_crtst_codigo;
 
+	/*AC Campo para Tipo Residencia*/
+	private String myCrtt_codigo;
+
 	/**
 	* IDENTIFICATIVO UNICO DE REGISTRO DE PROCESO
 	*/
@@ -342,6 +345,14 @@ VALORES:
 
 	public void setREP_CRPER_CODIGO(String myRep_crper_codigo) {
 		this.myRep_crper_codigo = myRep_crper_codigo;
+	}
+
+	public String getCRTT_CODIGO() {
+		return myCrtt_codigo;
+	}
+
+	public void setCRTT_CODIGO(String myCrtt_codigo) {
+		this.myCrtt_codigo = myCrtt_codigo;
 	}
 
 	/**

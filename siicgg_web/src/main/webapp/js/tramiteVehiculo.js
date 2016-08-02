@@ -424,6 +424,7 @@ $(function() {
         //Consulta de regla de validacion.
         var scpReglaValidacion= new SOAPClientParameters();
         scpReglaValidacion.add('inCrtst_codigo',$(this).val());
+        scpReglaValidacion.add('inCrtt_codigo',$("#cbxTipoTramite").val());
         scpReglaValidacion.add('format',TypeFormat.JSON);
         var tmpReglaValidacion = SOAPClient.invoke(URL_WS+'Cgg_regla_validacion','selectReglaTipoSolicitud',scpReglaValidacion, false,null);
         try{

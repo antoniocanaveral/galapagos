@@ -52,7 +52,8 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
         {name:'CRVAL_CODIGO'},
         {name:'CRVAL_NOMBRE'},
         {name:'CRTSE_CAMPO_EVALUACION'},
-        {name:'CRTSE_VALOR_1'}
+        {name:'CRTSE_VALOR_1'},
+        {name:'CRTT_CODIGO'}
     ]);
 
     var rFilaProceso = Ext.data.Record.create(['CRPRO_CODIGO', 'CRPRO_NOMBRE']);
@@ -211,11 +212,11 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
         disabled:true,
         listeners:{
             check:function(inThis,inChecked){
-                if(inChecked == true){
+                /*if(inChecked == true){
                     Ext.getCmp('tpGarantia').enable();
                 }else{
                     Ext.getCmp('tpGarantia').disable();
-                }
+                }*/
             }
         }
     });
@@ -1240,7 +1241,64 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
             var record = combo.findRecord(combo.valueField, value);
             return record ? record.get(combo.displayField) : combo.valueNotFoundText;
         }
-    }
+    };
+
+    //====>AC
+    var gsCrtt_codigo = new Ext.data.Store({
+        proxy:new Ext.ux.bsx.SoapProxy({
+            url:URL_WS+"Cgg_tipo_tramite",
+            method:"selectAll",
+            pagin:false
+        }),
+        remoteSort:false,
+        reader:new Ext.data.JsonReader({
+        },[
+            {
+                name:'CRTT_CODIGO'
+            },
+
+            {
+                name:'CRTT_NOMBRE'
+            }
+        ]),
+        baseParams:{
+            format:TypeFormat.JSON
+        },
+         listeners:{
+             load:function(){
+                 /*if(INRECORD_CGG_RES_PERSONA){
+                     try{
+                         //if(inRecordCgg_res_persona.get('CRDID_CODIGO') != undefined)
+                         cbxCrtt_codigo.setValue(inRecordCgg_res_persona.get('CRDID_CODIGO'));
+                     }catch(inErr){}
+                 }*/
+             }
+         }
+    });
+    gsCrtt_codigo.load();
+    var crtt_codigo=null;
+    var cbxCrtt_codigo = new Ext.form.ComboBox({
+        id:'cbxCrtt_codigo',
+        name:'cbxCrtt_codigo',
+        fieldLabel :'Tipo de tramite',
+        anchor:'100%',
+        store: gsCrtt_codigo,
+        displayField:'CRTT_NOMBRE',
+        typeAhead: true,
+        mode: 'local',
+        forceSelection:true,
+        triggerAction:'all',
+        emptyText:'Seleccione un tipo de tramite',
+        selectOnFocus:true,
+        tpl: '<tpl for="."><div ext:qtip="{CRTT_NOMBRE}. {CRTT_NOMBRE}" class="x-combo-list-item">{CRTT_NOMBRE}</div></tpl>',
+        valueField:'CRTT_CODIGO',
+        listeners:{
+            select:function(inThis,inRecord,inIndex){
+                crtt_codigo = inIndex;
+            }
+        }
+    });
+////AC<<====
 
     /**
      * Ext.form.TextField IDENTIFICATIVO de seleccion de funcion.
@@ -1332,6 +1390,20 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
             editor:{
                 xtype:'textfield'
             }
+        },
+        {
+            dataIndex:'CRTT_CODIGO',
+            header:'Tipo de tramite',
+            width:150,
+            sortable:true,
+            editor:cbxCrtt_codigo,
+            renderer:function(inCrttCodigo){
+                for(var i = 0; i < gsCrtt_codigo.data.items.length ;i++){
+                    if(gsCrtt_codigo.data.items[i].data.CRTT_CODIGO==inCrttCodigo){
+                        return gsCrtt_codigo.data.items[i].data.CRTT_NOMBRE;
+                    }
+                }
+            }
         }
     ]);
     /**
@@ -1342,13 +1414,13 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
             url:URL_WS+"Cgg_res_tipo_solicitud_regla",
             method:"selectCGG_RES_TIPO_SOLICITUD_TRAMITE1"
         }),
-        remoteSort:true,
+        remoteSort:false,
         reader:new Ext.data.JsonReader({},rTipoSolicitudRegla),
         baseParams:{
             inCrtst_codigo:'',
             format:'JSON'
         },
-        groupField: 'CRVAL_NOMBRE'
+        groupField: 'CRTT_CODIGO'
     });
 
     var reTipoSolicitudRegla = new Ext.ux.grid.RowEditor({
@@ -1547,12 +1619,13 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                     }
                 }
             }]
-        },{
+        },/*{
             id:'tpGarantia',
             title: '',
             layout:'border',
             items:[grdCgg_res_garantia_solicitud],
             disabled:true,
+            hidden:true,
             tbar:[{
                 iconCls:'iconNuevo',
                 handler:function(){
@@ -1580,7 +1653,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                     }
                 }
             }]
-        },{
+        },*/{
             id:'tpReglaValidacion',
             title: 'Reglas de validaci\u00F3n',
             disabled:true,
@@ -1616,7 +1689,8 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                                                 CRVAL_CODIGO:recordRegla.get('CRVAL_CODIGO'),
                                                 CRVAL_NOMBRE:recordRegla.get('CRVAL_NOMBRE'),
                                                 CRTSE_VALOR_1:tmpParams[i].toUpperCase(),
-                                                CRTSE_CAMPO_EVALUACION:''
+                                                CRTSE_CAMPO_EVALUACION:'',
+                                                CRTT_CODIGO: recordRegla.get('CRTT_CODIGO')
                                             });
                                             reTipoSolicitudRegla.stopEditing();
                                             gsCgg_res_tipo_solicitud_regla.insert(0,rFilaRegla);
@@ -1631,7 +1705,8 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                                             CRVAL_CODIGO:recordRegla.get('CRVAL_CODIGO'),
                                             CRVAL_NOMBRE:recordRegla.get('CRVAL_NOMBRE'),
                                             CRTSE_VALOR_1:recordRegla.get('CRVAL_FUNCION_VALIDACION'),
-                                            CRTSE_CAMPO_EVALUACION:''
+                                            CRTSE_CAMPO_EVALUACION:'',
+                                            CRTT_CODIGO: recordRegla.get('CRTT_CODIGO')
                                         });
                                         reTipoSolicitudRegla.stopEditing();
                                         gsCgg_res_tipo_solicitud_regla.insert(0,rFilaRegla);
@@ -1646,7 +1721,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                                 }
                             }
                         }
-                    )
+                    );
                     objDlgBusquedas.show();
                 }
             },{
@@ -1771,7 +1846,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
             txtCrtst_descripcion.setValue(inRecordCgg_res_tipo_solicitud_tramite.get('CRTST_DESCRIPCION'));
             txtCrtst_observacion.setValue(inRecordCgg_res_tipo_solicitud_tramite.get('CRTST_OBSERVACION'));
             chkCrtst_aplica_garantia.setValue(inRecordCgg_res_tipo_solicitud_tramite.get('CRTST_APLICA_GARANTIA'));
-            Ext.getCmp('tpGarantia').setDisabled(!inRecordCgg_res_tipo_solicitud_tramite.get('CRTST_APLICA_GARANTIA'));
+            //Ext.getCmp('tpGarantia').setDisabled(!inRecordCgg_res_tipo_solicitud_tramite.get('CRTST_APLICA_GARANTIA'));
 
             chkCrtst_aplica_tramite.setValue(inRecordCgg_res_tipo_solicitud_tramite.get('CRTST_APLICA_TRAMITE'));
             chkCrtst_aplica_grupo.setValue(inRecordCgg_res_tipo_solicitud_tramite.get('CRTST_APLICA_GRUPO'));
@@ -1813,6 +1888,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                     format:"JSON"
                 }
             });
+            sCgg_regla_validacion.load();
 
             gsCgg_res_tst_aplica.reload({
                 params:{
@@ -1851,6 +1927,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                 tmpReglaGuardar.CRVAL_NOMBRE = rRegla.get('CRVAL_NOMBRE');
                 tmpReglaGuardar.CRTSE_VALOR_1  = '';
                 tmpReglaGuardar.CRTSE_CAMPO_EVALUACION = '';
+                tmpReglaGuardar.CRTT_CODIGO = rRegla.get('CRTT_CODIGO');
                 tmpNombreRegla = rRegla.get('CRVAL_NOMBRE');
                 tmpParams[rRegla.get('CRTSE_VALOR_1')] = rRegla.get('CRTSE_CAMPO_EVALUACION');
 

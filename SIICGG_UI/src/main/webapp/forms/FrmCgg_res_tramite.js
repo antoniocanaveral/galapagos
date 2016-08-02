@@ -35,6 +35,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
     var esHistorico = false;
     var crgrtCodigo = null;
     var flagAuspiciante = false;
+    var crtt_codigo = null;
     var tmpPersonaAuspiciante = new Persona();
     var tmpPersonaBeneficiario = new Persona();
     var tmpPersonaRepresentante = new Persona();
@@ -425,6 +426,70 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
             }
         }
     });
+
+//====>AC
+    var gsCrtt_codigo = new Ext.data.Store({
+        proxy:new Ext.ux.bsx.SoapProxy({
+            url:URL_WS+"Cgg_tipo_tramite",
+            method:"selectAll",
+            pagin:false
+        }),
+        remoteSort:false,
+        reader:new Ext.data.JsonReader({
+        },[
+            {
+                name:'CRTT_CODIGO'
+            },
+
+            {
+                name:'CRTT_NOMBRE'
+            }
+        ]),
+        baseParams:{
+            format:TypeFormat.JSON
+        }/*,
+        listeners:{
+            load:function(){
+                if(INRECORD_CGG_RES_PERSONA){
+                    try
+                    {
+                        //if(inRecordCgg_res_persona.get('CRDID_CODIGO') != undefined)
+                        cbxCrdid_codigo.setValue(inRecordCgg_res_persona.get('CRDID_CODIGO'));
+                    }
+                    catch(inErr)
+                    {
+
+                    }
+                }
+            }
+        }*/
+    });
+    if(INSENTENCIA_CGG_RES_TRAMITE=='registrarTramite')
+        gsCrtt_codigo.load();
+    var cbxCrtt_codigo = new Ext.form.ComboBox({
+        id:'cbxCrtt_codigo',
+        name:'cbxCrtt_codigo',
+        fieldLabel :'Tipo de tramite',
+        anchor:'100%',
+        store: gsCrtt_codigo,
+        displayField:'CRTT_NOMBRE',
+        typeAhead: true,
+        mode: 'local',
+        hidden: INSENTENCIA_CGG_RES_TRAMITE!='registrarTramite',
+        forceSelection:true,
+        triggerAction:'all',
+        emptyText:'Seleccione un tipo de tramite',
+        selectOnFocus:true,
+        tpl: '<tpl for="."><div ext:qtip="{CRTT_NOMBRE}. {CRTT_NOMBRE}" class="x-combo-list-item">{CRTT_NOMBRE}</div></tpl>',
+        valueField:'CRTT_CODIGO',
+        listeners:{
+            select:function(inThis,inRecord,inIndex){
+                btnCrtst_codigo.disabled = false;
+                crtt_codigo = inIndex;
+            }
+        }
+    });
+////AC<<====
     /**
      * Ext.form.TextField IDENTIFICATIVO UNICO DE REGISTRO TIPO DE SOLICITUD DE RESIDENCIA
      */
@@ -442,6 +507,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
     var btnCrtst_codigo = new Ext.Button({
         id: 'btnCrtst_codigo',
         iconCls: 'iconBuscar',
+        disabled: true,
         listeners: {
             click: function(){
                 var tmpFLCgg_res_tipo_solicitud_tramite = new FrmListadoCgg_res_tipo_solicitud_tramite();
@@ -577,6 +643,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
             if(tmpRecord.data.CRTST_RESTRINGIDO != undefined && tmpRecord.data.CRTST_RESTRINGIDO){
                 var scpReglaValidacion= new SOAPClientParameters();
                 scpReglaValidacion.add('inCrtst_codigo',tmpRecord.get('CRTST_CODIGO'));
+                scpReglaValidacion.add('inCrtt_codigo',crtt_codigo);
                 scpReglaValidacion.add('format',TypeFormat.JSON);
                 var tmpReglaValidacion = SOAPClient.invoke(URL_WS+'Cgg_regla_validacion','selectReglaTipoSolicitud',scpReglaValidacion, false,null);
                 try{
@@ -1616,11 +1683,11 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
         id: 'pnlFrmCgg_res_tramite1Norte1',
         layout: 'column',
         region: 'north',
-        height: 55,
+        height: INSENTENCIA_CGG_RES_TRAMITE=='registrarTramite'?80:55,
         items: [{
             columnWidth: .5,
             layout: 'form',
-            items: [txtCrtra_numero, {
+            items: [cbxCrtt_codigo, txtCrtra_numero, {
                 xtype: 'panel',
                 layout: 'column',
                 anchor: '98%',

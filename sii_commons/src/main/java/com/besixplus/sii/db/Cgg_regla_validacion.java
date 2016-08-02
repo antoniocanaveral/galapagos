@@ -594,13 +594,14 @@ public class Cgg_regla_validacion implements Serializable{
 	 * @return com.besixplus.sii.objects.Cgg_regla_validacion OBJETO EQUIVALENTE AL REGISTRO DE LA TABLA.
 	 */
 	public ArrayList<HashMap<String,Object>>  selectReglaTipoSolicitud(
-			java.sql.Connection inConnection,String inCrtst_codigo
+			java.sql.Connection inConnection,String inCrtst_codigo,String inCrtt_codigo
 	){
 		ArrayList<HashMap<String,Object>> outCgg_regla_validacion = new ArrayList<HashMap<String,Object>>();
 		try{
-			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_REGLA_VALIDACION_SELECT_TIPO_SOLICITUD(?) }");
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_REGLA_VALIDACION_SELECT_TIPO_SOLICITUD(?,?) }");
 			stmSelect.registerOutParameter(1, Types.OTHER);
 			stmSelect.setString(2,inCrtst_codigo);
+			stmSelect.setString(3,inCrtt_codigo);
 			stmSelect.execute();
 			ResultSet results = (ResultSet) stmSelect.getObject(1);
 			int tmpColumnCount = results.getMetaData().getColumnCount();
