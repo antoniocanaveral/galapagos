@@ -1574,7 +1574,7 @@ $(function() {
                 return;
             }
         }
-        if(modeTemporal && objRepresentante==null && objRepresentante.CRPER_CODIGO!=null){
+        if(modeTemporal && (objRepresentante==null || objRepresentante.CRPER_CODIGO==null)){
             new bsxMessageBox({
                 title: 'Alerta',
                 msg: 'Debe especificar la c&eacute;dula de un representante v&aacute;lido y vigente.',
@@ -1682,6 +1682,7 @@ $(function() {
 
             var param = new SOAPClientParameters();
             param.add('inCrper_codigo', tmpRecordAuspiciante != null ? tmpRecordAuspiciante[0].CRPER_CODIGO : null);
+            param.add('inCgg_crpjr_codigo', tmpRecordAuspiciante != null ? tmpRecordAuspiciante[0].CRPJR_CODIGO : null);
             param.add('inCgg_crper_codigo', tmpRecordBeneficiario != null ? tmpRecordBeneficiario[0].CRPER_CODIGO : 'KEYGEN');
             // param.add('inCrtst_codigo', $("#cbxTipoSolicitudResidencia").val()) ;
             param.add('inCrtst_codigo', tmpMotivoResidenciaId);
@@ -1736,6 +1737,7 @@ $(function() {
 
             var param = new SOAPClientParameters();
             param.add('inCrper_codigo', tmpRecordAuspiciante != null ? tmpRecordAuspiciante[0].CRPER_CODIGO : null);
+            param.add('inCgg_crpjr_codigo', tmpRecordAuspiciante != null ? tmpRecordAuspiciante[0].CRPJR_CODIGO : null);
             param.add('inCgg_crper_codigo', null);
             param.add('inCrtst_codigo', tmpMotivoResidenciaId);
             param.add('inCisla_codigo', $("#cbxIslaTramite").val());
@@ -1842,6 +1844,7 @@ $(function() {
             var crdidCodigo = $('#cbxTipoDocumentoBeneficiario').val();
             var jsonData = {
                 'CRPER_CODIGO':crperCodigo,
+                'CRPJR_CODIGO': tmpRecordAuspiciante != null ? tmpRecordAuspiciante[0].CRPJR_CODIGO : null,
                 'CRDID_CODIGO':crdidCodigo,
                 'CGGCRPER_CODIGO':cggcrperCodigo,
                 'CRPER_NUM_DOC_IDENTIFIC':crperNumDocIdentific,
@@ -1897,6 +1900,7 @@ $(function() {
                     for (var i = 1; i < tblPersona.rows.length; i++) {
                         var objBeneficiario = {
                             CRPER_CODIGO: crperCodigo,
+                            CRPJR_CODIGO: tmpRecordAuspiciante != null ? tmpRecordAuspiciante[0].CRPJR_CODIGO : null,
                             CGGCRPER_CODIGO: tblPersona.rows[i].cells[1].id,
                             CRPER_NUM_DOC_IDENTIFIC: tblPersona.rows[i].cells[1].innerHTML,
                             CRDID_CODIGO: tblPersona.rows[i].cells[0].id,

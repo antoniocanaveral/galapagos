@@ -2201,6 +2201,7 @@ VALORES:
 	@WebMethod
 	public String registrarTramiteTranseunteLite(
 			@WebParam(name="inCrper_codigo")String inCrper_codigo,
+			@WebParam(name="inCgg_crpjr_codigo")String inCgg_crpjr_codigo,
 			@WebParam(name="inCgg_crper_codigo")String inCgg_crper_codigo,
 			@WebParam(name="inCrtst_codigo")String inCrtst_codigo,
 			@WebParam(name="inCisla_codigo")String inCisla_codigo,
@@ -2228,6 +2229,7 @@ VALORES:
 		objTramite.setCRTRA_CODIGO("KEYGEN");
 		objTramite.setCRTRA_FOLIO(BigDecimal.ZERO);
 		objTramite.setCRPER_CODIGO(inCrper_codigo);
+		objTramite.setCRPJR_CODIGO(inCgg_crpjr_codigo);
 		objTramite.setCGG_CRPER_CODIGO(inCgg_crper_codigo);
 		objTramite.setCRTST_CODIGO(inCrtst_codigo);
 		objTramite.setCVVEH_CODIGO(inCvveh_codigo);
@@ -2310,6 +2312,7 @@ VALORES:
 	@WebMethod
 	public String registrarTramiteLite(
 			@WebParam(name="inCrper_codigo")String inCrper_codigo,
+			@WebParam(name="inCgg_crpjr_codigo")String inCgg_crpjr_codigo,
 			@WebParam(name="inCgg_crper_codigo")String inCgg_crper_codigo,
 			@WebParam(name="inCrtst_codigo")String inCrtst_codigo,
 			@WebParam(name="inCisla_codigo")String inCisla_codigo,
@@ -2343,6 +2346,7 @@ VALORES:
 		obj.setCRTRA_CODIGO("KEYGEN");
 		obj.setCRTRA_FOLIO(BigDecimal.ZERO);
 		obj.setCRPER_CODIGO(inCrper_codigo);
+		obj.setCRPJR_CODIGO(inCgg_crpjr_codigo);
 		obj.setCRTT_CODIGO(inCrtt_codigo);
 		//REPRESENTANTE
 		obj.setREP_CRPER_CODIGO(inRep_crper_codigo);

@@ -10,6 +10,8 @@ public class RuleData implements Serializable {
     //Los datos estan en caliente, porque el tramite aún no ha sido creado.
     private String CRTST_CODIGO; //Código Tipo de Solicitud
 
+    private String CRPJR_CODIGO;//Código Auspiciante Juridico
+
     private String CRPER_CODIGO; //Código del Auspiciante
 
     private String CGGCRPER_CODIGO; //Código del Beneficiario
@@ -38,6 +40,14 @@ public class RuleData implements Serializable {
 
     public void setCRTST_CODIGO(String CRTST_CODIGO) {
         this.CRTST_CODIGO = CRTST_CODIGO;
+    }
+
+    public String getCRPJR_CODIGO() {
+        return CRPJR_CODIGO;
+    }
+
+    public void setCRPJR_CODIGO(String CRPJR_CODIGO) {
+        this.CRPJR_CODIGO = CRPJR_CODIGO;
     }
 
     public String getCRPER_CODIGO() {
