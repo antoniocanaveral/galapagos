@@ -77,6 +77,10 @@ public class BaseAPI extends BasePublicAPI {
         return this.cmisSession;
     }
 
+    public void disconnect(){
+        cmisSession.clear();
+    }
+
     /**
      * Uses basic authentication to create an HTTP request factory.
      *

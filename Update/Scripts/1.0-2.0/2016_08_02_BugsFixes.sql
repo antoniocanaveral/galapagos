@@ -65,6 +65,10 @@ $BODY$
   ROWS 1000;
 
 
+--TEMPORALES CON LOS PADRES CORRECTOS:
+update sii.cgg_res_tipo_solicitud_tramite set cgg_crtst_codigo='CRTST2' where cgg_crtst_codigo='CRTST11' and crtst_estado;
+
+
   --> MIGRATION SCRIPT CONTROLLER <--
 INSERT INTO sii.cgg_migrationscript (mrgsp_codigo,mrgsp_fecha,mrgsp_usuario_insert,mrgsp_fecha_insert,mrgsp_usuario_update,mrgsp_fecha_update,
 	mrgsp_estado,mrgsp_developer,mrgsp_name,mrgsp_description,
