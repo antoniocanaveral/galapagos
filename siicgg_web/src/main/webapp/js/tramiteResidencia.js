@@ -23,6 +23,9 @@ $(function() {
 
     btnAceptarAdjunto.click(function(){
         btnSalirAll($("attachView"));
+        //Con esto deberia arreglarse el problema de que muestra en el frame principal.
+        var frame = document.getElementById("frameAttachment");
+        frame.src ="bienvenida.jsp?CWPAG_CODIGO=CWPAG1";
     });
 
 

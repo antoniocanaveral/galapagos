@@ -13,6 +13,22 @@
     <script type="text/javascript" src="js/SoapClient.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript" src="js/prototype.js"></script>
+    <!--JQUERY para no cargar nada en iFrame-->
+    <!--script type="text/javascript" src="lib/jquery/jquery.js"></script>
+    <script type="text/javascript" src="lib/jquery/ui.core.min.js"></script>
+    <script type="text/javascript" src="lib/jquery/ui.tabs.min.js"></script>
+    <script type="text/javascript" src="lib/jquery/ui.datepicker.js"></script>
+    <script type="text/javascript" src="lib/jquery/jquery.validate.js"></script>
+    <script type="text/javascript" src="lib/jquery/jquery.tmpl.min.js"></script>
+    <script type="text/javascript" src="lib/jquery/ui.dialog.js"></script>
+    <script type="text/javascript" src="lib/jquery/jquery.dateFormat.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/jquery/jquery-ui.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jquery/ui.all.css"/>
+    <link rel="stylesheet" type="text/css" href="css/modulo.css"/>
+    <link rel="stylesheet" type="text/css" href="css/form.css"/>
+    <link rel="stylesheet" type="text/css" href="css/bsxTablaGE.css"/>
+    <link rel="stylesheet" type="text/css" href="css/bsxMessageBox.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jquery/jstree/style.css"/-->
     <script>
         //AC--> ACTUALIZACION DEL ESTILO
         window.onresize = function(event) {
@@ -380,6 +396,8 @@
                                                             margin: 0; padding: 0; max-width: 700px;" width="100%"
                                                         onload="document.getElementById('divCargando').style.visibility='hidden';">
                                                 </iframe>
+                                                <div id="divFrameBody" style="overflow-y:scroll !important; overflow-x:hidden !important; overflow:hidden;
+                                                            margin: 0; padding: 0; max-width: 700px;" width="100%"></div>
                                             </td>
                                         </tr>
                                     </table>
