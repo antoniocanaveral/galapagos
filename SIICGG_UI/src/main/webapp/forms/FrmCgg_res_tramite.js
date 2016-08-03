@@ -478,8 +478,8 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
             }
         }
     });
-    if(INSENTENCIA_CGG_RES_TRAMITE=='registrarTramite')
-        gsCrtt_codigo.load();
+    //if(INSENTENCIA_CGG_RES_TRAMITE=='registrarTramite')
+    gsCrtt_codigo.load();
 ////AC<<====
     /**
      * Ext.form.TextField IDENTIFICATIVO UNICO DE REGISTRO TIPO DE SOLICITUD DE RESIDENCIA
