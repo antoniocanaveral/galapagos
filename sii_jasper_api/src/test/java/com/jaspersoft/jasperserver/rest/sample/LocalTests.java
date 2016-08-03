@@ -25,7 +25,7 @@ public class LocalTests {
 
     @Test
     public void CreatePath(){
-        System.err.println(validateReport("atencionalcliente", "rptSolicitudResidenciaPermanente"));
+        System.err.println(validateReport("atencionalcliente", "rptSolicitudResidenciaTranseunte"));
     }
 
 
@@ -212,7 +212,19 @@ public class LocalTests {
 
                 JasperService jasperService = new JasperService(controls,fileService.getHttpContext());
                 jasperService.getOrCreateJasperReport(reportFolder, reportName, resources);
-
+                //Si los recursos son jrxml los creamos como reporte en la misma carpeta.
+                if(resources!=null && resources.size()>0){
+                    for(JasperReportResource resource:resources){
+                        if(resource.getName().endsWith("jrxml")){
+                            InputControlService controlService = new InputControlService(fileService.getHttpContext());
+                            File fileResource = new File(Env.getHomePath() + config.getProperty("SII_LOCAL_REPOSITORY") + config.getProperty("SII_REPORTS_PATH") + "/" + reportFolder
+                                    + "/" + reportName + "_files" + "/" + resource.getName());
+                            controls = controlService.getOrCreateInputControls(fileResource);
+                            jasperService = new JasperService(controls,fileService.getHttpContext());
+                            jasperService.getOrCreateJasperReport(reportFolder, resource.getName().replace(".jrxml",""), null);
+                        }
+                    }
+                }
                 fileService.logOut();
             }
 

@@ -53,7 +53,7 @@ function Reporte(inReportName,inReportFolder,inParams){
                 });
             }
         }
-    }
+    };
 
     this.getUrl = function(){
         this.show(false);
@@ -67,8 +67,8 @@ function Reporte(inReportName,inReportFolder,inParams){
  */
 Reporte.prototype.show = function(){
     this.show();
-}
+};
 
 Reporte.prototype.getUrl= function(){
     return this.getUrl();
-}
+};
