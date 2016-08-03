@@ -32,6 +32,8 @@ public class RuleData implements Serializable {
 
     private String REP_CRPER_CODIGO; //Código del Representante para Temporales
 
+    private String REP_CRPER_NUM_DOC_IDENTIFIC;// Cédula del Representante
+
     private String CHANGE_CRTST_CODIGO; //Nuevo motivo(cambio de motivo)
 
     public String getCRTST_CODIGO() {
@@ -126,8 +128,16 @@ public class RuleData implements Serializable {
         return REP_CRPER_CODIGO;
     }
 
-    public void setREP_CRPER_CODIGO(String CEDULA_REPRESENTANTE) {
-        this.REP_CRPER_CODIGO = CEDULA_REPRESENTANTE;
+    public void setREP_CRPER_CODIGO(String CRPER_CODIGO) {
+        this.REP_CRPER_CODIGO = CRPER_CODIGO;
+    }
+
+    public String getREP_CRPER_NUM_DOC_IDENTIFIC() {
+        return REP_CRPER_NUM_DOC_IDENTIFIC;
+    }
+
+    public void setREP_CRPER_NUM_DOC_IDENTIFIC(String REP_CRPER_NUM_DOC_IDENTIFIC) {
+        this.REP_CRPER_NUM_DOC_IDENTIFIC = REP_CRPER_NUM_DOC_IDENTIFIC;
     }
 
     public String getCHANGE_CRTST_CODIGO() {

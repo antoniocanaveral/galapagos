@@ -39,7 +39,6 @@ public class AlfrescoActions {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            cmis.disconnect();
         }
         cmis.disconnect();
         return result;
@@ -65,7 +64,6 @@ public class AlfrescoActions {
                 result=null;
         } catch (IOException e) {
             e.printStackTrace();
-            cmis.disconnect();
         }
         cmis.disconnect();
         return result;
@@ -96,7 +94,6 @@ public class AlfrescoActions {
             }
         }catch (Exception e){
             e.printStackTrace();
-            cmis.disconnect();
         }
         cmis.disconnect();
         return result;

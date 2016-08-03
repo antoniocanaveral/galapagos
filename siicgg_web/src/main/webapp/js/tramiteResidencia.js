@@ -95,9 +95,6 @@ $(function() {
             });
         }else{
             consultarDatosPersona(objRepresentante,$('#txtRepresentante').val(),'REPRESENTANTE');
-            if(objRepresentante!=null){
-                $('#txtRepresentante').val(objRepresentante.CRPER_APELLIDO_PATERNO + " " + objRepresentante.CRPER_NOMBRES);
-            }
         }
     }
 
@@ -527,6 +524,7 @@ $(function() {
     var cggcrperCodigo = null;
     var crperNumDocIdentific=null;
     var cggCrperFechaNacimiento = null;
+    var repCrperCodigo = null;
     var crdptCodigo = 'CRDPT_AT001';
     /******************FIN DE DEFINICION DE VARIABLES PARA REGLA DE VALIDACION DE INFORMAICON*******************/
 
@@ -1520,6 +1518,10 @@ $(function() {
                     {
                         if(inTipoPersona == 'REPRESENTANTE'){
                             objRepresentante = tmpRecordPersona[0];
+                            if(objRepresentante!=null){
+                                $('#txtRepresentanteData').val(objRepresentante.CRPER_APELLIDO_PATERNO + " " + objRepresentante.CRPER_APELLIDO_MATERNO +" "+ objRepresentante.CRPER_NOMBRES);
+                                repCrperCodigo=objRepresentante!=null?objRepresentante.CRPER_CODIGO:null;
+                            }
                         }
                         else if(inTipoPersona == 'AUSPICIANTE')
                         {
@@ -1838,7 +1840,7 @@ $(function() {
             param.add('inCrtra_fecha_ingreso', $('#dtFechaIngreso').val());
             param.add('inCrtra_fecha_salida', $('#dtFechaSalida').val());
             param.add('inCrtra_actividad_residencia', codigoActividad);
-            param.add('inRep_crper_codigo',objRepresentante!=null?objRepresentante.CRPER_CODIGO:null);
+            param.add('inRep_crper_codigo',repCrperCodigo);
             SOAPClient.invoke(URL_WS + "Cgg_res_tramite", 'registrarTramiteLite', param, true, CallBackCgg_res_tramite);
         }else{
             var beneficiarios = [];
@@ -1942,8 +1944,10 @@ $(function() {
                         objTmp[key] = _benef.CRPER_NUM_DOC_IDENTIFIC;
                     }else if(searchVal!=null && searchVal=='crperCodigo'){
                         objTmp[key] = _benef.CRPER_CODIGO;
-                    }else if(searchVal!=null && searchVal=='cggCrperFechaNacimiento'){
+                    }else if(searchVal!=null && searchVal=='cggCrperFechaNacimiento') {
                         objTmp[key] = _benef.CRPER_FECHA_NACIMIENTO;
+                    }else if(searchVal!=null && searchVal=='repCrperCodigo'){
+                        objTmp[key] = _benef.REP_CRPER_CODIGO;
                     }else{
                         if(key.toString().search("IN_")==0)
                             objTmp[key] = _benef[key.toString().slice(3)];
@@ -1988,7 +1992,8 @@ $(function() {
                 'CRDPT_CODIGO':crdptCodigo,
                 'CRPER_CONYUGE':$("#txtCiConyuge").val(),
                 'CRPER_FECHA_MATRIMONIO':$("#dtFechaMatrimonio").val(),
-                'REP_CRPER_CODIGO': objRepresentante!=null?objRepresentante.CRPER_CODIGO:null
+                'REP_CRPER_CODIGO': repCrperCodigo,
+                'REP_CRPER_NUM_DOC_IDENTIFIC': objRepresentante!=null?objRepresentante.REP_CRPER_NUM_DOC_IDENTIFIC:null
             };
             var resultadoRegla = evaluarReglaTramite();
             if(resultadoRegla!==null){

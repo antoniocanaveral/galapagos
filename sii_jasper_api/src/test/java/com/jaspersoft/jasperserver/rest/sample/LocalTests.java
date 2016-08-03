@@ -85,7 +85,7 @@ public class LocalTests {
                                 if (!fileService.touchFile(remotePath)) {
                                     //Si es reporte, creamos el reporte además de subir el archivo
                                     String justName = resource.getName().substring(0, resource.getName().indexOf("."));
-                                    if (resource.getName().endsWith("jrxml")) {
+                                    /*if (resource.getName().endsWith("jrxml")) {
                                         fileService.uploadFile(remotePath.replace("/" + resource.getName(), ""), resource.getName(), resource);
                                         List<InputControl> controls = null;
                                         InputControlService controlService = new InputControlService(fileService.getHttpContext());
@@ -95,12 +95,12 @@ public class LocalTests {
                                         String parentPath = remotePath.replace("/" + resource.getName(), "").substring(beginIndex + 1);
                                         String basePath = remotePath.replace("/" + resource.getName(), "").substring(0, beginIndex);
                                         jasperService.getOrCreateJasperReport(basePath, parentPath, justName, null);
-                                    } else {
+                                    } else {*/
                                         //Subimos el archivo sin poner la extensión
                                         fileService.uploadFile(remotePath.replace("/" + resource.getName(), ""), justName, resource);
                                         //Subimos el archivo nuevamente pero con extensión
-                                        fileService.uploadFile(remotePath.replace("/" + resource.getName(), ""), resource.getName(), resource);
-                                    }
+                                        //fileService.uploadFile(remotePath.replace("/" + resource.getName(), ""), resource.getName(), resource);
+                                    //}
 
                                 }
                             }
@@ -126,12 +126,13 @@ public class LocalTests {
                                 File[] folders = folder.listFiles();
                                 if (folders != null) {
                                     for (File inFile : folders) {
+                                        String justName = inFile.getName().substring(0, inFile.getName().indexOf("."));
                                         if (excludes != null) {
                                             if (inFile.isFile() && !excludes.contains(inFile.getName()))
-                                                filesToUpload.add(inFile.getName());
+                                                filesToUpload.add(justName);
                                         } else {
                                             if (inFile.isFile())
-                                                filesToUpload.add(inFile.getName());
+                                                filesToUpload.add(justName);
                                         }
                                     }
                                 }
@@ -182,7 +183,7 @@ public class LocalTests {
                 File reportRoot = new File(Env.getHomePath() + config.getProperty("SII_LOCAL_REPOSITORY") + config.getProperty("SII_REPORTS_PATH") + "/" + reportFolder + "/" + reportName + "_files");
                 if (reportRoot != null && reportRoot.exists() && reportRoot.isDirectory()) {
                     for (File item : reportRoot.listFiles()) {
-                        if (item.getName().contains(reportName)) {
+                        if (item.getName().contains(reportName)) {//Este es el reporte
                             if (!item.getName().endsWith(".jasper")) {//ignoramos los jasper
                                 InputControlService controlService = new InputControlService(fileService.getHttpContext());
                                 controls = controlService.getOrCreateInputControls(item);
@@ -196,9 +197,10 @@ public class LocalTests {
                                 if (resources == null)
                                     resources = new ArrayList<>();
                                 //Metemos el recurso en el repositorio.
+                                String justName = item.getName().substring(0, item.getName().indexOf("."));
                                 if (!fileService.touchFile(config.getProperty("SII_RESOURCES_PATH") + "/" + reportFolder + "/" + item.getName()))
                                     fileService.uploadFile(config.getProperty("SII_RESOURCES_PATH") + "/" + reportFolder, item.getName(), item);
-                                JasperReportResource resource = new JasperReportResource(item.getName(), config.getProperty("SII_RESOURCES_PATH") + "/" + reportFolder + "/" + item.getName());
+                                JasperReportResource resource = new JasperReportResource(justName, config.getProperty("SII_RESOURCES_PATH") + "/" + reportFolder + "/" + item.getName());
                                 resources.add(resource);
                             } else {
                                 System.err.println(".jasper found. Please Remove: " + item.getAbsolutePath());
@@ -213,7 +215,7 @@ public class LocalTests {
                 JasperService jasperService = new JasperService(controls,fileService.getHttpContext());
                 jasperService.getOrCreateJasperReport(reportFolder, reportName, resources);
                 //Si los recursos son jrxml los creamos como reporte en la misma carpeta.
-                if(resources!=null && resources.size()>0){
+                /*if(resources!=null && resources.size()>0){
                     for(JasperReportResource resource:resources){
                         if(resource.getName().endsWith("jrxml")){
                             InputControlService controlService = new InputControlService(fileService.getHttpContext());
@@ -224,7 +226,7 @@ public class LocalTests {
                             jasperService.getOrCreateJasperReport(reportFolder, resource.getName().replace(".jrxml",""), null);
                         }
                     }
-                }
+                }*/
                 fileService.logOut();
             }
 

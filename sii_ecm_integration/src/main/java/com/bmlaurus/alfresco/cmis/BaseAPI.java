@@ -79,6 +79,8 @@ public class BaseAPI extends BasePublicAPI {
 
     public void disconnect(){
         cmisSession.clear();
+        cmisSession=null;
+        System.out.println("----- [Alfresco Session] Cleared! -----");
     }
 
     /**

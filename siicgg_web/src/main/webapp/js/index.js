@@ -81,7 +81,7 @@ function loadInit(){
 		
 		lnkAccesoLogin.innerHTML="Salir";
 		divLogin.style.cssText = "background-color:#E6EFC2;border-color:#C1D573";
-		divUsuario.innerHTML = "<b>Bienvenido</b><br> "+ userObject.CRPER_NOMBRES+" "+userObject.CRPER_APELLIDO_PATERNO+"";		
+		divUsuario.innerHTML = "<b>Bienvenido</b><br> "+ userObject.CRPER_NOMBRES+" "+userObject.CRPER_APELLIDO_PATERNO+" "+userObject.CRPER_APELLIDO_MATERNO+"";
 		btnAcceso.onclick=function(){
 			window.location="PrivateWS/SessionWeb?request=logout";
 		}

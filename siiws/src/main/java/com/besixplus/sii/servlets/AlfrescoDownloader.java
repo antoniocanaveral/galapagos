@@ -24,15 +24,16 @@ public class AlfrescoDownloader extends HttpServlet implements Serializable {
                     // set to binary type if MIME mapping not found
                     mimeType = "application/octet-stream";
                 }
+                InputStream inStream = file.getInputStream();
+
                 response.setContentType(mimeType);
-                response.setContentLength((int) file.getInputStream().available());
+                response.setContentLength(inStream.available());
 
                 // forces download
                 String headerKey = "Content-Disposition";
                 String headerValue = String.format("inline; filename=\"%s\"", file.getName());
                 response.setHeader(headerKey, headerValue);
 
-                InputStream inStream = file.getInputStream();
                 // obtains response's output stream
                 OutputStream outStream = response.getOutputStream();
 

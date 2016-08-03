@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e5128dad-0604-4add-a157-503dd6066816">
 	<property name="ireport.zoom" value="1.3310000000000013"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="96"/>
+	<property name="ireport.y" value="0"/>
 	<property name="ireport.jasperserver.reportUnit" value="/Reports/sii/atencionalcliente/rptSolicitudResidenciaTranseunte"/>
 	<property name="ireport.jasperserver.url" value="https://192.168.10.160:8443/jasperserver/services/repository"/>
 	<parameter name="P_CRTRA_CODIGO" class="java.lang.String">
@@ -91,7 +91,7 @@ AND TRA.CRTRA_CODIGO=$P{P_CRTRA_CODIGO}]]>
 	<title>
 		<band height="20" splitType="Stretch">
 			<subreport>
-				<reportElement x="0" y="0" width="554" height="20"/>
+				<reportElement x="0" y="0" width="554" height="20" uuid="1bc75f92-d2ca-494e-a35e-c2b42b6afd15"/>
 				<subreportParameter name="SUBREPORT_DIR"/>
 				<subreportParameter name="P_SUBTITULO_2">
 					<subreportParameterExpression><![CDATA[""]]></subreportParameterExpression>
@@ -100,7 +100,7 @@ AND TRA.CRTRA_CODIGO=$P{P_CRTRA_CODIGO}]]>
 					<subreportParameterExpression><![CDATA[""]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptEncabezado"]]></subreportExpression>
+				<subreportExpression><![CDATA["repo:/Resources/sii/rptEncabezado"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
@@ -110,106 +110,105 @@ AND TRA.CRTRA_CODIGO=$P{P_CRTRA_CODIGO}]]>
 	<detail>
 		<band height="468" splitType="Stretch">
 			<textField>
-				<reportElement x="27" y="94" width="509" height="82"/>
+				<reportElement x="27" y="94" width="509" height="82" uuid="a66d338b-5912-494b-8078-69c1414f542b"/>
 				<textElement textAlignment="Justified" markup="html">
 					<font size="11"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_auspiciante}.toUpperCase()+ " ciudadano de "+$F{nacionalidad_ausp}+",  con "+$F{tipo_identific_ausp}+" Nº "+$F{crper_num_doc_identific_ausp}+",  ante  usted,  con  el  debido comedimiento  comparezco  y  solicito se le califique como residente Transeunte a "+$F{crper_beneficiario}+" con "+$F{tipo_identif_benef}+" Nº "+$F{numero_identific_benef}+", de acuerdo a lo que establece "+$F{tipo_solicitud}+", para lo cual adjunto los siguiente documentos:"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{crper_auspiciante}.toUpperCase()+ " ciudadano de "+$F{nacionalidad_ausp}+",  con "+$F{tipo_identific_ausp}+" Nº "+$F{crper_num_doc_identific_ausp}+",  ante  usted,  con  el  debido comedimiento  comparezco  y  solicito se le califique como residente Transeunte a "+$F{crper_beneficiario}+" con "+$F{tipo_identif_benef}+" Nº "+$F{numero_identific_benef}+", de acuerdo a lo que establece "+$F{tipo_solicitud}+", para lo cual adjunto los siguiente documentos:"]]></textFieldExpression>
 			</textField>
 			<subreport>
-				<reportElement positionType="Float" x="27" y="176" width="509" height="38"/>
+				<reportElement positionType="Float" x="27" y="176" width="509" height="38" uuid="ca424377-0f3b-4853-bc83-862c53b795f4"/>
 				<subreportParameter name="P_CRTST_CODIGO">
 					<subreportParameterExpression><![CDATA[$F{crtst_codigo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression class="java.lang.String"><![CDATA["repo:rptRequisitosTramitesResidencia"]]></subreportExpression>
+				<subreportExpression><![CDATA["repo:rptRequisitosTramitesResidencia"]]></subreportExpression>
 			</subreport>
 			<textField>
-				<reportElement positionType="Float" x="27" y="233" width="509" height="18" isPrintWhenDetailOverflows="true"/>
+				<reportElement positionType="Float" x="27" y="233" width="509" height="18" isPrintWhenDetailOverflows="true" uuid="306777d7-fcf1-4fac-a984-9903491601c6"/>
 				<textElement verticalAlignment="Middle">
 					<font size="11"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Las notificaciones que me correspondan las recibiré en la siguiente dirección:"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Las notificaciones que me correspondan las recibiré en la siguiente dirección:"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" x="27" y="370" width="509" height="20" isPrintWhenDetailOverflows="true"/>
-				<textElement/>
-				<textFieldExpression class="java.lang.String"><![CDATA["Atentamente, "]]></textFieldExpression>
+				<reportElement positionType="Float" x="27" y="370" width="509" height="20" isPrintWhenDetailOverflows="true" uuid="984d0b14-a63f-4f23-b6c5-04b34987e1a3"/>
+				<textFieldExpression><![CDATA["Atentamente, "]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement positionType="Float" x="27" y="428" width="509" height="40" isPrintWhenDetailOverflows="true"/>
+				<reportElement positionType="Float" x="27" y="428" width="509" height="40" isPrintWhenDetailOverflows="true" uuid="6ebe3dfe-ed02-4f20-98cf-9744a6184d8f"/>
 				<textElement markup="html"/>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{firma}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{firma}]]></textFieldExpression>
 			</textField>
 			<subreport>
-				<reportElement positionType="Float" x="27" y="288" width="509" height="43"/>
+				<reportElement positionType="Float" x="27" y="288" width="509" height="43" uuid="69976c98-6564-4204-bac0-e210e20843ff"/>
 				<subreportParameter name="P_CRPER_CODIGO">
 					<subreportParameterExpression><![CDATA[$F{crper_codigo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression class="java.lang.String"><![CDATA["repo:rptContactosAuspicianteSolicitudResidencia"]]></subreportExpression>
+				<subreportExpression><![CDATA["repo:rptContactosAuspicianteSolicitudResidencia"]]></subreportExpression>
 			</subreport>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" x="27" y="262" width="508" height="15"/>
+				<reportElement positionType="Float" x="27" y="262" width="508" height="15" uuid="4bfe847c-cc37-45fa-bb96-cefffba6bc32"/>
 				<textElement markup="html"/>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{provincia}+" <br> "+$F{canton}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{provincia}+" <br> "+$F{canton}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-				<reportElement x="26" y="31" width="508" height="63"/>
+				<reportElement x="26" y="31" width="508" height="63" uuid="8d4e8e90-d865-406a-bf05-d62da4b1ae8f"/>
 				<textElement markup="html">
 					<font size="11"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Señor <br>"+$F{responsable}+"<br> Presidente del Comité de Calificación y Control de Residencia <br> Ciudad "]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Señor <br>"+$F{responsable}+"<br> Presidente del Comité de Calificación y Control de Residencia <br> Ciudad "]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="26" y="0" width="509" height="20"/>
+				<reportElement x="26" y="0" width="509" height="20" uuid="98773a49-5309-4038-9b40-05d98acadf70"/>
 				<textElement verticalAlignment="Middle">
 					<font size="11"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{cisla_nombre}+", "+new java.text.SimpleDateFormat("EEEEE dd MMMMM yyyy").format(new Date())]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cisla_nombre}+", "+new java.text.SimpleDateFormat("EEEEE dd MMMMM yyyy").format(new Date())]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<pageFooter>
 		<band height="66" splitType="Stretch">
 			<subreport>
-				<reportElement x="0" y="18" width="554" height="48"/>
+				<reportElement x="0" y="18" width="554" height="48" uuid="e7aa0bd1-e26c-4113-8267-250e5510f8ff"/>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptPie"]]></subreportExpression>
+				<subreportExpression><![CDATA["repo:/Resources/sii/rptPie"]]></subreportExpression>
 			</subreport>
 			<textField pattern="EEEEE dd MMMMM yyyy">
-				<reportElement x="3" y="3" width="120" height="15"/>
+				<reportElement x="3" y="3" width="120" height="15" uuid="39de8284-64cb-4c4c-83ba-9c1884ef8b65"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.util.Date"><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="2" y="1" width="552" height="1"/>
+				<reportElement x="2" y="1" width="552" height="1" uuid="8a0b4cde-0a1f-4c67-af1b-af91860a6416"/>
 			</line>
 			<staticText>
-				<reportElement x="488" y="0" width="23" height="15"/>
+				<reportElement x="488" y="0" width="23" height="15" uuid="29d8b6f0-078e-4352-b0cd-075051b0c7d3"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Pág.]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="511" y="0" width="12" height="15"/>
+				<reportElement x="511" y="0" width="12" height="15" uuid="a95a8990-5c87-4555-8f86-7a1413ce6b01"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="536" y="0" width="16" height="15"/>
+				<reportElement x="536" y="0" width="16" height="15" uuid="cba151ee-9085-4892-b00a-0420d80fc346"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="524" y="0" width="12" height="15"/>
+				<reportElement x="524" y="0" width="12" height="15" uuid="4cd1d840-4447-4c90-907f-b85c4dc162f4"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>

@@ -177,6 +177,7 @@
                     <label class="form-label-left" id="lblRepresentante" for="txtRepresentante">Representante</label>
                     <input class="form-textbox" type="text" name="txtRepresentante" id="txtRepresentante" size="42"/>
                     <label class="obligatorio">(*)</label>
+                    <input class="form-textbox" type="text" disabled name="txtRepresentanteData" id="txtRepresentanteData" size="46" style="margin-left: 6px; text-align: center;"/>
                 </div>
             </div>
             <div id="divDatosTranseunte" style="display: none;">

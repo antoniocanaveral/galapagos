@@ -253,11 +253,14 @@ public abstract class BasePublicAPI {
         Document document = null;
         try {
             document = parentFolder.createDocument(props, contentStream, null);
+            contentStream.getStream().close();
             System.out.println("Created new document: " + document.getId());
         } catch (CmisContentAlreadyExistsException ccaee) {
             document = (Document) cmisSession.getObjectByPath(parentFolder.getPath() + "/" + fileName);
             System.out.println("Document already exists (Making Versionable): " + fileName);
             updateDocument(document, file, aspect);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         return document;
@@ -290,6 +293,7 @@ public abstract class BasePublicAPI {
                             file.getInputStream()
                     );
             doc.appendContentStream(contentStream,true);
+            contentStream.getStream().close();
             System.out.println("Document Updated V: "+doc.getVersionLabel() +" Id: " + doc.getId());
         } catch (FileNotFoundException e) {
             e.printStackTrace();

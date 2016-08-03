@@ -55,6 +55,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
     /******************INICIO DE DEFINICION DE VARIABLES PARA REGLA DE VALIDACION DE INFORMAICON*******************/
     var crtstCodigo = null;
     var crperCodigo = null;
+    var repCrperCodigo = null;
     var cggcrperCodigo = null;
     var crperNumDocIdentific=null;
     var cggCrperFechaNacimiento = null;
@@ -3350,7 +3351,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                 crperNumDocIdentific = rBeneficiario.get('CRPER_NUM_DOC_IDENTIFIC');
                 cggCrperFechaNacimiento = rBeneficiario.get('CRPER_FECHA_NACIMIENTO');
                 var crdidCodigo = rBeneficiario.get('CRDID_CODIGO');
-                var rep_cper_codigo = (rRepresentante)?rRepresentante.get('CRPER_CODIGO'):null;
+                repCrperCodigo = (rRepresentante)?rRepresentante.get('CRPER_CODIGO'):null;
                 //crdptCodigo = tmpDepositoGarantia.data.CRDPT_CODIGO;
                 jsonData = {'CRTST_CODIGO':crtstCodigo,
                             'CRDID_CODIGO':crdidCodigo,
@@ -3358,7 +3359,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                             'CGGCRPER_CODIGO':cggcrperCodigo,
                             'CRPER_NUM_DOC_IDENTIFIC':crperNumDocIdentific,
                             'CRPER_FECHA_NACIMIENTO':cggCrperFechaNacimiento,
-                            'REP_CRPER_CODIGO':rep_cper_codigo,
+                            'REP_CRPER_CODIGO':repCrperCodigo,
                             'CHANGE_CRTST_CODIGO':valChangeCrtst_codigo
                 };
             }catch(inErr){}
