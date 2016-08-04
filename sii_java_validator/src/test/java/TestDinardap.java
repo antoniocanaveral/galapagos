@@ -1,4 +1,4 @@
-import com.bmlaurus.ws.dinardap.RegistroCivil;
+import com.bmlaurus.ws.dinardap.SRI;
 import org.junit.Test;
 
 /**
@@ -9,9 +9,14 @@ public class TestDinardap {
     @Test
     public void ServiceTestet(){
 
-        RegistroCivil registroCivil = new RegistroCivil("1757078983");
+        /*RegistroCivil registroCivil = new RegistroCivil("1757078983");
         System.out.println(registroCivil.callServiceAsObject());
         System.out.println(registroCivil.toString());
+*/
+        SRI sri = new SRI("1792089581001");
+        sri.callServiceAsObject();
+        System.out.println(sri);
+
         //System.out.print("OK");
         //DinardapService cne = new CNE("1002867800");
         //System.out.println(cne.callServiceAsObject());

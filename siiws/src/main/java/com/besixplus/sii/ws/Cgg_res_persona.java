@@ -4,9 +4,7 @@ import com.besixplus.sii.db.ManagerConnection;
 import com.besixplus.sii.i18n.Messages;
 import com.besixplus.sii.mail.Base64;
 import com.besixplus.sii.objects.Cgg_res_adjunto_temporal;
-import com.bmlaurus.attachment.CreateCNEAttachment;
-import com.bmlaurus.attachment.CreateRCAttachment;
-import com.bmlaurus.ws.dinardap.CNE;
+import com.bmlaurus.attachment.CreatorInvoker;
 import com.bmlaurus.ws.dinardap.RegistroCivil;
 import com.bmlaurus.ws.dinardap.Utils;
 import org.json.JSONException;
@@ -371,6 +369,9 @@ public class Cgg_res_persona implements Serializable{
 			}
 			con.setAutoCommit(!ManagerConnection.isDeployed());
 			tmpObj = new com.besixplus.sii.db.Cgg_res_persona(tmpObj).select(con);
+
+			new CreatorInvoker(null,null,tmpObj).controlled().createPersonaDocuments();//LLAMADA AL GENERADOR DE ARCHIVOS
+
 			ArrayList<com.besixplus.sii.objects.Cgg_res_persona> tmpArray = new ArrayList<com.besixplus.sii.objects.Cgg_res_persona>();
 			tmpArray.add(tmpObj);
 			tmpFormat = new com.besixplus.sii.misc.Formatter(format, tmpArray);
@@ -467,7 +468,7 @@ public class Cgg_res_persona implements Serializable{
 					if(cggCrperCodigo.equals("true")) {
 						con.commit();
 						resultado = "{'CRPER_CODIGO':'" + objNuevoBeneficiario.getCRPER_CODIGO() + "'}";
-						createDinardapDocuments(null,objNuevoBeneficiario);
+						new CreatorInvoker(null,null,objNuevoBeneficiario).createPersonaDocuments();
 					}else
 						con.rollback();
 				}
@@ -1421,7 +1422,7 @@ public class Cgg_res_persona implements Serializable{
 								tmpObj.setCRPER_GENERO(0);
 							}
 
-							createDinardapDocuments(registroCivil,tmpObj);
+							new CreatorInvoker(registroCivil,null,tmpObj).createPersonaDocuments();
 						}
 					}
 					//
@@ -1440,43 +1441,6 @@ public class Cgg_res_persona implements Serializable{
 		if (tmpObj != null)
 			return tmpFormat.getData().toString();
 		return null;
-	}
-
-	private void createDinardapDocuments(final RegistroCivil registroCivil, com.besixplus.sii.objects.Cgg_res_persona tmpObj){
-		/*
-		* Creamos la cedula en BG
-		* */
-		final String crper_codigo = tmpObj.getCRPER_CODIGO();
-		if (crper_codigo != null) {
-			CNE cne = new CNE(tmpObj.getCRPER_NUM_DOC_IDENTIFIC());
-			Thread t = new Thread() {
-				public void run() {
-					CreateRCAttachment attachment = null;
-					if(registroCivil==null){
-						RegistroCivil rCivil = new RegistroCivil(tmpObj.getCRPER_NUM_DOC_IDENTIFIC());//cedula del beneficiario
-						if (rCivil.callServiceAsObject().equals(RegistroCivil.CALL_OK)){
-							attachment = new CreateRCAttachment(rCivil, crper_codigo);
-						}
-					}else
-						attachment = new CreateRCAttachment(registroCivil, crper_codigo);
-					try {
-						attachment.attachReport();
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
-					//DEBO METERLOS EN EL MISMO HILO PARA QUE DE TIEMPO DE CERRAR LAS CONEXIONES
-					if (cne != null && cne.callServiceAsObject().equals(CNE.CALL_OK)) {
-						CreateCNEAttachment attachmentCNE = new CreateCNEAttachment(cne, crper_codigo);
-						try {
-							attachmentCNE.attachReport();
-						} catch (SQLException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-			};
-			t.start();
-		}
 	}
 
 	/**

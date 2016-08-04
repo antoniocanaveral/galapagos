@@ -15,4 +15,4 @@ scp $ROOT_PATH/JbossEAP/SII_HOME/mailing/*.* advance@$REMOTE_SERVER:/home/advanc
 
 scp $ROOT_PATH/JbossEAP/SII_HOME/alfresco/globals.properties advance@$REMOTE_SERVER:/home/advance/galapagos/JbossEAP40/SII_HOME/alfresco
 
-#scp $ROOT_PATH/JbossEAP/SII_HOME/jasper/*.properties advance@$REMOTE_SERVER:/home/advance/galapagos/JbossEAP40/SII_HOME/jasper/
+scp $ROOT_PATH/JbossEAP/SII_HOME/jasper/reports/Resources/sii/*.jrxml advance@$REMOTE_SERVER:/home/advance/galapagos/JbossEAP/SII_HOME/jasper/reports/Resources/sii

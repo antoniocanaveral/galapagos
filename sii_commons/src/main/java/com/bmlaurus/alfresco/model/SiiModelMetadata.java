@@ -151,7 +151,7 @@ public class SiiModelMetadata implements Serializable{
     public boolean save(Connection conn){
         boolean result = false;
         try {
-            PreparedStatement pstmt = conn.prepareCall("SELECT code FROM cgg_ecm_metadata WHERE code = ?");
+            PreparedStatement pstmt = conn.prepareCall("SELECT code FROM sii.cgg_ecm_metadata WHERE code = ?");
             pstmt.setString(1,code);
             ResultSet rs = pstmt.executeQuery();
             String strSQL = null;
