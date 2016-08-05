@@ -583,9 +583,8 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
         {
             dataIndex:'CRFAS_NOMBRE',
             header:'Fase',
-            width:100,
-			sortable:true,
-            hidden:true
+            width:200,
+			sortable:true
         },
         {
             dataIndex:'CRISE_USUARIO_INSERT',

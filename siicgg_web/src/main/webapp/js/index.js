@@ -12,8 +12,8 @@ function loadInit(){
 	divCargando = document.getElementById("divCargando");
 	loadFecha();
 	loadSeleccionModulo();
-	var tmpPage = new ManagerCookies().read('page');	
-	if (tmpPage)document.getElementById("iFrameBody").src=tmpPage;
+	//var tmpPage = new ManagerCookies().read('page');
+	//if (tmpPage)document.getElementById("iFrameBody").src=tmpPage;
 	var divLogin = document.getElementById("divLogin");
 	var divUsuario = document.getElementById("divUsuario");
 	var pnlGestionEmpleo = document.getElementById("pnlGestionEmpleo");

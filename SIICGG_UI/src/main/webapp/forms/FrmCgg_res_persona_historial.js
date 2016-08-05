@@ -1208,51 +1208,50 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
     /*template de la consulta de persona historial*/
     var tmpInfoPersona;
     tmpInfoPersona = new Ext.XTemplate(
-        '<table width="100%" cellpadding="0">' +
+        '<table width="100%" style ="font-size: 12px;font-family:Arial, Helvetica, sans-serif" cellpadding="0">' +
         '<tr rowspan="0">'+
-        '<td><div class="tituloTemplate"><span style="font-family: Arial, Helvetica, sans-serif; ">Documento:</span></div></td>' +
-        '<td><font size="1" face="Arial, Helvetica, sans-serif">{CRDID_TIPO}</font></td></td>' +
-        '<td><div class="tituloTemplate"><font  face="Arial, Helvetica, sans-serif">No.:</font></div></td>' +
-        '<td><font size="1" face="Arial, Helvetica, sans-serif">{CRPER_NUM_DOC_IDENTIFIC}</font></td></td>' +
+        '<td><b>Documento:</b></td>' +
+        '<td>{CRDID_TIPO}</td></td>' +
+        '<td><b>No.:</b></td>' +
+        '<td>{CRPER_NUM_DOC_IDENTIFIC}</font></td></td>' +
         '<tr rowspan="0">'+
-        '<td><div class="tituloTemplate"><font face="Arial, Helvetica, sans-serif">Nombres:</font></div></td>' +
-        '<td><span  style="font-size: xx-small; font-family: Arial, Helvetica, sans-serif; ">{CRPER_NOMBRES}</span></td></td>' +
-        '<td><div class="tituloTemplate"<font  face="Arial, Helvetica, sans-serif">Apellidos:</font></div></td>' +
-        '<td><font size="1" face="Arial, Helvetica, sans-serif">{CRPER_APELLIDO_PATERNO} {CRPER_APELLIDO_MATERNO}</font></td></td>' +
+        '<td><b>Nombres:</b></td>' +
+        '<td>{CRPER_NOMBRES}</td></td>' +
+        '<td><b>Apellidos:</b></td>' +
+        '<td>{CRPER_APELLIDO_PATERNO} {CRPER_APELLIDO_MATERNO}</td></td>' +
         '<tr rowspan="0">'+
-        '<td><div class="tituloTemplate"><font face="Arial, Helvetica, sans-serif">No.residencia:</font></div></td>' +
-        '<td><span  style="font-size: xx-small; font-family: Arial, Helvetica, sans-serif; ">{CRPER_NUMERO_RESIDENCIA}</span></td></td>' +
-        '<td><div class="tituloTemplate"><font  face="Arial, Helvetica, sans-serif">Nacionalidad:</font></div></td>' +
-        '<td><font size="1" face="Arial, Helvetica, sans-serif">{CGNCN_NOMBRE}</font></td></td>' +
+        '<td><b>No.residencia:</b></td>' +
+        '<td>{CRPER_NUMERO_RESIDENCIA}</td></td>' +
+        '<td><b>Nacionalidad:</b></td>' +
+        '<td>{CGNCN_NOMBRE}</td></td>' +
         '<tr rowspan="0">'+
-        '<td><div class="tituloTemplate"><font face="Arial, Helvetica, sans-serif">Prov de nac.:</font></div></td>' +
-        '<td><font size="1" face="Arial, Helvetica, sans-serif">{CRPER_LUGAR_NACIMIENTO}</font></td></td>' +
-        '<td><div class="tituloTemplate"><font  face="Arial, Helvetica, sans-serif">Fecha de nac.:</font></div></td>' +
-        '<td><font size="1" face="Arial, Helvetica, sans-serif">{[this.myDate(values.CRPER_FECHA_NACIMIENTO)]}</font></td></tr>' +
-        '<td><div class="tituloTemplate"><font  face="Arial, Helvetica, sans-serif">G&eacute;nero:</font></div></td>' +
-        '<td><font size="1" face="Arial, Helvetica, sans-serif">',
+        '<td><b>Prov de nac.:</b></td>' +
+        '<td>{CRPER_LUGAR_NACIMIENTO}</td></td>' +
+        '<td><b>Fecha de nac.:</b></td>' +
+        '<td>{[this.myDate(values.CRPER_FECHA_NACIMIENTO)]}</td></tr>' +
+        '<td><b>G&eacute;nero:</b></td>' +
+        '<td>',
         '<tpl if="CRPER_GENERO ==TypeGenero.MASCULINO">',
-        '<span style="font-weight: bold;">Masculino</span>',
-
+        '<b>Masculino</b>',
         '</tpl>',
         '<tpl if="CRPER_GENERO ==TypeGenero.FEMENINO">',
         '<b>Femenino</b>',
         '</tpl>',
-        '</font></td>' +
-        '<td><div class="tituloTemplate"><font  face="Arial, Helvetica, sans-serif">Estado civil:</font></div></td>' +
-        '<td><font size="1" face="Arial, Helvetica, sans-serif">{CRECV_ESTADO_CIVIL}</font></td></td>' +
-        '<tr rowspan="0"><td><div class="tituloTemplate"><font  face="Arial, Helvetica, sans-serif">Prov. de res.:</font></div></td>' +
-        '<td><font size="1" face="Arial, Helvetica, sans-serif">{CCNT_NOMBRE}</font></td></td>' +
-        '<td><div class="tituloTemplate"><span  style="font-family: Arial, Helvetica, sans-serif; ">Tiene veh\u00edculo:</span></div></td>' +
-        '<td><font size="1" face="Arial, Helvetica, sans-serif">',
+        '</td>' +
+        '<td><b>Estado civil:</b></td>' +
+        '<td>{CRECV_ESTADO_CIVIL}</td></td>' +
+        '<tr rowspan="0"><td><b>Prov. de res.:</b></td>' +
+        '<td>{CCNT_NOMBRE}</td></td>' +
+        '<td><b>Tiene veh\u00edculo:</b></td>' +
+        '<td>',
         '<tpl if="CRPER_CUPO_VEHICULAR ==true">',
-        '<span style="font-weight: bold;">Si dispone</span>',
+        '<b>Si dispone</b>',
 
         '</tpl>',
         '<tpl if="CRPER_CUPO_VEHICULAR ==false">',
         '<b>No dispone</b>',
         '</tpl>',
-        '</font></td>' +
+        '</td>' +
         '</table>',
         {
             // XTemplate configuration:
@@ -1307,8 +1306,8 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
         '<td><b>Fecha inicio:</b></td>	<td>{[this.myDate(values.FECHA_INICIO)]}</td>' +
         '<td><b>F. caducidad:</b></td>	<td>{[this.myDate(values.FECHA_CADUCIDAD)]}</td>' +
         '</tr><tr>' +
-        '<td><b>Estadia m&aacute;xima:</b></td><td>{DIAS_AUTORIZADOS}  d&iacute;a</td>' +
-        '<td><b>Estadia actual<b></td>	<td>{ESTADIA_ACTUAL} d&iacute;as </td>' +
+        //'<td><b>Estadia m&aacute;xima:</b></td><td>{DIAS_AUTORIZADOS}  d&iacute;a</td>' +
+        //'<td><b>Estadia actual<b></td>	<td>{ESTADIA_ACTUAL} d&iacute;as </td>' +
         '<td><b>D&iacute;as vigente:</td><td><b>',
         '<tpl if="0<=DIAS_VIGENTE">','{DIAS_VIGENTE}','</tpl>',
         '<tpl if="DIAS_VIGENTE<=0 && TIPO_OPERACION ==0">','Exedido','</tpl>',
@@ -1742,14 +1741,14 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
                             var tmpFoto = document.getElementById("imgFotoPrs"+t.id);
                             tmpFoto.src = 'data:image/jpg;base64,'+ tmpArchivosResult[0].CRPER_FOTO;
                         }
-                        gsCgg_res_observacion.baseParams.inCrper_codigo = txtCrper_codigo.getValue();
-                        gsCgg_res_observacion.reload();
+                        //gsCgg_res_observacion.baseParams.inCrper_codigo = txtCrper_codigo.getValue();
+                        //gsCgg_res_observacion.reload();
                     }
                 },
                 frame:true,
                 layout:'border',
                 items:[pnlConsultaPersonaExpulsion,grdCgg_res_expulsion_historial]
-            },{
+            }/*,{
                 title: 'Observaciones',
                 tabTip: 'Consulta observaciones persona',
                 iconCls:'iconTodo',
@@ -1774,7 +1773,7 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
                 },
                 items:[pnlConsuPersona1, grdCgg_res_observacion],
                 bbar:[btnEmitirCertificadoObservado]
-            },
+            }*/,
             {
                 title: 'Residencia',
                 tabTip: 'Historial de residencia',
@@ -1848,7 +1847,7 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
             items:[pnlPersonaHistorial],
             width:950,
             minWidth:950,
-            height:500,
+            height:600,
             minheight:500,
             maximizable:true,
             minimizable:true,
