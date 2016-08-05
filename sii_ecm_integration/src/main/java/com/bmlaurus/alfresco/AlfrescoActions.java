@@ -40,6 +40,7 @@ public class AlfrescoActions {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        cmis.disconnect();
         return result;
     }
 
@@ -64,6 +65,7 @@ public class AlfrescoActions {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        cmis.disconnect();
         return result;
     }
 
@@ -93,12 +95,15 @@ public class AlfrescoActions {
         }catch (Exception e){
             e.printStackTrace();
         }
+        cmis.disconnect();
         return result;
     }
 
     public static DataHandler getDocument(String fileId){
         BaseAPI cmis = new BaseAPI();
-        return cmis.getDocument(fileId);
+        DataHandler result = cmis.getDocument(fileId);
+        cmis.disconnect();
+        return result;
     }
 
     private static List<Aspect> buildAspects(DocumentImpl obj){

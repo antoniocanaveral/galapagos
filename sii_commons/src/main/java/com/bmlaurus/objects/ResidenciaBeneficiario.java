@@ -25,6 +25,8 @@ public class ResidenciaBeneficiario {
     private String CRRSD_NUMERO;
     private Date CRRSD_FECHA_INICIO;
     private Date CRRSD_FECHA_CADUCIDAD;
+    private String CRTST_PARENT_CODIGO;
+
 
     public String getCRPER_CODIGO() {
         return CRPER_CODIGO;
@@ -152,5 +154,13 @@ public class ResidenciaBeneficiario {
 
     public void setCRRSD_FECHA_CADUCIDAD(Date CRRSD_FECHA_CADUCIDAD) {
         this.CRRSD_FECHA_CADUCIDAD = CRRSD_FECHA_CADUCIDAD;
+    }
+
+    public String getCRTST_PARENT_CODIGO() {
+        return CRTST_PARENT_CODIGO;
+    }
+
+    public void setCRTST_PARENT_CODIGO(String CRTST_PARENT_CODIGO) {
+        this.CRTST_PARENT_CODIGO = CRTST_PARENT_CODIGO;
     }
 }

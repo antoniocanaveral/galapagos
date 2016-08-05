@@ -17,6 +17,14 @@ Descargar la versión 6.2 o superior de Jasper Reports Server, desde el sitio [J
 
 Instalarlo en un servidor que se tenga acceso en la red local y configurarlo según la guía de instalación que puede encontrar en la misma página.
 
+Para solventar problemas "Legacy" con reportes ya existentes. Configurar la variable:
+
+<code>
+    #/jasperserver/WEB-INF/classes/esapi/security-config.properties
+     
+    security.validation.sql.on=false 
+</code>
+
 En la carpeta SII_HOME/jasper se encuentra el archivo **config.properties** que contiene las propiedades generales de la integración con el sistema SII
 
 `Una vez probado el primer reporte en el sistema, es importante desactivar el parámetro ` **INIT_JASPERSERVER** ` para aumentar el rendimiento de la generación de reportes.`

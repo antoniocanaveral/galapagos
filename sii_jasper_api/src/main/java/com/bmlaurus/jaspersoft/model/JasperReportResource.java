@@ -12,6 +12,22 @@ public class JasperReportResource implements Serializable {
     private String name;
     private ResourceFile file;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ResourceFile getFile() {
+        return file;
+    }
+
+    public void setFile(ResourceFile file) {
+        this.file = file;
+    }
+
     public JasperReportResource(String name, String uri) {
         this.name = name;
         if(uri.contains("-"))

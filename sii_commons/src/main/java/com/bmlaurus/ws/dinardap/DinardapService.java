@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -45,8 +46,10 @@ public abstract class DinardapService {
     protected transient Map<String,Object> resultMap;
     protected transient Map instituciones;
     protected transient Map datosPrincipales;
+    protected transient Map detalle;
     protected int serviceType;
     protected String serviceName;
+    protected String resultStaus;
 
     public Map<String, Object> getResultMap() {
         return resultMap;
@@ -72,6 +75,10 @@ public abstract class DinardapService {
         this.serviceName = serviceName;
     }
 
+    public String getResultStaus() {
+        return resultStaus;
+    }
+
     public DinardapService(int serviceType, String numeroIdentificacion) {
         this.serviceType = serviceType;
         this.numeroIdentificacion = numeroIdentificacion;
@@ -80,17 +87,20 @@ public abstract class DinardapService {
     private String populateService(){
         ConnectionUtils utils = new ConnectionUtils();
         String result = CALL_ERROR;
+        resultStaus = CALL_ERROR;
         try {
             result =  utils.getFichaGeneral(numeroIdentificacion,serviceType);
             resultMap = new Gson().fromJson(result, Map.class);
             instituciones = (Map) resultMap.get(KEY_INSTITUCIONES);
             if(instituciones!=null) {
                 datosPrincipales = (Map) instituciones.get(KEY_DATOS_PRINCIPALES);
+                detalle = (Map) instituciones.get(KEY_DETALLE);
                 serviceName = (String) instituciones.get(KEY_NOMBRE);
             }else{
                 //Debe haber un error
                 System.err.println(result);
                 result = CALL_ERROR;
+                resultStaus = CALL_ERROR;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -123,8 +133,61 @@ public abstract class DinardapService {
                     e.printStackTrace();
                 }
             }
+            //Llenamos el detalle
+            if(detalle!=null && detalle.size()>0){
+                try {
+                    List<Map> records;
+                    if(detalle.get("items") instanceof List)
+                        records = (List<Map>) detalle.get("items");
+                    else{
+                        List record = new ArrayList();
+                        record.add(detalle.get("items"));
+                        records = record;
+                    }
+                    String className = null;
+                    List detalles = new ArrayList();
+                    for(Map pair:records){
+                        List<Map> items = (List<Map>) pair.get("registros");
+                        className = pair.get("nombre").toString().replace(" ","");
+                        try {
+                            Class clazz = Class.forName("com.bmlaurus.ws.dinardap."+className.trim());
+                            Object refItems = clazz.newInstance();
+                            for(Map record: items){
+                                try {
+                                    if(record.get("valor")!=null) {
+                                        Field field = refItems.getClass().getDeclaredField(record.get("campo").toString());
+                                        String setterName = "set"+capitalize(field.getName());
+                                        Method setter = refItems.getClass().getDeclaredMethod(setterName,String.class);
+                                        setter.invoke(refItems,record.get("valor").toString());
+                                    }
+                                } catch (NoSuchFieldException e) {
+                                    e.printStackTrace();
+                                } catch (NoSuchMethodException e) {
+                                    e.printStackTrace();
+                                } catch (InvocationTargetException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            detalles.add(refItems);
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (InstantiationException e) {
+                            e.printStackTrace();
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    Field field = this.getClass().getDeclaredField(className);
+                    setFieldArrayValue(field,detalles);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            resultStaus = CALL_OK;
             return CALL_OK;
         }
+        resultStaus = CALL_ERROR;
         return CALL_ERROR;
     }
 
@@ -132,6 +195,20 @@ public abstract class DinardapService {
         String setterName = "set"+capitalize(field.getName());
         try {
             Method setter = this.getClass().getDeclaredMethod(setterName,String.class);
+            setter.invoke(this,value);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setFieldArrayValue(Field field,List value){
+        String setterName = "set"+capitalize(field.getName());
+        try {
+            Method setter = this.getClass().getDeclaredMethod(setterName,List.class);
             setter.invoke(this,value);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();

@@ -28,14 +28,14 @@ public class ResidenciaBeneficiarioData {
         beneficiarios =  new ArrayList<>();
         Connection conn = ManagerConnection.getConnection();
         String strSql = "select per.crper_codigo,per.crper_num_doc_identific,per.crper_nombres, per.crper_apellido_paterno, per.crper_apellido_materno,per.crper_fecha_nacimiento, per.cpais_codigo, per.cgg_cpais_codigo,per.crper_genero, per.crper_numero_residencia," +
-                "   ptst.crtst_descripcion as tipo, tst.crtst_descripcion, res.crtst_codigo, res.crrsd_numero, res.crrsd_fecha_inicio, res.crrsd_fecha_caducidad" +
+                "   ptst.crtst_descripcion as tipo, tst.crtst_descripcion, res.crtst_codigo, res.crrsd_numero, res.crrsd_fecha_inicio, res.crrsd_fecha_caducidad, ptst.crtst_codigo as crtst_parent_codigo" +
                 "   from sii.cgg_res_residencia res" +
                 "   join sii.cgg_res_tramite tra on (tra.crtra_codigo = res.crtra_codigo and res.crrsd_vigente = true)" +
                 "   join sii.cgg_res_persona per on res.crper_codigo = per.crper_codigo" +
                 "   join sii.cgg_res_tipo_solicitud_tramite tst on res.crtst_codigo = tst.crtst_codigo" +
                 "   left join sii.cgg_res_tipo_solicitud_tramite ptst on tst.cgg_crtst_codigo = ptst.crtst_codigo" +
                 "   where tra.crper_codigo = ? or crpjr_codigo = ? " +
-                "   and crrsd_vigente";
+                "   and crrsd_vigente and tst.crtst_atencion_cliente";
         try{
             PreparedStatement stmt=null;
             ResultSet results=null;
@@ -62,6 +62,7 @@ public class ResidenciaBeneficiarioData {
                 beneficiario.setCRRSD_NUMERO(results.getString(14));
                 beneficiario.setCRRSD_FECHA_INICIO(results.getDate(15));
                 beneficiario.setCRRSD_FECHA_CADUCIDAD(results.getDate(16));
+                beneficiario.setCRTST_PARENT_CODIGO(results.getString(17));
 
                 beneficiarios.add(beneficiario);
             }

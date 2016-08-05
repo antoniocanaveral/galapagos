@@ -549,7 +549,7 @@ NO.
 					objSolicitudRegla.setCRTSE_ESTADO(true);
 					objSolicitudRegla.setCRTSE_USUARIO_INSERT(tmpRequest.getUserPrincipal().getName());
 					objSolicitudRegla.setCRTSE_USUARIO_UPDATE(tmpRequest.getUserPrincipal().getName());
-					objSolicitudRegla.setCRTT_CODIGO(jaRegla.getJSONObject(k).getString("CRTT_CODIGO"));
+					objSolicitudRegla.setCRTT_CODIGO(jaRegla.getJSONObject(k).has("CRTT_CODIGO")?jaRegla.getJSONObject(k).getString("CRTT_CODIGO"):null);
 					res = new com.besixplus.sii.db.Cgg_res_tipo_solicitud_regla(objSolicitudRegla).insert(con);
 					if(!res.equalsIgnoreCase("true")){
 						break;
@@ -830,7 +830,7 @@ NO
 
 							reglaSolicitud.setCRVAL_CODIGO(tmpJsonRegla.getString("CRVAL_CODIGO"));
 							reglaSolicitud.setCRTSE_CAMPO_EVALUACION(tmpJsonRegla.getString("CRTSE_CAMPO_EVALUACION"));
-							reglaSolicitud.setCRTT_CODIGO(tmpJsonRegla.getString("CRTT_CODIGO"));
+							reglaSolicitud.setCRTT_CODIGO(tmpJsonRegla.has("CRTT_CODIGO")?tmpJsonRegla.getString("CRTT_CODIGO"):null);
 							reglaSolicitud.setCRTSE_USUARIO_UPDATE(tmpRequest.getUserPrincipal().getName());
 							flagInsertRegla = new com.besixplus.sii.db.Cgg_res_tipo_solicitud_regla(reglaSolicitud).update(con);
 							if(flagInsertRegla.equalsIgnoreCase("true")==false){
@@ -856,7 +856,7 @@ NO
 						objSolicitudRegla.setCRTSE_ESTADO(true);
 						objSolicitudRegla.setCRTSE_USUARIO_INSERT(tmpRequest.getUserPrincipal().getName());
 						objSolicitudRegla.setCRTSE_USUARIO_UPDATE(tmpRequest.getUserPrincipal().getName());
-						objSolicitudRegla.setCRTT_CODIGO(tmpJsonRegla.getString("CRTT_CODIGO"));
+						objSolicitudRegla.setCRTT_CODIGO(tmpJsonRegla.has("CRTT_CODIGO")?tmpJsonRegla.getString("CRTT_CODIGO"):null);
 						flagUpdateRegla = new com.besixplus.sii.db.Cgg_res_tipo_solicitud_regla(objSolicitudRegla).insert(con);
 						if(flagUpdateRegla.equalsIgnoreCase("true")==false){
 							break;

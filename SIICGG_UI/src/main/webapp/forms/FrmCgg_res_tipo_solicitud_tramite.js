@@ -1295,6 +1295,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
         listeners:{
             select:function(inThis,inRecord,inIndex){
                 crtt_codigo = inIndex;
+                grdCgg_res_tipo_solicitud_regla.getSelectionModel().getSelected()
             }
         }
     });
@@ -1344,7 +1345,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
 
         {
             dataIndex:'CRVAL_CODIGO',
-            header:'Regla validaci\u00f3n',
+            header:'Codigo Regla validaci\u00f3n',
             width:150,
             sortable:true,
             hidden:true
@@ -1370,9 +1371,9 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
         {
             dataIndex:'CRVAL_NOMBRE',
             header:'Regla validaci\u00f3n',
-            width:150,
+            width:200,
             sortable:true,
-            hidden:true
+            hidden:false
         },
         {
             dataIndex:'CRTSE_VALOR_1',
@@ -1672,7 +1673,8 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                             if(tmpRecordRegla)
                             {
                                 recordRegla = tmpRecordRegla;
-                                var tmpRuleExist =gsCgg_res_tipo_solicitud_regla.getAt(gsCgg_res_tipo_solicitud_regla.findExact('CRVAL_CODIGO',recordRegla.get('CRVAL_CODIGO')));
+                                var tmpRuleExist =gsCgg_res_tipo_solicitud_regla.getAt(gsCgg_res_tipo_solicitud_regla.findExact('CRVAL_CODIGO',recordRegla.get('CRVAL_CODIGO')))
+                                    && gsCgg_res_tipo_solicitud_regla.getAt(gsCgg_res_tipo_solicitud_regla.findExact('CRTT_CODIGO',recordRegla.get('CRTT_CODIGO')));
                                 if (!tmpRuleExist)
                                 {
                                     var tmpParams = recordRegla.get('CRVAL_FUNCION_PLSQL_PARAMETROS');
@@ -1731,7 +1733,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                     var seleccionado = grdCgg_res_tipo_solicitud_regla.getSelectionModel().getSelected();
                     if(seleccionado != null ){
                         grdCgg_res_tipo_solicitud_regla.getStore().each(function(inRecord){
-                            if(inRecord.get('CRVAL_NOMBRE')== seleccionado.get('CRVAL_NOMBRE')){
+                            if(inRecord.get('CRVAL_CODIGO')== seleccionado.get('CRVAL_CODIGO') && inRecord.get('CRTT_CODIGO')==seleccionado.get('CRTT_CODIGO')){
                                 grdCgg_res_tipo_solicitud_regla.getStore().remove(inRecord);
                             }
                         });

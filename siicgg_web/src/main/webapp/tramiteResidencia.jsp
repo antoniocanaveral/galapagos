@@ -177,6 +177,7 @@
                     <label class="form-label-left" id="lblRepresentante" for="txtRepresentante">Representante</label>
                     <input class="form-textbox" type="text" name="txtRepresentante" id="txtRepresentante" size="42"/>
                     <label class="obligatorio">(*)</label>
+                    <input class="form-textbox" type="text" disabled name="txtRepresentanteData" id="txtRepresentanteData" size="46" style="margin-left: 6px; text-align: center;"/>
                 </div>
             </div>
             <div id="divDatosTranseunte" style="display: none;">
@@ -682,6 +683,7 @@
 <div id="attachView" class="componetHide">
     <div id="divBgAttachModal" style="position:fixed;left:0px; top:0px; background-color:#fff; opacity:0.80;	filter:alpha(opacity=80); width: 100%; height: 100%"></div>
     <div id="attachContainter" style="z-index: 99; position: fixed; left: 50px; top: 50px; background-color: #fff; height: 675px; border: 1px solid #999999; border-radius: 2px;">
+        <!--div id="frameAttachment" style="width: 820px; height: 630px; overflow-x:hidden !important; overflow:hidden; margin: 0; padding: 0"></div-->
         <iframe frameborder="0" scrolling="no" id="frameAttachment" src="" style="width: 820px; height: 630px; overflow-x:hidden !important; overflow:hidden; margin: 0; padding: 0">
         </iframe>
         <div id="divBtnControlesAdjuntos" class="cssTabButton" style="margin-top: 10px; margin-left: 10px;">

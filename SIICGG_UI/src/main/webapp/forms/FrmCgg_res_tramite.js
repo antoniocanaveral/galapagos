@@ -55,6 +55,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
     /******************INICIO DE DEFINICION DE VARIABLES PARA REGLA DE VALIDACION DE INFORMAICON*******************/
     var crtstCodigo = null;
     var crperCodigo = null;
+    var repCrperCodigo = null;
     var cggcrperCodigo = null;
     var crperNumDocIdentific=null;
     var cggCrperFechaNacimiento = null;
@@ -437,45 +438,34 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
         remoteSort:false,
         reader:new Ext.data.JsonReader({
         },[
-            {
-                name:'CRTT_CODIGO'
-            },
-
-            {
-                name:'CRTT_NOMBRE'
-            }
+            {name:'CRTT_CODIGO'},
+            {name:'CRTT_NOMBRE'}
         ]),
         baseParams:{
             format:TypeFormat.JSON
-        }/*,
+        },
         listeners:{
             load:function(){
-                if(INRECORD_CGG_RES_PERSONA){
-                    try
-                    {
-                        //if(inRecordCgg_res_persona.get('CRDID_CODIGO') != undefined)
-                        cbxCrdid_codigo.setValue(inRecordCgg_res_persona.get('CRDID_CODIGO'));
+                if(INSENTENCIA_CGG_RES_TRAMITE!='registrarTramite'){
+                    try{
+                        if(inRecordCgg_res_tramite.get('CRTT_CODIGO') != undefined)
+                            cbxCrtt_codigo.setValue(inRecordCgg_res_tramite.get('CRTT_CODIGO'));
                     }
-                    catch(inErr)
-                    {
-
-                    }
+                    catch(inErr){}
                 }
             }
-        }*/
+        }
     });
-    if(INSENTENCIA_CGG_RES_TRAMITE=='registrarTramite')
-        gsCrtt_codigo.load();
     var cbxCrtt_codigo = new Ext.form.ComboBox({
         id:'cbxCrtt_codigo',
         name:'cbxCrtt_codigo',
         fieldLabel :'Tipo de tramite',
-        anchor:'100%',
+        anchor:'98%',
         store: gsCrtt_codigo,
         displayField:'CRTT_NOMBRE',
         typeAhead: true,
         mode: 'local',
-        hidden: INSENTENCIA_CGG_RES_TRAMITE!='registrarTramite',
+        disabled: INSENTENCIA_CGG_RES_TRAMITE!='registrarTramite',
         forceSelection:true,
         triggerAction:'all',
         emptyText:'Seleccione un tipo de tramite',
@@ -489,6 +479,8 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
             }
         }
     });
+    //if(INSENTENCIA_CGG_RES_TRAMITE=='registrarTramite')
+    gsCrtt_codigo.load();
 ////AC<<====
     /**
      * Ext.form.TextField IDENTIFICATIVO UNICO DE REGISTRO TIPO DE SOLICITUD DE RESIDENCIA
@@ -1683,7 +1675,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
         id: 'pnlFrmCgg_res_tramite1Norte1',
         layout: 'column',
         region: 'north',
-        height: INSENTENCIA_CGG_RES_TRAMITE=='registrarTramite'?80:55,
+        height: 80,//INSENTENCIA_CGG_RES_TRAMITE=='registrarTramite'?80:55,
         items: [{
             columnWidth: .5,
             layout: 'form',
@@ -3359,7 +3351,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                 crperNumDocIdentific = rBeneficiario.get('CRPER_NUM_DOC_IDENTIFIC');
                 cggCrperFechaNacimiento = rBeneficiario.get('CRPER_FECHA_NACIMIENTO');
                 var crdidCodigo = rBeneficiario.get('CRDID_CODIGO');
-                var rep_cper_codigo = (rRepresentante)?rRepresentante.get('CRPER_CODIGO'):null;
+                repCrperCodigo = (rRepresentante)?rRepresentante.get('CRPER_CODIGO'):null;
                 //crdptCodigo = tmpDepositoGarantia.data.CRDPT_CODIGO;
                 jsonData = {'CRTST_CODIGO':crtstCodigo,
                             'CRDID_CODIGO':crdidCodigo,
@@ -3367,7 +3359,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                             'CGGCRPER_CODIGO':cggcrperCodigo,
                             'CRPER_NUM_DOC_IDENTIFIC':crperNumDocIdentific,
                             'CRPER_FECHA_NACIMIENTO':cggCrperFechaNacimiento,
-                            'REP_CRPER_CODIGO':rep_cper_codigo,
+                            'REP_CRPER_CODIGO':repCrperCodigo,
                             'CHANGE_CRTST_CODIGO':valChangeCrtst_codigo
                 };
             }catch(inErr){}

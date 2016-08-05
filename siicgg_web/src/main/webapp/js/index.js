@@ -57,7 +57,10 @@ function loadInit(){
 			}
 		}
 		
-		function CallBackFrase(r){var res = eval(r);$("divFrase").innerHTML = res[0].CWFB_CONTENIDO;}	
+		function CallBackFrase(r){
+			var res = eval(r);
+			document.getElementById("divFrase").innerHTML = res[0].CWFB_CONTENIDO;
+		}
 		var param = new SOAPClientParameters(); 		
 		param.add('inCwfb_codigo',null);					
 		param.add('format', "JSON");					
@@ -65,7 +68,7 @@ function loadInit(){
 		
 		function CallBackIndicador(r){			
 			var res = eval(r);
-			$("divIndicador").innerHTML = "<table style='font-size:11'>"+				
+			document.getElementById("divIndicador").innerHTML = "<table style='font-size:11'>"+
 				"<tr><td>Visto por empresas:</td><td><b>"+res[0].OBSERVADO+"</b></td></tr>"+
 				"<tr><td>Aplicaciones realizadas:</td><td><b>"+res[0].APLICACIONES+"</b></td></tr>"+
 				"<tr><td>Inasistenacias a entrevistas:</td><td><b>"+res[0].FALTA+"</b></td></tr>"+
@@ -78,7 +81,7 @@ function loadInit(){
 		
 		lnkAccesoLogin.innerHTML="Salir";
 		divLogin.style.cssText = "background-color:#E6EFC2;border-color:#C1D573";
-		divUsuario.innerHTML = "<b>Bienvenido</b><br> "+ userObject.CRPER_NOMBRES+" "+userObject.CRPER_APELLIDO_PATERNO+"";		
+		divUsuario.innerHTML = "<b>Bienvenido</b><br> "+ userObject.CRPER_NOMBRES+" "+userObject.CRPER_APELLIDO_PATERNO+" "+userObject.CRPER_APELLIDO_MATERNO+"";
 		btnAcceso.onclick=function(){
 			window.location="PrivateWS/SessionWeb?request=logout";
 		}
@@ -129,7 +132,11 @@ function loadSeleccionModulo(){
 				
 			if (tmpComp.id == this.id){
 				setOptionModuloSeleccionado(this.id);
-				if (arrDivs[k].page)
+				if (arrDivs[k].page)/*{
+					$("#divFrameBody").load(arrDivs[k].page, function () {
+						console.log("page loaded");
+					});
+				}*/
 					document.getElementById("iFrameBody").src=arrDivs[k].page;
 				else
 					divCargando.style.visibility="hidden";
@@ -139,17 +146,21 @@ function loadSeleccionModulo(){
 		divCargando.style.visibility="visible";
 		for (var k=0;k<arrDivs.length;k++)	{					
 			if (arrDivs[k].idComponent == this.id)
-				if (arrDivs[k].page)
+				if (arrDivs[k].page)/*{
+					$("#divFrameBody").load(arrDivs[k].page, function () {
+						console.log("page loaded");
+					});
+				}*/
 					document.getElementById("iFrameBody").src=arrDivs[k].page;
 				else
 					divCargando.style.visibility="hidden";
 		}		
 	}
 	/*Menu Inicio*/
-	//arrDivs.push({parent:true,items:false,idComponent:"divInicio",page:"bienvenida.jsp?CWPAG_CODIGO=CWPAG1"});
-	document.getElementById("divInicio").onclick= function(){
+	arrDivs.push({parent:true,items:false,idComponent:"divInicio",page:"bienvenida.jsp?CWPAG_CODIGO=CWPAG1"});
+	/*document.getElementById("divInicio").onclick= function(){
 		window.open('http://www.gobiernogalapagos.gob.ec','_blank');
-	}		
+	};*/
 
 	/*Menu Gestion de empleo*/
 	arrDivs.push({parent:true,items:true,idComponent:"divGestEmpleo"});
@@ -218,8 +229,8 @@ function setOptionModuloSeleccionado(idModulo){
 	document.getElementById("loading").style.display="none";
 	document.getElementById("divIndicador").style.display="none";
 	document.getElementById("btnRegistroEmpresa").style.display="none";	
-	document.getElementById("btnAccederSistema").style.display="none";	
-	$("divIndicador").style.display="none";	
+	document.getElementById("btnAccederSistema").style.display="none";
+	//document.getElementById("divIndicador").style.display="none";
 	if(idModulo == "linkCandidatos"){			
 			
 		if (txtUsuario.value!="false"){			
@@ -242,11 +253,11 @@ function setOptionModuloSeleccionado(idModulo){
 				document.getElementById("btnDenunciaSugerencia").style.display="block";
 				document.getElementById("btnSubscripcionCargos").style.display="block";
 				document.getElementById("btnEmpresasRegistradas").style.display="block";
-				$("divIndicador").style.display="block";
+				document.getElementById("divIndicador").style.display="block";
 			}
 		}else{
-			$("btnInfoAdicional").style.fontSize ="11";
-			$("btnInfoAdicional").innerHTML = "Por favor presione el bot&oacute;n del panel superior para aplicar a ofertas de empleo "
+			document.getElementById("btnInfoAdicional").style.fontSize ="11";
+			document.getElementById("btnInfoAdicional").innerHTML = "Por favor presione el bot&oacute;n del panel superior para aplicar a ofertas de empleo "
 			document.getElementById("btnInfoAdicional").style.display="block";
 		}
 
@@ -261,8 +272,8 @@ function setOptionModuloSeleccionado(idModulo){
 			document.getElementById("btnRegistroEmpresa").style.display="block";	
 			document.getElementById("btnAccederSistema").style.display="block";			
 		}else{
-			$("btnInfoAdicional").style.fontSize ="11";
-			$("btnInfoAdicional").innerHTML = "<ul><li>Si desea registrar su empresa por favor de click <span id='preRegEmpresa' style='cursor:pointer'><b>aqu&iacute;</b></span>.</li><li>Si desea registrar ofertas de empleo click <a href='/sii/'><b>aqu&iacute;</b></a></li></ul>";
+			document.getElementById("btnInfoAdicional").style.fontSize ="11";
+			document.getElementById("btnInfoAdicional").innerHTML = "<ul><li>Si desea registrar su empresa por favor de click <span id='preRegEmpresa' style='cursor:pointer'><b>aqu&iacute;</b></span>.</li><li>Si desea registrar ofertas de empleo click <a href='/sii/'><b>aqu&iacute;</b></a></li></ul>";
 			document.getElementById("btnInfoAdicional").style.display="block";
 			document.getElementById("preRegEmpresa").onclick = function(){				
 				new ManagerCookies().create ('page','https://'+URL_SERVER+URL_APP+'registroDatosEmpresa.jsp',1);

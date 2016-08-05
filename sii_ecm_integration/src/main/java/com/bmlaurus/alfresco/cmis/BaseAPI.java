@@ -77,6 +77,12 @@ public class BaseAPI extends BasePublicAPI {
         return this.cmisSession;
     }
 
+    public void disconnect(){
+        cmisSession.clear();
+        cmisSession=null;
+        System.out.println("----- [Alfresco Session] Cleared! -----");
+    }
+
     /**
      * Uses basic authentication to create an HTTP request factory.
      *

@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION f_cgg_res_tramite_select1(in_user_name character varying, in_start_index integer, in_limit integer, in_sort_field_name character varying, in_direction character varying, in_find_text text)
+CREATE OR REPLACE FUNCTION sii.f_cgg_res_tramite_select1(in_user_name character varying, in_start_index integer, in_limit integer, in_sort_field_name character varying, in_direction character varying, in_find_text text)
   RETURNS SETOF refcursor AS
 $BODY$
 DECLARE
@@ -144,7 +144,7 @@ $BODY$
   ROWS 1000;
 
 
-CREATE OR REPLACE FUNCTION f_cgg_res_tramite_update_isla(in_crtra_codigo character varying, in_cisla_codigo character varying, in_crtra_usuario_update character varying)
+CREATE OR REPLACE FUNCTION sii.f_cgg_res_tramite_update_isla(in_crtra_codigo character varying, in_cisla_codigo character varying, in_crtra_usuario_update character varying)
   RETURNS void AS
 $BODY$
 DECLARE

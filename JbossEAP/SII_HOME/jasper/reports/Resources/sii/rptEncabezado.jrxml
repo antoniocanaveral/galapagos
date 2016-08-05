@@ -57,7 +57,7 @@ WHERE CGCNF_CONFIGURACION = 'TEXTO ENCABEZADO REPORTES']]>
 			</textField>
 			<image>
 				<reportElement x="0" y="0" width="90" height="70"/>
-				<imageExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR}+"cgg3.png"]]></imageExpression>
+				<imageExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR}+"cgg3"]]></imageExpression>
 			</image>
 		</band>
 	</detail>
