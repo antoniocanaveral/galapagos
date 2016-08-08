@@ -623,6 +623,7 @@ public class Cgg_res_fase implements Serializable{
 						con.commit();
 
 					//Insert Mensajes
+					//FIXME:Controlar UPDATES
 					org.json.JSONArray objNotificacionJSON = new org.json.JSONArray(inFaseNotificacion_JSON);
 					if (objNotificacionJSON.length()>0)
 						res = "false";

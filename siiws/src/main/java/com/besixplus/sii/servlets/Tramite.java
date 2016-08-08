@@ -218,6 +218,7 @@ public class Tramite extends HttpServlet implements Serializable {
 
 				}else if(inOperacion.equalsIgnoreCase("actualizar")==true){
 					//log +="==3 Actualizacion de tramite";
+					objTramite.setCRTRA_ATENCION_CLIENTE(true);
 					outResult = new Cgg_res_tramite().actualizarTramite(
 							objTramite.getCRTRA_CODIGO(),
 							objTramite.getCRPER_CODIGO(), 

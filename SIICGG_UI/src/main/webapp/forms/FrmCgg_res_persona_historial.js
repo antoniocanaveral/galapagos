@@ -979,6 +979,8 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
                         grdCgg_res_residencia_historial.getView().getRow(i).style.backgroundColor = '#FFFFE0';
                     }
                 }
+                if(gsCgg_res_residencia_historial.data.length>0)
+                    btnCarnetCgg_res_carnet.setDisabled(false);
             }
         }
     });
@@ -998,6 +1000,21 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
         tbar:['Listado de residencias'],
         loadMask: {
             msg: "Cargando..."
+        }
+    });
+
+    var btnCarnetCgg_res_carnet = new Ext.Button({
+        id: 'btnCarnetCgg_res_carnet',
+        name: 'btnCarnetCgg_res_carnet',
+        text: 'Ver Carnet',
+        iconCls: 'iconPreview',
+        disabled:true,
+        listeners:{
+            click:function(){
+                var carnetWin = new FrmListadoCgg_res_carnet(inDesktop,txtCrper_num_doc_identific_historial.getValue());
+                carnetWin.show();
+                carnetWin.loadHistorico();
+            }
         }
     });
 
@@ -1854,7 +1871,7 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
             constrain:true,
             resizable:true,
             iconCls:'iconHistorialPersona',
-            bbar:[btnAdjuntos,'->',btnCerrarCgg_res_persona_historial]
+            bbar:[btnAdjuntos,btnCarnetCgg_res_carnet,'->',btnCerrarCgg_res_persona_historial]
         });
         winFrmCgg_res_persona_historial.on("beforeclose",function(){
             pnlPersonaHistorial.items =[];

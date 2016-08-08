@@ -1116,8 +1116,8 @@ function FrmCgg_res_fase(INSENTENCIA_CGG_RES_FASE,INRECORD_PROCESO_FASE,INRECORD
                 var result = 'requerido';
                 for(i=0;i<dsDestinatarios.getCount();i++){
                     var rRequisito = dsDestinatarios.getAt(i);
-                    if(rRequisito.get(0) == inNtml_destinatario){
-                        result = rRequisito.get(1);
+                    if(rRequisito.get('code') == inNtml_destinatario){
+                        result = rRequisito.get('name');
                         break;
                     }
                 }
@@ -1135,8 +1135,8 @@ function FrmCgg_res_fase(INSENTENCIA_CGG_RES_FASE,INRECORD_PROCESO_FASE,INRECORD
                 var result = '';
                 for(i=0;i<dsTipoSolicitud.getCount();i++){
                     var rRequisito = dsTipoSolicitud.getAt(i);
-                    if(rRequisito.get(0) == inNtml_tipo_solicitud){
-                        result = rRequisito.get(1);
+                    if(rRequisito.get('CRTST_CODIGO') == inNtml_tipo_solicitud){
+                        result = rRequisito.get('CRTST_DESCRIPCION');
                         break;
                     }
                 }
@@ -1154,8 +1154,8 @@ function FrmCgg_res_fase(INSENTENCIA_CGG_RES_FASE,INRECORD_PROCESO_FASE,INRECORD
                 var result = 'requerido';
                 for(i=0;i<dsRespuestaFase.getCount();i++){
                     var rRequisito = dsRespuestaFase.getAt(i);
-                    if(rRequisito.get(0) == inNtml_destinatario){
-                        result = rRequisito.get(1);
+                    if(rRequisito.get('code') == inNtml_destinatario){
+                        result = rRequisito.get('name');
                         break;
                     }
                 }
