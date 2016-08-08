@@ -25,7 +25,7 @@ public class LocalTests {
 
     @Test
     public void CreatePath(){
-        System.err.println(validateReport("atencionalcliente", "rptSolicitudResidenciaTranseunte"));
+        System.err.println(validateReport("generated", "rptDinardapSRI"));
     }
 
 

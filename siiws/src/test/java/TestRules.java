@@ -2,13 +2,7 @@
  * Created by acanaveral on 15/6/16.
  */
 
-import com.besixplus.sii.db.ManagerConnection;
-import com.besixplus.sii.mail.ProcessMail;
-import com.besixplus.sii.misc.CGGEnumerators;
 import org.junit.Test;
-
-import java.sql.Connection;
-import java.sql.SQLException;
 
 public class TestRules {
 
@@ -34,7 +28,7 @@ public class TestRules {
                 e.printStackTrace();
             }
         }*/
-        Connection conn = ManagerConnection.getConnection();
+        /*Connection conn = ManagerConnection.getConnection();
         com.besixplus.sii.objects.Cgg_res_tramite obj = new com.besixplus.sii.objects.Cgg_res_tramite();
         obj.setCRTRA_CODIGO("CRTRA82645");
         obj = new com.besixplus.sii.db.Cgg_res_tramite(obj).select(conn);
@@ -47,9 +41,24 @@ public class TestRules {
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }*/
 
         //mailer.start();
+
+        /*SRI sri = new SRI("1710679968001");
+        if(sri.callServiceAsObject().equals(SRI.CALL_OK)){
+            CreateSRIAttachment sriAttachment = new CreateSRIAttachment(sri,"CPJR57");
+            try {
+                sriAttachment.attachReport();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }*/
+
+        /*Cgg_res_persona_juridica jur = new Cgg_res_persona_juridica();
+        jur.setCRPJR_CODIGO("CPJR57");
+        jur.setCRPJR_NUMERO_IDENTIFICACION("1710679968001");
+        new CreatorInvoker(null,jur).controlled().createEmpresaDocuments();*/
 
         /*RegistroCivil registroCivil = new RegistroCivil("1710679968");
         if(registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_OK)){
