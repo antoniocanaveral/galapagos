@@ -2276,7 +2276,7 @@ VALORES:
 				objTramite.getCRTRA_FECHA_INGRESO(),
 				objTramite.getCRTRA_FECHA_SALIDA(),
 				inBeneficiarios_JSON,
-				null,
+				"[]",
 				null,
 				null,
 				tmpRequest,
@@ -2400,13 +2400,9 @@ VALORES:
 			com.besixplus.sii.objects.Cgg_res_proceso objProceso = new Cgg_res_proceso();
 			objProceso = new com.besixplus.sii.db.Cgg_res_proceso(objProceso).selectByTipoSolicitudTramite(con, inCrtst_codigo);
 
-			//CONSULTA DEL ESTADO POR DEFECTO PARA UN TRAMITE
-			com.besixplus.sii.objects.Cgg_configuracion tmpConf = new com.besixplus.sii.objects.Cgg_configuracion();
-			tmpConf.setCGCNF_CODIGO("22");
 
-			tmpConf = new com.besixplus.sii.db.Cgg_configuracion(tmpConf).select(con);
 			obj.setCRPRO_CODIGO(objProceso.getCRPRO_CODIGO());
-			obj.setCRETT_CODIGO(tmpConf.getCGCNF_VALOR_CADENA());
+			//obj.setCRETT_CODIGO(tmpConf.getCGCNF_VALOR_CADENA());
 
 
 			if(inNuevoBeneficiarioJSON != null && inNuevoBeneficiarioJSON.trim().length()>=1){
@@ -2577,8 +2573,83 @@ VALORES:
 					}
 					if (resContacto.equals("true"))
 					{
+						Cgg_usuario objUsuarioRegistro = new Cgg_usuario();
+						objUsuarioRegistro.setCUSU_NOMBRE_USUARIO(tmpRequest.getUserPrincipal().getName());
+						new com.besixplus.sii.db.Cgg_usuario(objUsuarioRegistro).selectByUsername(con);
+
+						//CONSULTA DEL ESTADO POR DEFECTO PARA UN TRAMITE
+						com.besixplus.sii.objects.Cgg_configuracion tmpConf = new com.besixplus.sii.objects.Cgg_configuracion();
+						tmpConf.setCGCNF_CONFIGURACION("ESTADO TRAMITE SOLO GUARDADO");
+						tmpConf= new com.besixplus.sii.db.Cgg_configuracion(tmpConf).selectCGCNF_CONFIGURACION(con);
+						obj.setCRETT_CODIGO(tmpConf.getCGCNF_VALOR_CADENA());
+
 						obj.setCGG_CRPER_CODIGO(objNuevoBeneficiario.getCRPER_CODIGO());
 						res = new com.besixplus.sii.db.Cgg_res_tramite(obj).insert1(con);
+
+						///
+						Cgg_res_fase objFase = new Cgg_res_fase();
+						objFase.setCRPRO_CODIGO(obj.getCRPRO_CODIGO());
+
+						objFase = new com.besixplus.sii.db.Cgg_res_fase(objFase).selectFaseInicio(con,inCisla_codigo);
+
+						//log+="-8.2 Desicion para fase";
+
+						if(objFase.getCRFAS_CODIGO() != null &&
+								objFase.getCRFAS_CODIGO().trim().length() >= CGGEnumerators.LONGITUDCLAVEPRIMARIA.MINIMO.getValue()	&&
+								objFase.getCRFAS_CODIGO().trim().length() <= CGGEnumerators.LONGITUDCLAVEPRIMARIA.MAXIMO.getValue()) {
+
+							//REGISTRO DE SEGUIMIENTO INICIAL DE UN TRAMITE.
+							//log+="-8.3";
+							Cgg_res_seguimiento objSeguimientoPadre = new Cgg_res_seguimiento();
+
+							objSeguimientoPadre.setCRSEG_CODIGO("KEYGEN");
+							objSeguimientoPadre.setCGG_CRSEG_CODIGO(null);
+							objSeguimientoPadre.setCRTRA_CODIGO(res[0]);
+							objSeguimientoPadre.setCRFAS_CODIGO(objFase.getCRFAS_CODIGO());
+							objSeguimientoPadre.setCGG_CRFAS_CODIGO(objFase.getCRFAS_CODIGO());
+							objSeguimientoPadre.setCUSU_CODIGO(objUsuarioRegistro.getCUSU_CODIGO());
+							objSeguimientoPadre.setCRSEG_DESCRIPCION("Registro de seguimiento para tr\u00E1mite " + obj.getCRTRA_ANIO().toString() + "-" + res[1] + ".");
+							objSeguimientoPadre.setCRSEG_OBSERVACION(inCrtra_observacion);
+
+							objSeguimientoPadre.setCRSEG_ESTADO_ATENCION(ESTADOATENCION.RECIBIDO.getValue());
+							objSeguimientoPadre.setCRSEG_TIPO_RESPUESTA(TIPORESPUESTA.INDETERMINADO.getValue());
+
+							objSeguimientoPadre.setCRSEG_TIPO_ACTIVIDAD(objFase.getCRFAS_TAREA_REALIZA());
+							objSeguimientoPadre.setCRSEG_FECHA_RECEPCION(new Date());
+							objSeguimientoPadre.setCRSEG_FECHA_REVISION(new Date());
+							objSeguimientoPadre.setCRSEG_FECHA_DESPACHO(new Date());
+							objSeguimientoPadre.setCRSEG_ESTADO_HIJO(ESTADORESPUESTA.SINRESPUESTAS.getValue());
+							objSeguimientoPadre.setCRSEG_ESTADO(true);
+							objSeguimientoPadre.setCRSEG_VECES_REVISION(new BigDecimal(1));
+							objSeguimientoPadre.setCRSEG_NUMERO(new BigDecimal(0));
+							objSeguimientoPadre.setCUSU_CODIGO(objUsuarioRegistro.getCUSU_CODIGO());
+							objSeguimientoPadre.setCRSEG_ESTADO(true);
+							objSeguimientoPadre.setCRSEG_USUARIO_INSERT(tmpRequest.getUserPrincipal().getName());
+							objSeguimientoPadre.setCRSEG_USUARIO_UPDATE(tmpRequest.getUserPrincipal().getName());
+
+							String flagSeguimientoPadre = new com.besixplus.sii.db.Cgg_res_seguimiento(objSeguimientoPadre).insert(con);
+							//log+="-9 Seguimiento padre";
+							if (flagSeguimientoPadre.equalsIgnoreCase("true") == true) {
+								//REGISTRO DE LA NOVEDAD NOTIFICACION PARA EL SEGUIMIENTO PADRE EN CASO DE SOLO GUARDADO
+								Cgg_res_novedad_notificacion objNotificacionSeguimiento = new Cgg_res_novedad_notificacion();
+								objNotificacionSeguimiento.setCRNOV_CODIGO("KEYGEN");
+								objNotificacionSeguimiento.setCRSEG_CODIGO(objSeguimientoPadre.getCRSEG_CODIGO());
+								objNotificacionSeguimiento.setCRNOV_DESCRIPCION("TRAMITE DE USUARIO WEB, SOLO GUARDADO EL " + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(new Date()));
+								objNotificacionSeguimiento.setCRNOV_TIPO(TIPONOVEDAD.COMENTARIO.getValue());
+								objNotificacionSeguimiento.setCRNOV_FECHA_REGISTRO(new Date());
+								objNotificacionSeguimiento.setCRNOV_ESTADO(true);
+								objNotificacionSeguimiento.setCRNOV_USUARIO_INSERT(tmpRequest.getUserPrincipal().getName());
+								objNotificacionSeguimiento.setCRNOV_USUARIO_UPDATE(tmpRequest.getUserPrincipal().getName());
+								new com.besixplus.sii.db.Cgg_res_novedad_notificacion(objNotificacionSeguimiento).insert(con);
+							}else
+								flagRes = "false";
+						}
+
+
+
+
+
+
 					}
 					else
 					{
@@ -3224,7 +3295,7 @@ VALORES:
 
 						if(flagRequisito.equalsIgnoreCase("true")==true && flagAdjuntosRequisito.equalsIgnoreCase("true")==true ){						
 
-							objSeguimientoPadre = new Cgg_res_seguimiento();
+ 							objSeguimientoPadre = new Cgg_res_seguimiento();
 							objFase = new Cgg_res_fase();
 
 							Cgg_res_seguimiento seguimiento = new Cgg_res_seguimiento();

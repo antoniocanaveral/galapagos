@@ -401,3 +401,8 @@ var script=document.createElement('script');script.type="text/javascript";script
 var script=document.createElement('script');script.type="text/javascript";script.src="forms/FrmListadoCgg_web_pagina.js";head.appendChild(script);
 var script=document.createElement('script');script.type="text/javascript";script.src="forms/FrmCgg_web_pagina.js";head.appendChild(script);
 var script=document.createElement('script');script.type="text/javascript";script.src="forms/FrmListadoCgg_res_transeunte.js";head.appendChild(script);
+
+
+
+var script=document.createElement('script');script.type="text/javascript";script.src="forms/FrmListadoEcm_Archivos.js";head.appendChild(script);
+var script=document.createElement('script');script.type="text/javascript";script.src="forms/FrmCgg_ecm_archivo.js";head.appendChild(script);

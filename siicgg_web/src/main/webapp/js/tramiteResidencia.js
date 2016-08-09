@@ -222,28 +222,6 @@ $(function() {
             };
             //De una vez hacemos el insert antes de entrar en las reglas de validacion.
             if(!_isAuto) {
-                if (objBeneficiario.CGGCRPER_CODIGO == 'KEYGEN') {
-                    var objBeneficiarioJSON = JSON.stringify(objBeneficiario);
-                    var param = new SOAPClientParameters();
-                    param.add('inNuevoBeneficiarioJSON', objBeneficiarioJSON);
-                    var tmpPersona = SOAPClient.invoke(URL_WS + 'Cgg_res_persona', 'insertLite', param, false, null);
-                    try {
-                        var result = eval('(' + tmpPersona + ')');
-                        if (result == false) {
-                            new bsxMessageBox({
-                                title: 'Alerta',
-                                msg: 'Ha ocurrido un error al registrar el beneficiario. No es posible validar la informaci&oacute;n',
-                                icon: "iconInfo"
-                            });
-                            return;
-                        } else {
-                            objBeneficiario.CGGCRPER_CODIGO = result.CRPER_CODIGO;
-                        }
-                    } catch (inErr) {
-                        console.log(inErr.message);
-                    }
-                }
-
                 if(!validarReglaTranseuntes(objBeneficiario)){
                     $('#divCargando1').hide();
                     $('#divCargando1').html('Cargando..');
@@ -1494,6 +1472,33 @@ $(function() {
 
     consultarDatosAuspiciante();
 
+    function insertPersona(objBeneficiario){
+        if (objBeneficiario.CGGCRPER_CODIGO == 'KEYGEN') {
+            var objBeneficiarioJSON = JSON.stringify(objBeneficiario);
+            var param = new SOAPClientParameters();
+            param.add('inNuevoBeneficiarioJSON', objBeneficiarioJSON);
+            var tmpPersona = SOAPClient.invoke(URL_WS + 'Cgg_res_persona', 'insertLite', param, false, null);
+            try {
+                var result = eval('(' + tmpPersona + ')');
+                if (result == false) {
+                    new bsxMessageBox({
+                        title: 'Alerta',
+                        msg: 'Ha ocurrido un error al registrar el beneficiario. No es posible validar la informaci&oacute;n',
+                        icon: "iconInfo"
+                    });
+                    return false;
+                } else {
+                    objBeneficiario.CGGCRPER_CODIGO = result.CRPER_CODIGO;
+                }
+                return true;
+            } catch (inErr) {
+                console.log(inErr.message);
+                return false;
+            }
+        }
+    }
+
+
     function consultarDatosPersona(inTmpRecordPersona,inValue,inTipoPersona)
     {
         var flagConsultarDatos = false;
@@ -1565,6 +1570,24 @@ $(function() {
                     }
                     else
                     {
+
+                        var objBeneficiario = {
+                            CRPER_CODIGO: tmpRecordAuspiciante[0].CRPER_CODIGO,
+                            CGGCRPER_CODIGO: tmpRecordBeneficiario != null ? tmpRecordBeneficiario[0].CRPER_CODIGO : 'KEYGEN',
+                            CRPER_NUM_DOC_IDENTIFIC: $('#txtNumDocBeneficiario').val(),
+                            CRDID_CODIGO: cbxTipoDocumentoBeneficiario.dom.value,
+                            CRPER_NOMBRES: $('#txtNombreBeneficiario').val(),
+                            CRPER_APELLIDO_PATERNO: $('#txtApellidoPaternoBeneficiario').val(),
+                            CRPER_APELLIDO_MATERNO: $('#txtApellidoMaternoBeneficiario').val(),
+                            CRPER_GENERO: $("input[name='rdbtnGenero']:checked").val(),
+                            CRPER_FECHA_NACIMIENTO: $('#dtFechaNacimiento').val(),
+                            CPAIS_CODIGO: cbxNacionalidad.dom.value,
+                            CRDPT_CODIGO: crdptCodigo,
+                            CGG_CPAIS_CODIGO: cbxPaisResidencia.dom.value
+                        };
+                        insertPersona(objBeneficiario);
+                        tmpRecordPersona[0].CRPER_CODIGO = objBeneficiario.CGGCRPER_CODIGO;
+
                         if(inTipoPersona == 'AUSPICIANTE')
                         {
                             //alert('');

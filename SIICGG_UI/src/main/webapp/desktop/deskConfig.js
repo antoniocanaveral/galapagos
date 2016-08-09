@@ -740,6 +740,12 @@ MyDesktop.StartMenuVehiculos = Ext.extend(MyDesktop.StartMenuItem, {
                     handler :this.createWindow,
                     scope:this,
                     windowId:'FrmListadoCgg_veh_vehiculo'
+                },{
+                    text: 'Administraci\u00f3n de Archivos',
+                    iconCls:'bogus',
+                    handler :this.createWindow,
+                    scope:this,
+                    windowId:'FrmListadoCgg_ecm_archivo'
                 }]
             }
         }
