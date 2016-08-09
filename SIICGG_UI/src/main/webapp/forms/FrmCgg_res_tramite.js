@@ -418,6 +418,8 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                         sCgg_res_fase.reload({
                             params: {
                                 inCrpro_codigo: tmpRecord.get('CRPRO_CODIGO'),
+                                inCisla_codigo:null,
+                                inCrtra_codigo: inRecordCgg_res_tramite.get('CRTRA_CODIGO'),
                                 format: TypeFormat.JSON
                             }
                         });
@@ -701,6 +703,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                 params: {
                     inCrpro_codigo:tmpRecord.get('CRPRO_CODIGO'),
                     inCisla_codigo:userInfo.CISLA_CODIGO,
+                    inCrtra_codigo:inRecordCgg_res_tramite.get('CRTRA_CODIGO'),
                     format: TypeFormat.JSON
                 }
             });
@@ -2360,8 +2363,9 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
             name: 'CUSU_CODIGO'
         }]),
         baseParams: {
-            inCrpro_codigo: null,
+            inCrpro_codigo:null,
             inCisla_codigo:null,
+            inCrtra_codigo:null,
             format:TypeFormat.JSON
         },
         listeners:{
@@ -4167,6 +4171,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
             params: {
                 inCrpro_codigo:null,
                 inCisla_codigo:null,
+                inCrtra_codigo:null,
                 format: TypeFormat.JSON
             }
         });

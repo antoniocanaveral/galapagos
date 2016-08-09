@@ -419,7 +419,7 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
                         });
                     }
                     if (!faseFinal) {
-                        var objSeleccionSeguimiento = new DlgSeleccionDespacho(inRecordCgg_res_seguimiento.get('CRPRO_CODIGO'));
+                        var objSeleccionSeguimiento = new DlgSeleccionDespacho(inRecordCgg_res_seguimiento.get('CRPRO_CODIGO'),inRecordCgg_res_seguimiento.get('CRTRA_CODIGO'));
                         objSeleccionSeguimiento.closeHandler(function() {
                             if (objSeleccionSeguimiento.getCrfasSeguimiento() !== null){
 								seguimientoHandler(objSeleccionSeguimiento,inTipoRespuesta);

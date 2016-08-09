@@ -1242,6 +1242,7 @@ $(function() {
 
         modeTranseuntes = false;
         var auspiciado = document.getElementById("divAuspiciado");
+        document.getElementById("divFieldActividad").style.display = "block";
         document.getElementById("divMultiTranseuntes").style.display = "none";
         auspiciado.style.display = "block";
         document.getElementById("liAuspiciado").style.display = "block";
@@ -1251,6 +1252,8 @@ $(function() {
         switch ($(this).val()){
             case 'CRTST65':
                 //Consulta en la base de las residencias vigentes que el auspiciante tenga.
+                document.getElementById("divDatosActividad").style.display = "block";
+                document.getElementById("divFieldActividad").style.display = "none";
                 document.getElementById("divResidenciasVigentes").style.display = "block";
                 //Llenamos la tabla.
                 limpiarTablaResidenciasVigentes();

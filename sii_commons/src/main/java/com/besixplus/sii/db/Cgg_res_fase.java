@@ -1,15 +1,11 @@
 package com.besixplus.sii.db;
 
+import com.besixplus.sii.objects.Cgg_res_fase_hijo;
+
+import java.io.Serializable;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.io.Serializable;
-import java.sql.CallableStatement;
-import java.sql.ResultSet;
-import java.sql.Savepoint;
-import java.sql.SQLException;
-import java.sql.Types;
-
-import com.besixplus.sii.objects.Cgg_res_fase_hijo;
 
 /**
 * CLASE Cgg_res_fase
@@ -1100,7 +1096,7 @@ public class Cgg_res_fase implements Serializable{
 	 * @param inCisla_codigo IDENTIFICATIVO UNICO DE REGSITRO DE ISLA.
 	 * @return COLECCION DE DATOS DE FASES CON INFORMACION DE USUARIO DE FASE.
 	 */
-	public ArrayList<HashMap<String, Object>> selectCGG_RES_PROCESO1(
+	public ArrayList<HashMap<String, Object>> selectCGG_RES_PROCESO1_OLD(
 			java.sql.Connection inConnection,
 			String inCisla_codigo
 		){
@@ -1127,6 +1123,35 @@ public class Cgg_res_fase implements Serializable{
 			}
 			return outCgg_res_fase;
 		}
+	public ArrayList<HashMap<String, Object>> selectCGG_RES_PROCESO1(
+			java.sql.Connection inConnection,
+			String inCisla_codigo,
+			String inCrtra_codigo
+	){
+		ArrayList<HashMap<String, Object>> outCgg_res_fase = new ArrayList<HashMap<String, Object>>();
+		try{
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_FASE_S_CGG_RES_PROCESO(?,?,?) }");
+			stmSelect.registerOutParameter(1, Types.OTHER);
+			stmSelect.setString(2,this.getCgg_res_fase().getCRPRO_CODIGO());
+			stmSelect.setString(3,inCisla_codigo);
+			stmSelect.setString(4,inCrtra_codigo);
+			stmSelect.execute();
+			ResultSet results = (ResultSet) stmSelect.getObject(1);
+			int tmpColumnCount = results.getMetaData().getColumnCount();
+			while (results.next()) {
+				HashMap<String,Object> tmpObj = new HashMap<String,Object>();
+				for (int i = 1 ; i <= tmpColumnCount; i++)
+					if(results.getObject(i) != null)
+						tmpObj.put(results.getMetaData().getColumnName(i).toUpperCase(), results.getObject(i));
+				outCgg_res_fase.add(tmpObj);
+			}
+			results.close();
+			stmSelect.close();
+		}catch(SQLException e){
+			com.besixplus.sii.db.SQLErrorHandler.errorHandler(e);
+		}
+		return outCgg_res_fase;
+	}
 	
 	/**
 	 * SELECCIONA LA FASE INICIAL DE UN PROCESO PARA EL REGISTRO DE UN TRAMITE.

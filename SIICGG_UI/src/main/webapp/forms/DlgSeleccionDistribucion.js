@@ -66,6 +66,7 @@ function DlgSeleccionDistribucion(inCrpro_codigo,inCrfas_codigo){
                             params: {
                                 inCrpro_codigo: tmpRecord.get('CRPRO_CODIGO'),
                                 inCisla_codigo:new UserSession().getUserData().CISLA_CODIGO,
+                                inCrtra_codigo:null,
                                 format: TypeFormat.JSON
                             }
                         });
@@ -115,6 +116,8 @@ function DlgSeleccionDistribucion(inCrpro_codigo,inCrfas_codigo){
             }]),
         baseParams:{
             inCrpro_codigo:null,
+            inCisla_codigo:null,
+            inCrtra_codigo:null,
             format:TypeFormat.JSON
         },
         listeners:{
@@ -486,6 +489,7 @@ function DlgSeleccionDistribucion(inCrpro_codigo,inCrfas_codigo){
                     params: {
                         inCrpro_codigo:crproCodigo,
                         inCisla_codigo:new UserSession().getUserData().CISLA_CODIGO,
+                        inCrtra_codigo:null,
                         format: TypeFormat.JSON
                     }
                 });

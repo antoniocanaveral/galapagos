@@ -753,6 +753,7 @@ public class Cgg_res_fase implements Serializable{
 	public String selectCGG_RES_PROCESO(
 			@WebParam(name="inCrpro_codigo")String inCrpro_codigo,
 			@WebParam(name="inCisla_codigo")String inCisla_codigo,
+			@WebParam(name="inCrtra_codigo")String inCrtra_codigo,
 			@WebParam(name="format")String format
 			) throws SOAPException{
 		com.besixplus.sii.misc.Formatter tmpFormat = null;
@@ -766,7 +767,7 @@ public class Cgg_res_fase implements Serializable{
 				throw new SOAPFaultException(SOAPFactory.newInstance().createFault(myInfoMessages.getMessage("sii.seguridad.acceso.negado", null), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));				
 			}
 			con.setAutoCommit(false);
-			ArrayList<HashMap<String, Object>> obj = new com.besixplus.sii.db.Cgg_res_fase(tmpObj).selectCGG_RES_PROCESO1(con,inCisla_codigo);			
+			ArrayList<HashMap<String, Object>> obj = new com.besixplus.sii.db.Cgg_res_fase(tmpObj).selectCGG_RES_PROCESO1(con,inCisla_codigo,inCrtra_codigo);
 			tmpFormat = new com.besixplus.sii.misc.Formatter(format, obj);
 			con.close();
 		}catch(SQLException inException){

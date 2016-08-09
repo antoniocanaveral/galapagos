@@ -202,12 +202,12 @@
                 </div>
             </div>
             <div id="divDatosActividad" style="display: none;">
-                <div class="form-line">
+                <div class="form-line" id="divFieldActividad">
                     <label class="form-label-left" id="lblActividad" for="divActividad"> Actividad:</label>
                     <div class="form-input"><div id='divActividad'></div></div>
                     <label class="obligatorio">(*)</label>
                 </div>
-                <div class="form-line">
+                <div class="form-line" id="divFieldObservacion">
                     <label class="form-label-left" id="lblObservacion" for="txtObservacion"> Observaci&oacute;n:</label>
                     <div class="form-input">
                         <textarea class="form-textarea-limit" cols=36 rows = 5 type="text" name="txtObservacion" id="txtObservacion"></textarea>
