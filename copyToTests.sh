@@ -13,6 +13,8 @@ scp $ROOT_PATH/JbossEAP/SII_HOME/rules/*.* advance@$REMOTE_SERVER:/home/advance/
 
 scp $ROOT_PATH/JbossEAP/SII_HOME/mailing/*.* advance@$REMOTE_SERVER:/home/advance/galapagos/JbossEAP40/SII_HOME/mailing
 
+scp $ROOT_PATH/JbossEAP/SII_HOME/siicgg_ui/*.* advance@$REMOTE_SERVER:/home/advance/galapagos/JbossEAP40/SII_HOME/siicgg_ui
+
 scp $ROOT_PATH/JbossEAP/SII_HOME/alfresco/globals.properties advance@$REMOTE_SERVER:/home/advance/galapagos/JbossEAP40/SII_HOME/alfresco
 
 #scp -r $ROOT_PATH/JbossEAP/SII_HOME/jasper/reports advance@$REMOTE_SERVER:/home/advance/galapagos/JbossEAP40/SII_HOME/jasper

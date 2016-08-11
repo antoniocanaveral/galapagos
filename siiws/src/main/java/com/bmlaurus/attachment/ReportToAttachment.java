@@ -1,6 +1,5 @@
 package com.bmlaurus.attachment;
 
-import com.besixplus.sii.util.Env;
 import com.besixplus.sii.ws.JasperServerService;
 import com.bmlaurus.alfresco.AlfrescoActions;
 import com.bmlaurus.alfresco.integration.SiiAttachmentDocument;
@@ -8,9 +7,11 @@ import com.bmlaurus.alfresco.integration.SiiFileResult;
 import com.bmlaurus.alfresco.utils.InputStreamDataSource;
 import com.bmlaurus.jaspersoft.model.ReportExecutionResponse;
 import com.bmlaurus.jaspersoft.services.ReportExecutionService;
+import com.bmlaurus.jasper.Config;
 
 import javax.activation.DataHandler;
-import java.io.*;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.Map;
@@ -80,7 +81,7 @@ public abstract class ReportToAttachment {
         JasperServerService reportService = new JasperServerService();
         String valid = reportService.validateReport(reportFolder,reportName);
         if(valid.equals("{\"result\":true}")) {
-            Properties reportProps = Env.getExternalProperties("jasper/config.properties");
+            Properties reportProps = Config.getConfig();
             if (reportProps != null) {
                 url.append(reportProps.getProperty("SCHEME"));
                 url.append("://");

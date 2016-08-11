@@ -56,7 +56,7 @@ $BODY$
   ROWS 1000;
 
 
-  CREATE OR REPLACE FUNCTION sii.f_cgg_ecm_archivo_count(in_user_name character varying)
+CREATE OR REPLACE FUNCTION sii.f_cgg_ecm_archivo_count(in_user_name character varying)
   RETURNS integer AS
 $BODY$
 DECLARE

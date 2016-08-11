@@ -1,10 +1,10 @@
 package com.bmlaurus.alfresco.db;
 
-import com.besixplus.sii.util.Env;
 import com.bmlaurus.alfresco.model.SiiModelFile;
 import com.bmlaurus.alfresco.model.SiiModelIndexDefinition;
 import com.bmlaurus.alfresco.model.SiiModelIndexItem;
 import com.bmlaurus.alfresco.model.SiiModelMetadata;
+import com.bmlaurus.alfresco.utils.GlobalsConfig;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -180,7 +180,7 @@ public class SiiDataLoader {
             if(rs!=null && rs.next()) {
                 //Evaluamos la cadena que representa el path
                 if (sourcePath.startsWith("alfpath.") && sourcePath.endsWith(".path")) {
-                    Properties globals = Env.getExternalProperties("alfresco/globals.properties");
+                    Properties globals = GlobalsConfig.getConfig();
                     if (globals != null)
                         sourcePath = globals.getProperty(sourcePath);
                 }

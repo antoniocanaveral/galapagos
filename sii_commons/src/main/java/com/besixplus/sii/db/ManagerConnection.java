@@ -2,6 +2,7 @@ package com.besixplus.sii.db;
 
 import com.besixplus.sii.util.Env;
 import com.besixplus.sii.util.InitParameters;
+import com.bmlaurus.mailing.utils.Config;
 
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
@@ -86,7 +87,7 @@ public class ManagerConnection {
 			try {
 				//MAIL_SESSION = (Session) new InitialContext().lookup("java:/Mail");
 				//Vamos a crear la conexion a partir de un archivo de propiedades
-				Properties props = Env.getExternalProperties("mailing/config.properties");
+				Properties props = Config.getConfig();
 				MAIL_SESSION = Session.getInstance(props, new javax.mail.Authenticator() {
 					protected PasswordAuthentication getPasswordAuthentication() {
 						return new PasswordAuthentication(props.getProperty("mail.username"), props.getProperty("mail.password"));

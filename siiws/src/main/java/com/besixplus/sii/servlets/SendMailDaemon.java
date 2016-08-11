@@ -1,6 +1,7 @@
 package com.besixplus.sii.servlets;
 
 import com.besixplus.sii.util.Env;
+import com.bmlaurus.cron.utils.Config;
 import com.bmlaurus.exception.EnvironmentVariableNotDefinedException;
 import com.bmlaurus.job.BaseJob;
 import com.bmlaurus.job.BaseTrigger;
@@ -46,7 +47,7 @@ public class SendMailDaemon extends HttpServlet {
 			mySchedulerFactory = new StdSchedulerFactory();
 			myScheduler = mySchedulerFactory.getScheduler();
 
-			Properties props = Env.getExternalProperties("cron/config.properties");
+			Properties props = Config.getConfig();
 			if(props!=null && props.getProperty("cron.jobs") != null) {
 				Type jobList = new TypeToken<ArrayList<BaseJob>>() {
 				}.getType();
@@ -130,7 +131,7 @@ public class SendMailDaemon extends HttpServlet {
 	public void destroy() {
 		super.destroy();
 		try {
-			Properties props = Env.getExternalProperties("cron/config.properties");
+			Properties props = Config.getConfig();
 			if(props!=null && props.getProperty("cron.jobs") != null) {
 				Type jobList = new TypeToken<ArrayList<BaseJob>>() {
 				}.getType();

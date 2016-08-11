@@ -1,10 +1,12 @@
 package com.bmlaurus.invoker;
 
-import com.besixplus.sii.util.Env;
+import com.bmlaurus.invoker.utils.Config;
 import org.apache.commons.io.IOUtils;
 
 import javax.net.ssl.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.net.*;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -16,7 +18,7 @@ import java.util.Properties;
  */
 public class BackendInvoker {
 
-    private Properties config = Env.getExternalProperties("invoker/config.properties");
+    private Properties config = Config.getConfig();
 
     public String invokeBackendServlet(String servletName, String method, String payload) throws Exception, IOException {
         String result = null;

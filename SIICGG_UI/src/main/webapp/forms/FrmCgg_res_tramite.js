@@ -10,12 +10,14 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
     var inRecordCgg_res_tramite = INRECORD_CGG_RES_TRAMITE;
     var tituloCgg_res_tramite = 'Registro de tr\u00E1mites';
     var descCgg_res_tramite = 'El formulario permite establecer informaci\u00f3n de los tr\u00E1mites.';
+    var flagSoloGuardar = false;
     var isEdit = false;
     var tmpIsla = null;
     var tmpEstadoTramite = null;
     var tmpTipoSolicitud = null;
     var tmpProceso = null;
     var tmpAuspiciante = null;
+    var tmpRepresentante = null;
     var tmpPersonaJuridica = null;
     var tmpDepositoGarantia = null;
     var tmpBeneficiario = null;
@@ -57,6 +59,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
     var crperCodigo = null;
     var repCrperCodigo = null;
     var cggcrperCodigo = null;
+    var valFechaSalida = null;
     var crperNumDocIdentific=null;
     var cggCrperFechaNacimiento = null;
     var crdptCodigo = null;
@@ -377,6 +380,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                     if (tmpRecord != null && tmpRecord != undefined) {
                         txtCgg_rep_crper_codigo.setValue(tmpRecord.get('CRPER_NOMBRES') + " " + tmpRecord.get('CRPER_APELLIDO_PATERNO')+ ' ' + (tmpRecord.data.CRPER_APELLIDO_MATERNO?tmpRecord.data.CRPER_APELLIDO_MATERNO:''));
                         rRepresentante = tmpRecord;
+                        repCrperCodigo = (rRepresentante)?rRepresentante.get('CRPER_CODIGO'):null;
                     }
                 });
                 objBusqueda.show();
@@ -703,7 +707,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                 params: {
                     inCrpro_codigo:tmpRecord.get('CRPRO_CODIGO'),
                     inCisla_codigo:userInfo.CISLA_CODIGO,
-                    inCrtra_codigo:inRecordCgg_res_tramite.get('CRTRA_CODIGO'),
+                    inCrtra_codigo:inRecordCgg_res_tramite?inRecordCgg_res_tramite.get('CRTRA_CODIGO'):null,
                     format: TypeFormat.JSON
                 }
             });
@@ -1365,6 +1369,15 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
         iconCls: 'iconGuardarDespachar',
         tooltip: 'Guarda y despacha el tr\u00e1mite actual hacia la fase siguiente establecida.',
         handler: function(){
+            if(!flagSoloGuardar){
+                Ext.Msg.show({
+                    title: tituloCgg_res_tramite,
+                    msg: '(Solo) Guarde el tramite previamente para poder despacharlo.',
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.MessageBox.ERROR
+                });
+                return;
+            }
             var tmpTipoGarantia = '';
             if(validarFormularioTramite() == false) {
                 return;
@@ -1482,7 +1495,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                         inCrtra_fecha_salida:dtCrtra_fecha_salida.isVisible()?dtCrtra_fecha_salida.getValue().toString('dd/MM/yyyy'):null,
                         inOperacion:isEdit==false?'registrar':'actualizar',
                         inVehiculo:crearJSONVehiculo(),
-                        inRep_crper_codigo: rRepresentante.get('CRPER_CODIGO')=='KEYGEN' ? Ext.util.JSON.encode(rRepresentante.data):null,
+                        inRep_crper_codigo: rRepresentante.get('CRPER_CODIGO')=='KEYGEN'?null:rRepresentante.get('CRPER_CODIGO'),
                         inChange_crtst_codigo: valChangeCrtst_codigo
                     }
                 });
@@ -1547,7 +1560,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                             }
 
                             if(tmpFlag==true) {
-
+                                flagSoloGuardar = true;
                                 Ext.Msg.show({
                                     title: tituloCgg_res_tramite,
                                     msg: 'El tr\u00E1mite ha sido solo guardado.<br>El n\u00FAmero de su tr\u00E1mite es: <span class="numeroTramite">'+numTramite+ '</span>.<br>Para mayor informaci\u00F3n consulte el historial del tr\u00E1mite.',
@@ -1625,7 +1638,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                         inCrtra_fecha_salida:dtCrtra_fecha_salida.isVisible()?dtCrtra_fecha_salida.getValue().toString('dd/MM/yyyy'):null,
                         inOperacion:(isEdit==false)?'registrar':'actualizar',
                         inVehiculo:crearJSONVehiculo(),
-                        inRep_crper_codigo: rRepresentante.get('CRPER_CODIGO')=='KEYGEN' ? Ext.util.JSON.encode(rRepresentante.data):null,
+                        inRep_crper_codigo: rRepresentante.get('CRPER_CODIGO')=='KEYGEN'?null:rRepresentante.get('CRPER_CODIGO'),
                         inChange_crtst_codigo: valChangeCrtst_codigo
                     }
                 });
@@ -2879,6 +2892,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
     function cargarCgg_res_tramiteCtrls(){
         var scpIsla = null;
         var tmpCislaRegistro =null;
+        flagSoloGuardar = false;
         if (inRecordCgg_res_tramite){
 
             var scpTipoSolicitud=new SOAPClientParameters({
@@ -2920,6 +2934,30 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                 }catch (inErr) {
                     txtCrper_codigo.setValue(NO_DATA_MESSAGE);
                     tmpAuspiciante = null;
+                }
+            }
+
+            if(inRecordCgg_res_tramite.get('REP_CRPER_CODIGO')==null){
+                tmpPersonaRepresentante = null;
+                txtCgg_crper_codigo.setValue('');
+            }else{
+                var tmpRepresentante1 = Ext.util.Format.undef(inRecordCgg_res_tramite.get('REP_CRPER_CODIGO'));
+                var scpRepresentante = new SOAPClientParameters();
+                scpRepresentante.add('inCrper_codigo', tmpRepresentante1);
+                scpRepresentante.add('format', TypeFormat.JSON);
+                var tmpCrperRepRegistro = SOAPClient.invoke(URL_WS + "Cgg_res_persona", 'select', scpRepresentante, false, null);
+                try {
+                    tmpCrperRepRegistro = Ext.util.JSON.decode(tmpCrperRepRegistro);
+                    rRepresentante.set('CRPER_CODIGO', tmpCrperRegistro[0].CRPER_CODIGO);
+                    rRepresentante.set('CRPER_NOMBRES', tmpCrperRegistro[0].CRPER_NOMBRES);
+                    rRepresentante.set('CRPER_APELLIDO_PATERNO', tmpCrperRegistro[0].CRPER_APELLIDO_PATERNO);
+                    rRepresentante.set('CRPER_APELLIDO_MATERNO', tmpCrperRegistro[0].CRPER_APELLIDO_MATERNO);
+                    tmpRepresentante = rRepresentante;
+                    txtCgg_crper_codigo.setValue(rRepresentante.get('CRPER_NOMBRES') + " " + rRepresentante.get('CRPER_APELLIDO_PATERNO')+' '+(rRepresentante.data.CRPER_APELLIDO_MATERNO?rRepresentante.data.CRPER_APELLIDO_MATERNO:''));
+                    repCrperCodigo = (rRepresentante)?rRepresentante.get('CRPER_CODIGO'):null;
+                }catch (inErr) {
+                    txtCgg_crper_codigo.setValue(NO_DATA_MESSAGE);
+                    tmpRepresentante = null;
                 }
             }
 
@@ -3346,6 +3384,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
             return true;
 
         pnlFrmCgg_res_tramitePrincipal.getEl().mask('Validando...', 'x-mask-loading');
+        valFechaSalida=(dtCrtra_fecha_salida!=null && dtCrtra_fecha_salida.getValue()!=null)?dtCrtra_fecha_salida.getValue().toString('dd/MM/yyyy'):null;
         try{
             var jsonData = {};
             try{

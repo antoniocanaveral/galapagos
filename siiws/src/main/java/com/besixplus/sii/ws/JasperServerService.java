@@ -8,6 +8,7 @@ import com.bmlaurus.jaspersoft.model.InputControl;
 import com.bmlaurus.jaspersoft.model.JasperDataType;
 import com.bmlaurus.jaspersoft.model.JasperReportResource;
 import com.bmlaurus.jaspersoft.services.*;
+import com.bmlaurus.jasper.Config;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -46,7 +47,7 @@ public class JasperServerService implements Serializable {
             //String parentFolder = reportFolder.substring(0, reportFolder.lastIndexOf("/"));
             reportFolder = reportFolder.substring(reportFolder.lastIndexOf("/") + 1, reportFolder.length());
 
-            Properties config = Env.getExternalProperties("jasper/config.properties");
+            Properties config = Config.getConfig();
             FolderService folderService = null;
             if (Boolean.valueOf(config.getProperty("INIT_JASPERSERVER"))) {
                 UserService userService = new UserService();

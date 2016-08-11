@@ -1,4 +1,4 @@
-package com.bmlaurus.utils;
+package com.bmlaurus.cron.utils;
 
 import com.besixplus.sii.util.Env;
 
@@ -13,7 +13,7 @@ public class Config {
 
     public static Properties getConfig() {
         if (config == null) {
-            config = Env.getExternalProperties("alfresco/config.properties");
+            config = Env.getExternalProperties("cron/config.properties");
         }
 
         return config;

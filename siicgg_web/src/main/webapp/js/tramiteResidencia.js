@@ -505,6 +505,9 @@ $(function() {
     var cggCrperFechaNacimiento = null;
     var repCrperCodigo = null;
     var crdptCodigo = 'CRDPT_AT001';
+    var valFechaIngreso = null;
+    var valFechaSalida = null;
+
     /******************FIN DE DEFINICION DE VARIABLES PARA REGLA DE VALIDACION DE INFORMAICON*******************/
 
     /******************INICIO DE DEFINICION DE VARIABLES PARA LOS CONTACTOS DE LA PERSONA*******************/
@@ -1997,7 +2000,8 @@ $(function() {
         $('#divCargando1').html('Validando..');
         $('#divCargando1').show();
         try{
-
+            valFechaSalida = $('#dtFechaSalida').val();
+            valFechaIngreso = $('#dtFechaIngreso').val();
             crperCodigo = tmpRecordAuspiciante[0].CRPER_CODIGO;
             try{
                 cggcrperCodigo = tmpRecordBeneficiario != null? tmpRecordBeneficiario[0].CRPER_CODIGO:'KEYGEN';
@@ -2054,6 +2058,9 @@ $(function() {
         $('#divCargando1').show();
 
         crperCodigo = tmpRecordAuspiciante[0].CRPER_CODIGO;
+        valFechaSalida = $('#dtFechaSalida').val();
+        valFechaIngreso = $('#dtFechaIngreso').val();
+
         try{
             var beneficiarios = [];
             var multiReglas = [];

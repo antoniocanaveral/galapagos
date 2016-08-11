@@ -1,10 +1,10 @@
 package com.bmlaurus.attachment;
 
 import com.besixplus.sii.db.ManagerConnection;
-import com.besixplus.sii.util.Env;
 import com.bmlaurus.alfresco.db.SiiDataLoader;
 import com.bmlaurus.alfresco.integration.SiiIdentificable;
 import com.bmlaurus.alfresco.integration.SiiRespaldoDocument;
+import com.bmlaurus.alfresco.utils.GlobalsConfig;
 
 import javax.activation.DataHandler;
 import java.sql.Connection;
@@ -37,7 +37,7 @@ public class ResolucionAttachment extends ReportToAttachment {
         reportParams = new HashMap<>();
         reportParams.put("CRRST_CODIGO",recordId);
 
-        Properties globals = Env.getExternalProperties("alfresco/globals.properties");
+        Properties globals = GlobalsConfig.getConfig();
         if(globals!=null) {
             fileName = globals.getProperty("alfpath.resolucion.fileName");
             DataHandler stream = getReportExecutation("resoluciones",reportName);

@@ -6,7 +6,7 @@ import com.bmlaurus.alfresco.model.ContainerList;
 import com.bmlaurus.alfresco.model.NetworkEntry;
 import com.bmlaurus.alfresco.model.NetworkList;
 import com.bmlaurus.alfresco.utils.InputStreamDataSource;
-import com.bmlaurus.utils.Config;
+import com.bmlaurus.alfresco.utils.Config;
 import com.google.api.client.http.*;
 import com.bmlaurus.alfresco.aspects.Aspect;
 import org.apache.chemistry.opencmis.client.api.*;

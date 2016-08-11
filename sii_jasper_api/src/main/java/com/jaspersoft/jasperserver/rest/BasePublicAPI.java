@@ -1,6 +1,6 @@
 package com.jaspersoft.jasperserver.rest;
 
-import com.besixplus.sii.util.Env;
+import com.bmlaurus.jasper.Config;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,7 +19,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
-import org.apache.log4j.PropertyConfigurator;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,9 +56,8 @@ public abstract class BasePublicAPI {
     }
 
     private void initBaseAPI(){
-        PropertyConfigurator.configure(Env.getExternalProperties("loggin/log4j.properties"));
         log = LogFactory.getLog(getClass());
-        config = Env.getExternalProperties("jasper/config.properties");
+        config = Config.getConfig();
         if(config.getProperty("REST_VERSION").equals("v2"))
             isV2=true;
 
