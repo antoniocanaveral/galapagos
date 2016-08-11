@@ -5,14 +5,17 @@ import com.besixplus.sii.objects.Cgg_res_resol_tramite;
 import com.besixplus.sii.objects.Cgg_res_resolucion;
 import com.besixplus.sii.objects.Cgg_res_seguimiento;
 import com.besixplus.sii.objects.Cgg_res_tramite;
-import com.besixplus.sii.util.Env;
 import com.bmlaurus.invoker.BackendInvoker;
 import com.bmlaurus.rule.RulePhase;
+import com.bmlaurus.virtual.VirtualCache;
 import com.google.gson.Gson;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by acanaveral on 7/7/16.
@@ -66,7 +69,7 @@ public class GenerarResolucion extends RulePhase {
             tmpMsg = new com.besixplus.sii.db.Cgg_res_seguimiento().ejecutarFuncionSeguimiento(connection,FUNCTION_NAME,objSeguimiento.getCRSEG_CODIGO(),inUserName);
             if(tmpMsg!=null && !tmpMsg.equalsIgnoreCase("false")) {//Se generó la residencia.
 
-                Properties props = Env.getExternalProperties("rules/resolucion.properties");
+                Properties props = VirtualCache.getConfig(VirtualCache.PROP_RULES_RESOLUCION);
                 if(props!=null) {
                     String reportName = props.get("DEFAULT").toString();
                     if (props.get(tramite.getCRTST_CODIGO()) != null)

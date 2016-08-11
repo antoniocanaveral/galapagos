@@ -1,24 +1,30 @@
 package com.bmlaurus.alfresco.cmis;
 
+import com.bmlaurus.alfresco.aspects.Aspect;
 import com.bmlaurus.alfresco.integration.SiiAttachmentDocument;
 import com.bmlaurus.alfresco.model.ContainerEntry;
 import com.bmlaurus.alfresco.model.ContainerList;
 import com.bmlaurus.alfresco.model.NetworkEntry;
 import com.bmlaurus.alfresco.model.NetworkList;
 import com.bmlaurus.alfresco.utils.InputStreamDataSource;
-import com.bmlaurus.alfresco.utils.Config;
+import com.bmlaurus.virtual.VirtualCache;
 import com.google.api.client.http.*;
-import com.bmlaurus.alfresco.aspects.Aspect;
 import org.apache.chemistry.opencmis.client.api.*;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisContentAlreadyExistsException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
+import org.apache.chemistry.opencmis.commons.exceptions.CmisStorageException;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * Created by acanaveral on 28/4/16.
@@ -261,6 +267,8 @@ public abstract class BasePublicAPI {
             updateDocument(document, file, aspect);
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (CmisStorageException ex){
+            System.out.println("NO HAY ESPACIO EN EL ALFRESCO!! ");
         }
 
         return document;
@@ -299,6 +307,8 @@ public abstract class BasePublicAPI {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (CmisStorageException ex){
+            System.out.println("NO HAY ESPACIO EN EL ALFRESCO!! ");
         }
     }
 
@@ -369,11 +379,11 @@ public abstract class BasePublicAPI {
     }
 
     public String getSite() {
-        return Config.getConfig().getProperty("site");
+        return VirtualCache.getConfig(VirtualCache.PROP_ALFRESCO_CONF).getProperty("site");
     }
 
     public String getFolderName() {
-        return Config.getConfig().getProperty("folder_name");
+        return VirtualCache.getConfig(VirtualCache.PROP_ALFRESCO_CONF).getProperty("folder_name");
     }
 
     abstract public String getAlfrescoAPIUrl();

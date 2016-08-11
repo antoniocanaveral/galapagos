@@ -1,6 +1,6 @@
 package com.bmlaurus.ws.service;
 
-import com.besixplus.sii.util.Env;
+import com.bmlaurus.virtual.VirtualCache;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
@@ -25,7 +25,7 @@ public class ConnectionUtils {
     public String getFichaGeneral(String numeroIdentificacion, int codigoPaquete) throws Exception,
             IOException {
 
-        Properties config = Env.getExternalProperties("dinardap/config.properties");
+        Properties config = VirtualCache.getConfig(VirtualCache.PROP_DINARDAP_CONF);
 
         //Code to make a webservice HTTP request
         String responseString = "";

@@ -1567,8 +1567,8 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                                     buttons: Ext.Msg.OK,
                                     icon: Ext.MessageBox.INFO
                                 });
-
-                                if(Ext.getCmp('miChkEmitirComprobante').checked == true){
+                                //AC-> Parece que esto es inecesario.
+                                /*if(Ext.getCmp('miChkEmitirComprobante').checked == true){
                                     var reporte = new Reporte("rptComprobanteTramite", '/Reports/sii/residencia', {
                                         P_CRTRA_CODIGO:resultadoTramite[0]
                                     });
@@ -1584,7 +1584,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                                     }
                                 }
 
-                                winFrmCgg_res_tramite.close();
+                                winFrmCgg_res_tramite.close();*/
                             }else {
                                 Ext.Msg.show({
                                     title: tituloCgg_res_tramite,

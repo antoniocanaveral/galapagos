@@ -1,6 +1,6 @@
 package com.jaspersoft.jasperserver.rest;
 
-import com.bmlaurus.jasper.Config;
+import com.bmlaurus.virtual.VirtualCache;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -57,7 +57,7 @@ public abstract class BasePublicAPI {
 
     private void initBaseAPI(){
         log = LogFactory.getLog(getClass());
-        config = Config.getConfig();
+        config = VirtualCache.getConfig(VirtualCache.PROP_JASPER_CONF);
         if(config.getProperty("REST_VERSION").equals("v2"))
             isV2=true;
 

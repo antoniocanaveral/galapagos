@@ -4,7 +4,7 @@ import com.bmlaurus.alfresco.model.SiiModelFile;
 import com.bmlaurus.alfresco.model.SiiModelIndexDefinition;
 import com.bmlaurus.alfresco.model.SiiModelIndexItem;
 import com.bmlaurus.alfresco.model.SiiModelMetadata;
-import com.bmlaurus.alfresco.utils.GlobalsConfig;
+import com.bmlaurus.virtual.VirtualCache;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -180,7 +180,7 @@ public class SiiDataLoader {
             if(rs!=null && rs.next()) {
                 //Evaluamos la cadena que representa el path
                 if (sourcePath.startsWith("alfpath.") && sourcePath.endsWith(".path")) {
-                    Properties globals = GlobalsConfig.getConfig();
+                    Properties globals = VirtualCache.getConfig(VirtualCache.PROP_ALFRESCO_GLOBALS);
                     if (globals != null)
                         sourcePath = globals.getProperty(sourcePath);
                 }

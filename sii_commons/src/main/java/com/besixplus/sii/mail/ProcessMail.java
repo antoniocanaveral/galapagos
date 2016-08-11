@@ -5,7 +5,7 @@ import com.besixplus.sii.misc.CGGEnumerators;
 import com.besixplus.sii.objects.*;
 import com.besixplus.sii.util.Env;
 import com.bmlaurus.alfresco.db.SiiDataLoader;
-import com.bmlaurus.mailing.utils.Config;
+import com.bmlaurus.virtual.VirtualCache;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -205,7 +205,7 @@ public class ProcessMail extends Thread{
     private String noDataStr = "NO DATA";
     private String buildTextMessage(Connection objConn, Cgg_not_mail mail) throws SQLException {
         StringBuilder bodyMail = new StringBuilder();
-        Properties props = Config.getConfig();
+        Properties props = VirtualCache.getConfig(VirtualCache.PROP_MAILING_FORMAT);
         noDataStr = props.getProperty("mail.no_data");
         if(mail.isNtml_sendheader()){
             if(mail.getNtml_header_override()!=null && mail.getNtml_header_override().length()>=0)
@@ -237,7 +237,7 @@ public class ProcessMail extends Thread{
 
     private String buildHtmlMessage(Connection objConn, Cgg_not_mail mail) throws SQLException {
         StringBuilder bodyMail = new StringBuilder();
-        Properties props = Env.getExternalProperties("mailing/format.properties");
+        Properties props = VirtualCache.getConfig(VirtualCache.PROP_MAILING_FORMAT);
         noDataStr = props.getProperty("mail.no_data");
         String template = Env.getStringResource("mailing/"+props.getProperty("mail.html.template"));
         if(template!=null){

@@ -4,7 +4,7 @@ import com.besixplus.sii.db.ManagerConnection;
 import com.bmlaurus.alfresco.db.SiiDataLoader;
 import com.bmlaurus.alfresco.integration.SiiIdentificable;
 import com.bmlaurus.alfresco.integration.SiiPersonalesDocument;
-import com.bmlaurus.alfresco.utils.GlobalsConfig;
+import com.bmlaurus.virtual.VirtualCache;
 import com.bmlaurus.ws.dinardap.RegistroCivil;
 
 import javax.activation.DataHandler;
@@ -38,7 +38,7 @@ public class CreateRCAttachment extends ReportToAttachment {
         reportParams = new HashMap<>();
         reportParams.put("CEDULA_DATOS",userData.toString());
 
-        Properties globals = GlobalsConfig.getConfig();
+        Properties globals = VirtualCache.getConfig(VirtualCache.PROP_ALFRESCO_GLOBALS);
         if(globals!=null) {
             fileName = globals.getProperty("alfpath.identificacion.fileName");
             DataHandler stream = getReportExecutation("generated","rptDinardapCedula");

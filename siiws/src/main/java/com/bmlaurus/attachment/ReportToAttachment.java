@@ -7,7 +7,7 @@ import com.bmlaurus.alfresco.integration.SiiFileResult;
 import com.bmlaurus.alfresco.utils.InputStreamDataSource;
 import com.bmlaurus.jaspersoft.model.ReportExecutionResponse;
 import com.bmlaurus.jaspersoft.services.ReportExecutionService;
-import com.bmlaurus.jasper.Config;
+import com.bmlaurus.virtual.VirtualCache;
 
 import javax.activation.DataHandler;
 import java.io.InputStream;
@@ -81,7 +81,7 @@ public abstract class ReportToAttachment {
         JasperServerService reportService = new JasperServerService();
         String valid = reportService.validateReport(reportFolder,reportName);
         if(valid.equals("{\"result\":true}")) {
-            Properties reportProps = Config.getConfig();
+            Properties reportProps = VirtualCache.getConfig(VirtualCache.PROP_JASPER_CONF);
             if (reportProps != null) {
                 url.append(reportProps.getProperty("SCHEME"));
                 url.append("://");

@@ -1,6 +1,6 @@
 package com.bmlaurus.invoker;
 
-import com.bmlaurus.invoker.utils.Config;
+import com.bmlaurus.virtual.VirtualCache;
 import org.apache.commons.io.IOUtils;
 
 import javax.net.ssl.*;
@@ -18,7 +18,7 @@ import java.util.Properties;
  */
 public class BackendInvoker {
 
-    private Properties config = Config.getConfig();
+    private Properties config = VirtualCache.getConfig(VirtualCache.PROP_INVOKER_CONF);
 
     public String invokeBackendServlet(String servletName, String method, String payload) throws Exception, IOException {
         String result = null;

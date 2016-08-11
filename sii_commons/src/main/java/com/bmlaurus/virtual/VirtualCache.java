@@ -19,8 +19,15 @@ public class VirtualCache {
     public static final String PROP_INVOKER_CONF = "invoker/config.properties";
 
     public static final String PROP_MAILING_FORMAT = "mailing/format.properties";
+    public static final String PROP_MAILING_CONF = "mailing/config.properties";
 
+    public static final String PROP_DINARDAP_CONF = "dinardap/config.properties";
 
+    public static final String PROP_CRON_CONF = "cron/config.properties";
+
+    public static final String PROP_RULES_RESOLUCION = "rules/resolucion.properties";
+
+    public static final String PROP_DATABASE_CONF = "database/database.properties";
 
     private static Map<String,Properties> cachedProperties;
 
@@ -37,7 +44,7 @@ public class VirtualCache {
     }
 
 
-    public static void resetPropertie(String propertyFile){
+    public static void resetProperty(String propertyFile){
         if(cachedProperties != null){
             cachedProperties.replace(propertyFile,null);
         }

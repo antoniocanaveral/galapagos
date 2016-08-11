@@ -1,10 +1,10 @@
 package com.besixplus.sii.servlets;
 
 import com.besixplus.sii.util.Env;
-import com.bmlaurus.cron.utils.Config;
 import com.bmlaurus.exception.EnvironmentVariableNotDefinedException;
 import com.bmlaurus.job.BaseJob;
 import com.bmlaurus.job.BaseTrigger;
+import com.bmlaurus.virtual.VirtualCache;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.quartz.*;
@@ -47,7 +47,7 @@ public class SendMailDaemon extends HttpServlet {
 			mySchedulerFactory = new StdSchedulerFactory();
 			myScheduler = mySchedulerFactory.getScheduler();
 
-			Properties props = Config.getConfig();
+			Properties props = VirtualCache.getConfig(VirtualCache.PROP_CRON_CONF);
 			if(props!=null && props.getProperty("cron.jobs") != null) {
 				Type jobList = new TypeToken<ArrayList<BaseJob>>() {
 				}.getType();
@@ -131,7 +131,7 @@ public class SendMailDaemon extends HttpServlet {
 	public void destroy() {
 		super.destroy();
 		try {
-			Properties props = Config.getConfig();
+			Properties props = VirtualCache.getConfig(VirtualCache.PROP_CRON_CONF);
 			if(props!=null && props.getProperty("cron.jobs") != null) {
 				Type jobList = new TypeToken<ArrayList<BaseJob>>() {
 				}.getType();

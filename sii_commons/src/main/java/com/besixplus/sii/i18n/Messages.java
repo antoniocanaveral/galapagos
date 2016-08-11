@@ -1,6 +1,6 @@
 package com.besixplus.sii.i18n;
 
-import com.besixplus.sii.util.Env;
+import com.bmlaurus.virtual.VirtualCache;
 
 import java.text.MessageFormat;
 import java.util.Locale;
@@ -48,7 +48,7 @@ public class Messages {
 	public Messages(Types inType, Locale inLocale) {
 		this.myLocale = inLocale!=null?inLocale:Locale.getDefault();
 		this.myProperties = inType.toString()+".properties";
-		this.myMessages = Env.getExternalProperties("message/"+this.myProperties);
+		this.myMessages = VirtualCache.getConfig("message/"+this.myProperties);
 	}
 	/**
 	 * Establece la localizacion de los mensajes.

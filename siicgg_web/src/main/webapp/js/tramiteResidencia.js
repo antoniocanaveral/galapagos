@@ -25,8 +25,8 @@ $(function() {
         btnSalirAll($("attachView"));
         //Con esto deberia arreglarse el problema de que muestra en el frame principal.
         var frame = document.getElementById("frameAttachment");
-        frame.src = null;
-        frame.src ="bienvenida.jsp?CWPAG_CODIGO=CWPAG1";
+        frame.src = 'about:blank';
+        //frame.src ="bienvenida.jsp?CWPAG_CODIGO=CWPAG1";
     });
 
 

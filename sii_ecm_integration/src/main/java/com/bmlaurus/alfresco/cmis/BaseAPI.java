@@ -1,6 +1,6 @@
 package com.bmlaurus.alfresco.cmis;
 
-import com.bmlaurus.alfresco.utils.Config;
+import com.bmlaurus.virtual.VirtualCache;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -101,17 +101,17 @@ public class BaseAPI extends BasePublicAPI {
     }
 
     public String getAlfrescoAPIUrl() {
-        String host = Config.getConfig().getProperty("host");
+        String host = VirtualCache.getConfig(VirtualCache.PROP_ALFRESCO_CONF).getProperty("host");
         return host + "/api/";
     }
 
     public String getUsername() {
-        return Config.getConfig().getProperty("username");
+        return VirtualCache.getConfig(VirtualCache.PROP_ALFRESCO_CONF).getProperty("username");
     }
 
     public String getPassword() {
-        return Config.getConfig().getProperty("password");
+        return VirtualCache.getConfig(VirtualCache.PROP_ALFRESCO_CONF).getProperty("password");
     }
 
-    public String getDefaultDescription(){return Config.getConfig().getProperty("folder_description");}
+    public String getDefaultDescription(){return VirtualCache.getConfig(VirtualCache.PROP_ALFRESCO_CONF).getProperty("folder_description");}
 }

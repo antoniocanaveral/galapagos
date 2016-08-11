@@ -1,14 +1,14 @@
 package com.besixplus.sii.ws;
 
-import com.bmlaurus.exception.EnvironmentVariableNotDefinedException;
 import com.besixplus.sii.util.Env;
+import com.bmlaurus.exception.EnvironmentVariableNotDefinedException;
 import com.bmlaurus.jasper.JasperResponse;
 import com.bmlaurus.jaspersoft.model.ExtraResource;
 import com.bmlaurus.jaspersoft.model.InputControl;
 import com.bmlaurus.jaspersoft.model.JasperDataType;
 import com.bmlaurus.jaspersoft.model.JasperReportResource;
 import com.bmlaurus.jaspersoft.services.*;
-import com.bmlaurus.jasper.Config;
+import com.bmlaurus.virtual.VirtualCache;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -47,7 +47,7 @@ public class JasperServerService implements Serializable {
             //String parentFolder = reportFolder.substring(0, reportFolder.lastIndexOf("/"));
             reportFolder = reportFolder.substring(reportFolder.lastIndexOf("/") + 1, reportFolder.length());
 
-            Properties config = Config.getConfig();
+            Properties config = VirtualCache.getConfig(VirtualCache.PROP_JASPER_CONF);
             FolderService folderService = null;
             if (Boolean.valueOf(config.getProperty("INIT_JASPERSERVER"))) {
                 UserService userService = new UserService();
