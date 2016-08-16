@@ -2,7 +2,7 @@
  *Funcion. Crea el objeto FrmSeleccionSeguimiento para seleccion de seguimiento de fases a las que se despacha un seguimiento de un tramite.
  *@param inCrpro_codigo Codigo de proceso precargado.
  */
-function DlgSeleccionDespacho(inCrpro_codigo){
+function DlgSeleccionDespacho(inCrpro_codigo,inCrtra_codigo){
 
     var tituloDlgSeleccionDespacho = 'Selecci\u00F3n de seguimiento';
     var descDlgSeleccionDespacho = 'Este formulario le permite seleccionar el o los seguimientos a los que desea despachar el seguimiento de su tr\u00E1mite.';
@@ -66,6 +66,7 @@ function DlgSeleccionDespacho(inCrpro_codigo){
                             params: {
                                 inCrpro_codigo: tmpRecord.get('CRPRO_CODIGO'),
                                 inCisla_codigo: new UserSession().getUserData().CISLA_CODIGO,
+                                inCrtra_codigo: inCrtra_codigo,
                                 format: TypeFormat.JSON
                             }
                         });
@@ -103,6 +104,7 @@ function DlgSeleccionDespacho(inCrpro_codigo){
         baseParams:{
             inCrpro_codigo:null,
             inCisla_codigo:null,
+            inCrtra_codigo:null,
             format:TypeFormat.JSON
         },
         listeners:{
@@ -411,6 +413,7 @@ function DlgSeleccionDespacho(inCrpro_codigo){
                     params: {
                         inCrpro_codigo:crproCodigo,
                         inCisla_codigo:cislaCodigo,
+                        inCrtra_codigo:inCrtra_codigo,
                         format: TypeFormat.JSON
                     }
                 });

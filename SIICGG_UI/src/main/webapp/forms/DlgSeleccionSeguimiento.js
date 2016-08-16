@@ -62,6 +62,8 @@ function DlgSeleccionSeguimiento(){
                         sCgg_res_faseDss.reload({
                             params: {
                                 inCrpro_codigo: tmpRecord.get('CRPRO_CODIGO'),
+                                inCisla_codigo:null,
+                                inCrtra_codigo:null,
                                 format: TypeFormat.JSON
                             }
                         });
@@ -99,6 +101,8 @@ function DlgSeleccionSeguimiento(){
 		]),
         baseParams:{
             inCrpro_codigo:null,
+            inCisla_codigo:null,
+            inCrtra_codigo:null,
             format:TypeFormat.JSON
         }
     });

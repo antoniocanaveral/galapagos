@@ -412,6 +412,7 @@ function FrmCgg_res_tramite_transeunte_grupo(INSENTENCIA_CGG_RES_TRAMITE,INRECOR
                             params: {
                                 inCrpro_codigo:tmpProceso,
                                 inCisla_codigo:userInfo.CISLA_CODIGO,
+                                inCrtra_codigo:null,
                                 format: TypeFormat.JSON
                             }
                         });
@@ -1103,6 +1104,7 @@ function FrmCgg_res_tramite_transeunte_grupo(INSENTENCIA_CGG_RES_TRAMITE,INRECOR
         baseParams:{
             inCrpro_codigo:null,
             inCisla_codigo:null,
+            inCrtra_codigo:null,
             format:TypeFormat.JSON
         },
         sortInfo:{

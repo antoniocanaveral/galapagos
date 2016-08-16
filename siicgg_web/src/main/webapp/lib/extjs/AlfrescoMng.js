@@ -222,70 +222,72 @@ function AlfrescoMng(_tableName, _recordID, _filter, isReadOnly){
             comps.push(freePanel);
 
             //STORE DE DATA
-            if(store){
+            if(store) {
                 var renderedData = store.reader.jsonData;
-                var files = isList?renderedData.files:renderedData.files.files;
-                lastSelected=null;
-                for(var i=0;i<files.length;i++){
-                    var btnAction;
-                    var updateable = true;
-                    var insertable = true;
-                    var mandatory = false;
-                    if(isList){
-                        updateable = files[i].updateable;
-                        insertable = files[i].insertable;
-                        mandatory = files[i].mandatory;
-                    }
-                    var fileName = new Ext.Button({
-                        xtype: 'button',
-                        iconCls : 'ecmFile',
-                        text:(mandatory?"* ":"")+(isList?files[i].fileDescription:files[i].name),
-                        fileObj: files[i],
-                        prentPanelId:"tarjet_"+i,
-                        width: 169,
-                        height:40
-                    });
-                    fileName.on('click',fileSelected);
-                    if(files[i].fileResult || !isList){
-                        btnAction = new Ext.Button({
-                            iconCls:'ecmRefresh',
+                var files = isList ? renderedData.files : renderedData.files.files;
+                lastSelected = null;
+                if(files!=null){
+                    for (var i = 0; i < files.length; i++) {
+                        var btnAction;
+                        var updateable = true;
+                        var insertable = true;
+                        var mandatory = false;
+                        if (isList) {
+                            updateable = files[i].updateable;
+                            insertable = files[i].insertable;
+                            mandatory = files[i].mandatory;
+                        }
+                        var fileName = new Ext.Button({
+                            xtype: 'button',
+                            iconCls: 'ecmFile',
+                            text: (mandatory ? "* " : "") + (isList ? files[i].fileDescription : files[i].name),
                             fileObj: files[i],
-                            fileContainer:fileName,
-                            fileName:isList?files[i].fileName:files[i].name,
-                            margins: '23 0 0 -2',
-                            listeners:{click:freeUpload}
+                            prentPanelId: "tarjet_" + i,
+                            width: 169,
+                            height: 40
                         });
-                        if(!updateable)
-                            btnAction.hide();
-                    }else{
-                        btnAction = new Ext.Button({
-                            iconCls:'ecmUpload',
-                            fileObj: files[i],
-                            fileContainer:fileName,
-                            fileRecord:fileRecord,
-                            fileName:files[i].fileName,
-                            margins: '23 0 0 -2',
-                            listeners:{click:freeUpload}
-                        });
-                        if(!insertable)
-                            btnAction.hide();
-                    }
+                        fileName.on('click', fileSelected);
+                        if (files[i].fileResult || !isList) {
+                            btnAction = new Ext.Button({
+                                iconCls: 'ecmRefresh',
+                                fileObj: files[i],
+                                fileContainer: fileName,
+                                fileName: isList ? files[i].fileName : files[i].name,
+                                margins: '23 0 0 -2',
+                                listeners: {click: freeUpload}
+                            });
+                            if (!updateable)
+                                btnAction.hide();
+                        } else {
+                            btnAction = new Ext.Button({
+                                iconCls: 'ecmUpload',
+                                fileObj: files[i],
+                                fileContainer: fileName,
+                                fileRecord: fileRecord,
+                                fileName: files[i].fileName,
+                                margins: '23 0 0 -2',
+                                listeners: {click: freeUpload}
+                            });
+                            if (!insertable)
+                                btnAction.hide();
+                        }
 
-                    var fileRecord = new Ext.Panel({
-                        id:"tarjet_"+i,
-                        cls: 'ecmTransparentBtn',
-                        height:50,
-                        border:true,
-                        layout:'hbox',
-                        overCls:'selected-file-record',
-                        padding:'0 10 10 0',
-                        items: [fileName,btnAction]
-                    });
-                    //Lo quitamos de la lista cuando no tiene adjunto y no es insertable.
-                    if(isList && (files[i].fileResult==null && !insertable)){
-                        var kk=0; //NO HACEMOS NADA.
-                    }else
-                        comps.push(fileRecord);
+                        var fileRecord = new Ext.Panel({
+                            id: "tarjet_" + i,
+                            cls: 'ecmTransparentBtn',
+                            height: 50,
+                            border: true,
+                            layout: 'hbox',
+                            overCls: 'selected-file-record',
+                            padding: '0 10 10 0',
+                            items: [fileName, btnAction]
+                        });
+                        //Lo quitamos de la lista cuando no tiene adjunto y no es insertable.
+                        if (isList && (files[i].fileResult == null && !insertable)) {
+                            var kk = 0; //NO HACEMOS NADA.
+                        } else
+                            comps.push(fileRecord);
+                    }
                 }
             }
         }else {

@@ -1,7 +1,7 @@
 package com.besixplus.sii.db;
 
-import com.besixplus.sii.util.Env;
 import com.besixplus.sii.util.InitParameters;
+import com.bmlaurus.virtual.VirtualCache;
 
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
@@ -59,7 +59,7 @@ public class ManagerConnection {
 			if(!ManagerConnection.IS_DEPLOYED){
 				try {
 					DriverManager.registerDriver(new org.postgresql.Driver());
-					Properties prop = Env.getExternalProperties("database/database.properties");
+					Properties prop = VirtualCache.getConfig(VirtualCache.PROP_DATABASE_CONF);
 					ManagerConnection.setUserName(prop.getProperty("user"));
 					ManagerConnection.setPassword(prop.getProperty("password"));
 					return DriverManager.getConnection("jdbc:postgresql://"+prop.getProperty("host")+"/"+prop.getProperty("dbname"), prop);
@@ -86,7 +86,7 @@ public class ManagerConnection {
 			try {
 				//MAIL_SESSION = (Session) new InitialContext().lookup("java:/Mail");
 				//Vamos a crear la conexion a partir de un archivo de propiedades
-				Properties props = Env.getExternalProperties("mailing/config.properties");
+				Properties props = VirtualCache.getConfig(VirtualCache.PROP_MAILING_CONF);
 				MAIL_SESSION = Session.getInstance(props, new javax.mail.Authenticator() {
 					protected PasswordAuthentication getPasswordAuthentication() {
 						return new PasswordAuthentication(props.getProperty("mail.username"), props.getProperty("mail.password"));

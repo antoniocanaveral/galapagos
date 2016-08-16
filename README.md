@@ -36,3 +36,4 @@ Documentos de Instalación de la plataforma
 - Motor de Mensajería: Se define en cada fase el mensaje y los destinatarios a enviar. Defaults en SII_HOME/mailing/format.properties
 - Mensajes HTML con templeta.
 - Permitir funciones java en las fases. [Fases][]
+- Todos los archivos de configuracion (.properties) se gestionan con un VirtualCache

@@ -1,125 +1,103 @@
 /**
  * Created by acanaveral on 8/8/16.
  */
-function FrmCgg_ecm_archivo(INSENTENCIA_CGG_ECM_ARCHIVO, inCrseg_codigo, currentRecord, isReadOnly){
-    var tituloCgg_ecm_archivo='Informe';
-    var descCgg_ecm_archivo='El formulario permite administrar informaci\u00f3n del informe';
-    var readOnly = (isReadOnly!=null && isReadOnly==true)?true:false;
+function FrmCgg_ecm_archivo(INSENTENCIA_CGG_ECM_ARCHIVO, currentRecord){
+    var tituloCgg_ecm_archivo='Gesti\u00f3n de Archivos';
+    var descCgg_ecm_archivo='El formulario permite administrar informaci\u00f3n de archivos indexados en Alfresco';
+    var urlCgg_ecm_archivo=URL_WS+"Cgg_ecm_archivo";
+    var objArchivo = {
+                ECMCH_CODIGO : "KEYGEN",
+                ECMCH_TIPO : "GENE",
+                ECMCH_USUARIO_UPDATE : "",
+                ECMCH_UPDATEABLE : true,
+                ECMCH_USUARIO_INSERT : "",
+                ECMCH_ASUNTO : "",
+                ECMCH_FECHA_UPDATE : null,
+                ECMCH_FECHA_INSERT : null,
+                ECMCH_ESTADO : "",
+                ECMCH_FECHA : null,
+                ECMCH_DESCRIPCION : "",
+                ECMCH_EXTRACTO : ""
+            };
 
+    var readOnly = false;
+    if(currentRecord) {
+        readOnly = !currentRecord.get('ECMCH_UPDATEABLE');
+        objArchivo = currentRecord.json;
+    }
     /**
      * Ext.form.TextField IDENTIFICATIVO UNICO DE REGISTRO DE INFORME
      */
-    var txtCrinf_codigo = new Ext.form.TextField({
-        id:'txtCrinf_codigo',
-        name:'txtCrinf_codigo',
+    var txtEcmch_codigo = new Ext.form.TextField({
+        id:'txtEcmch_codigo',
+        name:'txtEcmch_codigo',
         fieldLabel :'Codigo',
         anchor:'98%',
         allowBlank :false,
         disabled : readOnly,
-        value:(currentRecord!=null?currentRecord.get('CRISE_CODIGO'):null)!=null?currentRecord.get('CRISE_CODIGO'):"KEYGEN",
+        value:(objArchivo!=null?objArchivo.ECMCH_CODIGO:null)!=null?objArchivo.ECMCH_CODIGO:"KEYGEN",
         hidden:true,
         hideLabel:true,
         maxLength :20
     });
-    /**
-     * Ext.form.TextField IDENTIFICATIVO UNICO DE REGISTRO DE SEGUIMIENTO
-     */
-    var txtCrseg_codigo = new Ext.form.TextField({
-        id:'txtCrseg_codigo',
-        name:'txtCrseg_codigo',
-        fieldLabel :'Seguimiento',
-        anchor:'98%',
-        disabled : readOnly,
-        value: (currentRecord!=null?currentRecord.get('CRSEG_CODIGO'):null)!=null?currentRecord.get('CRSEG_CODIGO'):null,
-        allowBlank :false,
-        readOnly:'true',
-        maxLength :20
-    });
-    /**
-     * IDENTIFICATIVO UNICO DE REGISTRO DE SEGUIMIENTO
-     */
-    /* var btnCrseg_codigoCgg_ecm_archivo = new Ext.Button({
-     id:'btnCrseg_codigoCgg_ecm_archivo',
-     iconCls:'iconBuscar',
-     listeners:{
-     click:function(){
-     var tmpFLCgg_res_seguimiento = new FrmListadoCgg_res_seguimiento();
-     var objBusqueda = new DlgBusqueda(tmpFLCgg_res_seguimiento.getStore(),tmpFLCgg_res_seguimiento.getColumnModel());
-     objBusqueda.closeHandler(function(){
-     var tmpRecord = objBusqueda.getSelectedRow();
-     if(tmpRecord!=null && tmpRecord!=undefined)
-     {
-     txtCrseg_codigo.setValue(tmpRecord.get('CRSEG_NOMBRE'));
-     tmpSeguimiento=tmpRecord.get('CRSEG_CODIGO');
-     }
-     });
-     objBusqueda.show();
-     }
-     }
-     });*/
-    /**
-     * Ext.form.TextField IDENTIFICATIVO UNICO DE REGISTRO SECCION
-     */
-    var txtCrsec_codigo = new Ext.form.TextField({
-        id:'txtCrsec_codigo',
-        name:'txtCrsec_codigo',
-        fieldLabel :'Seccci\u00F3n',
-        anchor:'98%',
-        disabled : readOnly,
-        value:(currentRecord!=null?currentRecord.get('CRSEC_CODIGO'):null)!=null?currentRecord.get('CRSEC_CODIGO'):null,
-        allowBlank :false,
-        readOnly:'true',
-        maxLength :20
-    });
-    /**
-     * IDENTIFICATIVO UNICO DE REGISTRO SECCION
-     */
-    /*var btnCrsec_codigoCgg_ecm_archivo = new Ext.Button({
-     id:'btnCrsec_codigoCgg_ecm_archivo',
-     iconCls:'iconBuscar',
-     listeners:{
-     click:function(){
-     var tmpFLCgg_res_seccion = new FrmListadoCgg_res_seccion();
-     var objBusqueda = new DlgBusqueda(tmpFLCgg_res_seccion.getStore(),tmpFLCgg_res_seccion.getColumnModel());
-     objBusqueda.closeHandler(function(){
-     var tmpRecord = objBusqueda.getSelectedRow();
-     if(tmpRecord!=null && tmpRecord!=undefined)
-     {
-     txtCrsec_codigo.setValue(tmpRecord.get('CRSEC_NOMBRE'));
-     tmpSeccion=tmpRecord.get('CRSEC_CODIGO');
-     }
-     });
-     objBusqueda.show();
-     }
-     }
-     });*/
+
     /**
      * Ext.form.TextField NUMERO DE INFORME DE RESPUESTA AL SEGUIMIENTO
      */
-    var txtCrinf_numero_informe = new Ext.form.TextField({
-        id:'txtCrinf_numero_informe',
-        name:'txtCrinf_numero_informe',
-        fieldLabel :'N\u00FAmero',
+
+    var dsTipoArchivo = new Ext.data.ArrayStore({
+        fields: ['code', 'name'],
+        idIndex: 0
+    });
+    dsTipoArchivo.loadData(tipoArchivo);
+    var cbxEcmch_tipo = new Ext.form.ComboBox({
+        id:"cbxEcmch_tipo",
+        store:dsTipoArchivo,
+        fieldLabel :'Tipo de documento',
+        displayField : 'name',
         disabled : readOnly,
-        value:(currentRecord!=null?currentRecord.get('CRISE_NUMERO_INFORME'):null)!=null?currentRecord.get('CRISE_NUMERO_INFORME'):null,
-        readOnly:((currentRecord!=null?currentRecord.get('CRISE_NUMERO_INFORME'):null)!=null?true:false),
+        valueField : 'code',
+        triggerAction:'all',
+        mode: 'local',
+        forceSelection:true,
+        value: (objArchivo!=null?objArchivo.ECMCH_TIPO:null)!=null?objArchivo.ECMCH_TIPO:null,
+        anchor:'50%'
+    });
+
+    /*
+    var txtEcmch_tipo = new Ext.form.TextField({
+        id:'txtEcmch_tipo',
+        name:'txtEcmch_tipo',
+        fieldLabel :'Tipo',
+        disabled : readOnly,
+        value:(currentRecord!=null?currentRecord.get('ECMCH_TIPO'):null)!=null?currentRecord.get('ECMCH_TIPO'):null,
+        readOnly:((currentRecord!=null?currentRecord.get('ECMCH_TIPO'):null)!=null?true:false),
         anchor:'60%',
         allowBlank :false,
         maxLength :20
     });
+    */
+    var chkEcmch_updateable = new Ext.form.Checkbox({
+        id:'chkEcmch_updateable',
+        name:'chkEcmch_updateable',
+        fieldLabel :'Editable',
+        disabled : readOnly,
+        checked : (objArchivo!=null?objArchivo.ECMCH_UPDATEABLE:null)!=null?objArchivo.ECMCH_UPDATEABLE:true
+    });
+
     /**
      * Ext.form.DateField FECHA DE REALIZACION DEL INFORME
      */
-    var selectedDate = (currentRecord!=null?currentRecord.get('CRISE_FECHA_INFORME'):null);
+    var selectedDate = (objArchivo!=null?objArchivo.ECMCH_FECHA:null);
     console.log("SelectedDate: "+selectedDate);
     if(selectedDate!=null)
         selectedDate = selectedDate.split(" ")[0].split('-').reverse().join('/');
     else
         selectedDate = CURRENT_DATE;
 
-    var dtCrinf_fecha_informe = new Ext.form.DateField({
-        id:'dtCrinf_fecha_informe',
-        name:'dtCrinf_fecha_informe',
+    var dtEcmch_fecha = new Ext.form.DateField({
+        id:'dtEcmch_fecha',
+        name:'dtEcmch_fecha',
         fieldLabel :'Fecha',
         allowBlank :false,
         disabled : readOnly,
@@ -130,26 +108,26 @@ function FrmCgg_ecm_archivo(INSENTENCIA_CGG_ECM_ARCHIVO, inCrseg_codigo, current
     /**
      * Ext.form.TextField ASUNTO DEL INFORME
      */
-    var txtCrinf_asunto_informe = new Ext.form.TextField({
-        id:'txtCrinf_asunto_informe',
-        name:'txtCrinf_asunto_informe',
+    var txtEcmch_asunto = new Ext.form.TextField({
+        id:'txtEcmch_asunto',
+        name:'txtEcmch_asunto',
         fieldLabel :'Asunto',
         anchor:'98%',
         disabled : readOnly,
-        value:(currentRecord!=null?currentRecord.get('CRISE_ASUNTO_INFORME'):null)!=null?currentRecord.get('CRISE_ASUNTO_INFORME'):null,
+        value:(objArchivo!=null?objArchivo.ECMCH_ASUNTO:null)!=null?objArchivo.ECMCH_ASUNTO:null,
         allowBlank :true,
         maxLength :100
     });
     /**
      * Ext.form.TextArea RESUMEN DEL CONTENIDO DEL INFORME
      */
-    var txtCrinf_extracto_informe = new Ext.form.HtmlEditor({
-        id:'txtCrinf_extracto_informe',
-        name:'txtCrinf_extracto_informe',
+    var txtEcmch_extracto = new Ext.form.HtmlEditor({
+        id:'txtEcmch_extracto',
+        name:'txtEcmch_extracto',
         fieldLabel :'Extracto',
         anchor:'98%',
         disabled : readOnly,
-        value:(currentRecord!=null?currentRecord.get('CRISE_EXTRACTO_INFORME'):null)!=null?currentRecord.get('CRISE_EXTRACTO_INFORME'):null,
+        value:(objArchivo!=null?objArchivo.ECMCH_EXTRACTO:null)!=null?objArchivo.ECMCH_EXTRACTO:null,
         enableFontSize:false,
         enableLinks:false,
         height:100,
@@ -158,56 +136,49 @@ function FrmCgg_ecm_archivo(INSENTENCIA_CGG_ECM_ARCHIVO, inCrseg_codigo, current
     /**
      * Ext.form.TextField DESCRIPCION DE LOS DOCUMENTOS DIGITALIZADOS ADJUNTOS EN EL SEGUIMIENTO
      */
-    var txtCrinf_descripcion_adjunto = new Ext.form.TextArea({
-        id:'txtCrinf_descripcion_adjunto',
-        name:'txtCrinf_descripcion_adjunto',
+    var txtEcmch_descripcion = new Ext.form.TextArea({
+        id:'txtEcmch_descripcion',
+        name:'txtEcmch_descripcion',
         fieldLabel :'Descripci\u00F3n',
-        anchor:'100%'
-    });
-    /**
-     * ARCHIVO DIGITAL ANEXO
-     */
-    var filCrinfo_archivo_adjunto = new Ext.form.FileUploadField({
-        id:'filCradj_archivo_adjunto',
-        name:'filCradj_archivo_adjunto',
-        fieldLabel :'Adjunto',
-        disabled :false,
-        anchor:'100%',
-        buttonCfg: {
-            text: '',
-            iconCls: 'iconAdjunto'
-        }
+        disabled : readOnly,
+        value:(objArchivo!=null?objArchivo.ECMCH_DESCRIPCION:null)!=null?objArchivo.ECMCH_DESCRIPCION:null,
+        anchor:'98%'
     });
 
     function validarInforme(){
         var flag = true;
 
-        if(txtCrinf_numero_informe.getValue()== undefined || txtCrinf_numero_informe.getValue()==null || txtCrinf_numero_informe.getValue().trim().length ==0){
-            txtCrinf_numero_informe.markInvalid("Establezca el numero de informe, por favor.");
+        if(cbxEcmch_tipo.getValue()== undefined || cbxEcmch_tipo.getValue()==null || cbxEcmch_tipo.getValue().trim().length ==0){
+            cbxEcmch_tipo.markInvalid("Establezca el tipo de archivo, por favor.");
             flag =false;
         }
 
-        if(txtCrinf_asunto_informe.getValue()== undefined || txtCrinf_asunto_informe.getValue()==null || txtCrinf_asunto_informe.getValue().trim().length ==0){
-            txtCrinf_asunto_informe.markInvalid("Establezca el asunto del informe, por favor.");
+        if(txtEcmch_asunto.getValue()== undefined || txtEcmch_asunto.getValue()==null || txtEcmch_asunto.getValue().trim().length ==0){
+            txtEcmch_asunto.markInvalid("Establezca el asunto del archivo, por favor.");
             flag =false;
         }
 
-        if(txtCrinf_extracto_informe.getValue()== undefined || txtCrinf_extracto_informe.getValue()==null || txtCrinf_extracto_informe.getValue().trim().length ==0){
-            txtCrinf_extracto_informe.markInvalid("Establezca un extracto del informe, por favor.");
+        if(txtEcmch_extracto.getValue()== undefined || txtEcmch_extracto.getValue()==null || txtEcmch_extracto.getValue().trim().length ==0){
+            txtEcmch_extracto.markInvalid("Establezca un extracto del archivo, por favor.");
             flag =false;
         }
         return flag;
     }
 
     var adjunto = new Ext.ux.form.AlfrescoFM({
-        id:'compAdjunto',  //(opcional)
-        name:'compAdjunto',       //(opcional)
+        id:'compAdjunto_ecm_archivo',  //(opcional)
+        name:'compAdjunto_ecm_archivo',       //(opcional)
         fieldLabel :'Adjuntos',         //(opcional -> Despliega la etiqueta del comoponente. Si no se define, aparece solo el botón)
         text: 'Adjunto',                //(opcional -> Texto del botón)
-        tableName : 'Cgg_ecm_archivo_seguimiento',
+        tableName : 'Cgg_ecm_archivo',
         isReadOnly: readOnly,
         validateRecordID:true,
-        recordID : txtCrinf_codigo.value
+        recordID : txtEcmch_codigo.value
+    });
+
+    adjunto.addListener("updateData",function(t){
+        t.recordID = null;
+        t.recordID = txtEcmch_codigo.value;
     });
 
     var btnGuardarCgg_ecm_archivo = new Ext.Button({
@@ -220,35 +191,41 @@ function FrmCgg_ecm_archivo(INSENTENCIA_CGG_ECM_ARCHIVO, inCrseg_codigo, current
                     return;
                 }
                 pnlCinfoComponentes.getEl().mask('Guardando...', 'x-mask-loading');
-                pnlCgg_res_Adjunto.getForm().submit({
-                    url:URL_WS+"InformeAdjuntoSeguimientoSRV",
-                    success:function(inForm,inAction){
+
+                objArchivo.ECMCH_CODIGO         =   txtEcmch_codigo.getValue();
+                objArchivo.ECMCH_TIPO           =   cbxEcmch_tipo.getValue();
+                objArchivo.ECMCH_ASUNTO         =   txtEcmch_asunto.getValue();
+                objArchivo.ECMCH_EXTRACTO       =   txtEcmch_extracto.getValue();
+                objArchivo.ECMCH_DESCRIPCION    =   txtEcmch_descripcion.getValue();
+                objArchivo.ECMCH_FECHA          =   dtEcmch_fecha.getValue().format('Y-m-d');
+                objArchivo.ECMCH_UPDATEABLE     =   chkEcmch_updateable.getValue();
+
+                try{
+                    function CallBackCgg_ecm_archivo(r){
                         pnlCinfoComponentes.getEl().unmask();
-                        var res = inAction.result.msg.trim().split(",");
-                        if(res[0]=='true'){
-                            Ext.MsgPopup.msg(tituloCgg_ecm_archivo,"El informe ha sido registrado!.", MsgPopup.INFO);
-                            if(res.length>1) {
-                                INSENTENCIA_CGG_ECM_ARCHIVO = "update";
-                                adjunto.recordID = res[1];
-                            }
-                            //winFrmCgg_ecm_archivo.close()
+                        if(r=='true'){
+                            Ext.Msg.show({
+                                title:tituloCgg_especialidad,
+                                msg: 'El archivo ha sido registrado!.',
+                                buttons: Ext.Msg.OK,
+                                icon: Ext.MessageBox.INFO
+                            });winFrmCgg_especialidad.close()
+                        }else{
+                            Ext.Msg.show({
+                                title:tituloCgg_especialidad,
+                                msg: 'El archivo no pudo ser registrado!.\nError:'+(r.message?r.message:r),
+                                buttons: Ext.Msg.OK,
+                                icon: Ext.MessageBox.ERROR
+                            });
                         }
-                    },
-                    failure:function(inForm,inAction){
-                        pnlCinfoComponentes.getEl().unmask();
-                        Ext.MsgPopup.msg(tituloCgg_ecm_archivo,"El informe no pudo ser registrado!.\nError:"+inAction.result.msg, MsgPopup.WARNING);
-                    },
-                    params:{
-                        inOperacion:INSENTENCIA_CGG_ECM_ARCHIVO,
-                        inCrise_codigo:txtCrinf_codigo.getValue(),
-                        inCrseg_codigo:inCrseg_codigo,
-                        inCrise_numero_informe:txtCrinf_numero_informe.getValue(),
-                        inCrise_fecha_informe:dtCrinf_fecha_informe.getValue().format('d/m/Y'),
-                        inCrise_asunto_informe:txtCrinf_asunto_informe.getValue(),
-                        inCrise_extracto_informe:txtCrinf_extracto_informe.getValue(),
-                        inCrise_descripcion_adjunto:txtCrinf_descripcion_adjunto.getValue()
                     }
-                });
+                    var param = new SOAPClientParameters();
+                    param.add("in_objEcmch",JSON.stringify(objArchivo));
+                    SOAPClient.invoke(urlCgg_ecm_archivo,INSENTENCIA_CGG_ECM_ARCHIVO,param, true, CallBackCgg_ecm_archivo);
+                }catch(inErr){
+                    pnlCinfoComponentes.getEl().unmask();
+                    Ext.MsgPopup.msg(tituloCgg_ecm_archivo,"El archivo no pudo ser registrado!", MsgPopup.WARNING);
+                }
             }
         }
     });
@@ -285,17 +262,17 @@ function FrmCgg_ecm_archivo(INSENTENCIA_CGG_ECM_ARCHIVO, inCrseg_codigo, current
         id:'pnlCgg_res_Adjunto',
         region:'center',
         labelWidth :90,
-        height:130,
+        height:100,
         fileUpload:true,
         items:[adjunto]
-        //items:[filCrinfo_archivo_adjunto,txtCrinf_descripcion_adjunto]
+        //items:[filCrinfo_archivo_adjunto,txtEcmch_descripcion]
     });
 
     var pnlfsCgg_res_Adjunto = new Ext.form.FieldSet({
         id:'pnlCgg_res_Adjunto',
-        title:'Adjunto del informe',
+        title:'Adjuntos',
         region:'center',
-        height:122,
+        height:60,
         items:[pnlCgg_res_Adjunto]
     });
 
@@ -303,7 +280,7 @@ function FrmCgg_ecm_archivo(INSENTENCIA_CGG_ECM_ARCHIVO, inCrseg_codigo, current
         id:'pnlCinfoComponentes',
         frame:true,
         layout:'form',
-        items:[txtCrinf_numero_informe,dtCrinf_fecha_informe,txtCrinf_asunto_informe,txtCrinf_extracto_informe,pnlfsCgg_res_Adjunto]
+        items:[cbxEcmch_tipo,chkEcmch_updateable,dtEcmch_fecha,txtEcmch_asunto,txtEcmch_descripcion,txtEcmch_extracto,pnlfsCgg_res_Adjunto]
     });
 
     /**
@@ -314,9 +291,9 @@ function FrmCgg_ecm_archivo(INSENTENCIA_CGG_ECM_ARCHIVO, inCrseg_codigo, current
         title:tituloCgg_ecm_archivo,
         tbar:getPanelTitulo(tituloCgg_ecm_archivo,descCgg_ecm_archivo),
         items:[pnlCinfoComponentes],
-        width:500,
-        minWidth:400,
-        resizable:false,
+        width:800,
+        minWidth:500,
+        resizable:true,
         modal:true,
         constrain:true,
         bbar:[btnGuardarCgg_ecm_archivo,btnCancelarCgg_ecm_archivo,'->',btnCerrarCgg_ecm_archivo]
@@ -335,7 +312,8 @@ function FrmCgg_ecm_archivo(INSENTENCIA_CGG_ECM_ARCHIVO, inCrseg_codigo, current
      * @base FrmCgg_ecm_archivo.prototype.loadData
      */
     this.loadData = function(){
-        cargarCgg_ecm_archivoCtrls();
+        //cargarCgg_ecm_archivoCtrls();
+        console.log("Controls");
     };
 }
 /**

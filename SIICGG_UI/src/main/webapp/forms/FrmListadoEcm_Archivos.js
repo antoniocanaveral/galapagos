@@ -2,6 +2,7 @@
  * Created by acanaveral on 8/8/16.
  * Permite Administrar los documentos de Alfresco
  */
+var tipoArchivo = [['SIST','Documentos de Sistema'],['GENE','Documentos Generales'],['NORM','Documentos Normativos'],['PERS','Documentos Personales']];
 
 
 function FrmListadoCgg_ecm_archivo() {
@@ -126,8 +127,19 @@ function FrmListadoCgg_ecm_archivo() {
     var cmCgg_ecm_archivo = new Ext.grid.ColumnModel([
         {   dataIndex: 'ECMCH_TIPO',
             header: 'Tipo',
-            width: 100,
-            sortable: true
+            width: 150,
+            sortable: true,
+            renderer:function(inNtml_codigo){
+                var i =0;
+                var result = inNtml_codigo;
+                for(i=0;i<tipoArchivo.length;i++){
+                    if(tipoArchivo[i][0] == inNtml_codigo){
+                        result = tipoArchivo[i][1];
+                        break;
+                    }
+                }
+                return result;
+            }
         },{
             dataIndex: 'ECMCH_ASUNTO',
             header: 'Asunto',
@@ -146,12 +158,16 @@ function FrmListadoCgg_ecm_archivo() {
         },{
             dataIndex: 'ECMCH_UPDATEABLE',
             header: 'Editable',
-            width: 25,
-            sortable: false
+            width: 100,
+            sortable: false,
+            xtype:'checkcolumn',
+            editor:{
+                xtype: 'checkbox'
+            }
         },{
             dataIndex: 'ECMCH_USUARIO_INSERT',
             header: 'Usuario',
-            width: 100,
+            width: 150,
             sortable: true
         }]);
 
@@ -254,7 +270,7 @@ function FrmListadoCgg_ecm_archivo() {
     var winFrmListadoCgg_ecm_archivo = new Ext.Window({
         id: 'winFrmListadoCgg_ecm_archivo',
         title: tituloListadoCgg_ecm_archivo,
-        width: 600,
+        width: 800,
         minWidth: 600,
         height: 400,
         minHeight: 400,

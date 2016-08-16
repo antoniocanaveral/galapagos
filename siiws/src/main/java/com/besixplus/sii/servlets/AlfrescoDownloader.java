@@ -14,17 +14,19 @@ import java.io.*;
 public class AlfrescoDownloader extends HttpServlet implements Serializable {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            String query = request.getQueryString();
-            if(query != null){
-                String fileId = query.split("=")[1];
-                DataHandler file = AlfrescoActions.getDocument(fileId);
-                String mimeType = file.getContentType();
-                if (mimeType == null) {
-                    // set to binary type if MIME mapping not found
-                    mimeType = "application/octet-stream";
-                }
-                InputStream inStream = file.getInputStream();
+        String query = request.getQueryString();
+        if(query != null){
+            String fileId = query.split("=")[1];
+            DataHandler file = AlfrescoActions.getDocument(fileId);
+            String mimeType = file.getContentType();
+            if (mimeType == null) {
+                // set to binary type if MIME mapping not found
+                mimeType = "application/octet-stream";
+            }
+            InputStream inStream = null;
+            OutputStream outStream = null;
+            try{
+                inStream = file.getInputStream();
 
                 response.setContentType(mimeType);
                 response.setContentLength(inStream.available());
@@ -35,7 +37,7 @@ public class AlfrescoDownloader extends HttpServlet implements Serializable {
                 response.setHeader(headerKey, headerValue);
 
                 // obtains response's output stream
-                OutputStream outStream = response.getOutputStream();
+                outStream = response.getOutputStream();
 
                 byte[] buffer = new byte[4096];
                 int bytesRead = -1;
@@ -44,12 +46,16 @@ public class AlfrescoDownloader extends HttpServlet implements Serializable {
                     outStream.write(buffer, 0, bytesRead);
                 }
 
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //BUG STREAMS ABIERTOS.
+            try {
                 inStream.close();
                 outStream.close();
-
+            }catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }

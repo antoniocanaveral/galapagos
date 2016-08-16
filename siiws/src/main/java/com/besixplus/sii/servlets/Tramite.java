@@ -63,6 +63,7 @@ public class Tramite extends HttpServlet implements Serializable {
 		String inCrgts_aplica = null;
 		Date inCrtra_fecha_salida = null;
 		JSONObject tmpTipoGarantia = null;
+		boolean soloGuardar=false;
 		String inOperacion = "registar";
 		ArrayList<com.besixplus.sii.objects.Cgg_res_adjunto> objColeccionAdjunto = new ArrayList<Cgg_res_adjunto>();
 		ServerResponse appResponse = new ServerResponse();
@@ -139,9 +140,10 @@ public class Tramite extends HttpServlet implements Serializable {
 							objTramite.setCHANGE_CRTST_CODIGO((item.getString().trim().length() == 0)?null:item.getString().trim());
 						if(item.getFieldName().equals("inTramiteRequisitos"))
 							inTramiteRequisitos=item.getString();
-						if(item.getFieldName().equals("inCrfas_codigo"))							
-							inCrfas_codigo=(item.getString().trim().length() == 0)?null:item.getString().trim();
-						if(item.getFieldName().equals("inNuevoBeneficiario"))
+						if(item.getFieldName().equals("inCrfas_codigo")) {
+							inCrfas_codigo = (item.getString().trim().length() == 0) ? null : item.getString().trim();
+							soloGuardar=inCrfas_codigo.equals("[]");
+						}if(item.getFieldName().equals("inNuevoBeneficiario"))
 							inNuevoBeneficiario=(item.getString().trim().length() == 0)?null:item.getString().trim();						
 						if(item.getFieldName().equals("inCrgts_aplica"))
 							inCrgts_aplica=(item.getString().trim().length() == 0)?null:item.getString().trim();
@@ -176,6 +178,10 @@ public class Tramite extends HttpServlet implements Serializable {
 							objColeccionAdjunto.add(objAdjunto);
 						}						
 					}					
+				}
+
+				if(!soloGuardar){//Es guardar y despachar
+					objTramite.setCRTRA_OBSERVACION(null);
 				}
 
 				if(inOperacion.equalsIgnoreCase("registrar")==true){

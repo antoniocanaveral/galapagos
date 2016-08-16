@@ -266,15 +266,17 @@ public class Cgg_ecm_archivo {
 
     public static int selectCount(
             java.sql.Connection inConnection,
+            String inUserName,
             String inKeyword
     ){
         int outCount = 0;
         if (inKeyword == null || inKeyword.trim().length() == 0 )
-            return selectCount(inConnection);
+            return selectCount(inConnection, inUserName);
         try{
-            CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_ECM_ARCHIVO_COUNT(?) }");
+            CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_ECM_ARCHIVO_COUNT(?,?) }");
             stmSelect.registerOutParameter(1, Types.INTEGER);
-            stmSelect.setString(2, inKeyword);
+            stmSelect.setString(2, inUserName);
+            stmSelect.setString(3, inKeyword);
             stmSelect.execute();
             outCount = stmSelect.getInt(1);
             stmSelect.close();
@@ -285,12 +287,14 @@ public class Cgg_ecm_archivo {
     }
 
     public static int selectCount(
-            java.sql.Connection inConnection
+            java.sql.Connection inConnection,
+            String inUserName
     ){
         int outCount = 0;
         try{
-            CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_ECM_ARCHIVO_COUNT() }");
+            CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_ECM_ARCHIVO_COUNT(?) }");
             stmSelect.registerOutParameter(1, Types.INTEGER);
+            stmSelect.setString(2, inUserName);
             stmSelect.execute();
             outCount = stmSelect.getInt(1);
             stmSelect.close();

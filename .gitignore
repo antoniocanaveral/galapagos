@@ -4,7 +4,7 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
+# *.jar
 *.war
 *.ear
 
@@ -12,6 +12,8 @@
 hs_err_pid*
 # others
 target/
+JbossEAP/SII_HOME/rules/*.jar
+SIICGG_UI/src/main/webapp/applets/*.jar
 activemq-data/
 *.log
 *.log.*

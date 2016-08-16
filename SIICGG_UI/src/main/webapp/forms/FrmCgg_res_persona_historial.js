@@ -430,6 +430,19 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
     var cmCgg_res_recordmigratorio_historial = new Ext.grid.ColumnModel([
         new Ext.grid.RowNumberer(),
         {
+            dataIndex:'CRMOV_SOPORTE',
+            header:'Corte',
+            width:50,
+            sortable:true,
+            editable: false,
+            xtype:'checkcolumn',
+            editor:{
+                xtype: 'checkbox',
+                readOnly: true,
+                editable: false
+            }
+        },
+        {
             dataIndex:'FECHA_VIAJE_INGRESO',
             header:'Fecha ingreso',
             width:150,
@@ -527,6 +540,10 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
         }, [
         {
             name:'CRMOV_CODIGO'
+        },
+
+        {
+            name:'CRMOV_SOPORTE'
         },
 
         {
@@ -1879,7 +1896,7 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
 		
     }
 	applyGrants(Ext.getCmp("pnlHistorialPersona").getBottomToolbar());
-	applyGrants(Ext.getCmp("Observacion").getBottomToolbar());
+	//applyGrants(Ext.getCmp("Observacion").getBottomToolbar());
 	applyGrants(Ext.getCmp("Notificacion").getBottomToolbar());
 
     /**

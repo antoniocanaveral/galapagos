@@ -122,70 +122,75 @@ public abstract class DinardapService {
     public String callServiceAsObject() {
         String result = populateService();
         if(!result.equals(CALL_ERROR)){
-            List<Map> registros = (List<Map>) datosPrincipales.get("registros");
-            for(Map record: registros){
-                try {
-                    if(record.get("valor")!=null) {
-                        Field field = this.getClass().getDeclaredField(record.get("campo").toString());
-                        setFieldValue(field,record.get("valor").toString());
-                    }
-                } catch (NoSuchFieldException e) {
-                    e.printStackTrace();
-                }
-            }
-            //Llenamos el detalle
-            if(detalle!=null && detalle.size()>0){
-                try {
-                    List<Map> records;
-                    if(detalle.get("items") instanceof List)
-                        records = (List<Map>) detalle.get("items");
-                    else{
-                        List record = new ArrayList();
-                        record.add(detalle.get("items"));
-                        records = record;
-                    }
-                    String className = null;
-                    List detalles = new ArrayList();
-                    for(Map pair:records){
-                        List<Map> items = (List<Map>) pair.get("registros");
-                        className = pair.get("nombre").toString().replace(" ","");
-                        try {
-                            Class clazz = Class.forName("com.bmlaurus.ws.dinardap."+className.trim());
-                            Object refItems = clazz.newInstance();
-                            for(Map record: items){
-                                try {
-                                    if(record.get("valor")!=null) {
-                                        Field field = refItems.getClass().getDeclaredField(record.get("campo").toString());
-                                        String setterName = "set"+capitalize(field.getName());
-                                        Method setter = refItems.getClass().getDeclaredMethod(setterName,String.class);
-                                        setter.invoke(refItems,record.get("valor").toString());
-                                    }
-                                } catch (NoSuchFieldException e) {
-                                    e.printStackTrace();
-                                } catch (NoSuchMethodException e) {
-                                    e.printStackTrace();
-                                } catch (InvocationTargetException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            detalles.add(refItems);
-                        } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
-                        } catch (InstantiationException e) {
-                            e.printStackTrace();
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
+            if(datosPrincipales!=null) {
+                List<Map> registros = (List<Map>) datosPrincipales.get("registros");
+                for (Map record : registros) {
+                    try {
+                        if (record.get("valor") != null) {
+                            Field field = this.getClass().getDeclaredField(record.get("campo").toString());
+                            setFieldValue(field, record.get("valor").toString());
                         }
+                    } catch (NoSuchFieldException e) {
+                        e.printStackTrace();
                     }
-
-                    Field field = this.getClass().getDeclaredField(className);
-                    setFieldArrayValue(field,detalles);
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
+                //Llenamos el detalle
+                if (detalle != null && detalle.size() > 0) {
+                    try {
+                        List<Map> records;
+                        if (detalle.get("items") instanceof List)
+                            records = (List<Map>) detalle.get("items");
+                        else {
+                            List record = new ArrayList();
+                            record.add(detalle.get("items"));
+                            records = record;
+                        }
+                        String className = null;
+                        List detalles = new ArrayList();
+                        for (Map pair : records) {
+                            List<Map> items = (List<Map>) pair.get("registros");
+                            className = pair.get("nombre").toString().replace(" ", "");
+                            try {
+                                Class clazz = Class.forName("com.bmlaurus.ws.dinardap." + className.trim());
+                                Object refItems = clazz.newInstance();
+                                for (Map record : items) {
+                                    try {
+                                        if (record.get("valor") != null) {
+                                            Field field = refItems.getClass().getDeclaredField(record.get("campo").toString());
+                                            String setterName = "set" + capitalize(field.getName());
+                                            Method setter = refItems.getClass().getDeclaredMethod(setterName, String.class);
+                                            setter.invoke(refItems, record.get("valor").toString());
+                                        }
+                                    } catch (NoSuchFieldException e) {
+                                        e.printStackTrace();
+                                    } catch (NoSuchMethodException e) {
+                                        e.printStackTrace();
+                                    } catch (InvocationTargetException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                detalles.add(refItems);
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                            } catch (InstantiationException e) {
+                                e.printStackTrace();
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        Field field = this.getClass().getDeclaredField(className);
+                        setFieldArrayValue(field, detalles);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                resultStaus = CALL_OK;
+                return CALL_OK;
+            }else{
+                resultStaus = CALL_ERROR;
+                return CALL_ERROR;
             }
-            resultStaus = CALL_OK;
-            return CALL_OK;
         }
         resultStaus = CALL_ERROR;
         return CALL_ERROR;

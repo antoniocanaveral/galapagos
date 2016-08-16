@@ -37,3 +37,12 @@ BEGIN
 		    cgg_ecm_file_code, cgg_ecm_index_definition_code)
 	    VALUES (v_file_code, 'IDX_CAD');
 END$$;
+
+
+  --> MIGRATION SCRIPT CONTROLLER <--
+INSERT INTO sii.cgg_migrationscript (mrgsp_codigo,mrgsp_fecha,mrgsp_usuario_insert,mrgsp_fecha_insert,mrgsp_usuario_update,mrgsp_fecha_update,
+	mrgsp_estado,mrgsp_developer,mrgsp_name,mrgsp_description,
+	mrgsp_releaseno,mrgsp_filename,mrgsp_isapply)
+VALUES(SII.F_KEYGEN('CGG_MIGRATIONSCRIPT','MRGSP_CODIGO','MRGSP'), current_timestamp,'ADMIN', current_timestamp,'ADMIN', current_timestamp,
+	true,'acanaveral','PERSONA JURIDICA','Gestión de Archivos de Persona Juridica',
+	'2.0','2016_08_04_ControlGeneracionDocumentos.sql',true);

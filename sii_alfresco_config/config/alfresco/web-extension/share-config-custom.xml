@@ -8,12 +8,14 @@
                 <aspect name="sii:almacenable" />
                 <aspect name="sii:caducable" />
                 <aspect name="sii:identificable" />
+                <aspect name="sii:firmable" />
             </visible>
 
             <!-- Aspects that a user can add. Same as "visible" if left empty -->
             <addable>
                 <aspect name="sii:almacenable" />
                 <aspect name="sii:caducable" />
+                <aspect name="sii:firmable" />
             </addable>
 
             <!-- Aspects that a user can remove. Same as "visible" if left empty -->
@@ -48,6 +50,8 @@
                     <!-- sii:identificableRelated -->
                     <show id="sii:table_name" />
                     <show id="sii:record_id" />
+                    <!-- sii:firmableRelated -->
+                    <show id="sii:usuario_firma" />
                 </field-visibility>
                 <appearance>
                     <!-- sii:almacenableRelated -->
@@ -59,6 +63,8 @@
                     <!-- sii:identificableRelated -->
                     <field id="sii:table_name" read-only="true" label-id="prop.sii_table_name"/>
                     <field id="sii:record_id" read-only="true" label-id="prop.sii_record_id"/>
+                    <!-- sii:firmableRelated -->
+                    <show id="sii:usuario_firma" read-only="true" label-id="prop.sii_usuario_firma"/>
                 </appearance>
             </form>
         </forms>
@@ -96,6 +102,8 @@
                     <!-- sii:identificableRelated -->
                     <show id="sii:table_name" />
                     <show id="sii:record_id" />
+                    <!-- sii:firmableRelated -->
+                    <show id="sii:usuario_firma" />
                 </field-visibility>
                 <appearance>
                     <field id="mimetype">
@@ -130,6 +138,11 @@
                         <control template="/org/alfresco/components/form/controls/textfield.ftl" />
                     </field>
                     <field id="sii:record_id" label-id="prop.sii_record_id">
+                        <control template="/org/alfresco/components/form/controls/textfield.ftl" />
+                    </field>
+
+                    <!-- sii:firmableRelated -->
+                    <field id="sii:usuario_firma" label-id="prop.sii_usuario_firma">
                         <control template="/org/alfresco/components/form/controls/textfield.ftl" />
                     </field>
                 </appearance>

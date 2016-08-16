@@ -8,6 +8,7 @@ import com.bmlaurus.jaspersoft.model.InputControl;
 import com.bmlaurus.jaspersoft.model.JasperDataType;
 import com.bmlaurus.jaspersoft.model.JasperReportResource;
 import com.bmlaurus.jaspersoft.services.*;
+import com.bmlaurus.virtual.VirtualCache;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.junit.Test;
@@ -36,7 +37,7 @@ public class LocalTests {
             //String parentFolder = reportFolder.substring(0, reportFolder.lastIndexOf("/"));
             reportFolder = reportFolder.substring(reportFolder.lastIndexOf("/") + 1, reportFolder.length());
 
-            Properties config = Env.getExternalProperties("jasper/config.properties");
+            Properties config = VirtualCache.getConfig(VirtualCache.PROP_JASPER_CONF);
             FolderService folderService = null;
             if (Boolean.valueOf(config.getProperty("INIT_JASPERSERVER"))) {
                 UserService userService = new UserService();

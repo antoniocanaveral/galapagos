@@ -2,7 +2,8 @@ package com.besixplus.sii.ws;
 
 import com.besixplus.sii.db.ManagerConnection;
 import com.besixplus.sii.i18n.Messages;
-import com.google.gson.Gson;
+import com.bmlaurus.json.GsonEngine;
+import com.bmlaurus.json.GsonEngineImp;
 
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
@@ -40,6 +41,8 @@ public class Cgg_ecm_archivo implements Serializable {
 
     private static final long serialVersionUID = 1561615879;
     private Messages myInfoMessages = new Messages(Messages.Types.Info);
+
+    private GsonEngine gsonEngine;
     @Resource
     WebServiceContext wctx;
 
@@ -57,7 +60,8 @@ public class Cgg_ecm_archivo implements Serializable {
         HttpServletRequest tmpRequest = (HttpServletRequest) wctx.getMessageContext().get(MessageContext.SERVLET_REQUEST);
         com.besixplus.sii.objects.Cgg_ecm_archivo obj = new com.besixplus.sii.objects.Cgg_ecm_archivo();
 
-        obj = new Gson().fromJson(in_objEcmch, com.besixplus.sii.objects.Cgg_ecm_archivo.class);
+        gsonEngine = new GsonEngineImp(null,"yyyy-MM-dd HH:mm:ss");
+        obj = gsonEngine.getGson().fromJson(in_objEcmch, com.besixplus.sii.objects.Cgg_ecm_archivo.class);
         obj.setECMCH_CODIGO("KEYGEN");
         obj.setECMCH_ESTADO(true);
         obj.setECMCH_USUARIO_INSERT(tmpRequest.getUserPrincipal().getName());
@@ -160,7 +164,7 @@ public class Cgg_ecm_archivo implements Serializable {
                 tmpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName());
                 return null;
             }
-            tmpCount = com.bmlaurus.db.Cgg_ecm_archivo.selectCount(con, keyword);
+            tmpCount = com.bmlaurus.db.Cgg_ecm_archivo.selectCount(con, tmpRequest.getUserPrincipal().getName(), keyword);
             con.setAutoCommit(!ManagerConnection.isDeployed());
             obj = com.bmlaurus.db.Cgg_ecm_archivo.selectAll(con, tmpRequest.getUserPrincipal().getName(), start, limit, sort, dir, keyword);
             tmpFormat = new com.besixplus.sii.misc.Formatter(format, obj);
@@ -223,7 +227,7 @@ public class Cgg_ecm_archivo implements Serializable {
                 tmpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName());
                 return null;
             }
-            tmpCount = com.bmlaurus.db.Cgg_ecm_archivo.selectCount(con, keyword);
+            tmpCount = com.bmlaurus.db.Cgg_ecm_archivo.selectCount(con, tmpRequest.getUserPrincipal().getName(), keyword);
             con.setAutoCommit(!ManagerConnection.isDeployed());
             obj = com.bmlaurus.db.Cgg_ecm_archivo.selectAllDirect(con, tmpRequest.getUserPrincipal().getName(), start, limit, sort, dir, keyword);
             tmpFormat = new com.besixplus.sii.misc.Formatter(format, obj);
@@ -268,7 +272,8 @@ public class Cgg_ecm_archivo implements Serializable {
         HttpServletRequest tmpRequest = (HttpServletRequest) wctx.getMessageContext().get(MessageContext.SERVLET_REQUEST);
         com.besixplus.sii.objects.Cgg_ecm_archivo obj = new com.besixplus.sii.objects.Cgg_ecm_archivo();
 
-        obj = new Gson().fromJson(in_objEcmch, com.besixplus.sii.objects.Cgg_ecm_archivo.class);
+        gsonEngine = new GsonEngineImp(null,"yyyy-MM-dd HH:mm:ss");
+        obj = gsonEngine.getGson().fromJson(in_objEcmch, com.besixplus.sii.objects.Cgg_ecm_archivo.class);
         obj.setECMCH_ESTADO(true);
         obj.setECMCH_USUARIO_UPDATE(tmpRequest.getUserPrincipal().getName());
 

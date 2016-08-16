@@ -4080,7 +4080,29 @@ function Cgg_res_tramite(){
         dataIndex:'CRTRA_ORDEN',
         header:'Transeunte',
         width:80
-    }]);
+    },
+     {
+        dataIndex:'REP_CRPER_CODIGO',
+        header:'Representante',
+        width:80,
+        hidden:true,
+        sortable:false
+    },
+    {
+        dataIndex:'CHANGE_CRTST_CODIGO',
+        header:'Tipo Solicitud Cambio',
+        width:80,
+        hidden:true,
+        sortable:false
+    },
+    {
+        dataIndex:'CRTT_CODIGO',
+        header:'Tipo de Solicitud',
+        width:80,
+        hidden:true,
+        sortable:false
+    }
+    ]);
 		
     /**
 	  * Ext.data.Store Agrupacion de registros de la tabla Cgg_res_tramite por un campo especifico.

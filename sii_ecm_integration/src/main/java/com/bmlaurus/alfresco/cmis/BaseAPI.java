@@ -1,6 +1,6 @@
 package com.bmlaurus.alfresco.cmis;
 
-import com.bmlaurus.utils.Config;
+import com.bmlaurus.virtual.VirtualCache;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -35,7 +35,6 @@ public class BaseAPI extends BasePublicAPI {
     public static final JsonFactory JSON_FACTORY = new JacksonFactory();
 
     private HttpRequestFactory requestFactory;
-    private Session cmisSession;
 
     public String getAtomPubURL(HttpRequestFactory requestFactory) {
         String alfrescoAPIUrl = getAlfrescoAPIUrl();
@@ -57,7 +56,7 @@ public class BaseAPI extends BasePublicAPI {
      * @return Session
      */
     public Session getCmisSession() {
-        if (cmisSession == null) {
+        if (PublicConnection.cmisSession == null) {
             // default factory implementation
             SessionFactory factory = SessionFactoryImpl.newInstance();
             Map<String, String> parameter = new HashMap<String, String>();
@@ -72,14 +71,14 @@ public class BaseAPI extends BasePublicAPI {
 
             List<Repository> repositories = factory.getRepositories(parameter);
 
-            cmisSession = repositories.get(0).createSession();
+            PublicConnection.cmisSession = repositories.get(0).createSession();
+            System.out.println("----- [Building Alfresco Session] -----");
         }
-        return this.cmisSession;
+        return PublicConnection.cmisSession;
     }
 
     public void disconnect(){
-        cmisSession.clear();
-        cmisSession=null;
+        //PublicConnection.cmisSession.clear();
         System.out.println("----- [Alfresco Session] Cleared! -----");
     }
 
@@ -102,17 +101,17 @@ public class BaseAPI extends BasePublicAPI {
     }
 
     public String getAlfrescoAPIUrl() {
-        String host = Config.getConfig().getProperty("host");
+        String host = VirtualCache.getConfig(VirtualCache.PROP_ALFRESCO_CONF).getProperty("host");
         return host + "/api/";
     }
 
     public String getUsername() {
-        return Config.getConfig().getProperty("username");
+        return VirtualCache.getConfig(VirtualCache.PROP_ALFRESCO_CONF).getProperty("username");
     }
 
     public String getPassword() {
-        return Config.getConfig().getProperty("password");
+        return VirtualCache.getConfig(VirtualCache.PROP_ALFRESCO_CONF).getProperty("password");
     }
 
-    public String getDefaultDescription(){return Config.getConfig().getProperty("folder_description");}
+    public String getDefaultDescription(){return VirtualCache.getConfig(VirtualCache.PROP_ALFRESCO_CONF).getProperty("folder_description");}
 }

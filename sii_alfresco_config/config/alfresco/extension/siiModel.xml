@@ -91,5 +91,13 @@
                 </property>
             </properties>
         </aspect>
+        <aspect name="sii:firmable">
+            <title>El documento requiere firma</title>
+            <properties>
+                <property name="sii:usuario_firma">
+                    <type>d:text</type>
+                </property>
+            </properties>
+        </aspect>
     </aspects>
 </model>

@@ -5,6 +5,7 @@ import com.besixplus.sii.misc.CGGEnumerators;
 import com.besixplus.sii.objects.*;
 import com.besixplus.sii.util.Env;
 import com.bmlaurus.alfresco.db.SiiDataLoader;
+import com.bmlaurus.virtual.VirtualCache;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -57,8 +58,8 @@ public class ProcessMail extends Thread{
     }
 
     private void externalMail(){
+        Connection objConn = ManagerConnection.getConnection();
         try {
-            Connection objConn = ManagerConnection.getConnection();
             objConn.setAutoCommit(false);
 
             if (externalMail != null) {
@@ -71,12 +72,17 @@ public class ProcessMail extends Thread{
             objConn.close();
         } catch (SQLException e) {
             e.printStackTrace();
+            try {
+                objConn.close();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 
     private void tramiteMail(){
+        Connection objConn= ManagerConnection.getConnection();
         try {
-            Connection objConn= ManagerConnection.getConnection();
             objConn.setAutoCommit(false);
 
             if(tramite==null || tramite.getCRTRA_CODIGO()==null){
@@ -167,11 +173,16 @@ public class ProcessMail extends Thread{
             objConn.close();
         } catch (SQLException e) {
             e.printStackTrace();
+            try {
+                objConn.close();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 
 
-    private void buildMessage(Connection conn, Cgg_not_mail mail, String destMail){
+    private void buildMessage(Connection conn, Cgg_not_mail mail, String destMail) throws SQLException {
         Cgg_buzon_correo objCorreo = new Cgg_buzon_correo();
         objCorreo.setCBZC_CODIGO("KEYGEN");
         objCorreo.setCBZC_ASUNTO(mail.getNtml_subject());
@@ -192,9 +203,9 @@ public class ProcessMail extends Thread{
     }
 
     private String noDataStr = "NO DATA";
-    private String buildTextMessage(Connection objConn, Cgg_not_mail mail){
+    private String buildTextMessage(Connection objConn, Cgg_not_mail mail) throws SQLException {
         StringBuilder bodyMail = new StringBuilder();
-        Properties props = Env.getExternalProperties("mailing/format.properties");
+        Properties props = VirtualCache.getConfig(VirtualCache.PROP_MAILING_FORMAT);
         noDataStr = props.getProperty("mail.no_data");
         if(mail.isNtml_sendheader()){
             if(mail.getNtml_header_override()!=null && mail.getNtml_header_override().length()>=0)
@@ -224,9 +235,9 @@ public class ProcessMail extends Thread{
         return bodyMail.toString();
     }
 
-    private String buildHtmlMessage(Connection objConn, Cgg_not_mail mail){
+    private String buildHtmlMessage(Connection objConn, Cgg_not_mail mail) throws SQLException {
         StringBuilder bodyMail = new StringBuilder();
-        Properties props = Env.getExternalProperties("mailing/format.properties");
+        Properties props = VirtualCache.getConfig(VirtualCache.PROP_MAILING_FORMAT);
         noDataStr = props.getProperty("mail.no_data");
         String template = Env.getStringResource("mailing/"+props.getProperty("mail.html.template"));
         if(template!=null){
@@ -250,11 +261,13 @@ public class ProcessMail extends Thread{
     //      @$BENEFICIARIO@ -> Nombres Completos del Beneficiario
     //      @$BENEFICIARIO_ID@ -> Cédula del Beneficiario
     //      @$TIPO_RESIDENCIA@ -> Tipo de la Solicitud de Residencia
+    //      @$EMPRESA@ -> Nombre de la Empresa Auspiciante
+    //      @$EMPRESA_ID@ -> RUC de la Empresa Auspiciante
 
     //Obtener el contenido de las @ y reemplazarlo por la ejecución de la base de datos.
     //Seguir recorriendo el mensaje hasta el final.
 
-    public String contentBody(Connection objConn, String mailBody){
+    public String contentBody(Connection objConn, String mailBody) throws SQLException {
         StringBuilder buffer = new StringBuilder();
 
         int index = 0;
@@ -282,7 +295,7 @@ public class ProcessMail extends Thread{
     }
 
 
-    private String dataResolver(Connection conn, String dataPath){
+    private String dataResolver(Connection conn, String dataPath) throws SQLException {
         String result = noDataStr;
         String tableName = null;
         String recordId = null;
@@ -333,6 +346,16 @@ public class ProcessMail extends Thread{
                     recordId = tramite.getCGG_CRPER_CODIGO();
                     path.add("@crper_num_doc_identific@");
                     break;
+                case "$EMPRESA":
+                    tableName="cgg_res_persona_juridica";
+                    recordId = tramite.getCRPJR_CODIGO();
+                    path.add("@crpjr_razon_social@");
+                    break;
+                case "$EMPRESA_ID":
+                    tableName="cgg_res_persona_juridica";
+                    recordId = tramite.getCRPJR_CODIGO();
+                    path.add("@crpjr_numero_identificacion@");
+                    break;
                 case "$TIPO_RESIDENCIA":
                     tableName = "cgg_res_tramite";
                     recordId = tramite.getCRTRA_CODIGO();
@@ -351,16 +374,12 @@ public class ProcessMail extends Thread{
         if(path.size()>0)
             result="";
         for(String data:path) {
-            try {
-                if(data.startsWith("@"))
-                    result = result + cleanData(SiiDataLoader.repoResolver(conn, tableName, recordId, data))+" ";
-                else
-                    result = data;
-                if(result.trim().length()==0)
-                    result=noDataStr;
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            if(data.startsWith("@"))
+                result = result + cleanData(SiiDataLoader.repoResolver(conn, tableName, recordId, data))+" ";
+            else
+                result = data;
+            if(result.trim().length()==0)
+                result=noDataStr;
         }
         return result;
     }
