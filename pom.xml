@@ -30,11 +30,11 @@
 		<module>sii_alfresco_config</module>
 		<module>sii_commons</module>
 		<module>sii_ecm_integration</module>
+		<module>sii_applet</module>
 		<module>SIICGG_UI</module>
 		<module>siicgg_web</module>
 		<module>siiws</module>
 		<module>sii_jasper_api</module>
 		<module>sii_java_validator</module>
-		<module>sii_applet</module>
 	</modules>
 </project>

@@ -6,6 +6,7 @@
  * @base FrmListadoCgg_res_carnet
  * @author Besixplus Cia. Ltda.
  */
+var tmpPrsFirma;
 
 function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET) {
     var inSentenciaCgg_res_carnet = IN_SENTENCIA_CGG_RES_CARNET;
@@ -22,7 +23,7 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 	var tmpFechaAprobacion;
 	var tmpCarnet;
 	var tmpPrsFoto;
-	var tmpPrsFirma;
+	tmpPrsFirma=null;
 	var tmpPrsFir;
 	var tmpPrsFirAudit;
 	var tmpAdjuntos;
@@ -397,18 +398,19 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 		document.body.appendChild(js);
 
 	}
+	LoadJs("forms/FrmCaptureImage.js");
 	var btnCapturarFoto = new Ext.Button({
 		id:'btnCapturarFoto',
 		text:'Capturar',
 		iconCls:'iconCamara',
 		handler:function(){
-			LoadJs("forms/FrmCaptureImage.js");
 			var captura = new FrmCaptureImage();
 			captura.closeHandler(function(){
-				tmpPrsFoto = captura.getImage();
-				if(tmpPrsFoto!=null && tmpPrsFoto.src!=null){
+				var capturaPrsFoto = captura.getImage();
+				if(capturaPrsFoto!=null && capturaPrsFoto.src!=null){
 					var tmpImgFoto = document.getElementById("imgFotoPrsnCrn");
-					tmpImgFoto.src = tmpPrsFoto.src;
+					tmpImgFoto.src = capturaPrsFoto.src;
+					tmpPrsFoto = capturaPrsFoto.src.slice(22);
 				}
 				//tmpImgFoto.src = 'data:image/jpg;base64,'+tmpPrsFoto;
 
@@ -416,8 +418,8 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 			captura.show();
 		}
 	});
-	
-	
+
+
 	var btnCapturarFirma = new Ext.Button({
 		id:'btnCapturarFirma',
 		text:'Capturar',
@@ -425,18 +427,15 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 		handler:function(){
 			if(!tmpPlugin)
 				tmpPlugin = document.getElementById("bsxCrnBiometric");
-			tmpPrsFirma = tmpPlugin.getSignature()
-			if(tmpPrsFirma && tmpPrsFirma.length > 0){
-				var tmpImgFirma = document.getElementById("imgFirmaPrsnCrn");
-				tmpImgFirma.src = 'data:image/jpg;base64,'+tmpPrsFirma;
-			}else{
-				Ext.Msg.show({
-					title: tituloCgg_res_carnet,
-                    msg: tmpPlugin.message,
-                    buttons: Ext.Msg.OK,
-                    icon: Ext.MessageBox.ERROR
-                });
-			}
+
+			tmpPlugin.style.display='block';
+			tmpPlugin.width = '270';
+			tmpPlugin.height = '110';
+			tmpPlugin.innerHTML='<APPLET CODE="com.bmlaurus.signature.SigPlusImgDemo.class" NAME="appletFirma" WIDTH=260 HEIGHT=100 ALIGN=middle archive="applets/sii_applet.jar">'
+				+' <PARAM name="model" value="SignatureGem1X5"/>'
+				+' <PARAM name="comPort" value="HID1"/>'
+				+' <PARAM name="generateImg" value="false"/>'
+				+'</APPLET>';
 		}
 	});
 	
@@ -513,7 +512,7 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 		frame:true,
 		activeTab:0,
 		region:'center',
-		html:'<object id="bsxCrnBiometric" type="' + SII_mimeType + '" width="0" height="0"></object>',
+		html:'<div id="bsxCrnBiometric" width="0" height="0" style="display: none"></div>',//'<object id="bsxCrnBiometric" type="' + SII_mimeType + '" width="0" height="0"></object>',
 		items:[pnlFotoCrn,pnlFirmaCrn,pnlHuellaCrn]
 	});
 	/**
@@ -656,44 +655,63 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 */
 FrmCgg_res_carnet.prototype.setPersona = function(inPersona){
 	this.setPersona(inPersona);
-}
+};
 /**
 * Funcion prototipo. Establece la residencia de la Persona.
 * @param inIdPersona Identificador de Persona.
 */
 FrmCgg_res_carnet.prototype.setResidencia = function(inResidencia){
 	this.setResidencia(inResidencia);
-}
+};
 /**
 * Funcion prototipo. Establece los tramites de carnetizacion de la Persona.
 * @param inCarnet Carnet de la Persona.
 */
 FrmCgg_res_carnet.prototype.setCarnet = function(inCarnet){
 	this.setCarnet(inCarnet);
-}
+};
 /**
 * Funcion prototipo. Establece los datos de biometricos de la Persona.
 * @param inAdjuntos Informacion de adjuntos.
 */
 FrmCgg_res_carnet.prototype.setAdjuntos = function(inAdjuntos){
 	this.setAdjuntos(inAdjuntos);
-}
+};
 /**
  * Funcion prototipo. Permite mostrar la ventana winFrmCgg_res_carnet desde una instancia.
  */
 FrmCgg_res_carnet.prototype.show = function () {
     this.getWindow().show();
-}
+};
 /**
  *Funcion prototipo. Permite cerrar la ventana winFrmCgg_res_carnet desde una instancia.
  */
 FrmCgg_res_carnet.prototype.close = function () {
     this.getWindow().close();
-}
+};
 /**
  * Funcion prototipo. Permite saber si se ha cerrado la ventana winFrmCgg_res_carnet,
  * con el fin de realizar otras acciones desde una instancia.
  */
 FrmCgg_res_carnet.prototype.closeHandler = function (inFunctionHandler) {
     this.getWindow().on('close', inFunctionHandler);
+};
+
+
+function callbackApplet(e){
+	if(e && e.length > 0){
+		var tmpImgFirma = document.getElementById("imgFirmaPrsnCrn");
+		tmpImgFirma.src = 'data:image/jpg;base64,'+e;
+		tmpPrsFirma = e;
+	}else{
+		Ext.Msg.show({
+			title: tituloCgg_res_carnet,
+			msg: tmpPlugin.message,
+			buttons: Ext.Msg.OK,
+			icon: Ext.MessageBox.ERROR
+		});
+	}
+	var tmpPlugin = document.getElementById("bsxCrnBiometric");
+	tmpPlugin.innerHTML='';
+	tmpPlugin.style.display='none';
 }
