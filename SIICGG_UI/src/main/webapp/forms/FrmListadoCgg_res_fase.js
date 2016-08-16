@@ -121,13 +121,26 @@ function FrmListadoCgg_res_fase(inDesktop){
     },
     {
         dataIndex:'CRPRO_CODIGO',
-        hidden:true
-    },
-	{
-        dataIndex:'CRPRO_NOMBRE',
         header:'Proceso',
         width:100,
-        sortable:true
+        sortable:true,
+        renderer:function(inCRPRO_CODIGO){
+            var result = '';
+            var scpProceso = new SOAPClientParameters({
+                inCrpro_codigo:inCRPRO_CODIGO,
+                format:TypeFormat.JSON
+            });
+
+            var tmpProceso = SOAPClient.invoke(URL_WS+'Cgg_res_proceso', 'select', scpProceso, false, null);
+            try{
+                tmpProceso = Ext.util.JSON.decode(tmpProceso);
+                tmpProceso = tmpProceso[0];
+                result = tmpProceso.CRPRO_NOMBRE;
+            }catch(inErr){
+                result = NO_DATA_MESSAGE;
+            }
+            return result;
+        }
     },
     {
         dataIndex:'CRFAS_NOMBRE',
@@ -256,9 +269,6 @@ function FrmListadoCgg_res_fase(inDesktop){
         },
         {
             name:'CRFAS_SUBE_ADJUNTO'
-        },
-		{
-            name:'CRPRO_NOMBRE'
         }
         ]),
         sortInfo:{

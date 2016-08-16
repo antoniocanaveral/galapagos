@@ -1,5 +1,22 @@
 package com.besixplus.sii.servlets;
 
+import com.besixplus.sii.db.Cgg_configuracion;
+import com.besixplus.sii.db.ManagerConnection;
+import com.besixplus.sii.mail.Base64;
+import com.besixplus.sii.objects.Cgg_res_adjunto;
+import com.besixplus.sii.objects.Cgg_res_persona;
+import com.besixplus.sii.objects.Cgg_res_residencia;
+import com.besixplus.sii.objects.ServerResponse;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.json.JSONObject;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Connection;
@@ -8,27 +25,6 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.json.JSONObject;
-
-//import com.besixplus.biometric.types.FingerDevice;
-//import com.besixplus.enbsp.win.Lector;
-import com.besixplus.sii.db.Cgg_configuracion;
-import com.besixplus.sii.db.ManagerConnection;
-import com.besixplus.sii.mail.Base64;
-import com.besixplus.sii.objects.Cgg_res_adjunto;
-import com.besixplus.sii.objects.Cgg_res_persona;
-import com.besixplus.sii.objects.Cgg_res_residencia;
-import com.besixplus.sii.objects.ServerResponse;
 
 public class Cgg_res_carnet extends HttpServlet implements Serializable{
 	private static final long serialVersionUID = 1340778175;
@@ -124,10 +120,10 @@ public class Cgg_res_carnet extends HttpServlet implements Serializable{
 						}
 					}
 				}
-				/*if( tmpFirAuditText== null || tmpFirText == null){
+				if( tmpFirAuditText== null || tmpFirText == null){
 					tmpServerResponse.setMsg("Falta informaci\u00f3n de la huella dactilar.");
 					tmpServerResponse.setSuccess(false);
-				}else*/ if(tmpFoto == null){
+				}else if(tmpFoto == null){
 					tmpServerResponse.setMsg("Falta la fotograf\u00eda de la persona carnetizada.");
 					tmpServerResponse.setSuccess(false);
 				}else if(tmpFirma == null){

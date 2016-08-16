@@ -192,8 +192,8 @@ function FrmCgg_res_sesion_comite(INSENTENCIA_CGG_RES_SESION_COMITE,INRECORD_CGG
         id:'txtCrssc_descripcion_adjunto',
         name:'txtCrssc_descripcion_adjunto',
         fieldLabel :'Descripci\u00f3n',
-        anchor:'98%'
-
+        anchor:'98%',
+		maxLength:200
     });
 
     /**

@@ -1,5 +1,5 @@
 function loadModulo(){	
-	var userObject;	
+	var userObject;
 	var url = URL_WS+"PublicWS/Cgg_atc_gestion_empleo";
 	/*new Ajax.Request(url, {
 		method: 'get',

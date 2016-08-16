@@ -1,9 +1,14 @@
+
+
+/////// OJO!!!
+//#####ESTE ARCHIVO ESTA DEPRECADO. LOS PARAMETROS GLOBALES SE ENCUENTRAN EN SII_HOME/siicgg_ui
+
 Ext.BLANK_IMAGE_URL='lib/extjs/resources/images/default/s.gif';
 var URL_SERVER= document.URL.split('/')[2];
 var URL_WS = "/siiws/";
 var URL_APP="/sii/";
 var URL_DOC_VIEWER="/siiws/DocViewer";
-var URL_REPORT='http://190.95.187.82:8081/jasperserver/flow.html?_flowId=viewReportFlow&standAlone=true&j_username=sii&j_password=sii';
+var URL_REPORT='http://'+document.domain+':8081/jasperserver/flow.html?_flowId=viewReportFlow&standAlone=true&j_username=sii&j_password=sii';
 var URL_LOGOUT = 'SessionManager?request=logout';
 var APP_TITLE='SIICGG';
 var OUTPUT_REPORT='pdf';
@@ -930,14 +935,14 @@ function Persona(){
 
     {
         dataIndex:'CRPER_APELLIDO_PATERNO',
-        header:'Apellido paterno',
+        header:'Primer apellido',
         width:150,
         sortable:true
     },
 
     {
         dataIndex:'CRPER_APELLIDO_MATERNO',
-        header:'Apellido materno',
+        header:'Segundo apellido',
         width:150,
         sortable:true
     },
@@ -1123,14 +1128,14 @@ function PersonaAsistenteCurso(){
 
     {
         dataIndex:'CRPER_APELLIDO_PATERNO',
-        header:'Apellido paterno',
+        header:'Primer apellido',
         width:150,
         sortable:true
     },
 
     {
         dataIndex:'CRPER_APELLIDO_MATERNO',
-        header:'Apellido materno',
+        header:'Segundo apellido',
         width:150,
         sortable:true
     },
@@ -2715,14 +2720,14 @@ function PersonaResidentePermanente(){
 
     {
         dataIndex:'CRPER_APELLIDO_PATERNO',
-        header:'Apellido paterno',
+        header:'Primer apellido',
         width:150,
         sortable:true
     },
 
     {
         dataIndex:'CRPER_APELLIDO_MATERNO',
-        header:'Apellido materno',
+        header:'Segundo apellido',
         width:150,
         sortable:true
     },
@@ -4437,14 +4442,14 @@ function Cgg_gem_candidato_lite(){
     this.columnModel = new Ext.grid.ColumnModel([
     {
         dataIndex:'CRPER_APELLIDO_PATERNO',
-        header:'Apellido paterno',
+        header:'Primer apellido',
         width:200,
         sortable:true
     },
 
     {
         dataIndex:'CRPER_APELLIDO_MATERNO',
-        header:'Apellido materno',
+        header:'Segundo apellido',
         width:200,
         sortable:true
     },

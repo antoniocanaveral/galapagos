@@ -14,15 +14,25 @@ function bsxMessageBox(v){
 	this.height=	v.height||80;	
 	
 	/*Fondo transparente*/
-	this.bmsgbBackground = document.createElement("div");
-	this.bmsgbBackground.id="bmsgbBackground";	
-	document.body.appendChild(this.bmsgbBackground);
+	this.bmsgbBackground = null;
+	if(document.getElementById("bmsgbBackground")!=null)
+		this.bmsgbBackground = document.getElementById("bmsgbBackground");
+	else {
+		this.bmsgbBackground = document.createElement("div");
+		this.bmsgbBackground.id = "bmsgbBackground";
+		document.body.appendChild(this.bmsgbBackground);
+	}
 	
 	/*div que contiene la ventana */
-	this.bmsgbModal = document.createElement("div");
-	this.bmsgbModal.id="bmsgbModal";
-	document.body.appendChild(this.bmsgbModal);
-	
+	this.bmsgbModal = null;
+	if(document.getElementById("bmsgbModal")!=null)
+		this.bmsgbModal = document.getElementById("bmsgbModal");
+	else {
+		this.bmsgbModal = document.createElement("div");
+		this.bmsgbModal.id = "bmsgbModal";
+		document.body.appendChild(this.bmsgbModal);
+	}
+
 	var tmp =document.getElementById("bsxMsgBox");
 	tmp = (tmp)?null:null;
 	this.bmsgbModal.innerHTML="<TABLE id='bsxMsgBox' border=1><TBODY></TABLE>";	

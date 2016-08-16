@@ -1,7 +1,7 @@
 /**
- *FUNCION. CREA EL OBJETO FRMSELECCIONSEGUIMIENTO PARA SELECCION DE SEGUIMIENTO DE FASES A LAS QUE SE DESPACHA UN SEGUIMIENTO DE UN TRAMITE.
- *@param inCrpro_codigo CODIGO DE PROCESO PRECARGADO.
- *@param inCrfas_codigo CODIGO DE FASE PREDETERMINADA.
+ *Funcion. Crea el objeto FrmSeleccionSeguimiento para seleccion de seguimiento de fases a las que se despacha un seguimiento de un tramite.
+ *@param inCrpro_codigo Codigo de proceso precargado.
+ *@param inCrfas_codigo Codigo de fase predeterminada.
  */
 function DlgSeleccionDistribucion(inCrpro_codigo,inCrfas_codigo){
 
@@ -66,6 +66,7 @@ function DlgSeleccionDistribucion(inCrpro_codigo,inCrfas_codigo){
                             params: {
                                 inCrpro_codigo: tmpRecord.get('CRPRO_CODIGO'),
                                 inCisla_codigo:new UserSession().getUserData().CISLA_CODIGO,
+                                inCrtra_codigo:null,
                                 format: TypeFormat.JSON
                             }
                         });
@@ -115,6 +116,8 @@ function DlgSeleccionDistribucion(inCrpro_codigo,inCrfas_codigo){
             }]),
         baseParams:{
             inCrpro_codigo:null,
+            inCisla_codigo:null,
+            inCrtra_codigo:null,
             format:TypeFormat.JSON
         },
         listeners:{
@@ -361,7 +364,7 @@ function DlgSeleccionDistribucion(inCrpro_codigo,inCrfas_codigo){
                     return NO_DATA_MESSAGE;
                 }
             }
-        },{
+        },/*{
             dataIndex:'CRFAS_SUMILLA',
             header:'Comentario/Sumilla',
             width:150,
@@ -369,7 +372,7 @@ function DlgSeleccionDistribucion(inCrpro_codigo,inCrfas_codigo){
             editor:{
                 xtype:'textfield'
             }
-        },{
+        },*/{
             dataIndex:'CRFAS_TAREA_REALIZA',
             header:'Actividad',
             width:150,
@@ -468,9 +471,7 @@ function DlgSeleccionDistribucion(inCrpro_codigo,inCrfas_codigo){
         layout:'border',        
         bbar:[btnNuevoDlgSeleccionDistribucion,'->',btnCerrarDlgSeleccionDistribucion]
     });
-    /**
-     *FUNCION QUE PERMITE CARGAR DATOS
-     */
+
     function cargarDatos(){
         if(inCrpro_codigo !== null && inCrpro_codigo !== undefined){
             
@@ -488,6 +489,7 @@ function DlgSeleccionDistribucion(inCrpro_codigo,inCrfas_codigo){
                     params: {
                         inCrpro_codigo:crproCodigo,
                         inCisla_codigo:new UserSession().getUserData().CISLA_CODIGO,
+                        inCrtra_codigo:null,
                         format: TypeFormat.JSON
                     }
                 });
@@ -501,30 +503,22 @@ function DlgSeleccionDistribucion(inCrpro_codigo,inCrfas_codigo){
     }
 
     /**
-     * FUNCION MIEMBRO QUE DEVUELVE LA VENTANA WINDLGSELECCIONDISTRIBUCION.
-     * @returns VENTANA winDlgSeleccionDistribucion.
+     * Funcion miembro que devuelve la ventana winDlgSeleccionDistribucion.
+     * @returns ventana winDlgSeleccionDistribucion.
+     * @base winDlgSeleccionDistribucion.prototype.show
      */
     this.getWindow = function(){
         return winDlgSeleccionDistribucion;
     }
-    /**
-     * FUNCION MIEMBRO QUE DEVUELVE EL CODIGO DE PROCESO
-     * @returns crproCodigo CODIGO DE PROCESO
-     */
+
     this.getCrproCodigo = function(){
         return crproCodigo;
     }
-    /**
-     * FUNCION MIEMBRO QUE DEVUELVE EL CODIGO DE FASE
-     * @returns crfasCodigo CODIGO DE FASE
-     */
+
     this.getCrfasCodigo = function(){
         return crfasCodigo;
     }
-    /**
-     * FUNCION QUE DEVUELVE LA FASE DE SEGUIMIENTO
-     * @returns outResult
-     */
+
     this.getCrfasSeguimiento = function(){
         return outResult;
     }
@@ -534,49 +528,48 @@ function DlgSeleccionDistribucion(inCrpro_codigo,inCrfas_codigo){
 }
 
 /**
- * FUNCION PROTOTIPO. PERMITE MOSTRAR LA VENTANA WINFRMLISTADOCGG_RES_VOTO DESDE UNA INSTANCIA.
+ * Funcion prototipo. Permite mostrar la ventana winFrmListadoCgg_res_voto desde una instancia.
  */
 DlgSeleccionDistribucion.prototype.show = function(){
     this.getWindow().show();
 }
 /**
- * FUNCION PROTOTIPO. PERMITE CERRAR LA VENTANA WINFRMLISTADOCGG_RES_VOTO DESDE UNA INSTANCIA.
+ * Funcion prototipo. Permite cerrar la ventana winFrmListadoCgg_res_voto desde una instancia.
  */
 DlgSeleccionDistribucion.prototype.close = function(){
     this.getWindow().close();
 }
 /**
- * FUNCION PROTOTIPO. PERMITE SABER SI SE HA CERRADO LA VENTANA WINFRMLISTADOCGG_RES_VOTO,
- * CON EL FIN DE REALIZAR OTRAS ACCIONES DESDE UNA INSTANCIA.
- * @param inFunctionHandler FUNCION
+ * Funcion prototipo. Permite saber si se ha cerrado la ventana winFrmListadoCgg_res_voto,
+ * con el fin de realizar otras acciones desde una instancia.
  */
 DlgSeleccionDistribucion.prototype.closeHandler = function(inFunctionHandler){
     this.getWindow().on('close',inFunctionHandler);
 }
 
 /**
- * FUNCION PROTOTIPO. SELECIONA EL CODIGO DE PROCESO SELECCIONADO.
+ * Funcion prototipo. Seleciona el codigo de proceso seleccionado.
  */
 DlgSeleccionDistribucion.prototype.getCrproCodigo = function(){
     this.getCrproCodigo();
 }
 
 /**
- * FUNCION PROTOTIPO. SELECIONA EL CODIGO DE PROCESO SELECCIONADO.
+ * Funcion prototipo. Seleciona el codigo de proceso seleccionado.
  */
 DlgSeleccionDistribucion.prototype.getCrfasCodigo = function(){
     this.getCrfasCodigo();
 }
 
 /**
- * FUNCION PROTOTIPO. SELECIONA EL CODIGO DE PROCESO SELECCIONADO.
+ * Funcion prototipo. Seleciona el codigo de proceso seleccionado.
  */
 DlgSeleccionDistribucion.prototype.getCrfasSeguimiento = function(){
     this.getCrfasSeguimiento();
 }
 
 /**
- * FUNCION PROTOTIPO. EJECUTA LA FUNCION INTERNA PARA CARGA DE DATOS.
+ * Funcion prototipo. Ejecuta la funcion interna para carga de datos.
  */
 DlgSeleccionDistribucion.prototype.loadData = function(){
     return this.loadData;

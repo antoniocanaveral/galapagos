@@ -1,25 +1,23 @@
 package com.besixplus.sii.servlets;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.besixplus.sii.db.Cgg_res_persona;
+import com.besixplus.sii.db.ManagerConnection;
+import com.besixplus.sii.objects.ServerResponse;
+import org.json.JSONObject;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.json.JSONObject;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 //import com.besixplus.biometric.types.FingerDevice;
 //import com.besixplus.enbsp.win.Lector;
-import com.besixplus.sii.db.Cgg_res_persona;
-import com.besixplus.sii.db.ManagerConnection;
-import com.besixplus.sii.mail.Base64;
-import com.besixplus.sii.objects.ServerResponse;
 
 /**
  * Servlet implementation class Biometrico

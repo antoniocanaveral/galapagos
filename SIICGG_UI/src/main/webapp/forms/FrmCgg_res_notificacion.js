@@ -62,13 +62,13 @@ function FrmCgg_res_notificacion(INSENTENCIA_CGG_RES_NOTIFICACION,INRECORD_CGG_R
         },
         {
             dataIndex:'CRPER_APELLIDO_PATERNO',
-            header:'Apellido paterno',
+            header:'Primer apellido',
             width:150,
             sortable:true
         },
         {
             dataIndex:'CRPER_APELLIDO_MATERNO',
-            header:'Apellido materno',
+            header:'Segundo apellido',
             width:150,
             sortable:true
         },
@@ -1114,6 +1114,36 @@ function FrmCgg_res_notificacion(INSENTENCIA_CGG_RES_NOTIFICACION,INRECORD_CGG_R
         maxLength :50
 
     });
+
+//MO
+
+    var cbxTipoNotificacion = new Ext.form.ComboBox({
+        store:scCantonNotificacion,
+        id:'cbxTipoNotificacion',
+        name:'cbxTipoNotificacion',
+        displayField: "CCTN_NOMBRE",
+        fieldLabel :'Tipo Notificaci\u00f3n',
+        valueField: 'CCTN_CODIGO',
+        mode:'local',
+        typeAhead:true,
+        autoSelect:true,
+        hiddenId:'cbxCantonH',
+        hiddenName:'cbxCantonH',
+        hiddenValue:'id',
+        forceSelection:true,
+        editable: true,
+        triggerAction:'all',
+        submitValue:true,
+        anchor:'75%',
+        emptyText : 'Seleccione una opci\u00f3n..',
+        allowBlank:false
+
+    });
+
+
+//
+
+
     /**
      * Ext.form.DateField FECHA EN QUE SE REALIZO LA NOTIFICACION
      */
@@ -1219,7 +1249,9 @@ function FrmCgg_res_notificacion(INSENTENCIA_CGG_RES_NOTIFICACION,INRECORD_CGG_R
     /**
      * Ext.form.NumberField ESTATUS MIGRATORIO
      */
-    var cbxCrnot_estatus = new Ext.form.ComboBox({
+
+// MO
+/*    var cbxCrnot_estatus = new Ext.form.ComboBox({
         id:'cbxCrnot_estatus',
         name:'cbxCrnot_estatus',
         store: dttipo_estatus_migratorio,
@@ -1263,7 +1295,7 @@ function FrmCgg_res_notificacion(INSENTENCIA_CGG_RES_NOTIFICACION,INRECORD_CGG_R
                         icon: Ext.MessageBox.QUESTION
                     });
 
-                /* }else{
+                /!* }else{
 
                         Ext.Msg.show({
                             title:tituloCgg_res_notificacion,
@@ -1272,7 +1304,7 @@ function FrmCgg_res_notificacion(INSENTENCIA_CGG_RES_NOTIFICACION,INRECORD_CGG_R
                             icon: Ext.MessageBox.INFO
                         });
                         cbxCrnot_estatus.setValue()==Typeestatus_migratorio.NO_PERMITIDO;
-                    }*/
+                    }*!/
                 }
                 else{
 					
@@ -1286,7 +1318,10 @@ function FrmCgg_res_notificacion(INSENTENCIA_CGG_RES_NOTIFICACION,INRECORD_CGG_R
 
         },
         value:0
-    });
+    });*/
+//
+
+
     /**
      * Ext.form.DateField FECHA DE  AUDIENCIA PARA ANALISIS O JUSTIFICACION DE LA NOTIFICACION
      */
@@ -1405,6 +1440,138 @@ function FrmCgg_res_notificacion(INSENTENCIA_CGG_RES_NOTIFICACION,INRECORD_CGG_R
     });
     dtCrnot_fecha_expulsion.setVisible(false);
 
+// MO
+
+    /**
+     * Ext.form.DateField FECHA DE RESOLUCION
+     */
+    var dtCrnot_fecha_resolucion = new Ext.form.DateField({
+        id:'dtCrnot_fecha_resolucion',
+        name:'dtCrnot_fecha_resolucion',
+        fieldLabel :'Fecha',
+        allowBlank :true,
+        value:new Date(),
+        format:'d/m/Y',
+        submitValue:false,
+        anchor:'98%',
+        maxValue:new Date()
+    });
+    /**
+     * Ext.form.TextArea RESUMEN DEL CONTENIDO DE LA RESOLUCION
+     */
+    var txtCrnot_extracto_resolucion = new Ext.form.TextArea({
+        id:'txtCrnot_extracto_resolucion',
+        name:'txtCrnot_extracto_resolucion',
+        fieldLabel :'Extracto',
+        width:'60%',
+        allowBlank:true,
+        anchor:'98%'
+    });
+    /**
+     * Ext.form.TextField OBSERVACION REGISTRADA EN LA RESOLUCION
+     */
+    var txtCrnot_observacion_resolucion = new Ext.form.TextArea({
+        id:'txtCrnot_observacion_resolucion',
+        name:'txtCrnot_observacion_resolucion',
+        fieldLabel :'Observaci\u00f3n',
+        anchor:'98%',
+        width:'60%',
+        allowBlank :true
+    });
+
+    /**
+     * Ext.form.TextField DESCRIPCION DEL DOCUMENTO ADJUNTO
+     */
+    var txtCrnot_descripcion_adjunto_resol = new Ext.form.TextArea({
+        id:'txtCrnot_descripcion_adjunto_resol',
+        name:'txtCrnot_descripcion_adjunto_resol',
+        fieldLabel :'Descripci\u00f3n',
+        anchor:'98%',
+        allowBlank :true,
+        maxLength :100,
+        autoScroll:true
+    });
+
+    /**
+     * ARCHIVO DIGITAL ANEXO
+     */
+    var filCrnot_adjunto_resolucion = new Ext.form.FileUploadField({
+        id:'filCrnot_adjunto_resolucion',
+        name:'filCrnot_adjunto_resolucion',
+        fieldLabel :'Archivo adjunto',
+        disabled :false,
+        anchor:'98%',
+        buttonCfg: {
+            text: '',
+            iconCls: 'iconAdjunto'
+        }
+    });
+
+//
+
+// MO
+
+    /**
+     * Ext.form.DateField FECHA DE LEVANTAMIENTO SANCIÓN
+     */
+    var dtCrnot_fecha_lev_sancion = new Ext.form.DateField({
+        id:'dtCrnot_fecha_lev_sancion',
+        name:'dtCrnot_fecha_lev_sancion',
+        fieldLabel :'Fecha',
+        allowBlank :true,
+        value:new Date(),
+        format:'d/m/Y',
+        submitValue:false,
+        anchor:'98%',
+        maxValue:new Date()
+    });
+
+    /**
+     * Ext.form.TextField OBSERVACION REGISTRADA EN EL LEVANTAMIENTO DE LA SANCIÓN
+     */
+    var txtCrnot_observacion_lev_sancion = new Ext.form.TextArea({
+        id:'txtCrnot_observacion_lev_sancion',
+        name:'txtCrnot_observacion_lev_sancion',
+        fieldLabel :'Observaci\u00f3n',
+        anchor:'98%',
+        width:'60%',
+        allowBlank :true
+    });
+
+    /**
+     * ARCHIVO DIGITAL ANEXO
+     */
+    var filCrnot_adjunto_lev_resolucion = new Ext.form.FileUploadField({
+        id:'filCrnot_adjunto_lev_resolucion',
+        name:'filCrnot_adjunto_lev_resolucion',
+        fieldLabel :'Archivo adjunto',
+        disabled :false,
+        anchor:'98%',
+        buttonCfg: {
+            text: '',
+            iconCls: 'iconAdjunto'
+        }
+    });
+
+    /**
+     * ARCHIVO DIGITAL ANEXO
+     */
+    var filCrnot_adjunto_lev_sancion = new Ext.form.FileUploadField({
+        id:'filCrnot_adjunto_lev_sancion',
+        name:'filCrnot_adjunto_lev_sancion',
+        fieldLabel :'Archivo adjunto',
+        disabled :false,
+        anchor:'98%',
+        buttonCfg: {
+            text: '',
+            iconCls: 'iconAdjunto'
+        }
+    });
+
+//
+
+
+
     /**
      * Boton que permite almacenar la informacion de la ventana winFrmCgg_res_notificacion
      */
@@ -1450,14 +1617,14 @@ function FrmCgg_res_notificacion(INSENTENCIA_CGG_RES_NOTIFICACION,INRECORD_CGG_R
                 if(isEdit==true && chkCrnot_estado.getValue()==false&&tmpFecha_audiencia && tmp_estado != TypeEstadoNotificacion.EJECUTADA){
                     tmp_estado=TypeEstadoNotificacion.PROCESADA;
                 }
-                if(cbxCrnot_estatus.getValue()==Typeestatus_migratorio.PERMITIDO ){
+                /*if(cbxCrnot_estatus.getValue()==Typeestatus_migratorio.PERMITIDO ){
                     //tmp_estado=TypeEstadoNotificacion.PERMITIDO_INGRESO;
                     if (txtCrres_resolucion.getValue().length == 0)
                     {
                         txtCrres_resolucion.markInvalid("Es necesario seleccionar una resoluci\u00f3n de respaldo");
                         return;
                     }
-                }
+                }*/
 
                 Ext.getCmp('pnlCgg_res_Notificacion').getForm().submit({
                     url: URL_WS + "Cgg_res_notificacionSRV",
@@ -1661,6 +1828,31 @@ function FrmCgg_res_notificacion(INSENTENCIA_CGG_RES_NOTIFICACION,INRECORD_CGG_R
 
             ]
         },
+//MO
+
+            {
+                xtype:'panel',
+
+                layout:'column',
+                items:[
+                    {
+                        columnWidth:.6,
+                        labelWidth :110,
+                        layout:'form',
+                        items:[cbxTipoNotificacion]
+                    },
+
+                    {
+                        columnWidth:.4,
+                        labelWidth :80,
+                        layout:'form',
+                        items:[]
+                    }
+
+                ]
+            },
+
+//
 
         {
             xtype:'panel',
@@ -1709,12 +1901,16 @@ function FrmCgg_res_notificacion(INSENTENCIA_CGG_RES_NOTIFICACION,INRECORD_CGG_R
             layout:'column',
             items:[
 
-            {
+// MO
+
+            /*{
                 columnWidth:.50,
                 labelWidth :110,
                 layout:'form',
                 items:[cbxCrnot_estatus]
-            },//dtCrnot_fecha_expulsion]},
+            },//dtCrnot_fecha_expulsion]},*/
+
+//
 
             {
                 columnWidth:.50,
@@ -1864,6 +2060,131 @@ function FrmCgg_res_notificacion(INSENTENCIA_CGG_RES_NOTIFICACION,INRECORD_CGG_R
 
     });
 
+// MO
+    var pnlResolucion = new Ext.Panel({
+        id:'pnlResolucion',
+        frame:true,
+        layout:'form',
+        title: 'Resolucion',
+        // disabled:true,
+        labelWidth :110,
+        fileUpload:true,
+        items:[
+            {
+                xtype:'panel',
+                layout:'column',
+                items:[
+
+                    {
+                        columnWidth:.4,
+                        labelWidth :80,
+                        layout:'form',
+                        items:[dtCrnot_fecha_resolucion]
+                    }
+                ]
+            },
+            txtCrnot_extracto_resolucion,
+            txtCrnot_observacion_resolucion,
+
+            {
+                xtype:'fieldset',
+                checkboxToggle:true,
+                title: 'Adjunto Resolucion',
+                autoHeight:true,
+                collapsed: true,
+
+                items :[
+                    {
+                        xtype:'panel',
+                        layout:'column',
+                        fileUpload:true,
+                        items:[
+                            {
+                                columnWidth:.65,
+                                layout:'form',
+                                items:[filCrnot_adjunto_resolucion]
+                            },
+
+                            {
+                                columnWidth:.35,
+                                layout:'form',
+                                items:[btnDescargarAdjuntoNotificacion]
+                            }
+
+                        ]
+                    },txtCrnot_descripcion_adjunto_resol
+                ]
+            }
+
+        ]
+
+    });
+//
+
+// MO
+    var pnlLevSancion = new Ext.Panel({
+        id:'pnlLevSancion',
+        frame:true,
+        layout:'form',
+        title: 'Levantamiento Sanci\u00f3n',
+        // disabled:true,
+        labelWidth :110,
+        fileUpload:true,
+        items:[
+            {
+                xtype:'panel',
+                layout:'column',
+                items:[
+
+                    {
+                        columnWidth:.4,
+                        labelWidth :80,
+                        layout:'form',
+                        items:[dtCrnot_fecha_lev_sancion]
+                    }
+                ]
+            },
+            txtCrnot_observacion_lev_sancion,
+
+            {
+                xtype:'fieldset',
+                checkboxToggle:true,
+                title: 'Archivo Adjunto',
+                autoHeight:true,
+                collapsed: true,
+
+                items :[
+                    {
+                        xtype:'panel',
+                        layout:'column',
+                        fileUpload:true,
+                        items:[
+                            {
+                                columnWidth:.65,
+                                layout:'form',
+                                items:[filCrnot_adjunto_lev_sancion]
+                            },
+
+                            {
+                                columnWidth:.35,
+                                layout:'form',
+                                items:[btnDescargarAdjuntoNotificacion]
+                            }
+
+                        ]
+                    },
+                ]
+            }
+
+        ]
+
+    });
+//
+
+
+// MO
+
+/*
     var objImageDefaultNotif={
         HUELLA:'resources/images/fingerprint.jpg'
     };
@@ -2060,6 +2381,9 @@ function FrmCgg_res_notificacion(INSENTENCIA_CGG_RES_NOTIFICACION,INRECORD_CGG_R
 
         ]
     });
+*/
+
+//
 
 
     var tabNotificacion = new Ext.TabPanel({
@@ -2069,7 +2393,9 @@ function FrmCgg_res_notificacion(INSENTENCIA_CGG_RES_NOTIFICACION,INRECORD_CGG_R
         defaults:{
             autoHeight: true
         },
-        items:[pnlNotificacion,pnlAudiencia,pnlHuellaNotificacion]
+        items:[pnlNotificacion,pnlAudiencia,pnlResolucion,pnlLevSancion]
+
+// MO //items:[pnlNotificacion,pnlAudiencia,pnlHuellaNotificacion]
     });
 
 
@@ -2200,7 +2526,7 @@ function FrmCgg_res_notificacion(INSENTENCIA_CGG_RES_NOTIFICACION,INRECORD_CGG_R
                 btnGuardarCgg_res_notificacion.disable();
 
             }
-            cbxCrnot_estatus.setValue(inRecordCgg_res_notificacion.get('CRNOT_REGULARIZACION'));			
+            //cbxCrnot_estatus.setValue(inRecordCgg_res_notificacion.get('CRNOT_REGULARIZACION'));
             if(inRecordCgg_res_notificacion.get('CRNOT_REGULARIZACION')==Typeestatus_migratorio.PERMITIDO){
                 txtCrres_resolucion.setVisible(true);
                 btnCrres_codigoCgg_res_notificacion.setVisible(true);                
@@ -2217,7 +2543,7 @@ function FrmCgg_res_notificacion(INSENTENCIA_CGG_RES_NOTIFICACION,INRECORD_CGG_R
             dtCrnot_fecha_expulsion.setValue(truncDate(inRecordCgg_res_notificacion.get('CRNOT_FECHA_EXPULSION')));
             isEdit = true;
             //  cbxCanton.hiddenValue = inRecordCgg_res_notificacion.get('CCTN_CODIGO');
-            cbxCrnot_estatus.hiddenValue = inRecordCgg_res_notificacion.get('CRNOT_REGULARIZACION');
+            //cbxCrnot_estatus.hiddenValue = inRecordCgg_res_notificacion.get('CRNOT_REGULARIZACION');
             chkCrnot_estado.hideLabel=false;
             chkCrnot_estado.setVisible(true);
             dtCrnot_fecha_expulsion.setVisible(false);

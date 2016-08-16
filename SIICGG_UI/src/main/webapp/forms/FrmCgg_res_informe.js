@@ -6,9 +6,10 @@
 * @base FrmListadoCgg_res_informe
 * @author Besixplus Cia. Ltda.
 */
-function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
+function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME, inCrseg_codigo, currentRecord, isReadOnly){
     var tituloCgg_res_informe='Informe';
     var descCgg_res_informe='El formulario permite administrar informaci\u00f3n del informe';
+    var readOnly = (isReadOnly!=null && isReadOnly==true)?true:false;
     
     /**
 * Ext.form.TextField IDENTIFICATIVO UNICO DE REGISTRO DE INFORME
@@ -19,7 +20,8 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
         fieldLabel :'Codigo',
         anchor:'98%',
         allowBlank :false,
-        value:"KEYGEN",
+        disabled : readOnly,
+        value:(currentRecord!=null?currentRecord.get('CRISE_CODIGO'):null)!=null?currentRecord.get('CRISE_CODIGO'):"KEYGEN",
         hidden:true,
         hideLabel:true,
         maxLength :20
@@ -32,6 +34,8 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
         name:'txtCrseg_codigo',
         fieldLabel :'Seguimiento',
         anchor:'98%',
+        disabled : readOnly,
+        value: (currentRecord!=null?currentRecord.get('CRSEG_CODIGO'):null)!=null?currentRecord.get('CRSEG_CODIGO'):null,
         allowBlank :false,
         readOnly:'true',
         maxLength :20
@@ -66,6 +70,8 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
         name:'txtCrsec_codigo',
         fieldLabel :'Seccci\u00F3n',
         anchor:'98%',
+        disabled : readOnly,
+        value:(currentRecord!=null?currentRecord.get('CRSEC_CODIGO'):null)!=null?currentRecord.get('CRSEC_CODIGO'):null,
         allowBlank :false,
         readOnly:'true',
         maxLength :20
@@ -99,6 +105,9 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
         id:'txtCrinf_numero_informe',
         name:'txtCrinf_numero_informe',
         fieldLabel :'N\u00FAmero',
+        disabled : readOnly,
+        value:(currentRecord!=null?currentRecord.get('CRISE_NUMERO_INFORME'):null)!=null?currentRecord.get('CRISE_NUMERO_INFORME'):null,
+        readOnly:((currentRecord!=null?currentRecord.get('CRISE_NUMERO_INFORME'):null)!=null?true:false),
         anchor:'60%',
         allowBlank :false,
         maxLength :20
@@ -106,12 +115,20 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
     /**
 * Ext.form.DateField FECHA DE REALIZACION DEL INFORME
 */
+    var selectedDate = (currentRecord!=null?currentRecord.get('CRISE_FECHA_INFORME'):null);
+    console.log("SelectedDate: "+selectedDate);
+    if(selectedDate!=null)
+        selectedDate = selectedDate.split(" ")[0].split('-').reverse().join('/');
+    else
+        selectedDate = CURRENT_DATE;
+
     var dtCrinf_fecha_informe = new Ext.form.DateField({
         id:'dtCrinf_fecha_informe',
         name:'dtCrinf_fecha_informe',
         fieldLabel :'Fecha',
         allowBlank :false,
-        value:CURRENT_DATE,
+        disabled : readOnly,
+        value: selectedDate,
         format:'d/m/Y',
 		maxValue:CURRENT_DATE
     });
@@ -123,6 +140,8 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
         name:'txtCrinf_asunto_informe',
         fieldLabel :'Asunto',
         anchor:'98%',
+        disabled : readOnly,
+        value:(currentRecord!=null?currentRecord.get('CRISE_ASUNTO_INFORME'):null)!=null?currentRecord.get('CRISE_ASUNTO_INFORME'):null,
         allowBlank :true,
         maxLength :100
     });
@@ -134,6 +153,8 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
         name:'txtCrinf_extracto_informe',
         fieldLabel :'Extracto',
         anchor:'98%',
+        disabled : readOnly,
+        value:(currentRecord!=null?currentRecord.get('CRISE_EXTRACTO_INFORME'):null)!=null?currentRecord.get('CRISE_EXTRACTO_INFORME'):null,
         enableFontSize:false,
         enableLinks:false,
         height:100,
@@ -183,6 +204,17 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
         return flag;
     }
 
+    var adjunto = new Ext.ux.form.AlfrescoFM({
+        id:'compAdjunto',  //(opcional)
+        name:'compAdjunto',       //(opcional)
+        fieldLabel :'Adjuntos',         //(opcional -> Despliega la etiqueta del comoponente. Si no se define, aparece solo el botón)
+        text: 'Adjunto',                //(opcional -> Texto del botón)
+        tableName : 'Cgg_res_informe_seguimiento',
+        isReadOnly: readOnly,
+        validateRecordID:true,
+        recordID : txtCrinf_codigo.value
+    });
+
     var btnGuardarCgg_res_informe = new Ext.Button({
         id:'btnGuardarCgg_res_informe',
         text:'Guardar',
@@ -196,10 +228,15 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
                 pnlCgg_res_Adjunto.getForm().submit({
                     url:URL_WS+"InformeAdjuntoSeguimientoSRV",
                     success:function(inForm,inAction){
-                        pnlCinfoComponentes.getEl().unmask();                        
-                        if(inAction.result.msg.trim()=='true'){
+                        pnlCinfoComponentes.getEl().unmask();
+                        var res = inAction.result.msg.trim().split(",");
+                        if(res[0]=='true'){
                             Ext.MsgPopup.msg(tituloCgg_res_informe,"El informe ha sido registrado!.", MsgPopup.INFO);
-                            winFrmCgg_res_informe.close()
+                            if(res.length>1) {
+                                INSENTENCIA_CGG_RES_INFORME = "update";
+                                adjunto.recordID = res[1];
+                            }
+                            //winFrmCgg_res_informe.close()
                         }                        
                     },
                     failure:function(inForm,inAction){
@@ -216,7 +253,7 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
                         inCrise_extracto_informe:txtCrinf_extracto_informe.getValue(),
                         inCrise_descripcion_adjunto:txtCrinf_descripcion_adjunto.getValue()
                     }
-                });                      
+                });
             }
         }
     });
@@ -255,7 +292,8 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
         labelWidth :90,
         height:130,
         fileUpload:true,
-        items:[filCrinfo_archivo_adjunto,txtCrinf_descripcion_adjunto]
+        items:[adjunto]
+        //items:[filCrinfo_archivo_adjunto,txtCrinf_descripcion_adjunto]
     });
 
     var pnlfsCgg_res_Adjunto = new Ext.form.FieldSet({
@@ -296,37 +334,37 @@ function FrmCgg_res_informe(INSENTENCIA_CGG_RES_INFORME,inCrseg_codigo){
 */
     this.getWindow = function(){
         return winFrmCgg_res_informe;
-    }
+    };
     /**
 * Funcion miembro que carga los controles de la ventana winFrmCgg_res_informe.
 * @base FrmCgg_res_informe.prototype.loadData
 */
     this.loadData = function(){
         cargarCgg_res_informeCtrls();
-    }
+    };
 }
 /**
 * Funcion prototipo. Permite mostrar la ventana winFrmCgg_res_informe desde una instancia.
 */
 FrmCgg_res_informe.prototype.show = function(){
     this.getWindow().show();
-}
+};
 /**
 *Funcion prototipo. Permite cerrar la ventana winFrmCgg_res_informe desde una instancia.
 */
 FrmCgg_res_informe.prototype.close = function(){
     this.getWindow().close();
-}
+};
 /**
 * Funcion prototipo. Permite saber si se ha cerrado la ventana winFrmCgg_res_informe,
 * con el fin de realizar otras acciones desde una instancia.
 */
 FrmCgg_res_informe.prototype.closeHandler = function(inFunctionHandler){
     this.getWindow().on('close',inFunctionHandler);
-}
+};
 /**
 * Funcion prototipo. Permite cargar los controles de la ventana winFrmCgg_res_informe desde una instancia.
 */
 FrmCgg_res_informe.prototype.loadData = function(){
     this.loadData();
-}
+};

@@ -9,9 +9,12 @@ import org.quartz.JobExecutionException;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -34,7 +37,7 @@ public class SendMailJob implements Job{
 			tmpCon.close();
 			
 			for (Cgg_buzon_correo tmpCorreo : tmpCorreos) {
-				//new SendMailThread(tmpCorreo, tmpConf.getCGCNF_VALOR_CADENA()).start();
+				new SendMailThread(tmpCorreo, tmpConf.getCGCNF_VALOR_CADENA()).start();
 			}
 			
 			tmpCorreos.clear();
@@ -73,17 +76,31 @@ class SendMailThread extends Thread{
 		        	new com.besixplus.sii.db.Cgg_configuracion(tmpConf1).select(tmpCon1);		        	
 		        	tmpMessage.setFrom(new InternetAddress(tmpConf1.getCGCNF_VALOR_CADENA()));
 				} catch (SQLException e) {
-					e.printStackTrace();					
-					tmpMessage.setFrom();
+					e.printStackTrace();
 				}
 				tmpCon1.close();
-			}else			
-				tmpMessage.setFrom();
+			}
+
 			tmpMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(myCorreo.getCBZC_DESTINATARIO()));
 			tmpMessage.addRecipient(Message.RecipientType.CC, new InternetAddress(myEmailCC));
 			tmpMessage.setSubject(myCorreo.getCBZC_ASUNTO());
-			tmpMessage.setContent(myCorreo.getCBZC_MENSAJE()!=null?myCorreo.getCBZC_MENSAJE():"", myCorreo.getCBZC_TIPO_CONTENIDO());
+
+			Multipart multipart = new MimeMultipart( "alternative" );
+			MimeBodyPart mailBody = new MimeBodyPart();
+			if(myCorreo.getCBZC_TIPO_CONTENIDO().equals("html")){
+				mailBody.setContent( myCorreo.getCBZC_MENSAJE()!=null?myCorreo.getCBZC_MENSAJE():"<h1>Omita este correo</h1>", "text/html; charset=utf-8" );
+			}else if(myCorreo.getCBZC_TIPO_CONTENIDO().equals("text")){
+				mailBody.setText(myCorreo.getCBZC_MENSAJE()!=null?myCorreo.getCBZC_MENSAJE():"Omita este correo","utf-8");
+			}else{
+				//Intentamos enviarlo como html
+				mailBody.setContent( myCorreo.getCBZC_MENSAJE()!=null?myCorreo.getCBZC_MENSAJE():"<h1>Omita este correo</h1>", "text/html; charset=utf-8" );
+			}
+			multipart.addBodyPart(mailBody);
+			tmpMessage.setContent(multipart);
+			tmpMessage.saveChanges();
+
 			Transport.send(tmpMessage);
+
 			myCorreo.setCBZC_ENVIADO(true);
 		} catch (MessagingException e) {
 			e.printStackTrace();

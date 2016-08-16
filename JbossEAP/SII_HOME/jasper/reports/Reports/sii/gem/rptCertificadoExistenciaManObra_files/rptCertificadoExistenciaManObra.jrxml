@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="595" pageHeight="841" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.2396694214876032"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="60"/>
+	<property name="ireport.jasperserver.reportUnit" value="/Reports/sii/gem/rptCertificadoExistenciaManObra"/>
+	<property name="ireport.jasperserver.url" value="http://190.95.187.82:8081/jasperserver/services/repository"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["E:\\CGG\\APP\\REPORTS\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CGVCN_CODIGO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+	VAC.CGVCN_NUMERO_MANOBRA,
+	SII.F_RPT_NOMBRE_OFERTANTE(VAC.CGVCN_USUARIO_INSERT,1) AS CUSU_RESPONSABLE,
+          CISLA_NOMBRE,
+	CGCRG_NOMBRE,
+	SII.F_RPT_NOMBRE_OFERTANTE(VAC.CUSU_CODIGO) AS CGVCN_OFERTANTE,
+	VAC.CGVCN_DIRECCION,
+	DATE(VAC.CGVCN_FECHA_MANOBRA) AS CGVCN_FECHA_MANOBRA,
+	CASE
+		WHEN VAC.CGVCN_EXISTENCIA_MANOBRA = 0 THEN '<b>NO</b> se han receptado '
+		WHEN VAC.CGVCN_EXISTENCIA_MANOBRA = 1 THEN '<b>SI</b> se ha receptado '||(SELECT COUNT(CGVCN_CODIGO) FROM CGG_GEM_CANDIDATO CA WHERE CA.CGVCN_CODIGO=VAC.CGVCN_CODIGO and CA.CGCND_SELECCIONADO in (1,3,4,5))
+	END AS CGVCN_MENSAJE_MANOBRA,
+         (SELECT COUNT(CGVCN_CODIGO) FROM CGG_GEM_CANDIDATO CA WHERE CA.CGVCN_CODIGO=VAC.CGVCN_CODIGO ) AS CGVCN_NUMERO_CARPETAS,
+         CASE
+          WHEN (SELECT COUNT(CGVCN_CODIGO) FROM CGG_GEM_CANDIDATO CA WHERE CA.CGVCN_CODIGO=VAC.CGVCN_CODIGO )>1 THEN 's'
+          WHEN (SELECT COUNT(CGVCN_CODIGO) FROM CGG_GEM_CANDIDATO CA WHERE CA.CGVCN_CODIGO=VAC.CGVCN_CODIGO )=1 THEN ''
+         END AS CGVCN_MENSAJE_CARPETAS,
+	VAC.CGVCN_EXISTENCIA_MANOBRA,
+	VAC.CGVCN_numero_vacantes,
+	CASE
+	  WHEN SII.F_RPT_PERSONA_TIPO(VAC.CUSU_CODIGO)::BOOLEAN = FALSE THEN ' '
+	  WHEN SII.F_RPT_PERSONA_TIPO(VAC.CUSU_CODIGO)::BOOLEAN = TRUE THEN 'el Señor(a)'
+	END AS CGVCN_DESCRIPCION_TRABAJO,
+	VAC.CGVCN_NUMERO_COMUNICADO,
+	VAC.CGVCN_FECHA_PUBLICACION
+FROM SII.CGG_GEM_VACANTE VAC
+INNER JOIN SII.CGG_ISLA ISL ON ISL.CISLA_CODIGO = VAC.CISLA_CODIGO
+INNER JOIN SII.CGG_GEM_CARGO CAR ON CAR.CGCRG_CODIGO = VAC.CGCRG_CODIGO
+WHERE VAC.CGVCN_ESTADO = TRUE
+AND VAC.CGVCN_NUMERO_MANOBRA IS NOT NULL
+AND VAC.CGVCN_CODIGO = $P{P_CGVCN_CODIGO}]]>
+	</queryString>
+	<field name="cgvcn_numero_manobra" class="java.lang.String"/>
+	<field name="cusu_responsable" class="java.lang.String"/>
+	<field name="cisla_nombre" class="java.lang.String"/>
+	<field name="cgcrg_nombre" class="java.lang.String"/>
+	<field name="cgvcn_ofertante" class="java.lang.String"/>
+	<field name="cgvcn_direccion" class="java.lang.String"/>
+	<field name="cgvcn_fecha_manobra" class="java.sql.Date"/>
+	<field name="cgvcn_mensaje_manobra" class="java.lang.String"/>
+	<field name="cgvcn_numero_carpetas" class="java.lang.Long"/>
+	<field name="cgvcn_mensaje_carpetas" class="java.lang.String"/>
+	<field name="cgvcn_existencia_manobra" class="java.lang.Integer"/>
+	<field name="cgvcn_numero_vacantes" class="java.lang.Integer"/>
+	<field name="cgvcn_descripcion_trabajo" class="java.lang.String"/>
+	<field name="cgvcn_numero_comunicado" class="java.lang.String"/>
+	<field name="cgvcn_fecha_publicacion" class="java.sql.Timestamp"/>
+	<variable name="V_FECHA_ACTUAL" class="java.util.Date">
+		<variableExpression><![CDATA[new Date()]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="32" splitType="Stretch">
+			<subreport>
+				<reportElement x="3" y="0" width="551" height="32"/>
+				<subreportParameter name="SUBREPORT_DIR"/>
+				<subreportParameter name="P_SUBTITULO_2">
+					<subreportParameterExpression><![CDATA[""]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="P_SUBTITULO_1">
+					<subreportParameterExpression><![CDATA[""]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptEncabezado"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="1" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="300" splitType="Stretch">
+			<textField pattern="">
+				<reportElement positionType="Float" x="14" y="49" width="334" height="20"/>
+				<textElement markup="html">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cisla_nombre}+" "+new java.text.SimpleDateFormat("EEEEE, dd MMMMM yyyy").format($F{cgvcn_fecha_manobra})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="151" y="17" width="119" height="20"/>
+				<textElement verticalAlignment="Top">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CERTIFICACIÓN ]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="14" y="184" width="521" height="97">
+					<printWhenExpression><![CDATA[( $F{cgvcn_existencia_manobra}.intValue()==1 ? true : false )]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Justified" markup="html">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["<b>Nota:</b> Según <b>Resolución No 6623-CCCRI-29-VIII-2008,</> emitida por el Comité de Calificación y Control de Residencia del Consejo del INGALA, en su <b> Art.1</b> manifiesta que \" En el caso que el certificado de existencia de mano de obra otorgado por el <b>INGALA</b> señale que <b> si existe personal calificado para ocupar el cargo,</b> las Unidades de Control de Residencia <b> designará un delegado para que esté presente en el momento de la entrevista y adherirá su firma de responsabilidad en los informes técnicos presentados</b> \" ."]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement positionType="Float" x="14" y="173" width="521" height="5">
+					<printWhenExpression><![CDATA[( $F{cgvcn_existencia_manobra}.intValue()==1 ? true : false )]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="P_CGVCN_CODIGO">
+					<subreportParameterExpression><![CDATA[$P{P_CGVCN_CODIGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:rptCandidatosCertificadosManObra"]]></subreportExpression>
+			</subreport>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="15" y="1" width="522" height="14" isPrintWhenDetailOverflows="true">
+					<printWhenExpression><![CDATA[( $F{cgvcn_existencia_manobra}.intValue()==1 ? false : true)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Justified" markup="html">
+					<font size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["<br><br><br><br><br><br><br> "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="14" y="104" width="522" height="67" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["De acuerdo a Comunicado  N.- "+$F{cgvcn_numero_comunicado}+" de fecha "+new java.text.SimpleDateFormat("dd MMMMM yyyy").format($F{cgvcn_fecha_publicacion})+" y una vez realizado el proceso de selección y búsqueda a través de los medios de comunicación a nivel local y provincial, en "+$F{cisla_nombre}.toUpperCase()+" "+$F{cgvcn_mensaje_manobra}+" carpeta(s), para llenar la(s) vacante(s) solicitada(s) por "+$F{cgvcn_descripcion_trabajo}+" <b>"+$F{cgvcn_ofertante}.toUpperCase()+"</b>:"+
+(($F{cgvcn_existencia_manobra}.intValue() == 1)?"<br><br><b>":" para <b>")+(($F{cgvcn_existencia_manobra}.intValue() == 1)?$F{cgvcn_numero_vacantes}:"") +" "+$F{cgcrg_nombre}+"</b>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="270" y="17" width="235" height="20"/>
+				<textElement verticalAlignment="Top">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cgvcn_numero_manobra}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="14" y="79" width="522" height="19" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["El/La suscrito(a) <b>"+$F{cusu_responsable}.toUpperCase()+", COORDINADOR(A) DEL SISTEMA DE GESTION DE EMPLEO CERTIFICA:</b> "]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="51" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="18" width="554" height="13"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptPie"]]></subreportExpression>
+			</subreport>
+			<textField pattern="EEEEE dd MMMMM yyyy  HH:mm:ss">
+				<reportElement x="3" y="3" width="168" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="2" y="1" width="552" height="1"/>
+			</line>
+			<textField evaluationTime="Report">
+				<reportElement x="530" y="4" width="17" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="482" y="3" width="23" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Pág.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="505" y="3" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="518" y="3" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[de ]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="191">
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="FixRelativeToBottom" x="15" y="0" width="522" height="16" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center" markup="html">
+					<font size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Atentamente,"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="FixRelativeToBottom" x="15" y="57" width="522" height="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cusu_responsable}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="FixRelativeToBottom" x="151" y="71" width="266" height="36" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center" markup="html">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["COORDINADOR(A)  SISTEMA DE GESTION DE EMPLEO "+ $F{cisla_nombre}.toUpperCase()+"."]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="0" y="129" width="554" height="13"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptPie"]]></subreportExpression>
+			</subreport>
+			<textField pattern="EEEEE dd MMMMM yyyy HH:mm:ss">
+				<reportElement x="3" y="114" width="168" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="2" y="112" width="552" height="1"/>
+			</line>
+			<textField evaluationTime="Report">
+				<reportElement x="530" y="115" width="17" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="482" y="114" width="23" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Pág.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="505" y="114" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="518" y="114" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[de ]]></text>
+			</staticText>
+		</band>
+	</lastPageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

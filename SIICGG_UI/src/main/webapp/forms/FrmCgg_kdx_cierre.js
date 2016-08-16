@@ -564,13 +564,20 @@ function FrmCgg_kdx_cierre(IN_SENTENCIA_CGG_KDX_CIERRE,IN_RECORD_CGG_KDX_CIERRE)
                 if (!pnlCgg_kdx_cierre.getForm().isValid()){
                     return;
                 }
-                if (numCkcrr_diferencia.getValue()==0){
+                if (numCkcrr_diferencia.getValue()==0)
+                {
                     guardarCierre();
-                }else{
-                    function Guardar(btn){
+                }
+                else
+                {
+                    function Guardar(btn)
+                    {
                         if (btn=='yes'){
+
                             guardarCierre();
-                        }else{
+                        }
+                        else
+                        {
                             return;
                         }
                     }
@@ -581,7 +588,10 @@ function FrmCgg_kdx_cierre(IN_SENTENCIA_CGG_KDX_CIERRE,IN_RECORD_CGG_KDX_CIERRE)
                         fn:Guardar,
                         icon: Ext.MessageBox.INFO
                     });
+
+
                 }
+
             }
         }
     });

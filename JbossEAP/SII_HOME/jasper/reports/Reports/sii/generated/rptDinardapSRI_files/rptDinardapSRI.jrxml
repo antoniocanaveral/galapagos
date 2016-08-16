@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptDinardapCedula" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryWithPageHeaderAndFooter="true" whenResourceMissingType="Empty" uuid="faf0c0ac-9091-4e29-8120-c456bf763229">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="org.json.JSONObject"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#EFF7FF"/>
+		</conditionalStyle>
+	</style>
+	<subDataset name="SRIEstablecimiento" uuid="08f73c24-23c1-476c-8bcd-094d7011b831">
+		<field name="numeroRuc" class="java.lang.String">
+			<fieldDescription><![CDATA[numeroRuc]]></fieldDescription>
+		</field>
+		<field name="numeroEstableciminiento" class="java.lang.String">
+			<fieldDescription><![CDATA[numeroEstableciminiento]]></fieldDescription>
+		</field>
+		<field name="nombreFantasiaComercial" class="java.lang.String">
+			<fieldDescription><![CDATA[nombreFantasiaComercial]]></fieldDescription>
+		</field>
+		<field name="estadoEstablecimiento" class="java.lang.String">
+			<fieldDescription><![CDATA[estadoEstablecimiento]]></fieldDescription>
+		</field>
+		<field name="numero" class="java.lang.String">
+			<fieldDescription><![CDATA[numero]]></fieldDescription>
+		</field>
+	</subDataset>
+	<parameter name="CEDULA_DATOS" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select 1]]>
+	</queryString>
+	<field name="?column?" class="java.lang.Integer"/>
+	<pageFooter>
+		<band height="20">
+			<staticText>
+				<reportElement x="307" y="0" width="128" height="20" uuid="8934d128-9cc4-43c7-bdc0-f2c3900cdf0e"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha de Generación:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy h.mm a">
+				<reportElement x="435" y="0" width="120" height="20" uuid="bd7b089d-f1a2-41d6-ba5b-9e513020fe55"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="314" splitType="Stretch">
+			<frame>
+				<reportElement x="13" y="48" width="527" height="192" uuid="e1cb7328-b38e-4732-a74b-29d4b6a99936"/>
+				<box>
+					<topPen lineWidth="2.0" lineColor="#999999"/>
+					<leftPen lineWidth="2.0" lineColor="#999999"/>
+					<bottomPen lineWidth="2.0" lineColor="#999999"/>
+					<rightPen lineWidth="2.0" lineColor="#999999"/>
+				</box>
+				<staticText>
+					<reportElement x="4" y="125" width="170" height="20" forecolor="#006699" uuid="1c285a62-a350-4479-a143-453864629260"/>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[ACTIVIDAD PRINCIPAL]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="174" y="125" width="343" height="64" uuid="aba0c891-9a26-4c0e-aa32-edc6b0571e1d"/>
+					<box leftPadding="2"/>
+					<textElement textAlignment="Justified" verticalAlignment="Top">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("actividadEconomicaPrincipal")]]></textFieldExpression>
+				</textField>
+			</frame>
+			<staticText>
+				<reportElement x="17" y="83" width="170" height="20" forecolor="#006699" uuid="08a37860-e49f-4b6d-bec2-1569ee2e94a9"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[TIPO DE CONTRIBUYENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="17" y="113" width="170" height="20" forecolor="#006699" uuid="4130b39b-3b84-41b5-92eb-31681c025b9a"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[RAZON SOCIAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="17" y="53" width="170" height="20" forecolor="#006699" uuid="b9357a5a-291d-47eb-bab5-eb9669e46512"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Nº. RUC]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="187" y="83" width="343" height="20" uuid="a04b116b-e0a3-4e34-b84b-9cdfc161def3"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("personaSociedad")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="187" y="53" width="153" height="20" uuid="dbdd5497-c8ab-40bb-a9a0-95325effaba7"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CEDULA_DATOS}!=null?(new org.json.JSONObject($P{CEDULA_DATOS})).getString("numeroRuc"):""]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="17" y="143" width="170" height="20" forecolor="#006699" uuid="7afdcbd6-a5d0-41ec-a24b-64f65cc63c19"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[FECHA DE INICIO DE ACTIVIDADES]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="187" y="113" width="343" height="30" uuid="13173b6e-f568-40e5-bc4b-9ab63b8fd1b3"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Top">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("razonSocial")]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement x="187" y="143" width="343" height="20" uuid="a2210909-747e-4695-b20d-4d44d69d50ac"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("fechaInicioActividades")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="16" uuid="b38a111d-1577-4905-99a0-d109841eac6d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Este Documento Sustituye al RUC y es válido solamente para el Sistema Integral del CGG ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="16" width="555" height="20" uuid="eb583b77-efc4-477d-ba09-fd9f22060d70"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Documento Generado a partir de los datos obtenidos del Servicio del SRI]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement key="table" style="table" x="13" y="269" width="527" height="45" uuid="4293da26-168f-44a5-ae24-8d3829e88e88"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="SRIEstablecimiento" uuid="c135f923-b4aa-4dbc-9dea-30f1dc1047a8">
+						<dataSourceExpression><![CDATA[(new net.sf.jasperreports.engine.data.JsonDataSource(new ByteArrayInputStream(((new org.json.JSONObject($P{CEDULA_DATOS})).getString("SRIEstablecimiento")).getBytes("UTF-8"))))]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="90" uuid="f5e0066e-a3a6-4d5e-9844-11f69353344b">
+						<jr:tableHeader style="table_TH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="33026569-ea7f-4220-a169-4ab175281f87"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[RUC]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="a23e4fc0-972b-47b3-a752-cf6360e2514c"/>
+								<textElement verticalAlignment="Middle">
+									<paragraph leftIndent="1"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{numeroRuc}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="30" uuid="79948fe0-a079-422b-83a7-a8cac1fedecf">
+						<jr:tableHeader style="table_TH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="30" height="30" uuid="0373caa9-37a0-4b19-98df-28615c84bcd8"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[#]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="30" height="20" uuid="50f43d29-572b-41b3-a3b2-633a934379dd"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<paragraph leftIndent="1"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{numeroEstableciminiento}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="212" uuid="e34a4829-7f77-4f88-ab75-f7b2f0da20f4">
+						<jr:tableHeader style="table_TH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="212" height="30" uuid="9e7a751e-a30c-4073-9cb3-c37b984fbfcd"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[NOMBRE COMERCIAL]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="212" height="20" uuid="19db80a9-4b0a-49b0-8859-fbf56e4515ab"/>
+								<textElement verticalAlignment="Middle">
+									<paragraph leftIndent="1"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{nombreFantasiaComercial}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="83" uuid="3cb2dca5-f084-476e-bbaf-7e4f15164c33">
+						<jr:tableHeader style="table_TH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="83" height="30" uuid="4a387f49-2d5e-4147-8ef9-12c4c458fe7b"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[ESTADO]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="83" height="20" uuid="6d8e0014-ea0e-45bf-ab13-a9d7bc69d883"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<paragraph leftIndent="1"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{estadoEstablecimiento}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="110" uuid="838fbf7a-8b36-4bd8-849a-c25ad69f11af">
+						<jr:tableHeader style="table_TH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="110" height="30" uuid="e380e005-4c4f-4106-a364-1fa27e175d9f"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[NUMERO]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="110" height="20" uuid="da27c7e6-d1a0-42a3-a894-57fcfcb86bef"/>
+								<textElement verticalAlignment="Middle">
+									<paragraph leftIndent="1"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{numero}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<staticText>
+				<reportElement x="13" y="245" width="527" height="20" forecolor="#006699" uuid="ce210190-46d0-4ba8-9d26-9463e0d396d6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DETALLE DE ESTABLECIMIENTOS]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

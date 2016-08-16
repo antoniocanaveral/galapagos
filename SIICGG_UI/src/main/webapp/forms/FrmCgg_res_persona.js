@@ -807,7 +807,7 @@ function FrmCgg_res_persona(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_RES_PERSONA
     var txtCrper_apellido_paterno = new Ext.form.TextField({
         id:'txtCrper_apellido_paterno',
         name:'txtCrper_apellido_paterno',
-        fieldLabel :'Apellido paterno',
+        fieldLabel :'Primer apellido',
         anchor:'98%',
         allowBlank :false,
         invalidText : 'Es necesario ingresar el apellido  de la persona '
@@ -818,7 +818,7 @@ function FrmCgg_res_persona(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_RES_PERSONA
     var txtCrper_apellido_materno = new Ext.form.TextField({
         id:'txtCrper_apellido_materno',
         name:'txtCrper_apellido_materno',
-        fieldLabel :'Apellido materno',
+        fieldLabel :'Segundo apellido',
         anchor:'98%',
         allowBlank : true
     });
@@ -2880,6 +2880,18 @@ function FrmCgg_res_persona(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_RES_PERSONA
         labelWidth :100
     });
 
+    //AC==>
+    var btnAdjuntos = new Ext.ux.form.AlfrescoFM({
+        id:'compAdjunto',   //(opcional)
+        name:'compAdjunto', //(opcional)
+        text: 'Adjuntos',    //(opcional -> Texto del botón)
+        tableName: 'Cgg_res_persona',
+        validateRecordID:true,
+        recordID : INRECORD_CGG_RES_PERSONA.id,
+        filter : null
+    });
+    //<== AC
+
     /**
      * Ext.Window Ventana en la que reside los controles necesarios para administrar la informacion de los registros de la tabla Cgg_res_persona.
      */
@@ -2898,7 +2910,7 @@ function FrmCgg_res_persona(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_RES_PERSONA
         layout:'anchor',
         modal:true,
         constrain:true,
-        bbar:[btnGuardarCgg_res_persona,btnMasAcciones,btnCancelarCgg_res_persona,'->',btnCerrarCgg_res_persona],
+        bbar:[btnGuardarCgg_res_persona,btnCancelarCgg_res_persona,btnMasAcciones,'-',btnAdjuntos,'->',btnCerrarCgg_res_persona],
         listeners:{
             show:function()
             {

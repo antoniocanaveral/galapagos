@@ -175,6 +175,8 @@ draw2d.Start.prototype.onDoubleClick=function()
      });		*/
 }
 
+
+
 draw2d.Start.prototype.onContextMenu= function()
 {
     var myCrpro_codigo = this.data.get('CRPRO_CODIGO');

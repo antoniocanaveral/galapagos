@@ -172,7 +172,6 @@ function FrmCgg_tct_adjunto_csv(inDesktop) {
                 tooltip: 'Ver detalle del proceso',
                 handler: function(grid, rowIndex, colIndex) {
                     var tmpRecord = grid.getStore().getAt(rowIndex).get("validacion");
-					alert(tmpRecord.dataSet);
                     if (tmpRecord.resultadoValidacion == 'false'){
                         Ext.Msg.show({
                             title:'Error validaci\u00f3n',
@@ -235,7 +234,6 @@ function FrmCgg_tct_adjunto_csv(inDesktop) {
         proxy  : new Ext.data.MemoryProxy([]),
         listeners:{
             load:function( store, recs){
-				
                 var record;
                 var arrRows= new Array();
 
@@ -245,13 +243,80 @@ function FrmCgg_tct_adjunto_csv(inDesktop) {
                     if(record.get("validacion").resultadoValidacion != 'false')
                     {
                       arrRows.push(i);
+
                     }
                 }
-				sm.unlock();
                 sm.selectRows(arrRows);
                 sm.lock();
-                btnGuardarCgg_tct_adjunto_csv.enable();
-			}
+
+                    btnGuardarCgg_tct_adjunto_csv.enable();
+    
+
+                /*
+                 grdLstDatosCSV.getEl().mask("Validando datos de personas...",'x-mask-loading');
+                 btnGuardarCgg_tct_adjunto_csv.disable();
+                 var k=0;
+                 var TmpMsg ="";
+                 var arrRows= new Array();
+                 sm.unlock();
+                 function validarReglas(r){
+                 if (r) {
+                 var h = eval("("+r+")");
+                 if (h.resultadoValidacion == "true")	arrRows.push(k-1);
+                 recs[k-1].set("MSG",h);
+                 recs[k-1].commit();
+                 }else if (k>0){
+                 recs[k-1].set("MSG",{resultadoValidacion:"true"});
+                 recs[k-1].commit();
+                 arrRows.push(k-1);
+                 }
+                 if (recs.length<=k){
+                 sm.selectRows(arrRows);
+                 sm.lock();
+                 btnGuardarCgg_tct_adjunto_csv.enable();
+                 grdLstDatosCSV.getEl().unmask();
+                 return Ext.util.JSON.decode(r);
+                 }
+                 var tmpRec = recs[k];
+
+                 tmpCarpt_codigo_origen = tmpRec.get("AORIGEN");
+                 tmpNumeroDocumento = tmpRec.get("NUMPASS");
+                 k++;
+                 //Obtiene el copdigo de la persona
+                 function CallBackCgg_tct_csv_persona(r){
+                 var tmpSelect = Ext.util.JSON.decode(r);
+                 if (tmpSelect.length > 0){
+                 tmpCrper_codigo = tmpSelect[0].CRPER_CODIGO;
+                 if (tmpCrper_codigo){
+                 try{
+                 var objReglasValidacion  = Ext.decode(tmpObjReglasValidacionCsv );
+                 for(var i=0;i<objReglasValidacion.length;i++){
+                 var objTmp = Ext.decode(objReglasValidacion[i].CRTSE_CAMPO_EVALUACION)[0];
+                 for (var key in objTmp)	objTmp[key] = eval(objTmp[key]);
+                 objReglasValidacion[i].CRTSE_CAMPO_EVALUACION ='['+Ext.encode(objTmp)+']';
+                 }
+                 objReglasValidacion=Ext.encode(objReglasValidacion);
+                 var param = new SOAPClientParameters();
+                 param.add('inJSON_reglas_validacion',objReglasValidacion);
+                 param.add('jsonData',null);
+                 SOAPClient.invoke(URL_WS+'Cgg_regla_validacion' ,'ejecutarReglaTipoSolicitud',param, true, validarReglas);
+                 }catch(inErr){
+                 Ext.MsgPopup.msg("Error", "No se ha podido validar la informaci\u00f3n a almacenar.\nError:"+inErr);
+                 pnlOrganizacion.getEl().unmask();
+                 return false;
+                 }
+                 }else
+                 validarReglas();
+                 }else
+                 validarReglas();
+                 }
+                 var param = new SOAPClientParameters();
+                 param.add('inCrper_num_doc_identific',tmpNumeroDocumento);
+                 param.add('format',TypeFormat.JSON);
+                 SOAPClient.invoke(URL_WS+"Cgg_res_persona",'selectNumDoc',param, true, CallBackCgg_tct_csv_persona);
+                 }
+                 validarReglas();
+                 */}
         }
     });
 

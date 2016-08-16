@@ -424,6 +424,7 @@ $(function() {
         //Consulta de regla de validacion.
         var scpReglaValidacion= new SOAPClientParameters();
         scpReglaValidacion.add('inCrtst_codigo',$(this).val());
+        scpReglaValidacion.add('inCrtt_codigo',$("#cbxTipoTramite").val());
         scpReglaValidacion.add('format',TypeFormat.JSON);
         var tmpReglaValidacion = SOAPClient.invoke(URL_WS+'Cgg_regla_validacion','selectReglaTipoSolicitud',scpReglaValidacion, false,null);
         try{
@@ -985,6 +986,10 @@ $(function() {
         param.add('inNuevoBeneficiarioJSON',null) ;
         param.add('inContactoPersonaJSON',inContactosJSON);//'[]') ;
         param.add('inInfoVehiculos',objVehiculo?objVehiculo:null) ;
+        param.add('inCrtra_fecha_ingreso', null);
+        param.add('inCrtra_fecha_salida', null);
+        param.add('inCrtra_actividad_residencia', null);
+        param.add('inRep_crper_codigo',null);
         SOAPClient.invoke(URL_WS+"Cgg_res_tramite",'registrarTramiteLite',param, true, CallBackCgg_res_tramite);
     });
     /*
@@ -1244,11 +1249,16 @@ $(function() {
             // cggcrperCodigo = tmpRecordBeneficiario[0].CRPER_CODIGO!=undefined?tmpRecordBeneficiario[0].CRPER_CODIGO:null;
             crperNumDocIdentific = $('#txtNumDocBeneficiario').val();
             cvvehCodigo = tmpVehiculo.VEHICULO;
-
+            var jsonData = {'CVVEH_CODIGO':cvvehCodigo,
+                'CRPER_CODIGO':crperCodigo,
+                'CGGCRPER_CODIGO':cggcrperCodigo,
+                'CRPER_NUM_DOC_IDENTIFIC':crperNumDocIdentific
+            };
             var resultadoRegla = evaluarReglaTramite();
             if(resultadoRegla!==null){
                 var param = new SOAPClientParameters();
                 param.add('inJSON_reglas_validacion',resultadoRegla);
+                param.add('jsonData',JSON.stringify(jsonData));
                 var validacion = SOAPClient.invoke(URL_WS+'Cgg_regla_validacion' ,'ejecutarReglaTipoSolicitud',param, false, null);
                 validacion = eval('('+validacion+')');
                 if(validacion.resultadoValidacion !== undefined){

@@ -131,13 +131,7 @@ function applyGrants(inButtonsArray, inDisabled){
     }
     tmpJSON += "]";
     function CallBackGrants(r){
-        if ( window.console && window.console.log ) {
-            window.console.log("CallBack: "+r);
-        }
         var tmpResJSON = Ext.util.JSON.decode(r);
-        if ( window.console && window.console.log ) {
-            window.console.log("Stringify: "+JSON.stringify(tmpResJSON));
-        }
         if(tmpJSON.length > 0){
             for(i = 0; i < tmpIds.length; i++){
                 if(inDisabled)
@@ -808,6 +802,17 @@ function abrirPersona(inCrper_codigo){
     objCgg_res_persona.show();
 }
 
+// MO
+
+function abrirNotificacionFinan(inCrper_codigo){
+    var objCgg_res_notificacion_Finan = new FrmCgg_res_notificacion_finan("update",inCrper_codigo);
+    objCgg_res_notificacion_Finan.loadData1();
+    objCgg_res_notificacion_Finan.show();
+}
+
+//
+
+
 /**
  *Abre el formulario de seguimiento.
  *@param inCrseg_codigo Codigo de seguimiento.
@@ -1126,8 +1131,8 @@ function comprobarSeguimiento(){
 		if(countTramites>0 || countOfertas>0){
 			if(countTramites>0 && document.getElementById('divLnkSeguimiento'))
 				document.getElementById('divLnkSeguimiento').innerHTML= 'Seguimiento de tramites(<span class="textResaltado">'+countTramites+'</span>)';
-            var linkTramites ='<div id = "btnRevisarTarea" style="margin:5 10 5 10" class="link"><span style="margin-right:10"><b>'+countTramites+'</b></span><span>Tr\u00e1mite(s) pendientes</span></div>';
-			var linkOfertas ='<div id = "btnRevisarOferta" style="margin:5 10 5 10" class="link"><span style="margin-right:10"><b>'+countOfertas+'</b></span><span>Oferta(s) de empleo por aprobar</span></div>';
+            var linkTramites ='<div id = "btnRevisarTarea" style="margin:5px 10px 5px 10px" class="link"><span style="margin-right:10px"><b>'+countTramites+'</b></span><span>Tr\u00e1mite(s) pendientes</span></div>';
+			var linkOfertas ='<div id = "btnRevisarOferta" style="margin:5px 10px 5px 10px" class="link"><span style="margin-right:10px"><b>'+countOfertas+'</b></span><span>Oferta(s) de empleo por aprobar</span></div>';
 			var objNotificadorSeguimiento = new Ext.ux.window.MessageWindow({
                 title: "Tareas por atender",
                 autoHeight: true,
@@ -1138,7 +1143,7 @@ function comprobarSeguimiento(){
                 hideFx: {delay: 4000,mode: 'standard',useProxy: false},
                 iconCls: 'messagebox_info_16',
 				html: (countTramites>0?linkTramites:'')+(countOfertas>0?linkOfertas:'')+
-				'<div style="margin:15 10 5 10"><input  id = "chkRecordar" type="checkbox"/><span style="margin-left:5"><i>No avisarme</i></span></div>',
+				'<div style="margin:15px 10px 5px 10px"><input  id = "chkRecordar" type="checkbox"/><span style="margin-left:5px"><i>No avisarme</i></span></div>',
                 showFx: {delay: 0,mode: 'standard',useProxy: false},
                 width: 250
             }).show(Ext.getDoc());

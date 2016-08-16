@@ -1,7 +1,7 @@
 /**
-* FUNCION PUBLICA. FORMULARIO QUE PERMITE VISUALIZAR EN FORMA DE LISTADO, LA INFORMACION DE LOS REGISTROS DE TABLA CGG_SEC_OBJETO.
-* @param inObject SELECCIONA LOS DATOS QUE UN USUARIO TIENE ACCESO  
-* @param inObjectType TIPO DE OBJETOS QUE SE MUESTRAN EN EL LISTADO
+* Funcion publica. Formulario que permite visualizar en forma de listado, la informacion de los registros de tabla Cgg_sec_objeto.
+* @constructor 
+* @author Besixplus Cia. Ltda.
 */
 function DlgBusquedaObjDep(inObject, inObjectType){
 	var optMenu = 'Seguridad/Objetos';
@@ -207,6 +207,7 @@ function DlgBusquedaObjDep(inObject, inObjectType){
 	/**
 	* Funcion miembro que devuelve la ventana winDlgBusquedaObjDep.
 	* @returns ventana winFrmCgg_sec_objeto.
+	* @base DlgBusquedaObjDep.prototype.show
 	*/
 	this.getWindow = function(){
 		return winDlgBusquedaObjDep;
@@ -220,36 +221,29 @@ function DlgBusquedaObjDep(inObject, inObjectType){
 	}
 	/**
 	* Funcion miembro que develve el ColumnModel utilizado en el listado.
-	* @return cmCgg_sec_objeto
 	*/
 	this.getColumnModel = function(){
 		return cmCgg_sec_objeto;
 	}
 	/**
 	* Funcion miembro que develve el Store utilizado en el listado.
-	* @return gsCgg_sec_objeto_dep
 	*/
 	this.getStore = function(){
 		return gsCgg_sec_objeto_dep;
 	}
 	/**
 	* Funcion miembro que develve el ColumnModel utilizado en el listado.
-	*  @return cmWSObjetosDep
 	*/
 	this.getWSColumnModel = function(){
 		return cmWSObjetosDep;
 	}
 	/**
 	* Funcion miembro que develve el Store utilizado en el listado.
-	* @return gsWSObjetosDep
 	*/
 	this.getWSStore = function(){
 		return gsWSObjetosDep;
 	}
-	/**
-	 *FUNCION PROTOTIPO. PERMITE OBTENER LA FILA SELECCIONADA.
-	 *@return tmpSelectedRows
-	 */
+	
 	this.getSelectedRows = function(){
 		return tmpSelectedRows;
 	}
@@ -293,7 +287,6 @@ DlgBusquedaObjDep.prototype.close = function(){
 /**
 * Funcion prototipo. Permite saber si se ha cerrado la ventana winDlgBusquedaObjDep,
 * con el fin de realizar otras acciones desde una instancia.
-* @parama inFunctionHandler Funcion.
 */
 DlgBusquedaObjDep.prototype.closeHandler = function(inFunctionHandler){
 	this.getWindow().on('close',inFunctionHandler);

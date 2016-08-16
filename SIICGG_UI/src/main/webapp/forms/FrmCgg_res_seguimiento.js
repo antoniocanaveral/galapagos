@@ -29,7 +29,7 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
         CRTRA_ANIO:'2010',
         CRTRA_NUMERO:'',
         CRPER_BENEFICIARIO:'',
-	CGG_CRPER_NUM_DOC_IDENTIFIC:'',
+		CGG_CRPER_NUM_DOC_IDENTIFIC:'',
         CRPER_AUSPICIANTE:'',
         CRTRA_FECHA_RECEPCION:'',
         CRPJR_RAZON_SOCIAL:'',
@@ -43,9 +43,9 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
         CRPER_CODIGO:'',
         CRFAS_NOMBRE:'',
         CRTRA_MOTIVO:'',
-        FLAG_BENEFICIARIO:'none',
-        VEHICULO:'none',
-        CVVEH_CODIGO:''
+        REP_CRPER_CODIGO:'',
+        CHANGE_CRTST_CODIGO:'',
+        CRTT_CODIGO:''
     };
 
     var datosSeguimiento = {
@@ -62,11 +62,11 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
 
     };
     var tplTramite = new Ext.Template(
-            '<table id="ver-zebra2" width="100%" border="0"> <colgroup> <col class="vzebra-odd-strong"/> <col class="vzebra-even-tight"/> <col class="vzebra-odd-strong"/> <col class="vzebra-even-tight"/> </colgroup> <tr> <td width=80> N&uacute;mero:</td> <td width="33%"> {CRTRA_ANIO}-{CRTRA_NUMERO}</td> <td width=80> Tipo solicitud:</td> <td width="33%"> {CRTST_DESCRIPCION:ellipsis(25)}</td> </tr> <tr> <td> <div id="idDivBeneficiario">{ETIQUETA}</div></td> <td> {CRPER_BENEFICIARIO:ellipsis(25)}<br>{CGG_CRPER_NUM_DOC_IDENTIFIC}<a id="lnkPersona" href="#" style="display:{FLAG_BENEFICIARIO}" onClick="abrirPersona(\'{CRPER_CODIGO}\')"> Ver mas...</a></td> <td> Isla:</td> <td> {CISLA_NOMBRE}</td> </tr> <tr> <td> Auspiciante:</td> <td> {CRPER_AUSPICIANTE:ellipsis(25)}</td> <td> Recepci&oacute;n:</td> <td> {CRTRA_FECHA_RECEPCION}</td> </tr> <tr> <td> Pers. jur&iacute;dica:</td> <td> {CRPJR_RAZON_SOCIAL}</td> <td> N. folios:</td> <td> {CRTRA_FOLIO}</td> </tr> <tr> <td> Observaci&oacute;n:</td> <td> {CRTRA_OBSERVACION:ellipsis(30)}</td> <td> Comunicado(R):</td> <td> {CRTRA_COMUNICADO_RADIAL}</td> </tr> <tr> <td>Actividad:</td> <td>{CRTRA_ACTIVIDAD_RESIDENCIA}</td> <td>Permanencia:</td> <td>{CRTRA_DIAS_PERMANENCIA}</td> </tr> <tr> <td>Fase:</td> <td><span class="textoResultado">{CRFAS_NOMBRE:ellipsis(30)}</span></td> <td>Veh&iacute;culo</td> <td><a id="lnkVeh" href="#" style="display:{VEHICULO}" onClick="abrirVeh(\'{CVVEH_CODIGO}\')"> Ver veh&iacute;culo</a></td> </tr> <tr> <td></td> <td></td> <td></td> <td> <a id="lnkSeguimiento" href="#" onClick="abrirTramite(\'{CRTRA_CODIGO}\')"> Ver mas...</a> </td> </tr> </table>'
+            '<table id="ver-zebra2" width="100%" border="0"> <colgroup> <col class="vzebra-odd-strong"/> <col class="vzebra-even-tight"/> <col class="vzebra-odd-strong"/> <col class="vzebra-even-tight"/> </colgroup> <tr> <td width=80> N&uacute;mero:</td> <td width="33%"> {CRTRA_ANIO}-{CRTRA_NUMERO}</td> <td width=80> Tipo solicitud:</td> <td width="33%"> {CRTST_DESCRIPCION} <br> {CHANGE_CRTST_CODIGO}</td> </tr> <tr> <td> <div id="idDivBeneficiario">{ETIQUETA}</div></td> <td> {CRPER_BENEFICIARIO}<br>{CGG_CRPER_NUM_DOC_IDENTIFIC}<a id ="lnkPersona" href="#" onClick="abrirPersona(\'{CRPER_CODIGO}\')"> Ver mas...</a></td> <td> Isla:</td> <td> {CISLA_NOMBRE}</td> </tr> <tr> <td> Auspiciante:</td> <td> {CRPER_AUSPICIANTE}</td> <td> Recepci&oacute;n:</td> <td> {CRTRA_FECHA_RECEPCION}</td> </tr> <tr> <td> Pers. jur&iacute;dica:</td> <td> {CRPJR_RAZON_SOCIAL}</td><td> Representante:</td><td> {REP_CRPER_CODIGO}</td></tr><tr><td> Tipo de tramite:</td><td> {CRTT_CODIGO}</td><td> N. folios:</td> <td> {CRTRA_FOLIO}</td> </tr> <tr> <td> Observaci&oacute;n:</td> <td> {CRTRA_OBSERVACION}</td> <td> Comunicado(R):</td> <td> {CRTRA_COMUNICADO_RADIAL}</td> </tr> <tr> <td>Actividad:</td> <td>{CRTRA_ACTIVIDAD_RESIDENCIA}</td> <td>Permanencia:</td> <td>{CRTRA_DIAS_PERMANENCIA}</td> </tr> <tr> <td>Fase:</td> <td><span class="textoResultado">{CRFAS_NOMBRE}</span></td> <td>Recalificaci\u00f3n</td> <td>{CRTRA_MOTIVO}</td> </tr> <tr> <td></td> <td></td> <td></td> <td> <a id ="lnkSeguimiento" href="#" onClick="abrirTramite(\'{CRTRA_CODIGO}\')"> Ver mas...</a> </td> </tr> </table>'
             );
 
     var tplSeguimientoFase = new Ext.Template(
-            '<table id="ver-zebra2" width="100%" border="0"> <colgroup> <col class="vzebra-odd-strong"/> <col class="vzebra-even-tight"/> <col class="vzebra-odd-strong"/> <col class="vzebra-even-tight"/> <col class="vzebra-odd-strong"/> <col class="vzebra-even-tight"/> </colgroup> <tr> <td width="80px"> Seguimiento: </td> <td width="50%">{CRSEG_NUMERO}</td> <td width="80px"> Observaci&oacute;n: </td> <td width="50%">{CRSEG_OBSERVACION}</td> <td width="80px"> Recepci&oacute;n: </td> <td width="25%">{CRSEG_FECHA_RECEPCION}</td> </tr> <tr> <td> Fase: </td> <td><span class="textoResultado">{CRFAS_NOMBRE:ellipsis(30)}</span></td> <td> Usuario: </td> <td>{CUSU_NOMBRES}</td> <td> Despacho: </td> <td>{CRSEG_FECHA_DESPACHO}</td> </tr> <tr> <td> Actividad: </td> <td>{CRSEG_TIPO_ACTIVIDAD}</td> <td> Descripci&oacute;n: </td> <td>{CRSEG_DESCRIPCION}</td> <td></td> <td><a href="#">Ver mas...</a></td> </tr> </table>'
+            '<table id="ver-zebra2" width="100%" border="0"> <colgroup> <col class="vzebra-odd-strong"/> <col class="vzebra-even-tight"/> <col class="vzebra-odd-strong"/> <col class="vzebra-even-tight"/> <col class="vzebra-odd-strong"/> <col class="vzebra-even-tight"/> </colgroup> <tr> <td width="80px"> Seguimiento: </td> <td width="50%">{CRSEG_NUMERO}</td> <td width="80px"> Observaci&oacute;n: </td> <td width="50%">{CRSEG_OBSERVACION}</td> <td width="80px"> Recepci&oacute;n: </td> <td width="25%">{CRSEG_FECHA_RECEPCION}</td> </tr> <tr> <td> Fase: </td> <td><span class="textoResultado">{CRFAS_NOMBRE}</span></td> <td> Usuario: </td> <td>{CUSU_NOMBRES}</td> <td> Despacho: </td> <td>{CRSEG_FECHA_DESPACHO}</td> </tr> <tr> <td> Actividad: </td> <td>{CRSEG_TIPO_ACTIVIDAD}</td> <td> Descripci&oacute;n: </td> <td>{CRSEG_DESCRIPCION}</td> <td></td> <td><a href="#">Ver mas...</a></td> </tr> </table>'
             );
 
     var rNovedadNotificacion = new Ext.data.Record.create([
@@ -419,7 +419,7 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
                         });
                     }
                     if (!faseFinal) {
-                        var objSeleccionSeguimiento = new DlgSeleccionDespacho(inRecordCgg_res_seguimiento.get('CRPRO_CODIGO'));
+                        var objSeleccionSeguimiento = new DlgSeleccionDespacho(inRecordCgg_res_seguimiento.get('CRPRO_CODIGO'),inRecordCgg_res_seguimiento.get('CRTRA_CODIGO'));
                         objSeleccionSeguimiento.closeHandler(function() {
                             if (objSeleccionSeguimiento.getCrfasSeguimiento() !== null){
 								seguimientoHandler(objSeleccionSeguimiento,inTipoRespuesta);
@@ -504,6 +504,22 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
         }
     });
 
+
+//MO
+    /**
+     * Boton que permite adjuntar el documento correspondiente a la Resolución.
+     */
+    var btnResolucionCgg_res_seguimiento = new Ext.Button({
+        id:'btnResolucionCgg_res_seguimiento',
+        text:'Resoluci\u00f3n',
+        iconCls:'iconGuardar',
+        tooltip:'Adjuntar documento de Resoluci\u00f3n',
+        handler:function(){
+            // enviarSeguimiento(TypeRespuestaSeguimiento.APROBADO);
+        }
+    });
+//
+
     /**
      * Boton que permite cerrar la ventana winFrmCgg_res_seguimiento.
      */
@@ -518,6 +534,18 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
             }
         }
     });
+
+    //AC=>
+    var btnAdjuntos = new Ext.ux.form.AlfrescoFM({
+        id:'compAdjunto',   //(opcional)
+        name:'compAdjunto', //(opcional)
+        text: 'Adjuntos',    //(opcional -> Texto del botón)
+        tableName: 'Cgg_res_tramite',
+        validateRecordID:true,
+        recordID : inRecordCgg_res_seguimiento.get('CRTRA_CODIGO'),
+        filter: "crtst_codigo='"+inRecordCgg_res_seguimiento.get('CRTST_CODIGO')+"'"
+    });
+
     /**
      * Ext.grid.ColumnModel Define el modelo de columnas para el objeto cgg_res_informe.
      */
@@ -555,8 +583,8 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
         {
             dataIndex:'CRFAS_NOMBRE',
             header:'Fase',
-            width:100,
-			sortable:true            
+            width:200,
+			sortable:true
         },
         {
             dataIndex:'CRISE_USUARIO_INSERT',
@@ -618,12 +646,21 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
         sm:new Ext.grid.RowSelectionModel({
             singleSelect:true
         }),
-        tbar:[{
-            iconCls:'iconNuevo',
-            id:'btnAgregarInforme',
-            tooltip:'Agregar informe',
-            handler:function() {
-                var objCgg_res_informe = new FrmCgg_res_informe('Insert', INRECORD_CGG_RES_SEGUIMIENTO.get('CRSEG_CODIGO'));
+        listeners:{
+            rowdblclick:function(inGridComponent, inRowIndex, inEventObject){
+                var r=grdCgg_res_informe_seguimiento.getSelectionModel().getSelected();
+                var objCgg_res_informe = null;
+
+                var rInformeSeguimiento = grdCgg_res_informe_seguimiento.getSelectionModel().getSelected();
+                if (rInformeSeguimiento !== null && rInformeSeguimiento !== undefined) {
+                    if (rInformeSeguimiento.get('CRISE_USUARIO_INSERT') == tmpUsuarioConectado && rInformeSeguimiento.get('CRSEG_CODIGO') == inRecordCgg_res_seguimiento.get('CRSEG_CODIGO')) {
+                        objCgg_res_informe = new FrmCgg_res_informe('Update', INRECORD_CGG_RES_SEGUIMIENTO.get('CRSEG_CODIGO'),r, false);
+                    }else{
+                        objCgg_res_informe = new FrmCgg_res_informe('Update', INRECORD_CGG_RES_SEGUIMIENTO.get('CRSEG_CODIGO'),r, true);
+                    }
+                }else{
+                    objCgg_res_informe = new FrmCgg_res_informe('Update', INRECORD_CGG_RES_SEGUIMIENTO.get('CRSEG_CODIGO'),r, false);
+                }
                 objCgg_res_informe.closeHandler(function() {
                     gsCgg_res_informe_seguimiento.reload();
                     gsCgg_res_adjunto.reload();
@@ -631,44 +668,58 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
                 objCgg_res_informe.show();
             }
         },
-        {
-            id:'btnEliminarInforme',
-			disabled:true,
-            iconCls:'iconEliminar',
-            tooltip:'Eliminar informe',
-            listeners:{
-                click:function() {
-                    var rInformeSeguimiento = grdCgg_res_informe_seguimiento.getSelectionModel().getSelected();
-                    if (rInformeSeguimiento !== null && rInformeSeguimiento !== undefined) {
-                        if(rInformeSeguimiento.get('CRISE_USUARIO_INSERT') == tmpUsuarioConectado && rInformeSeguimiento.get('CRSEG_CODIGO') == inRecordCgg_res_seguimiento.get('CRSEG_CODIGO')){
-                            Ext.Msg.show({
-                                title:tituloCgg_res_seguimiento,
-                                msg:'Est\u00e1 seguro de eliminar el informe?',
-                                buttons: Ext.Msg.YESNO,
-                                fn:function(inBtn) {
-                                    if (inBtn == 'yes') {
-                                        var scpEliminarInforme = new SOAPClientParameters();
-                                        scpEliminarInforme.add('inCrise_codigo', rInformeSeguimiento.get('CRISE_CODIGO'));
-                                        SOAPClient.invoke(URL_WS + "Cgg_res_informe_seguimiento", 'delete', scpEliminarInforme, true, function(inServiceResponse) {
-                                            if (inServiceResponse == 'true') {
-                                                Ext.MsgPopup.msg(tituloCgg_res_seguimiento, 'El informe ha sido eliminado.', MsgPopup.INFO);
-                                                gsCgg_res_informe_seguimiento.reload();
-                                            } else {
-                                                Ext.MsgPopup.msg(tituloCgg_res_seguimiento, 'El informe ha sido eliminado.\nError:' + inServiceResponse, MsgPopup.WARNING);
-                                            }
-                                        })
+        tbar:[
+            {
+                iconCls:'iconNuevo',
+                id:'btnAgregarInforme',
+                tooltip:'Agregar informe',
+                handler:function() {
+                        var objCgg_res_informe = new FrmCgg_res_informe('Insert', INRECORD_CGG_RES_SEGUIMIENTO.get('CRSEG_CODIGO'));
+                        objCgg_res_informe.closeHandler(function() {
+                            gsCgg_res_informe_seguimiento.reload();
+                            gsCgg_res_adjunto.reload();
+                        });
+                        objCgg_res_informe.show();
+                    }
+            },
+            {
+                id:'btnEliminarInforme',
+                disabled:true,
+                iconCls:'iconEliminar',
+                tooltip:'Eliminar informe',
+                listeners:{
+                    click:function() {
+                        var rInformeSeguimiento = grdCgg_res_informe_seguimiento.getSelectionModel().getSelected();
+                        if (rInformeSeguimiento !== null && rInformeSeguimiento !== undefined) {
+                            if(rInformeSeguimiento.get('CRISE_USUARIO_INSERT') == tmpUsuarioConectado && rInformeSeguimiento.get('CRSEG_CODIGO') == inRecordCgg_res_seguimiento.get('CRSEG_CODIGO')){
+                                Ext.Msg.show({
+                                    title:tituloCgg_res_seguimiento,
+                                    msg:'Est\u00e1 seguro de eliminar el informe?',
+                                    buttons: Ext.Msg.YESNO,
+                                    fn:function(inBtn) {
+                                        if (inBtn == 'yes') {
+                                            var scpEliminarInforme = new SOAPClientParameters();
+                                            scpEliminarInforme.add('inCrise_codigo', rInformeSeguimiento.get('CRISE_CODIGO'));
+                                            SOAPClient.invoke(URL_WS + "Cgg_res_informe_seguimiento", 'delete', scpEliminarInforme, true, function(inServiceResponse) {
+                                                if (inServiceResponse == 'true') {
+                                                    Ext.MsgPopup.msg(tituloCgg_res_seguimiento, 'El informe ha sido eliminado.', MsgPopup.INFO);
+                                                    gsCgg_res_informe_seguimiento.reload();
+                                                } else {
+                                                    Ext.MsgPopup.msg(tituloCgg_res_seguimiento, 'El informe ha sido eliminado.\nError:' + inServiceResponse, MsgPopup.WARNING);
+                                                }
+                                            })
 
-                                    }
-                                },
-                                icon: Ext.MessageBox.QUESTION
-                            });
-                        }else{
-                            Ext.MsgPopup.msg(tituloCgg_res_seguimiento, 'El informe no puede ser modificado.', MsgPopup.INFO);
+                                        }
+                                    },
+                                    icon: Ext.MessageBox.QUESTION
+                                });
+                            }else{
+                                Ext.MsgPopup.msg(tituloCgg_res_seguimiento, 'El informe no puede ser modificado.', MsgPopup.INFO);
+                            }
                         }
                     }
                 }
             }
-        }
         ]
     });
 	grdCgg_res_informe_seguimiento.getSelectionModel().on("selectionchange",function(sm){
@@ -680,6 +731,17 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
 					Ext.getCmp('btnEliminarInforme').setDisabled(true);				
 		}
 	});
+
+    grdCgg_res_informe_seguimiento.getSelectionModel().on("selectionchange",function(sm){
+        if (sm.hasSelection()){
+            var rInforme=sm.getSelected();
+            if(rInforme.get('CRISE_USUARIO_INSERT') == tmpUsuarioConectado && rInforme.get('CRSEG_CODIGO') == inRecordCgg_res_seguimiento.get('CRSEG_CODIGO'))
+                Ext.getCmp('btnEliminarInforme').setDisabled(false);
+            else
+                Ext.getCmp('btnEliminarInforme').setDisabled(true);
+        }
+    });
+
     gsCgg_res_informe_seguimiento.load();
 
     /**
@@ -1068,7 +1130,7 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
         {
             dataIndex:'CJCRI_REQUERIMIENTO',
             header:'Requerimiento',
-            width:100,
+            width:180,
             sortable:true
         },
         ccCJCRI_REQUERIDO,ccCJSGC_RESPUESTA,
@@ -1097,112 +1159,6 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
             editor:{
                 xtype:'textfield'
             }
-        },{
-            xtype: 'actioncolumn',
-            width: 80,
-            header:'Adjunto',
-            id:'cjsgc_data',
-            renderer:function(v,x,r){
-                if (r.data.CJSGC_NOMBRE_ADJUNTO)
-                    x.css = "row-green";
-                if(esHistorico == true){
-                    this.items[1].iconCls = 'iconAdjunto1';
-                    this.items[1].tooltip = '';
-                    this.items[0].iconCls = 'iconAdjunto1';
-                    this.items[0].tooltip = '';
-                 }
-
-                //Ext.getCmp('btnEliminarRF').hide();
-                //Ext.getCmp('btnSubirRF').hide();
-            },
-            items:[{
-                id:'btnSubirAR',
-                iconCls: 'iconAdjunto',                // Use a URL in the icon config
-                tooltip: 'Subir adjunto',
-                handler: function(grid, rowIndex, colIndex) {
-                    if(esHistorico == true){
-                       // if(new UserSession().getUserID() != inRecordCgg_res_seguimiento.get('CUSU_CODIGO')){
-                            return;
-                        //}
-                    }
-                    if(tmpFase!==null){
-                        grdCgg_jur_seguimiento_criterio.getSelectionModel().selectRow(rowIndex);
-                        var rAdjuntoCriterio = grdCgg_jur_seguimiento_criterio.getSelectionModel().getSelected();
-                        if (rAdjuntoCriterio !== null) {
-                            if(rAdjuntoCriterio.get('CJSGC_CODIGO')=='KEYGEN'){
-                                rAdjuntoCriterio.set('CJSGC_RESPUESTA',true);
-                                var tmpEventObj = {
-                                    record:rAdjuntoCriterio
-                                };
-                                enableDelayRow = rowIndex;
-                                grdCgg_jur_seguimiento_criterio.fireEvent('afteredit',tmpEventObj);
-                                return;
-                            }
-                            var objSubirAdjunto = new FrmSubirAdjuntoCriterio(rAdjuntoCriterio.get('CJSGC_CODIGO'));
-                            objSubirAdjunto.closeHandler(function() {
-                                gsCgg_jur_seguimiento_criterio.load();
-                            });
-                            objSubirAdjunto.show();
-                        }
-                    }
-                }
-            },
-            {
-                id:'btnEliminarAR',
-                iconCls: 'iconEliminar',                // Use a URL in the icon config
-                tooltip: 'Eliminar adjunto',
-                handler: function(grid, rowIndex, colIndex) {
-                    if(esHistorico == true){
-                        if(new UserSession().getUserID() != inRecordCgg_res_seguimiento.get('CUSU_CODIGO')){
-                            return;
-                        }
-                    }
-                    if(tmpFase!==null){
-                        grdCgg_jur_seguimiento_criterio.getSelectionModel().selectRow(rowIndex);
-                        var rAdjuntoCriterio = grdCgg_jur_seguimiento_criterio.getSelectionModel().getSelected();
-                        if(rAdjuntoCriterio.get('CRADJ_USUARIO_INSERT') == tmpUsuarioConectado && rAdjuntoCriterio.get('CRSEG_CODIGO') == inRecordCgg_res_seguimiento.get('CRSEG_CODIGO')){
-                            if (rAdjuntoCriterio !== null) {
-                                var scpBorrarAdjunto = new SOAPClientParameters();
-                                scpBorrarAdjunto.add('inCjsgc_codigo', rAdjuntoCriterio.get('CJSGC_CODIGO'));
-                                SOAPClient.invoke(URL_WS + 'Cgg_jur_seguimiento_criterio', 'deleteAdjuntoCriterio', scpBorrarAdjunto, true, function(inServiceResponse) {
-                                    if (inServiceResponse == 'true') {
-                                        Ext.MsgPopup.msg(tituloCgg_res_informe_seguimiento, "El adjunto fue eliminado.", MsgPopup.INFO);
-                                    } else {
-                                        Ext.MsgPopup.msg(tituloCgg_res_informe_seguimiento, "El adjunto de requisito no ha sido eliminado.<br>Error:" + inServiceResponse, MsgPopup.WARNING);
-                                    }
-                                    gsCgg_jur_seguimiento_criterio.load();
-                                });
-                            }
-                        }else{
-                            Ext.MsgPopup.msg(tituloCgg_res_informe_seguimiento, "El adjunto no puede ser modificado.", MsgPopup.INFO);
-                        }
-                    }
-                }
-            },{
-                iconCls: 'iconBuscar',                // Use a URL in the icon config
-                tooltip: 'Ver adjunto',
-                handler: function(grid, rowIndex, colIndex) {
-                    grdCgg_jur_seguimiento_criterio.getSelectionModel().selectRow(rowIndex);
-                    var rAdjuntoCriterio = grdCgg_jur_seguimiento_criterio.getSelectionModel().getSelected();
-                    if (rAdjuntoCriterio !== null) {
-                        var url1 = URL_DOC_VIEWER + '?table=cgg_jur_seguimiento_criterio&keyc=cjsgc_codigo&keyv=' + rAdjuntoCriterio.get('CJSGC_CODIGO') + '&column=cjsgc_adjunto&fn=' + rAdjuntoCriterio.get('CJSGC_NOMBRE_ADJUNTO') + '&request=view';
-                        window.open(url1);
-                    }
-                }
-            },
-            {
-                iconCls: 'iconGuardar',
-                tooltip: 'Guardar adjunto',
-                handler: function(grid, rowIndex, colIndex) {
-                    grdCgg_jur_seguimiento_criterio.getSelectionModel().selectRow(rowIndex);
-                    var rAdjuntoCriterio = grdCgg_jur_seguimiento_criterio.getSelectionModel().getSelected();
-                    if (rAdjuntoCriterio !== null) {
-                        var url2 = URL_DOC_VIEWER + '?table=cgg_jur_seguimiento_criterio&keyc=cjsgc_codigo&keyv=' + rAdjuntoCriterio.get('CJSGC_CODIGO') + '&column=cjsgc_adjunto&fn=' + rAdjuntoCriterio.get('CJSGC_NOMBRE_ADJUNTO') + '&request=download';
-                        window.open(url2);
-                    }
-                }
-            }
-            ]
         }
         ]);
     /**
@@ -1381,6 +1337,22 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
         header: 'Requerido',
         width: 90
     });
+
+    //PRUEBA ADJUNTO
+
+    var adjunto = new Ext.ux.form.AlfrescoFM({
+        id:'identificador_componente',  //(opcional)
+        name:'nombre_componente',       //(opcional)
+        fieldLabel :'Adjuntos',         //(opcional -> Despliega la etiqueta del comoponente. Si no se define, aparece solo el botón)
+        text: 'Adjunto',                //(opcional -> Texto del botón)
+        tableName : 'CGG_TABLA_DE REFERENCIA',
+        recordID : 'RECORD_ID',
+        filter: 'FILTRO_PARA_EL_MODELO' //(opcional)
+    });
+
+    //
+
+
     /**
      * Ext.grid.ColumnModel Define el modelo de columnas para el objeto cgg_res_seguimiento_requisito.
      */
@@ -1424,142 +1396,14 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
                 }
                 return result;
             }
-        },ccCRSRQ_REQUERIDO, cbcCRRQT_CUMPLE, {
+        },ccCRSRQ_REQUERIDO, cbcCRRQT_CUMPLE,{
             dataIndex: 'CRRQT_OBSERVACION',
             header: 'Observaci\u00F3n',
             width: 200,
             sortable: true
-        },{
-            xtype: 'actioncolumn',
-            width: 90,
-            header:'Adjunto',
-            id:'cradj_data',
-            renderer:function(v,x,r){
-                if (r.data.CRADJ_DATA)
-                    x.css = "row-green";
-                if(esHistorico == true){
-                    this.items[1].iconCls = 'iconAdjunto1';
-                    this.items[1].tooltip = '';
-                    this.items[0].iconCls = 'iconAdjunto1';
-                    this.items[0].tooltip = '';
-                 }
-            },
-            items:[{
-                id:'btnSubirRF',
-                iconCls: 'iconAdjunto',                // Use a URL in the icon config
-                tooltip: 'Subir adjunto',
-                handler: function(grid, rowIndex, colIndex) {
-                    if(esHistorico == true){
-                        //if(new UserSession().getUserID() != inRecordCgg_res_seguimiento.get('CUSU_CODIGO')){
-                        return;
-                        //}
-                    }
-                    if(tmpFase!==null && tmpFase.CRFAS_SUBE_ADJUNTO_REQUISITO ==true ){
-                        grdCgg_res_seguimiento_requisito.getSelectionModel().selectRow(rowIndex);
-                        var rAdjunto = grdCgg_res_seguimiento_requisito.getSelectionModel().getSelected();
-                        if (rAdjunto !== null) {
-                            var cjadj_data = rAdjunto.get('CRADJ_CODIGO');
-                            var tmpCodigo = null;
-                            if (cjadj_data == null || cjadj_data == undefined) {
-                                tmpCodigo = 'KEYGEN';
-                            } else {
-                                tmpCodigo = cjadj_data.CRADJ_CODIGO;
-                            }
-                            var objSubirAdjunto = new FrmCgg_res_adjunto(rAdjunto.get('CRRQT_CODIGO'), tmpCodigo);
-                            objSubirAdjunto.closeHandler(function(){
-                                if(objSubirAdjunto.dialogResult()!==null && objSubirAdjunto.dialogResult().toLowerCase()=='guardar'){
-                                    if(cjadj_data){
-                                        var scpBorrarAdjunto = new SOAPClientParameters({
-                                            inCradj_codigo:CRADJ_CODIGO
-                                        });
-                                        var inServiceResponse = SOAPClient.invoke(URL_WS + 'Cgg_res_adjunto', 'delete', scpBorrarAdjunto, false,null);
-                                    }                                                                                                           
-                                    gsCgg_res_seguimiento_requisito.reload({
-                                        params:{
-                                            inCrtst_codigo: inRecordCgg_res_seguimiento.get('CRTST_CODIGO'),
-                                            inCrtra_codigo: inRecordCgg_res_seguimiento.get('CRTRA_CODIGO'),
-                                            format: TypeFormat.JSON
-                                        }
-                                    });
-                                }                                
-                            });
-                            objSubirAdjunto.show();
-                        }
-                    }else{
-                        Ext.MsgPopup.msg(tituloCgg_res_seguimiento, "No puede editar esta informaci\u00f3n!", MsgPopup.INFO);
-                    }
-                }
-            },{
-                id:'btnEliminarRF',
-                iconCls: 'iconEliminar',                // Use a URL in the icon config
-                tooltip: 'Eliminar adjunto',
-                handler: function(grid, rowIndex, colIndex) {
-                    if(esHistorico == true){
-                        //if(new UserSession().getUserID() != inRecordCgg_res_seguimiento.get('CUSU_CODIGO')){
-                        return;
-                        // }
-                    }
-                    if(tmpFase!==null && tmpFase.CRFAS_SUBE_ADJUNTO_REQUISITO ==true){
-                        grdCgg_res_seguimiento_requisito.getSelectionModel().selectRow(rowIndex);
-                        var rAdjuntoCriterio = grdCgg_res_seguimiento_requisito.getSelectionModel().getSelected();
-                        if (rAdjuntoCriterio !== null) {
-                            var cjadj_data = rAdjuntoCriterio.get('CRADJ_DATA');
-                            if (cjadj_data !== null && cjadj_data!== undefined) {
-                                var scpBorrarAdjunto = new SOAPClientParameters();
-                                scpBorrarAdjunto.add('inCradj_codigo', cjadj_data.CRADJ_CODIGO);
-                                SOAPClient.invoke(URL_WS + 'Cgg_res_adjunto', 'delete', scpBorrarAdjunto, true, function(inServiceResponse) {
-                                    if (inServiceResponse == 'true') {
-                                        Ext.MsgPopup.msg(tituloCgg_res_seguimiento, "El adjunto fue eliminado.", MsgPopup.INFO);
-                                    } else {
-                                        Ext.MsgPopup.msg(tituloCgg_res_seguimiento, "El adjunto de requisito no ha sido eliminado.<br>Error:" + inServiceResponse, MsgPopup.WARNING);
-                                    }
-                                    gsCgg_res_seguimiento_requisito.reload({
-                                        params:{
-                                            inCrtst_codigo: inRecordCgg_res_seguimiento.get('CRTST_CODIGO'),
-                                            inCrtra_codigo: inRecordCgg_res_seguimiento.get('CRTRA_CODIGO'),
-                                            format: TypeFormat.JSON
-                                        }
-                                    });
-                                });
-                            }
-                        }
-                    }else{
-                        Ext.MsgPopup.msg(tituloCgg_res_seguimiento, "No puede editar esta informaci\u00f3n!", MsgPopup.INFO);
-                    }
-                }
-            },
-            {
-                iconCls: 'iconBuscar',            
-                tooltip: 'Ver adjunto',
-                handler: function(grid, rowIndex, colIndex) {
-                    grdCgg_res_seguimiento_requisito.getSelectionModel().selectRow(rowIndex);
-                    var rAdjuntoCriterio = grdCgg_res_seguimiento_requisito.getSelectionModel().getSelected();
-                    if (rAdjuntoCriterio !== null) {
-                        var cradj_data = rAdjuntoCriterio.get('CRADJ_DATA');
-                        if (cradj_data !== null && cradj_data !== undefined) {
-                            var url1 = URL_DOC_VIEWER + '?table=cgg_res_adjunto&keyc=cradj_codigo&keyv=' + cradj_data.CRADJ_CODIGO + '&column=cradj_archivo_adjunto&fn=' + cradj_data.CRADJ_NOMBRE_ADJUNTO + '&request=view';
-                            window.open(url1);
-                        }
-                    }
-                }
-            },
-            {
-                iconCls: 'iconGuardar',
-                tooltip: 'Guardar adjunto',
-                handler: function(grid, rowIndex, colIndex) {
-                    grdCgg_res_seguimiento_requisito.getSelectionModel().selectRow(rowIndex);
-                    var rAdjuntoCriterio = grdCgg_res_seguimiento_requisito.getSelectionModel().getSelected();
-                    if (rAdjuntoCriterio !== null) {
-                        var cradj_data = rAdjuntoCriterio.get('CRADJ_DATA');
-                        if (cradj_data !== null && cradj_data !== undefined) {
-                            var url1 = URL_DOC_VIEWER + '?table=cgg_res_adjunto&keyc=cradj_codigo&keyv=' + cradj_data.CRADJ_CODIGO + '&column=cradj_archivo_adjunto&fn=' + cradj_data.CRADJ_NOMBRE_ADJUNTO + '&request=download';
-                            window.open(url1);
-                        }
-                    }
-                }
-            }
-            ]
-        },{
+        }
+//MO
+        /*,{
             dataIndex: 'CRADJ_DATA',
             header: 'Adjuntado por',
             hidden:true,
@@ -1572,7 +1416,9 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
                 }
                 return result;
             }
-        }]);
+        }*/
+//
+    ]);
 
     /**
      * Ext.data.Store Agrupacion de registros de la tabla Cgg_res_seguimiento_requisito por un campo especifico.
@@ -1646,12 +1492,12 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
             layout:'border',            
             items:[grdCgg_res_informe_seguimiento]
         },
-        {
+        /*{AC=>
             id:'tpSeguimientoAdjunto',
             title:'Adjuntos',
             layout:'border',
             items:[pnlAdjuntoSeguimiento]
-        },
+        },*/
         {
             id:'tpSeguimientoRequerimiento',
             title:'Requisitos a cumplir',
@@ -1868,12 +1714,12 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
                     }
                     ]
                 }
-            },'->',btnCerrarCgg_res_seguimiento],
+            },'-',btnAdjuntos,'->',btnCerrarCgg_res_seguimiento],
             listeners:{
                 show:function(){
                     tpSeguimiento.activate('tpSeguimiento1');
                     //tpSeguimiento.activate('tpInfoResidencia');
-                    //tpSeguimiento.activate('tpSeguimiento1');
+                    tpSeguimiento.activate('tpSeguimiento1');
 
                     tplTramite.compile();
                     tplTramite.overwrite('divTramite', datosTramite);
@@ -1912,6 +1758,7 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
         });
     }
 
+
     function isla(inCISLA_CODIGO) {
         var tmp1 = SCGG_ISLA.findExact('CISLA_CODIGO', inCISLA_CODIGO);
         var resultado = null;
@@ -1941,6 +1788,10 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
             datosTramite.CRTRA_OBSERVACION = Ext.util.Format.undef(inRecordCgg_res_seguimiento.get('CRTRA_OBSERVACION'));
             datosTramite.CRTRA_COMUNICADO_RADIAL = inRecordCgg_res_seguimiento.get('CRTRA_COMUNICADO_RADIAL') == 'null' ? '' : inRecordCgg_res_seguimiento.get('CRTRA_COMUNICADO_RADIAL');
             datosTramite.CRTRA_DIAS_PERMANENCIA = inRecordCgg_res_seguimiento.get('CRTRA_DIAS_PERMANENCIA') != 0?inRecordCgg_res_seguimiento.get('CRTRA_DIAS_PERMANENCIA') +' dias':inRecordCgg_res_seguimiento.get('CRTRA_FECHA_SALIDA')?truncDate(inRecordCgg_res_seguimiento.get('CRTRA_FECHA_SALIDA')):'INDEFINIDO';
+            datosTramite.REP_CRPER_CODIGO = inRecordCgg_res_seguimiento.get('REP_CRPER_CODIGO') != null ? inRecordCgg_res_seguimiento.get('REP_CRPER_CODIGO'):'';
+            datosTramite.CHANGE_CRTST_CODIGO = inRecordCgg_res_seguimiento.get('CHANGE_CRTST_CODIGO') != null ? inRecordCgg_res_seguimiento.get('CHANGE_CRTST_CODIGO'):'';
+            datosTramite.CRTT_CODIGO = inRecordCgg_res_seguimiento.get('CRTT_CODIGO') != null ? inRecordCgg_res_seguimiento.get('CRTT_CODIGO'):'';
+
 
             var scpTramite = new SOAPClientParameters({
                 inCrtra_codigo:inRecordCgg_res_seguimiento.get('CRTRA_CODIGO'),
@@ -1990,11 +1841,6 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
             datosTramite.CRPER_CODIGO = inRecordCgg_res_seguimiento.get('CGG_CRPER_CODIGO');
             datosTramite.CRFAS_NOMBRE = inRecordCgg_res_seguimiento.get('CRFAS_NOMBRE');
 
-            datosTramite.CVVEH_CODIGO = crtraData.CVVEH_CODIGO ;
-            if(crtraData.CVVEH_CODIGO){
-                datosTramite.VEHICULO = 'block';
-            }
-
             datosSeguimiento.CRSEG_NUMERO = inRecordCgg_res_seguimiento.get('CRSEG_NUMERO');
             datosSeguimiento.CRFAS_NOMBRE = inRecordCgg_res_seguimiento.get('CRFAS_NOMBRE');
             datosSeguimiento.CRSEG_FECHA_RECEPCION = truncDate(inRecordCgg_res_seguimiento.get('CRSEG_FECHA_RECEPCION'));
@@ -2002,9 +1848,7 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
             datosSeguimiento.CRSEG_OBSERVACION = inRecordCgg_res_seguimiento.get('CRSEG_OBSERVACION');
             datosSeguimiento.CRSEG_TIPO_ACTIVIDAD = inRecordCgg_res_seguimiento.get('CRSEG_TIPO_ACTIVIDAD');
             datosSeguimiento.CRSEG_DESCRIPCION = inRecordCgg_res_seguimiento.get('CRSEG_DESCRIPCION');
-            datosSeguimiento.CUSU_NOMBRES = inRecordCgg_res_seguimiento.get('CUSU_NOMBRES');
-
-            
+            datosSeguimiento.CUSU_NOMBRES = inRecordCgg_res_seguimiento.get('CUSU_NOMBRES');           
 
             var tmpTipoSolicitudTramite = inRecordCgg_res_seguimiento.get('CRTST_CODIGO');
             var scpTipoSolicitudTramite = new SOAPClientParameters();
@@ -2085,6 +1929,9 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
                 btnDistribuirCgg_res_seguimiento.disable();
                 btnNegarCgg_res_seguimiento.disable();
                 Ext.getCmp('btnOtraAccionCgg_res_seguimiento').disable();
+                //MO
+                btnResolucionCgg_res_seguimiento.disable();
+                //
                 Ext.MsgPopup.msg(tituloCgg_res_seguimiento, "El seguimiento se encuentra distribuido.<br>No puede realizar ninguna actividad hasta la ateci\u00F3n del mismo.", MsgPopup.INFO);
             }else if(inRecordCgg_res_seguimiento.get('CRSEG_ESTADO_ATENCION') == TypeEstadoAtencion.REVISADODISTRIBUIDO) {
                 btnDistribuirCgg_res_seguimiento.disable();                
@@ -2100,6 +1947,9 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
                 btnNegarCgg_res_seguimiento.hide();
                 btnDistribuirCgg_res_seguimiento.hide();
                 Ext.getCmp('btnOtraAccionCgg_res_seguimiento').hide();
+                //MO
+                btnResolucionCgg_res_seguimiento.hide();
+                //
 
                 Ext.getCmp('btnAgregarNovedad').hide();
                 Ext.getCmp('btnEliminarNovedad').hide();
@@ -2159,6 +2009,9 @@ function FrmCgg_res_seguimiento(INRECORD_CGG_RES_SEGUIMIENTO, inDesktop) {
                     btnNegarCgg_res_seguimiento.disable();
                     btnDistribuirCgg_res_seguimiento.disable();
                     Ext.getCmp('btnOtraAccionCgg_res_seguimiento').disable();
+                    //MO
+                    btnResolucionCgg_res_seguimiento.disable();
+                    //
                 }
             });
             flagFinalizacion = null;

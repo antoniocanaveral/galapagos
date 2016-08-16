@@ -340,6 +340,27 @@ function FrmListadoCgg_res_persona(inDesktop){
 		btnEliminarCgg_res_persona.setDisabled(!sm_cgper);
 		btnHojaDeVidaCgg_res_persona.setDisabled(!sm_cgper)*/
 	});
+
+    //AC==>
+    var btnAdjuntos = new Ext.ux.form.AlfrescoFM({
+        id:'compAdjunto',   //(opcional)
+        name:'compAdjunto', //(opcional)
+        text: 'Adjuntos',    //(opcional -> Texto del botón)
+        tableName: 'Cgg_res_persona',
+        validateRecordID:true
+    });
+
+    btnAdjuntos.addListener("updateData",function(t){
+        t.recordID = null;
+        var rPersona = grdCgg_res_persona.getSelectionModel().getSelected();
+        t.recordID = rPersona.get('CRPER_CODIGO');
+        t.filter = null;
+        rTramite=null;
+    });
+
+    //<== AC
+
+
     /**
      * Ext.Window Ventana en la que reside los controles necesarios para visualizar la informacion de los registros de la tabla Cgg_res_persona.
      */
@@ -359,7 +380,7 @@ function FrmListadoCgg_res_persona(inDesktop){
             minimizable:true,
             constrain:true,
             layout:'border',
-            bbar:[btnNuevoCgg_res_persona,btnEditarCgg_res_persona,btnEliminarCgg_res_persona,'-',btnHojaDeVidaCgg_res_persona,'->',btnSalirCgg_res_persona]
+            bbar:[btnNuevoCgg_res_persona,btnEditarCgg_res_persona,btnEliminarCgg_res_persona,'-',btnHojaDeVidaCgg_res_persona,'-',btnAdjuntos,'->',btnSalirCgg_res_persona]
         });
     }
     else
@@ -377,7 +398,7 @@ function FrmListadoCgg_res_persona(inDesktop){
             minimizable:true,
             constrain:true,
             layout:'border',
-            bbar:[btnNuevoCgg_res_persona,btnEditarCgg_res_persona,btnEliminarCgg_res_persona,'-',btnHojaDeVidaCgg_res_persona,'->',btnSalirCgg_res_persona]
+            bbar:[btnNuevoCgg_res_persona,btnEditarCgg_res_persona,btnEliminarCgg_res_persona,'-',btnHojaDeVidaCgg_res_persona,'-',btnAdjuntos,'->',btnSalirCgg_res_persona]
         });
     }
 

@@ -222,7 +222,7 @@ function loadIngresoTCT(){
 		}
 	}
 	$("btnVerificar").onclick=function(){
-		if (cbxTipoDocumento.dom.value == 1 && validarCedula(txtNumeroDocumento.value) == false){			
+		if (cbxTipoDocumento.dom.value == 1 && validarCedula(txtNumeroDocumento.value) == false){
 			
 			new bsxMessageBox({
 				title:"N\u00famero de documento inv\u00E1lido",
@@ -270,7 +270,7 @@ function loadIngresoTCT(){
     }	
 	
 	btnGuardarTTC.onclick = function(){
-		btnGuardarTTC.disabled=true;
+		btnGuardarTTC.disabled=false;
 		if (fnVerificarDatos()==true){			
 			if(tblPersona.rows.length<=1){
 				new bsxMessageBox({
@@ -440,7 +440,45 @@ function loadIngresoTCT(){
 	var param = new SOAPClientParameters();
 	param.add('format','JSON');
 	SOAPClient.invoke(URL_WS+"PublicWS/Cgg_tct_tipo_hospedaje","selectAll",param, true, CallBackCgg_tct_hospedaje);
-		
+
+
+	/*
+	 *Creación de un combobox para Categoría
+	 */
+	var cbxCategoria = new bsxComboBox({
+		id:"cbxCategoria",
+		renderTo:"tdCategoria",
+		displayField:"TCTCAT_NOMBRE",
+		valueField:"TCTCAT_CODIGO",
+		webService:{
+			url:URL_WS+"Cgg_tct_categoria",
+			method:"selectAll",
+			params:[
+				{name:"format",value:"JSON"}
+			]
+		},
+		width:100
+	});
+	cbxCategoria.reload();
+
+	/*
+	 *Creación de un combobox para Tipo de Registro
+	 */
+	var cbxTipoRegistro = new bsxComboBox({
+		id:"cbxTipoRegistro",
+		renderTo:"tdTipoRegistro",
+		displayField:"TCTTR_NOMBRE",
+		valueField:"TCTTR_CODIGO",
+		webService:{
+			url:URL_WS+"Cgg_tct_tipo_registro",
+			method:"selectAll",
+			params:[
+				{name:"format",value:"JSON"}
+			]
+		},
+		width:100
+	});
+	cbxTipoRegistro.reload();
 	
 	/*
 	*Creacion de un combobox para las aereolineas
@@ -595,6 +633,87 @@ function loadIngresoTCT(){
 		}
 	});	
 	cbxConfiguracion.reload();
+
+	/*
+	 *Creacion de un combobox para la isla de hospedaje
+	 */
+
+	var cbxIslaHospedaje = new bsxComboBox({
+		id:"cbxIslaHospedaje",
+		renderTo:"divIslaHospedaje",
+		displayField:"CISLA_NOMBRE",
+		valueField:"CISLA_CODIGO",
+		webService:{
+			url:URL_WS+"Cgg_isla",
+			method:"selectAllAtencionCliente",
+			params:[
+				{name:"format",value:"JSON"}
+			]
+		},
+		events:{
+			load:function(v){
+				$('#cbxIslaHospedaje').prepend("<option value=></option>");
+				$("#cbxIslaHospedaje").val(0);
+
+			}
+		}
+	});
+	cbxIslaHospedaje.reload();
+
+	/*
+	 *Creacion de un combobox para el tipo de hospedaje
+	 */
+
+	var cbxTipoHospedaje = new bsxComboBox({
+		id:"cbxTipoHospedaje",
+		renderTo:"divTipoHospedaje",
+		displayField:"CTTHJ_NOMBRE",
+		valueField:"CTTHJ_CODIGO",
+		webService:{
+			url:URL_WS+"Cgg_tct_tipo_hospedaje",
+			method:"selectAll",
+			params:[
+				{name:"format",value:"JSON"}
+			]
+		},
+		events:{
+			load:function(v){
+				$('#cbxTipoHospedaje').prepend("<option value=></option>");
+				$("#cbxTipoHospedaje").val(0);
+
+			}
+		}
+	});
+	cbxTipoHospedaje.reload();
+
+	/*
+	 *Creacion de un combobox para el nombre de hospedaje
+	 */
+
+	var cbxNombreHospedaje = new bsxComboBox({
+		id:"cbxNombreHospedaje",
+		renderTo:"divNombreHospedaje",
+		displayField:"CISLA_NOMBRE",
+		valueField:"CISLA_CODIGO",
+		webService:{
+			url:URL_WS+"Cgg_isla",
+			method:"selectAllAtencionCliente",
+			params:[
+				{name:"format",value:"JSON"}
+			]
+		},
+		events:{
+			load:function(v){
+				$('#cbxNombreHospedaje').prepend("<option value=></option>");
+				$("#cbxNombreHospedaje").val(0);
+
+			}
+		}
+	});
+	cbxNombreHospedaje.reload();
+
+
+
 	function fnHabilitarControles(estado){
 		txtNombrePersona.readOnly = estado;
 		txtApellidoPersona.readOnly = estado;
@@ -867,7 +986,7 @@ function loadIngresoTCT(){
 			tmpNumeroDocumento = txtNumeroDocumento.value;
 			tmpCrper_codigo = codigoPersona?codigoPersona:'';
 			tmpCusu_nombre = null;
-var arrFecha = dtFechaIngreso.value.split('/');
+			var arrFecha = dtFechaIngreso.value.split('/');
 			var fechaIngreso = arrFecha[2]+'-'+arrFecha[1]+'-'+arrFecha[0];		
 
 			tmpFechaIngreso = fechaIngreso+'T00:00:00';
@@ -877,6 +996,7 @@ var arrFecha = dtFechaIngreso.value.split('/');
             var param = new SOAPClientParameters();
 			var jsonevalualRegla = evaluarReglasValidacion(objReglasValidacion);			
             param.add('inJSON_reglas_validacion',jsonevalualRegla);
+			param.add('jsonData',null);
             SOAPClient.invoke(URL_WS+'PublicWS/Cgg_regla_validacion' ,'ejecutarReglaTipoSolicitud',param, true, CallBackCgg_regla_validacion);
     }
 	setHeightForm();

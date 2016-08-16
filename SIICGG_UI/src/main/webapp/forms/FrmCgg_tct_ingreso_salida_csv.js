@@ -389,7 +389,7 @@ function FrmCgg_tct_ingreso_salida_csv(inDesktop) {
 
                         }catch(inErr){
                             alert(inErr);
-							btnGuardarCgg_tct_ingreso_salida_csv.enable();
+							tnGuardarCgg_tct_ingreso_salida_csv.enable();
                         }
                     }
         }

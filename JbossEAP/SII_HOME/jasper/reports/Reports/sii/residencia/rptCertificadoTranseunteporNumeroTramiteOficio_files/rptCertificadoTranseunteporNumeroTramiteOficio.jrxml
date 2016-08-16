@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.7715610000000017"/>
+	<property name="ireport.x" value="52"/>
+	<property name="ireport.y" value="137"/>
+	<property name="ireport.jasperserver.reportUnit" value="/Reports/sii/residencia/rptCertificadoTranseunteporNumeroTramiteOficio"/>
+	<property name="ireport.jasperserver.url" value="http://190.95.187.82:8081/jasperserver/services/repository"/>
+	<parameter name="P_CRTRA_CODIGO" class="java.lang.String"/>
+	<parameter name="P_CUSU_RESPONSABLE" class="java.lang.String"/>
+	<parameter name="P_CUSU_CODIGO" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/klascano/BESIX/DEV/SIICGG/APP/REPORTS/"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT DISTINCT
+ TRA.CRTRA_NUMERO,
+ (SELECT I.CISLA_NOMBRE FROM SII.CGG_ISLA I WHERE I.CISLA_CODIGO = TRA.CISLA_CODIGO ) AS CISLA_NOMBRE,
+ (SELECT RES.CRRES_NUMERO_RESOLUCION FROM SII.CGG_RES_RESOLUCION RES WHERE TST.CRRES_CODIGO = RES.CRRES_CODIGO) AS CRRES_NUMERO_RESOLUCION,
+  CASE
+   WHEN TRA.CRPJR_CODIGO IS NOT NULL AND TRA.CRPER_CODIGO IS NULL THEN SII.F_CGG_RES_PERSONA_JURIDICA_SELECT_NOMBRES(TRA.CRPJR_CODIGO)
+   WHEN TRA.CRPJR_CODIGO IS NULL AND TRA.CRPER_CODIGO IS NOT NULL THEN SII.F_CGG_RES_PERSONA_SELECT_NOMBRES(TRA.CRPER_CODIGO)
+   WHEN TRA.CRPJR_CODIGO IS NOT NULL AND TRA.CRPER_CODIGO IS NOT NULL THEN SII.F_CGG_RES_PERSONA_JURIDICA_SELECT_NOMBRES(TRA.CRPJR_CODIGO)
+  END AS CRPER_AUSPICIANTE,
+  CASE WHEN LENGTH($P{P_CUSU_CODIGO})>1
+	THEN (SELECT COALESCE(P.CRPER_NOMBRES,' ')||' '||COALESCE(P.CRPER_APELLIDO_PATERNO,' ')||' '||COALESCE(P.CRPER_APELLIDO_MATERNO,' ') FROM SII.CGG_RES_PERSONA P INNER JOIN CGG_USUARIO U ON U.CRPER_CODIGO = P.CRPER_CODIGO AND U.CUSU_CODIGO= $P{P_CUSU_CODIGO})
+	ELSE (SELECT CONF.CGCNF_VALOR_CADENA FROM SII.CGG_CONFIGURACION CONF WHERE CONF.CGCNF_CODIGO = 'CONF111')
+  END AS CUSU_CERTIFICA,
+  CASE WHEN LENGTH($P{P_CUSU_RESPONSABLE})<>0 THEN SII.F_RPT_NOMBRE_OFERTANTE($P{P_CUSU_RESPONSABLE}) ELSE (SELECT CONF.CGCNF_VALOR_CADENA FROM SII.CGG_CONFIGURACION CONF WHERE CONF.CGCNF_CODIGO = 'CONF110') END AS CUSU_RESPONSABLE,
+  SII.F_CUSU_CARGO_PERSONA($P{P_CUSU_RESPONSABLE},0) AS CARGO_RESPONSABLE,
+  (SELECT COALESCE(G.CGCRG_NOMBRE,'NINGUNA') FROM SII.CGG_GEM_CARGO G WHERE G.CGCRG_CODIGO = TRA.CRTRA_ACTIVIDAD_RESIDENCIA) CRTRA_ACTIVIDAD_RESIDENCIA
+FROM SII.CGG_RES_TRAMITE TRA
+INNER JOIN SII.CGG_RES_TIPO_SOLICITUD_TRAMITE TST ON(TST.CRTST_CODIGO = TRA.CRTST_CODIGO)
+WHERE TRA.CRTRA_ESTADO=TRUE
+AND SII.F_TIPO_SOLICITUD_PADRE(TST.CRTST_CODIGO)=(SELECT CONF.CGCNF_VALOR_CADENA FROM SII.CGG_CONFIGURACION CONF WHERE CONF.CGCNF_CODIGO = '05')
+AND TRA.CRTRA_CODIGO=$P{P_CRTRA_CODIGO}]]>
+	</queryString>
+	<field name="crtra_numero" class="java.math.BigDecimal"/>
+	<field name="cisla_nombre" class="java.lang.String"/>
+	<field name="crres_numero_resolucion" class="java.lang.String"/>
+	<field name="crper_auspiciante" class="java.lang.String"/>
+	<field name="cusu_certifica" class="java.lang.String"/>
+	<field name="cusu_responsable" class="java.lang.String"/>
+	<field name="cargo_responsable" class="java.lang.String"/>
+	<field name="crtra_actividad_residencia" class="java.lang.String"/>
+	<variable name="V_FILA" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[new BigDecimal($V{V_FILA}.intValue()+1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<variable name="V_FECHA_ACTUAL" class="java.util.Date">
+		<variableExpression><![CDATA[new Date()]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="20" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="1" width="555" height="19"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="P_SUBTITULO_2">
+					<subreportParameterExpression><![CDATA[""]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="P_SUBTITULO_1">
+					<subreportParameterExpression><![CDATA[""]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptEncabezado"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="11" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="18" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="401" splitType="Stretch">
+			<staticText>
+				<reportElement x="138" y="0" width="217" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CERTIFICADO DE TRANSEÚNTE No.]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement x="28" y="85" width="522" height="50" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["En cumplimiento a lo dispuesto en el Art. 24 de la LOREG, la resolución No "+$F{crres_numero_resolucion}+" del Comité de Calificación y Control de Residencia y vista la solicitud presentada por <b>"+ $F{crper_auspiciante} +"</b> para realizar actividades de <b>"+$F{crtra_actividad_residencia}+"</b>, mediante la cual solicita el ingreso en calidad de transeúntes."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement x="28" y="147" width="522" height="63" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Una vez autorizado por el (la) <b>"+$F{cusu_responsable}+" - "+$F{cargo_responsable}+" </b> y por cuanto reúnen los requisitos exigidos en el Art.23 del Reglamento Especial para la Calificación y Control de Residencia en la provincia de Galápagos, se extiende el presente certificado de transeúnte a las siguientes personas: "]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="227" y="269" width="100" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center" markup="none">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Lo Certifico]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="16" y="339" width="522" height="14" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cusu_certifica}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="28" y="43" width="296" height="20"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cisla_nombre}.toUpperCase()+" "+new java.text.SimpleDateFormat("EEEEE, dd MMMMM yyyy").format($V{V_FECHA_ACTUAL})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="355" y="0" width="156" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{crtra_numero}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="152" y="353" width="250" height="46" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center">
+					<font size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["CONTROL DE RESIDENCIA CONSEJO DE GOBIERNO DEL RÉGIMEN ESPECIAL DE GALÁPAGOS"]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement positionType="Float" x="437" y="360" width="113" height="24" isPrintWhenDetailOverflows="true"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="2of7" drawText="false" checksumRequired="false">
+					<jr:codeExpression><![CDATA[$F{crtra_numero}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<subreport>
+				<reportElement x="28" y="233" width="522" height="13"/>
+				<subreportParameter name="P_CRTRA_NUMERO">
+					<subreportParameterExpression><![CDATA[$F{crtra_numero}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:rptPersonasCertificadoTranseunte"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement x="28" y="213" width="483" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Atención: Este certificado es válido para el beneficiario únicamente en la fecha de ingreso establecida.]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="437" y="384" width="113" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{crtra_numero}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="5" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="66" splitType="Stretch">
+			<textField>
+				<reportElement x="511" y="3" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="488" y="3" width="23" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Pág.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="524" y="3" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[de ]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="3" y="3" width="120" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="2" y="1" width="552" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="536" y="3" width="17" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_COUNT}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="3" y="18" width="551" height="48"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptPie"]]></subreportExpression>
+			</subreport>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

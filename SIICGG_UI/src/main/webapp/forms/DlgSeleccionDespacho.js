@@ -1,8 +1,8 @@
 /**
- *FUNCION. CREA EL OBJETO FRMSELECCIONSEGUIMIENTO PARA SELECCION DE SEGUIMIENTO DE FASES A LAS QUE SE DESPACHA UN SEGUIMIENTO DE UN TRAMITE.
- *@param inCrpro_codigo CODIGO DE PROCESO PRECARGADO.
+ *Funcion. Crea el objeto FrmSeleccionSeguimiento para seleccion de seguimiento de fases a las que se despacha un seguimiento de un tramite.
+ *@param inCrpro_codigo Codigo de proceso precargado.
  */
-function DlgSeleccionDespacho(inCrpro_codigo){
+function DlgSeleccionDespacho(inCrpro_codigo,inCrtra_codigo){
 
     var tituloDlgSeleccionDespacho = 'Selecci\u00F3n de seguimiento';
     var descDlgSeleccionDespacho = 'Este formulario le permite seleccionar el o los seguimientos a los que desea despachar el seguimiento de su tr\u00E1mite.';
@@ -66,6 +66,7 @@ function DlgSeleccionDespacho(inCrpro_codigo){
                             params: {
                                 inCrpro_codigo: tmpRecord.get('CRPRO_CODIGO'),
                                 inCisla_codigo: new UserSession().getUserData().CISLA_CODIGO,
+                                inCrtra_codigo: inCrtra_codigo,
                                 format: TypeFormat.JSON
                             }
                         });
@@ -79,7 +80,7 @@ function DlgSeleccionDespacho(inCrpro_codigo){
     /**
      * Ext.data.Store Agrupacion de registros de la tabla Cgg_res_fase por un campo especifico.
      */
-    var sCgg_res_faseDss = new Ext.data.Store({
+    var sCgg_res_faseDss =new Ext.data.Store({
         proxy:new Ext.ux.bsx.SoapProxy({
             url:URL_WS+"Cgg_res_fase",
             method:"selectCGG_RES_PROCESO"
@@ -103,6 +104,7 @@ function DlgSeleccionDespacho(inCrpro_codigo){
         baseParams:{
             inCrpro_codigo:null,
             inCisla_codigo:null,
+            inCrtra_codigo:null,
             format:TypeFormat.JSON
         },
         listeners:{
@@ -117,7 +119,35 @@ function DlgSeleccionDespacho(inCrpro_codigo){
                 });
             }
         }
-    });        
+    });
+    
+    var sCgg_res_fase_hijoDss =new Ext.data.Store({
+        proxy:new Ext.ux.bsx.SoapProxy({
+            url:URL_WS+"Cgg_res_fase",
+            method:"selectCGG_RES_FASE1"
+        }),
+        reader:new Ext.data.JsonReader({
+            },[
+            {name:'CRFAS_CODIGO'},
+            {name:'CRPRO_CODIGO'},
+            {name:'CRETT_CODIGO'},
+            {name:'CGG_CRETT_CODIGO'},
+            {name:'CRSEC_CODIGO'},
+            {name:'CGG_CRFAS_CODIGO'},
+            {name:'CGG_CUSU_CODIGO'},
+            {name:'CRFAS_NOMBRE'},
+            {name:'CRFAS_ORDEN'},
+			{name:'CRFAS_TAREA_REALIZA'},
+			{name:'CRFAS_SUBE_ADJUNTO'},
+			{name:'CRFAS_SUMILLA'},
+			{name:'CUSU_CODIGO'}
+		]),
+        baseParams:{
+            inCgg_crfas_codigo:null,
+            format:TypeFormat.JSON
+        }
+    });
+
 
     var cbsmDespacho = new Ext.grid.CheckboxSelectionModel({
         singleSelect:true,
@@ -283,7 +313,7 @@ function DlgSeleccionDespacho(inCrpro_codigo){
                     return NO_DATA_MESSAGE;
                 }
             }
-        },{
+        },/*{
             dataIndex:'CRFAS_SUMILLA',
             header:'Comentario/Sumilla',
             width:150,
@@ -291,7 +321,7 @@ function DlgSeleccionDespacho(inCrpro_codigo){
             editor:{
                 xtype:'textfield'
             }
-        },{
+        },*/{
             dataIndex:'CRFAS_TAREA_REALIZA',
             header:'Actividad',
             width:150,
@@ -383,6 +413,7 @@ function DlgSeleccionDespacho(inCrpro_codigo){
                     params: {
                         inCrpro_codigo:crproCodigo,
                         inCisla_codigo:cislaCodigo,
+                        inCrtra_codigo:inCrtra_codigo,
                         format: TypeFormat.JSON
                     }
                 });
@@ -415,8 +446,8 @@ function DlgSeleccionDespacho(inCrpro_codigo){
     }
 
     /**
-     *FUNCION. VALIDA SI LA FASE SELECCIONADA ES DIFERENTE A LA ESTABLECIDA POR EL METODO SETCRFAS_CODIGO.
-     *@param inRecordFase RECORD DE LA FASE SELECCIONADA DEL GRID.
+     *Funcion. Valida si la fase seleccionada es diferente a la establecida por el metodo setCrfas_codigo.
+     *@param inRecordFase Record de la fase seleccionada del grid.
      *@return True/False.
      */
     function validarSeguimiento(inRecordFase){
@@ -440,38 +471,26 @@ function DlgSeleccionDespacho(inCrpro_codigo){
     }
 
     /**
-     * FUNCION MIEMBRO QUE DEVUELVE LA VENTANA WINDLGSELECCIONDESPACHO.
-     * @returns VENTANA winDlgSeleccionDespacho.
+     * Funcion miembro que devuelve la ventana winDlgSeleccionDespacho.
+     * @returns ventana winDlgSeleccionDespacho.
      * @base winDlgSeleccionDespacho.prototype.show
      */
     this.getWindow = function(){
         return winDlgSeleccionDespacho;
     }
-    /**
-     *FUNCION QUE PERMITE OBTENER EL CODIGO DE PROCESO.
-     *@return crproCodigo CODIGO DE PROCESO
-     */
+
     this.getCrproCodigo = function(){
         return crproCodigo;
     }
-    /**
-     *FUNCION QUE PERMITE OBTENER EL CODIGO DE FASE.
-     *@return crfasCodigo CODIGO DE FASE
-     */
+
     this.getCrfasCodigo = function(){
         return crfasCodigo;
     }
-    /**
-     *FUNCION QUE PERMITE OBTENER LA FASE EN LA QUE SE ENCUENTRA EL SEGUIMIENTOP.
-     *@return outResult 
-     */
+
     this.getCrfasSeguimiento = function(){
         return outResult;
     }
-    /**
-     *FUNCION QUE PERMITE ESTABLECER EL CODIGO DE FASE.
-     *@param crfasCodigo CODIGO DE FASE
-     */
+
     this.setCrfasCodigo = function(inCrfasCodigo){
         crfasCodigo = inCrfasCodigo;
     }
@@ -495,7 +514,6 @@ DlgSeleccionDespacho.prototype.close = function(){
 /**
  * Funcion prototipo. Permite saber si se ha cerrado la ventana winFrmListadoCgg_res_voto,
  * con el fin de realizar otras acciones desde una instancia.
- * @param inFunctionHandler Funcion.
  */
 DlgSeleccionDespacho.prototype.closeHandler = function(inFunctionHandler){
     this.getWindow().on('close',inFunctionHandler);
@@ -521,16 +539,11 @@ DlgSeleccionDespacho.prototype.getCrfasCodigo = function(){
 DlgSeleccionDespacho.prototype.getCrfasSeguimiento = function(){
     this.getCrfasSeguimiento();
 }
-/**
- * Funcion prototipo. Establece el codigo de la fase.
- * @param inCrfasCodigo IDENTIFICATIVO UNICO DE REFGISTRO DE FASE
- */
+
 DlgSeleccionDespacho.prototype.setCrfasCodigo = function(inCrfasCodigo){
     this.setCrfasCodigo(inCrfasCodigo);
 }
-/**
- * Funcion prototipo.
- */
+
 DlgSeleccionDespacho.prototype.loadData = function(){
     return this.loadData;
 }

@@ -3,11 +3,11 @@
  * @constructor
  * @author Besixplus Cia. Ltda.
  */
-function FrmListadoCgg_res_seccion(inDesktop){
+function FrmListadoCgg_res_seccion(){
     var optMenu='Configuraci\u00F3n/Distrubuci\u00F3n departamental/Administraci\u00F3n secci\u00F3n';
     var urlListadoCgg_res_seccion=URL_WS+"Cgg_res_seccion";
-    var tituloListadoCgg_res_seccion='Secci\u00f3n';
-    var descListadoCgg_res_seccion='El formulario permite administrar informaci\u00f3n de las secciones del CGG.';
+    var tituloListadoCgg_res_seccion='Res seccion';
+    var descListadoCgg_res_seccion='El formulario permite administrar informaci\u00f3n de la tabla Res seccion';
     /**
      * Ext.Button Boton que permite insertar un nuevo registro de la ventana winFrmListadoCgg_res_seccion.
      */
@@ -180,10 +180,7 @@ function FrmListadoCgg_res_seccion(inDesktop){
     /**
      * Ext.Window Ventana en la que reside los controles necesarios para visualizar la informacion de los registros de la tabla Cgg_res_seccion.
      */
-    var winFrmListadoCgg_res_seccion = null;
-    
-if(inDesktop!=null && inDesktop!=undefined){
-    winFrmListadoCgg_res_seccion = inDesktop.createWindow({
+    var winFrmListadoCgg_res_seccion = new Ext.Window({
         id:'winFrmListadoCgg_res_seccion',
         title:tituloListadoCgg_res_seccion,
         iconCls:'iconAplicacion',
@@ -199,24 +196,6 @@ if(inDesktop!=null && inDesktop!=undefined){
         items:[grdCgg_res_seccion],
         bbar:[btnNuevoCgg_res_seccion,btnEditarCgg_res_seccion,btnEliminarCgg_res_seccion,'-',btnReporteCgg_res_seccion,'->',btnSalirCgg_res_seccion]
     });
-}else{
-    winFrmListadoCgg_res_seccion = new Ext.Window({
-        id:'winFrmListadoCgg_res_seccion',
-        title:tituloListadoCgg_res_seccion,
-        iconCls:'iconAplicacion',
-        width:600,
-        minWidth:600,
-        height:400,
-        minHeight:400,
-        maximizable:true,
-        minimizable:true,
-        constrain:true,
-        layout:'border',
-        tbar:getPanelTitulo('Listado '+tituloListadoCgg_res_seccion,descListadoCgg_res_seccion),
-        items:[grdCgg_res_seccion],
-        bbar:[btnNuevoCgg_res_seccion,btnEditarCgg_res_seccion,btnEliminarCgg_res_seccion,'-',btnReporteCgg_res_seccion,'->',btnSalirCgg_res_seccion]
-    });
-}
     /**
      * Funcion que aplica los privilegios del usuario.
      */

@@ -1,19 +1,15 @@
 package com.besixplus.sii.servlets;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Date;
+import com.besixplus.sii.db.ManagerConnection;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.json.JSONObject;
-
-import com.besixplus.sii.db.ManagerConnection;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * Servlet implementation class SessionManager
@@ -31,7 +27,7 @@ public class SessionWeb extends HttpServlet {
 	/**
 	 * @see HttpServlet#service(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
+	/*protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			Connection tmpCon = ManagerConnection.getConnection();
 			tmpCon.setAutoCommit(false);
@@ -52,5 +48,26 @@ public class SessionWeb extends HttpServlet {
 		} catch (SQLException e) {			
 			e.printStackTrace();
 		}		
+	}*/
+
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		try
+		{
+			Connection tmpCon = ManagerConnection.getConnection();
+			tmpCon.setAutoCommit(false);
+			ManagerConnection.setAppUserName(request.getUserPrincipal().getName());
+			com.besixplus.sii.objects.Cgg_configuracion objConfig = new com.besixplus.sii.objects.Cgg_configuracion();
+			objConfig.setCGCNF_CODIGO("CONF28");
+			String val = new com.besixplus.sii.db.Cgg_configuracion(objConfig).select(tmpCon).getCGCNF_VALOR_CADENA();
+			PrintWriter out = response.getWriter();
+			out.println(val);
+			tmpCon.setAutoCommit(true);
+			tmpCon.close();
+			if ((request.getParameter("request") != null) && (request.getParameter("request").equals("logout")))
+				request.getSession().invalidate();
+			response.sendRedirect(response.encodeRedirectURL("/" + val));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

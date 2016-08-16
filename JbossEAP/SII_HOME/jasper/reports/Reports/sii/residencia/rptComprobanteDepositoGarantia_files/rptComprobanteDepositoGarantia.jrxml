@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="595" pageHeight="841" columnWidth="567" leftMargin="14" rightMargin="14" topMargin="14" bottomMargin="14">
+	<property name="ireport.zoom" value="1.100000000000002"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["E:\\CGG\\APP\\REPORTS\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CRTRA_CODIGO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[--SELECT * FROM CGG_RES_TRAMITE WHERE CRTRA_NUMERO = '102'
+
+SELECT
+	TRA.CRTRA_ANIO||' - '||TRA.CRTRA_NUMERO AS CRTRA_NUMERO, --NUMERO TRAMITE
+	CASE
+		WHEN TRA.CRPER_CODIGO IS NULL AND TRA.CRPJR_CODIGO IS NOT NULL THEN SII.F_RPT_NOMBRE_AUSPICIANTE(TRA.CRPJR_CODIGO)
+		WHEN TRA.CRPER_CODIGO IS NOT NULL AND TRA.CRPJR_CODIGO IS NULL THEN SII.F_RPT_NOMBRE_AUSPICIANTE(TRA.CRPER_CODIGO)
+		WHEN TRA.CRPJR_CODIGO IS NOT NULL THEN SII.F_RPT_NOMBRE_AUSPICIANTE(TRA.CRPJR_CODIGO)
+	END AS CRPER_AUSPICIANTE, --AUSPICIANTE
+	CASE
+		WHEN TRA.CRPER_CODIGO IS NOT NULL AND TRA.CRPJR_CODIGO IS NOT NULL THEN SII.F_RPT_NOMBRE_AUSPICIANTE(TRA.CRPER_CODIGO)
+		ELSE
+		''
+	END AS CRPER_REPRESENTANTE,
+	(SELECT PER.CRPER_NUM_DOC_IDENTIFIC FROM SII.CGG_RES_PERSONA PER WHERE PER.CRPER_CODIGO=TRA.CRPER_CODIGO) AS CRPER_NUM_DOC_IDENTIFICACION_REP,
+	SII.F_CGG_RES_PERSONA_SELECT_NOMBRES(TRA.CGG_CRPER_CODIGO) AS CRPER_BENEFICIARIO, --BENEFICIARIO
+	(SELECT PER.CRPER_NUM_DOC_IDENTIFIC FROM SII.CGG_RES_PERSONA PER WHERE PER.CRPER_CODIGO=TRA.CGG_CRPER_CODIGO) AS CRPER_NUM_DOC_IDENTIFICACION,
+	(SELECT RDG.CRDPT_VALOR_DEPOSITO FROM CGG_RES_DEPOSITO_GARANTIA RDG WHERE RDG.CRDPT_CODIGO=TRG.CRDPT_CODIGO) AS CRDPT_VALOR_DEPOSITO, --DEPOSITO DE LA GARANTIA
+	(SELECT CRPJR_RAZON_SOCIAL
+	FROM SII.CGG_RES_DEPOSITO_GARANTIA DPT
+	LEFT JOIN SII.CGG_RES_PERSONA_JURIDICA PJR ON PJR.CRPJR_CODIGO = DPT.CRPJR_CODIGO
+	WHERE DPT.CRDPT_CODIGO = TRG.CRDPT_CODIGO) AS CRETF_NOMBRE_ENTIDAD -- ENTIDAD FINANCIERA
+FROM SII.CGG_RES_TRAMITE TRA
+INNER JOIN SII.CGG_RES_TRAMITE_GARANTIA TRG ON TRG.CRTRA_CODIGO = TRA.CRTRA_CODIGO AND TRG.CRTGR_ESTADO
+WHERE TRA.CRTRA_CODIGO=$P{P_CRTRA_CODIGO}
+UNION ALL
+SELECT
+	TRA.CRTRA_ANIO||' - '||TRA.CRTRA_NUMERO AS CRTRA_NUMERO, --NUMERO TRAMITE
+	CASE
+		WHEN TRA.CRPER_CODIGO IS NULL AND TRA.CRPJR_CODIGO IS NOT NULL THEN SII.F_RPT_NOMBRE_AUSPICIANTE(TRA.CRPJR_CODIGO)
+		WHEN TRA.CRPER_CODIGO IS NOT NULL AND TRA.CRPJR_CODIGO IS NULL THEN SII.F_RPT_NOMBRE_AUSPICIANTE(TRA.CRPER_CODIGO)
+		WHEN TRA.CRPER_CODIGO IS NOT NULL AND TRA.CRPJR_CODIGO IS NOT NULL THEN SII.F_RPT_NOMBRE_AUSPICIANTE(TRA.CRPJR_CODIGO)
+	END AS CRPER_AUSPICIANTE, --AUSPICIANTE
+	CASE
+		WHEN TRA.CRPER_CODIGO IS NOT NULL AND TRA.CRPJR_CODIGO IS NOT NULL THEN SII.F_RPT_NOMBRE_AUSPICIANTE(TRA.CRPER_CODIGO)
+		ELSE
+		''
+	END AS CRPER_REPRESENTANTE, --REPRESENTANTE
+	(SELECT PER.CRPER_NUM_DOC_IDENTIFIC FROM SII.CGG_RES_PERSONA PER WHERE PER.CRPER_CODIGO=TRA.CRPER_CODIGO) AS CRPER_NUM_DOC_IDENTIFICACION_REP,
+	SII.F_CGG_RES_PERSONA_SELECT_NOMBRES(TRA.CGG_CRPER_CODIGO) AS CRPER_BENEFICIARIO, --BENEFICIARIO
+	(SELECT PER.CRPER_NUM_DOC_IDENTIFIC FROM SII.CGG_RES_PERSONA PER WHERE PER.CRPER_CODIGO=TRA.CGG_CRPER_CODIGO) AS CRPER_NUM_DOC_IDENTIFICACION,
+	(SELECT RDG.CRDPT_VALOR_DEPOSITO FROM SII.CGG_RES_DEPOSITO_GARANTIA RDG WHERE RDG.CRDPT_CODIGO=TRG.CRDPT_CODIGO) AS CRDPT_VALOR_DEPOSITO, --DEPOSITO DE LA GARANTIA
+	(SELECT CRPJR_RAZON_SOCIAL
+	FROM SII.CGG_RES_DEPOSITO_GARANTIA DPT
+	LEFT JOIN SII.CGG_RES_PERSONA_JURIDICA PJR ON PJR.CRPJR_CODIGO = DPT.CRPJR_CODIGO
+	WHERE DPT.CRDPT_CODIGO = TRG.CRDPT_CODIGO) AS CRETF_NOMBRE_ENTIDAD -- ENTIDAD FINANCIERA
+FROM SII.CGG_RES_TRAMITE TRA
+INNER JOIN SII.CGG_RES_TRAMITE_GARANTIA TRG ON TRG.CRTRA_CODIGO = TRA.CRTRA_CODIGO AND TRG.CRTGR_ESTADO
+WHERE TRA.CRTRA_CODIGO=$P{P_CRTRA_CODIGO}]]>
+	</queryString>
+	<field name="crtra_numero" class="java.lang.String"/>
+	<field name="crper_auspiciante" class="java.lang.String"/>
+	<field name="crper_representante" class="java.lang.String"/>
+	<field name="crper_num_doc_identificacion_rep" class="java.lang.String"/>
+	<field name="crper_beneficiario" class="java.lang.String"/>
+	<field name="crper_num_doc_identificacion" class="java.lang.String"/>
+	<field name="crdpt_valor_deposito" class="java.math.BigDecimal"/>
+	<field name="cretf_nombre_entidad" class="java.lang.String"/>
+	<variable name="V_FILA" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[new BigDecimal($V{V_FILA}.intValue()+1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<variable name="V_FECHA_ACTUAL" class="java.util.Date">
+		<variableExpression><![CDATA[new Date()]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="378" splitType="Stretch">
+			<textField>
+				<reportElement x="114" y="87" width="385" height="38"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["COMPROBANTE PARA DEPOSITO DE GARANTIA EN EL BANCO "+$F{cretf_nombre_entidad}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="48" y="132" width="157" height="21"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="48" y="162" width="157" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DATOS AUSPICIANTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="85" y="190" width="98" height="16">
+					<printWhenExpression><![CDATA[$F{crper_representante}.length()>0]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[EMPRESA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="48" y="261" width="135" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DATOS AUSPICIADO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="284" y="132" width="254" height="21"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Número de Tramite: "+$F{crtra_numero}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="85" y="292" width="98" height="16"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[NOMBRES:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="85" y="319" width="98" height="16"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[CEDULA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="85" y="345" width="98" height="18"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[VALOR:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="209" y="190" width="285" height="18"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_auspiciante}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="209" y="292" width="285" height="16"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_beneficiario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="209" y="319" width="285" height="16"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_num_doc_identificacion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="85" y="24" width="453" height="52" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONSEJO DE GOBIERNO DEL REGIMEN ESPECIAL DE GALÁPAGOS]]></text>
+			</staticText>
+			<textField pattern="###0.00">
+				<reportElement x="209" y="345" width="285" height="18"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{crdpt_valor_deposito}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="377" width="565" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<image>
+				<reportElement x="19" y="18" width="55" height="63"/>
+				<imageExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/cgg3"]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement x="210" y="212" width="285" height="18" isRemoveLineWhenBlank="true"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_representante}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="86" y="212" width="109" height="16" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$F{crper_representante}.length() > 0]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[REPRESENTANTE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="85" y="190" width="98" height="16">
+					<printWhenExpression><![CDATA[$F{crper_representante}.isEmpty()]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[AUSPICIANTE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="86" y="236" width="98" height="16" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$F{crper_num_doc_identificacion_rep}.length()>0]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[CEDULA:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="209" y="236" width="285" height="18" isRemoveLineWhenBlank="true"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_num_doc_identificacion_rep}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="4" splitType="Stretch"/>
+	</pageFooter>
+</jasperReport>

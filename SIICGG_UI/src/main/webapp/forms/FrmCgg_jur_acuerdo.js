@@ -396,10 +396,10 @@ function FrmCgg_jur_acuerdo(IN_SENTENCIA_CGG_JUR_ACUERDO,IN_RECORD_CGG_JUR_ACUER
     /**
      * Funcion que permite cargar el  codigo del documento generado
      */
-    function generarAño(){
+    function generarAnio(){
         numCjacu_anio.setValue(parseInt(new Date().getFullYear()));
     }
-    generarAño();
+    generarAnio();
     /**
      * Ext.form.TextField NUMERO SECUENCIAL UNICO DEL ACUERDO
      */

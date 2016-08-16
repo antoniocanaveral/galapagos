@@ -1,13 +1,18 @@
 package com.besixplus.sii.ws;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+import com.besixplus.sii.db.ManagerConnection;
+import com.besixplus.sii.i18n.Messages;
+import com.besixplus.sii.mail.ProcessMail;
+import com.besixplus.sii.misc.CGGEnumerators;
+import com.besixplus.sii.misc.CGGEnumerators.*;
+import com.besixplus.sii.objects.Cgg_res_fase;
+import com.besixplus.sii.objects.Cgg_res_novedad_notificacion;
+import com.besixplus.sii.objects.Cgg_res_tramite;
+import com.besixplus.sii.objects.ServerResponse;
+import com.besixplus.sii.util.Env;
+import com.bmlaurus.rule.RulePhase;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
@@ -23,22 +28,15 @@ import javax.xml.soap.SOAPFactory;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import com.besixplus.sii.db.ManagerConnection;
-import com.besixplus.sii.i18n.Messages;
-import com.besixplus.sii.misc.CGGEnumerators;
-import com.besixplus.sii.misc.CGGEnumerators.ESTADOATENCION;
-import com.besixplus.sii.misc.CGGEnumerators.ESTADORESPUESTA;
-import com.besixplus.sii.misc.CGGEnumerators.LONGITUDCLAVEPRIMARIA;
-import com.besixplus.sii.misc.CGGEnumerators.TIPONOVEDAD;
-import com.besixplus.sii.misc.CGGEnumerators.TIPORESPUESTA;
-import com.besixplus.sii.objects.Cgg_res_fase;
-import com.besixplus.sii.objects.Cgg_res_novedad_notificacion;
-import com.besixplus.sii.objects.Cgg_res_tramite;
-import com.besixplus.sii.objects.ServerResponse;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.net.URLClassLoader;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 
 /**
  * CLASE Cgg_res_seguimiento
@@ -728,16 +726,29 @@ public class Cgg_res_seguimiento implements Serializable{
 				if(outResult.equals("true")){
 					//VERIFICA SI EXISTE UNA FUNCION POR EJECUTAR
 					if(objFaseSeguimiento.getCRFAS_FUNCION_EJECUTA().trim().isEmpty()==false){
-						if (objFaseSeguimiento.getCRFAS_EJECUTA_DESPACHO()== true && inTipo_atencion == CGGEnumerators.ESTADOATENCION.DESPACHADO.getValue()){
-							tmpMsg = new com.besixplus.sii.db.Cgg_res_seguimiento().ejecutarFuncionSeguimiento(inConnection,objFaseSeguimiento.getCRFAS_FUNCION_EJECUTA(),objSeguimiento.getCRSEG_CODIGO(),inUserName);
-							if (!tmpMsg.equalsIgnoreCase("false"))
-								appResponse.setMsg(tmpMsg);
-
-						}
+						boolean runRule = false;
+						if (objFaseSeguimiento.getCRFAS_EJECUTA_DESPACHO()== true && inTipo_atencion == CGGEnumerators.ESTADOATENCION.DESPACHADO.getValue())
+							runRule=true;
 						else if(objFaseSeguimiento.getCRFAS_EJECUTA_DESPACHO()== false && inTipo_atencion == CGGEnumerators.ESTADOATENCION.DISTRIBUIDO.getValue())
-						{
-							tmpMsg = new com.besixplus.sii.db.Cgg_res_seguimiento().ejecutarFuncionSeguimiento(inConnection,objFaseSeguimiento.getCRFAS_FUNCION_EJECUTA(),objSeguimiento.getCRSEG_CODIGO(),inUserName);
-							if (!tmpMsg.equalsIgnoreCase("false"))
+							runRule=true;
+
+						if(runRule){
+							if(objFaseSeguimiento.getCRFAS_FUNCION_EJECUTA().contains("com.bmlaurus.phaserule")){//es una regla de java para fases
+								//Verificamos que tramite venga con datos
+								if(tramite.getCRTST_CODIGO()==null){
+									tramite.setCRTRA_CODIGO(objSeguimiento.getCRTRA_CODIGO());
+									tramite = new com.besixplus.sii.db.Cgg_res_tramite(tramite).select(inConnection);
+								}
+								String className = objFaseSeguimiento.getCRFAS_FUNCION_EJECUTA();
+								URLClassLoader externalClassLoader = new URLClassLoader (Env.resolveClassPath("rules"), this.getClass().getClassLoader());
+								Class clazz = Class.forName(className,true,externalClassLoader);
+								RulePhase rule = (RulePhase) clazz.getConstructor(Connection.class).newInstance(inConnection);
+								tmpMsg = rule.executeRule(objSeguimiento, tramite, inUserName);
+							}else{
+								tmpMsg = new com.besixplus.sii.db.Cgg_res_seguimiento().ejecutarFuncionSeguimiento(inConnection,objFaseSeguimiento.getCRFAS_FUNCION_EJECUTA(),
+										objSeguimiento.getCRSEG_CODIGO(),inUserName);
+							}
+							if (tmpMsg!=null && !tmpMsg.equalsIgnoreCase("false"))
 								appResponse.setMsg(tmpMsg);
 						}
 					}
@@ -827,7 +838,7 @@ public class Cgg_res_seguimiento implements Serializable{
 
 								//NOTIFICACION A TRAVEZ DE CORREO ELECTRONICO AL USUARIO DEL SEGUIMIENTO Q RECIBIO EL SEGUIMIENTO.
 								//TODO: IMPLEMENTAR LA NOTIFICACION POR CORREO ELECTRONICO.
-								//Notificador objNotificador = new Notificador(inMail, inAsunto, inContenido, inNombreAdjuntos, inAdjuntos)																								
+								//Notificador objNotificador = new Notificador(inMail, inAsunto, inContenido, inNombreAdjuntos, inAdjuntos)
 							}
 
 						}else{
@@ -839,7 +850,9 @@ public class Cgg_res_seguimiento implements Serializable{
 						}										
 					}
 					if(flagSeguimientoHijo.equalsIgnoreCase("true")==true){										
-						inConnection.commit();																												
+						inConnection.commit();
+						ProcessMail mailer = new ProcessMail(objSeguimiento,tramite,objFaseSeguimiento, inCrseg_tipo_respuesta);
+						mailer.start();
 					}else{
 						outResult="NO SE PUDO ALMACENAR EL ENVIO DE SEGUIMIENTO.";
 						inConnection.rollback();

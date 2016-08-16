@@ -495,6 +495,7 @@ function FrmCgg_res_fase(INSENTENCIA_CGG_RES_FASE,INRECORD_PROCESO_FASE,INRECORD
                     param.add('inCrfas_atencion_normal',chkCrfas_atencion_normal.getValue());
                     param.add('inFaseUsuario_JSON',grdCgg_res_fase_usuario.getStore().getJsonData());
                     param.add('inFaseCriterio_JSON',grdCgg_jur_criterio.getStore().getJsonData());
+                    param.add('inFaseNotificacion_JSON',grdCgg_res_fase_notificacion.getStore().getJsonData());
                     SOAPClient.invoke(urlCgg_res_fase,INSENTENCIA_CGG_RES_FASE + '1',param, true, CallBackCgg_res_fase);
                 }catch(inErr){
                     winFrmCgg_res_fase.getEl().unmask();
@@ -945,7 +946,359 @@ function FrmCgg_res_fase(INSENTENCIA_CGG_RES_FASE,INRECORD_PROCESO_FASE,INRECORD
             }]
     });
 
+    //AC==>
 
+    /*
+     * Ext.ux.grid.RowEditor Editor de filas personalizado para utilización en el grid de notificaciones
+     */
+    var reNotification= new Ext.ux.grid.RowEditor({
+        saveText: 'Aceptar',
+        cancelText:'Cancelar',
+        listeners: {
+            validateedit: function (inRowEditor, inObject, inRecord, inRowIndex) {
+            },
+            canceledit: function (inRowEditor, inFlag) {
+            }
+        }
+    });
+
+    var destinatariosData = [['AUSP','Auspiciante'],['BENF','Beneficiario'], ['USUA','Funcionario Fase'], ['GOB','Gobierno de Gal\u00F1pagos']];
+    var dsDestinatarios = new Ext.data.ArrayStore({
+        fields: ['code', 'name'],
+        idIndex: 0
+    });
+    dsDestinatarios.loadData(destinatariosData);
+    var cmbDestinatarios = new Ext.form.ComboBox({
+        id:"cmbDestinatarios",
+        store:dsDestinatarios,
+        displayField : 'name',
+        valueField : 'code',
+        triggerAction:'all',
+        mode: 'local',
+        forceSelection:true
+    });
+
+    var dsMensajes = new Ext.data.Store({
+        proxy:new Ext.ux.bsx.SoapProxy({
+            url:URL_WS+"Cgg_not_mail",
+            method:"selectAll"
+        }),
+        remoteSort:false,
+        reader:new Ext.data.JsonReader({},[
+            {
+                name:'ntml_codigo'
+            },
+
+            {
+                name:'ntml_name'
+            },
+
+            {
+                name:'ntml_description'
+            }
+        ]),
+        listeners:{
+            load:function(){
+                dsMensajes.sort('ntml_name','ASC');
+            }
+        }
+    });
+    dsMensajes.load();
+    var cmbMensajes = new Ext.form.ComboBox({
+        id:"cmbMensajes",
+        store:dsMensajes,
+        mode: 'local',
+        forceSelection:true,
+        displayField:'ntml_name',
+        typeAhead: true,
+        triggerAction:'all',
+        emptyText:'Seleccione un Mensaje',
+        selectOnFocus:true,
+        tpl: '<tpl for="."><div ext:qtip="{ntml_description}" class="x-combo-list-item">{ntml_name}</div></tpl>',
+        valueField:'ntml_codigo'
+    });
+
+    var dsTipoSolicitud = new Ext.data.Store({
+        proxy:new Ext.ux.bsx.SoapProxy({
+            url:URL_WS+"Cgg_res_tipo_solicitud_tramite",
+            method:"selectAll",
+            pagin : false
+        }),
+        baseParams: {
+            format: TypeFormat.JSON
+        },
+        remoteSort:false,
+        reader:new Ext.data.JsonReader({},[
+            {name:'CRTST_CODIGO'},
+            {name:'CRTST_DESCRIPCION'},
+            {name:'CRTST_OBSERVACION'}
+        ]),
+        listeners:{
+            load:function(){
+                dsMensajes.sort('CRTST_DESCRIPCION','ASC');
+            }
+        }
+    });
+    dsTipoSolicitud.load();
+    var cmbTipoSolicitud = new Ext.form.ComboBox({
+        id:"cmbTipoSolicitud",
+        store:dsTipoSolicitud,
+        mode: 'local',
+        forceSelection:true,
+        displayField:'CRTST_DESCRIPCION',
+        typeAhead: true,
+        triggerAction:'all',
+        selectOnFocus:true,
+        tpl: '<tpl for="."><div ext:qtip="{CRTST_OBSERVACION}" class="x-combo-list-item">{CRTST_DESCRIPCION}</div></tpl>',
+        valueField:'CRTST_CODIGO'
+    });
+    var respuestaFase = [['AUT','Respuesta Positiva'],['NEGA','Respuesta Negativa']];
+    var dsRespuestaFase = new Ext.data.ArrayStore({
+        fields: ['code', 'name'],
+        idIndex: 0
+    });
+    dsRespuestaFase.loadData(respuestaFase);
+    var cmbRespuestaFase = new Ext.form.ComboBox({
+        id:"cmbRespuestaFase",
+        store:dsRespuestaFase,
+        displayField : 'name',
+        valueField : 'code',
+        triggerAction:'all',
+        mode: 'local',
+        forceSelection:true
+    });
+    
+    //Deifine las columnas de la tabla cgg_pra_contacto.
+    var cmCgg_not_fase_notification = new Ext.grid.ColumnModel([
+        new Ext.grid.RowNumberer(),
+        {
+            dataIndex:'CRPRO_CODIGO',
+            hidden:true,
+            header:'Codigo',
+            width:150,
+            sortable:true
+        },
+
+        {
+            dataIndex:'CRFAS_CODIGO',
+            hidden:true,
+            header:'Codigo',
+            width:150,
+            sortable:true
+        },
+        {
+            dataIndex:'NTML_CODIGO',
+            header:'Mensaje',
+            width:200,
+            sortable:true,
+            editor:cmbMensajes,
+            renderer:function(inNtml_codigo){
+                var i =0;
+                var result = 'requerido';
+                for(i=0;i<dsMensajes.getCount();i++){
+                    var rRequisito = dsMensajes.getAt(i);
+                    if(rRequisito.get('ntml_codigo') == inNtml_codigo){
+                        result = rRequisito.get('ntml_name');
+                        break;
+                    }
+                }
+                return result;
+            }
+        },
+        {
+            dataIndex:'NTFN_DESTINATARIO',
+            header:'Destinatario',
+            width:200,
+            sortable:true,
+            editor: cmbDestinatarios,
+            renderer:function(inNtml_destinatario){
+                var i =0;
+                var result = 'requerido';
+                for(i=0;i<dsDestinatarios.getCount();i++){
+                    var rRequisito = dsDestinatarios.getAt(i);
+                    if(rRequisito.get('code') == inNtml_destinatario){
+                        result = rRequisito.get('name');
+                        break;
+                    }
+                }
+                return result;
+            }
+        },
+        {
+            dataIndex:'NTFN_TIPO_SOLICITUD',
+            header:'Tipo Solicitud',
+            width:200,
+            sortable:true,
+            editor: cmbTipoSolicitud,
+            renderer:function(inNtml_tipo_solicitud){
+                var i =0;
+                var result = '';
+                for(i=0;i<dsTipoSolicitud.getCount();i++){
+                    var rRequisito = dsTipoSolicitud.getAt(i);
+                    if(rRequisito.get('CRTST_CODIGO') == inNtml_tipo_solicitud){
+                        result = rRequisito.get('CRTST_DESCRIPCION');
+                        break;
+                    }
+                }
+                return result;
+            }
+        },
+        {
+            dataIndex:'NTFN_RESPUESTA_FASE',
+            header:'Evento',
+            width:200,
+            sortable:true,
+            editor: cmbRespuestaFase,
+            renderer:function(inNtml_destinatario){
+                var i =0;
+                var result = 'requerido';
+                for(i=0;i<dsRespuestaFase.getCount();i++){
+                    var rRequisito = dsRespuestaFase.getAt(i);
+                    if(rRequisito.get('code') == inNtml_destinatario){
+                        result = rRequisito.get('name');
+                        break;
+                    }
+                }
+                return result;
+            }
+        }
+    ]);
+
+    //Agrupacion de registros de la tabla Cgg_pra_contacto por un campo especifico.*/
+    var gsCgg_not_fase_notification = new Ext.data.Store({
+        proxy:new Ext.ux.bsx.SoapProxy({
+            url:URL_WS+"Cgg_not_fase_notification",
+            method:"selectByFase",
+            pagin:false
+        }),
+        remoteSort:false,
+        reader:new Ext.data.JsonReader({
+        },[
+            {
+                name:'CRPRO_CODIGO'
+            },
+            {
+                name:'CRFAS_CODIGO'
+            },
+            {
+                name:'NTML_CODIGO'
+            },
+            {
+                name:'NTFN_DESTINATARIO'
+            },
+            {
+                name:'NTFN_TIPO_SOLICITUD'
+            },
+            {
+                name:'NTFN_RESPUESTA_FASE'
+            }
+        ]),
+        sortInfo:{
+            field: 'NTML_CODIGO',
+            direction: 'ASC'
+        },
+        baseParams:{}
+    });
+
+
+    var grdCgg_res_fase_notificacion = new Ext.grid.EditorGridPanel({
+        cm:cmCgg_not_fase_notification,
+        store:gsCgg_not_fase_notification,
+        region:'center',
+        anchor:'100% 100%',
+        sm:new Ext.grid.RowSelectionModel({
+            singleSelect:true
+        }),
+        viewConfig:{
+            forceFit:true
+        },
+        loadMask:{
+            msg:"Cargando..."
+        },
+        plugins:[reNotification],
+        tbar: [{
+            // xtype:'button',
+            iconCls:'iconNuevo',
+            tooltip:'Agregar notificaci\u00F3n',
+            handler : function(){ // Agrego filas
+                var tmpRecordCriterio = grdCgg_res_fase_notificacion.getStore().recordType;
+                reNotification.stopEditing();
+                grdCgg_res_fase_notificacion.getStore().insert(0,
+                    new tmpRecordCriterio({
+                        CRPRO_CODIGO: 'KEYGEN',
+                        CRFAS_CODIGO: 'KEYGEN',
+                        NTML_CODIGO: '',
+                        NTFN_DESTINATARIO: '',
+                        NTFN_TIPO_SOLICITUD:'',
+                        NTFN_RESPUESTA_FASE:'AUT'
+                    })
+                );
+                grdCgg_res_fase_notificacion.getView().refresh();
+                reNotification.startEditing(0,3);
+            }
+        },
+            {
+                xtype:'button',
+                iconCls:'iconEliminar',
+                tooltip:'Eliminar notificaci\u00F3n',
+                handler : function(){ // Agrego filas
+                    if (grdCgg_res_fase_notificacion.getSelectionModel().getSelected().get('CRFAS_CODIGO') != 'KEYGEN')
+                    {
+
+                        function SWRCgg_res_fase_notificacion(btn){
+                            if (btn=='yes'){
+                                try{
+                                    function CallBackCgg_res_fase_notificacion(r){
+                                        winFrmCgg_res_fase.getEl().unmask();
+                                        if(r=='true'){
+                                            grdCgg_res_fase_notificacion.stopEditing();
+                                            gsCgg_not_fase_notification.remove(grdCgg_res_fase_notificacion.getSelectionModel().getSelected());
+                                            grdCgg_res_fase_notificacion.getView().refresh();
+                                            grdCgg_res_fase_notificacion.getSelectionModel().selectRow(0);
+                                            //gsCgg_jur_criterio.reload();
+                                        }else{
+                                            Ext.Msg.show({
+                                                title:tituloCgg_res_fase,
+                                                msg: 'La informaci\u00f3n de la notificaci\u00F3n no ha podido ser eliminada.',
+                                                buttons: Ext.Msg.OK,
+                                                icon: Ext.MessageBox.ERROR
+                                            });
+                                        }
+                                    }
+                                    winFrmCgg_res_fase.getEl().mask('Eliminando...', 'x-mask-loading');
+                                    var param = new SOAPClientParameters();
+                                    param.add("inCrpro_codigo",grdCgg_res_fase_notificacion.getSelectionModel().getSelected().get('CRPRO_CODIGO'));
+                                    param.add("inCrfas_codigo",grdCgg_res_fase_notificacion.getSelectionModel().getSelected().get('CRFAS_CODIGO'));
+                                    param.add("inNtml_codigo",grdCgg_res_fase_notificacion.getSelectionModel().getSelected().get('NTML_CODIGO'));
+                                    param.add("inNtfn_destinatario",grdCgg_res_fase_notificacion.getSelectionModel().getSelected().get('NTFN_DESTINATARIO'));
+                                    //param.add("inNtfn_tipo_solicitud",grdCgg_res_fase_notificacion.getSelectionModel().getSelected().get('NTFN_TIPO_SOLICITUD'));
+                                    //param.add("inNtfn_respuesta_fase",grdCgg_res_fase_notificacion.getSelectionModel().getSelected().get('NTFN_RESPUESTA_FASE'));
+                                    SOAPClient.invoke(URL_WS+"Cgg_not_fase_notification","deleteTrusted",param, true, CallBackCgg_res_fase_notificacion);
+                                }catch(inErr){
+                                    winFrmCgg_res_fase.getEl().unmask();
+                                }
+                            }
+                        }
+                        Ext.Msg.show({
+                            title:'Aviso',
+                            msg:'Est\u00e1 seguro de eliminar?',
+                            buttons: Ext.Msg.YESNO,
+                            fn: SWRCgg_res_fase_notificacion,
+                            icon: Ext.MessageBox.QUESTION
+                        });
+                    }
+                    else
+                    {
+                        grdCgg_res_fase_notificacion.stopEditing();
+                        gsCgg_not_fase_notification.remove(grdCgg_res_fase_notificacion.getSelectionModel().getSelected());
+                        grdCgg_res_fase_notificacion.getView().refresh();
+                        grdCgg_res_fase_notificacion.getSelectionModel().selectRow(0);
+                    }
+
+
+                }
+            }]
+    });
 
 
     var tabpnlOpciones = new Ext.TabPanel({
@@ -968,6 +1321,13 @@ function FrmCgg_res_fase(INSENTENCIA_CGG_RES_FASE,INRECORD_PROCESO_FASE,INRECORD
                 //frame:false,
                 title:'Requerimientos',
                 items:[grdCgg_jur_criterio]
+            },
+            {
+                xtype:'panel',
+                layout:'border',
+                //frame:false,
+                title:'Notificaciones',
+                items:[grdCgg_res_fase_notificacion]
             }
         ]
     });
@@ -1228,7 +1588,11 @@ function FrmCgg_res_fase(INSENTENCIA_CGG_RES_FASE,INRECORD_PROCESO_FASE,INRECORD
                     format:TypeFormat.JSON
                 }
             });
-
+            gsCgg_not_fase_notification.reload({
+                params:{
+                    inCrfas_codigo:inRecordCgg_res_fase['CRFAS_CODIGO']
+                }
+            });
         }
     }
     /**

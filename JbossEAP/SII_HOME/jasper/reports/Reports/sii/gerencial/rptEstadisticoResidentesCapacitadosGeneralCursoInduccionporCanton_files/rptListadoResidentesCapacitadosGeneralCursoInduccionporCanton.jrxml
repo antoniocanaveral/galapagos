@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptListadoResidentesCapacitadosGeneralCursoInduccionporCanton" language="groovy" pageWidth="595" pageHeight="842" columnWidth="585" leftMargin="5" rightMargin="5" topMargin="5" bottomMargin="5">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="P_FECHA_INICIAL" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_FECHA_FINAL" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_TIPO_BUSQUEDA" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+	C.CANTON,
+	C.CDASC_CODIGO,
+	C.CRPER_NOMBRES,
+	C.CRPER_NUM_DOC_IDENTIFIC,
+	C.CDCUR_CONTENIDO,
+	C.CDCUR_FECHA_INICIO,
+	C.CDCUR_ESTABLECIMIENTO
+
+
+FROM(
+	SELECT DISTINCT
+		(SELECT CCTN_NOMBRE
+		FROM SII.CGG_CANTON
+		WHERE CCTN_CODIGO=CUR.CCTN_CODIGO) AS CANTON,
+
+		COALESCE(PER.CRPER_NOMBRES,'')||' ' ||COALESCE(PER.CRPER_APELLIDO_PATERNO,'')||' '||COALESCE(PER.CRPER_APELLIDO_Materno,'') CRPER_NOMBRES,
+		PER.CRPER_NUM_DOC_IDENTIFIC,
+
+		CUR.CDCUR_CONTENIDO,
+		CUR.CDCUR_FECHA_INICIO,
+		CUR.CDCUR_ESTABLECIMIENTO,
+
+		ASI.CDASC_CODIGO,
+		CRTST_CODIGO,
+		CASE $P{P_TIPO_BUSQUEDA}
+		WHEN 0 THEN '04'
+		WHEN 1 THEN '03'
+		WHEN 2 THEN '03'
+		END CODIGO ,
+		CASE $P{P_TIPO_BUSQUEDA}
+		WHEN 0 THEN '04'
+		WHEN 1 THEN '03'
+		WHEN 2 THEN '04'
+		END CODIGO1
+
+	FROM SII.CGG_DHU_ASISTENTE_CURSO ASI
+		INNER JOIN SII.CGG_DHU_CURSO CUR ON(CUR.CDCUR_CODIGO=ASI.CDCUR_CODIGO)
+		INNER JOIN SII.CGG_RES_PERSONA PER ON(PER.CRPER_CODIGO=ASI.CRPER_CODIGO)
+		LEFT  JOIN SII.CGG_RES_RESIDENCIA RES ON(RES.CRPER_CODIGO=PER.CRPER_CODIGO)
+	WHERE CUR.CDCUR_ESTADO
+
+		AND CUR.CDTCR_CODIGO=(SELECT CGCNF_VALOR_CADENA FROM CGG_CONFIGURACION WHERE CGCNF_CODIGO = 'CONF109') --INDUCCION
+		AND ASI.CDASC_APROBADO=1 --APROBADOS
+		AND CUR.CDCUR_FECHA_INICIO::DATE BETWEEN $P{P_FECHA_INICIAL}::DATE AND $P{P_FECHA_FINAL}::DATE
+)AS C
+WHERE
+	C.CRTST_CODIGO IN (WITH RECURSIVE TIPO(CRTST_CODIGO,
+					CGG_CRTST_CODIGO,
+					CRTST_DESCRIPCION)AS(
+								SELECT CRTST_CODIGO, CGG_CRTST_CODIGO, CRTST_DESCRIPCION
+								FROM CGG_RES_TIPO_SOLICITUD_TRAMITE
+								WHERE ((CRTST_CODIGO = (SELECT CGCNF_VALOR_CADENA
+											FROM CGG_CONFIGURACION
+
+											WHERE CGCNF_CODIGO = CODIGO)
+									) OR (CRTST_CODIGO = (SELECT CGCNF_VALOR_CADENA
+												FROM CGG_CONFIGURACION
+											WHERE CGCNF_CODIGO = CODIGO1)
+									     )
+									)
+								UNION SELECT TST.CRTST_CODIGO, TST.CGG_CRTST_CODIGO, TP.CRTST_DESCRIPCION
+								      FROM CGG_RES_TIPO_SOLICITUD_TRAMITE TST, TIPO TP
+								      WHERE TST.CGG_CRTST_CODIGO = TP.CRTST_CODIGO
+
+							    )
+			    SELECT CRTST_CODIGO
+			    FROM TIPO
+			 )]]>
+	</queryString>
+	<field name="canton" class="java.lang.String"/>
+	<field name="cdasc_codigo" class="java.lang.String"/>
+	<field name="crper_nombres" class="java.lang.String"/>
+	<field name="crper_num_doc_identific" class="java.lang.String"/>
+	<field name="cdcur_contenido" class="java.lang.String"/>
+	<field name="cdcur_fecha_inicio" class="java.sql.Timestamp"/>
+	<field name="cdcur_establecimiento" class="java.lang.String"/>
+	<variable name="V_FILA" class="java.math.BigDecimal" resetType="Group" resetGroup="CANTON" incrementType="Report">
+		<variableExpression><![CDATA[new BigDecimal($V{V_FILA}.intValue()+1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<group name="CANTON">
+		<groupExpression><![CDATA[$F{canton}]]></groupExpression>
+		<groupHeader>
+			<band height="40">
+				<staticText>
+					<reportElement x="0" y="0" width="46" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Cantón:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="46" y="0" width="539" height="20"/>
+					<textElement textAlignment="Justified" verticalAlignment="Middle">
+						<font size="9" isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{canton}.toUpperCase()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="56" y="20" width="73" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[# Identificación]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="129" y="20" width="161" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nombres]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="290" y="20" width="86" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Contenido]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="376" y="20" width="117" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Establecimiento]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="493" y="20" width="63" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Fecha inicio]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="27" y="20" width="29" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nº]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="21">
+				<staticText>
+					<reportElement x="390" y="1" width="100" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total registros:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="491" y="1" width="65" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{V_FILA}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="26" splitType="Stretch">
+			<textField>
+				<reportElement x="56" y="0" width="73" height="25"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_num_doc_identific}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="140" y="1" width="150" height="25"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_nombres}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="301" y="1" width="75" height="25"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cdcur_contenido}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="390" y="1" width="103" height="25"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cdcur_establecimiento}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="493" y="0" width="63" height="25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{cdcur_fecha_inicio}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="27" y="25" width="530" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="27" y="1" width="29" height="23"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{V_FILA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -11,7 +11,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
     var inRecordCgg_res_tipo_solicitud_tramite=INRECORD_CGG_RES_TIPO_SOLICITUD_TRAMITE;
     var urlCgg_res_tipo_solicitud_tramite=URL_WS+"Cgg_res_tipo_solicitud_tramite";
     var tituloCgg_res_tipo_solicitud_tramite='Tipo de solicitud tr\u00E1mite';
-    var descCgg_res_tipo_solicitud_tramite='El formulario permite ingresar o editar informaci\u00f3n de del tipo de solicitud tr\u00E1mite';
+    var descCgg_res_tipo_solicitud_tramite='El formulario permite ingresar o editar informaci\u00f3n del tipo de solicitud tr\u00E1mite';
     var isEdit = false;
 
     var tmpTipoTramite=null;
@@ -19,30 +19,41 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
     var tmpProceso = null;
     var recordRegla = null;
     var tmpResolucion = null;
-	var tmpStoreTipoStramite;
+    var tmpStoreTipoStramite;
 
     var rSolicitudRequisito = Ext.data.Record.create([
-    	{name:'CRSRQ_CODIGO',mapping:'CRSRQ_CODIGO'},
-    	{name:'CRTSR_CODIGO',dataIndex:'CRTSR_CODIGO'},
-    	{name:'CRREQ_CODIGO',dataIndex:'CRREQ_CODIGO'},
-    	{name:'CRSRQ_DESCRIPCION',dataIndex:'CRSRQ_DESCRIPCION'},
-    	{name:'CRSRQ_REQUERIDO',dataIndex:'CRSRQ_REQUERIDO'},
-    	{name:'CRSRQ_PARTICIPANTE',dataIndex:'CRSRQ_PARTICIPANTE'}
+        {name:'CRSRQ_CODIGO',mapping:'CRSRQ_CODIGO'},
+        {name:'CRTSR_CODIGO',dataIndex:'CRTSR_CODIGO'},
+        {name:'CRREQ_CODIGO',dataIndex:'CRREQ_CODIGO'},
+        {name:'CRSRQ_DESCRIPCION',dataIndex:'CRSRQ_DESCRIPCION'},
+        {name:'CRSRQ_REQUERIDO',dataIndex:'CRSRQ_REQUERIDO'},
+        {name:'CRSRQ_PARTICIPANTE',dataIndex:'CRSRQ_PARTICIPANTE'}
     ]);
 
-    var rGarantiaSolicitud = Ext.data.Record.create([
+    var rSolicitudAdjunto = Ext.data.Record.create([
+        {name:'code',mapping:'code'},
+        {name:'cgg_ecm_metadata_code',dataIndex:'cgg_ecm_metadata_code'},
+        {name:'fileName',dataIndex:'fileName'},
+        {name:'fileDescription',dataIndex:'fileDescription'},
+        {name:'documentType',dataIndex:'documentType'},
+        {name:'fileRepository',dataIndex:'fileRepository'},
+        {name:'overrideName',dataIndex:'overrideName'}
+    ]);
+
+   var rGarantiaSolicitud = Ext.data.Record.create([
     	{name:'CRGTS_CODIGO',mapping:'CRGTS_CODIGO'},
     	{name:'CRGRT_CODIGO',mapping:'CRGRT_CODIGO'},
     	{name:'CRTST_CODIGO',mapping:'CRTSR_CODIGO'}
     ]);
 
     var rTipoSolicitudRegla = Ext.data.Record.create([
-    	{name:'CRTSE_CODIGO'},
-    	{name:'CRTST_CODIGO'},
-    	{name:'CRVAL_CODIGO'},
-    	{name:'CRVAL_NOMBRE'},
-    	{name:'CRTSE_CAMPO_EVALUACION'},
-    	{name:'CRTSE_VALOR_1'}
+        {name:'CRTSE_CODIGO'},
+        {name:'CRTST_CODIGO'},
+        {name:'CRVAL_CODIGO'},
+        {name:'CRVAL_NOMBRE'},
+        {name:'CRTSE_CAMPO_EVALUACION'},
+        {name:'CRTSE_VALOR_1'},
+        {name:'CRTT_CODIGO'}
     ]);
 
     var rFilaProceso = Ext.data.Record.create(['CRPRO_CODIGO', 'CRPRO_NOMBRE']);
@@ -108,7 +119,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                         try {
                             tmpCrproRegistro = Ext.util.JSON.decode(tmpCrproRegistro);
                             tmpCrproRegistro = tmpCrproRegistro[0];
-                            
+
                             rProceso.set('CRPRO_CODIGO', tmpCrproRegistro.CRPRO_CODIGO);
                             rProceso.set('CRPRO_NOMBRE', tmpCrproRegistro.CRPRO_NOMBRE);
                             tmpProceso = rProceso;
@@ -116,7 +127,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                         }catch(inErr) {
                             txtCrpro_codigo.setValue(NO_DATA_MESSAGE);
                             tmpProceso = null;
-                        }                                               
+                        }
                     }
                 });
                 objBusqueda.show();
@@ -130,10 +141,10 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
         id:'txtCrtpt_codigo',
         name:'txtCrtpt_codigo',
         fieldLabel:'Area de tr\u00E1mite',
-        anchor:'98%',        
+        anchor:'98%',
         readOnly:'true'
     });
-	
+
     var cbxCkesp_codigo = new Ext.form.ComboBox({
         fieldLabel:'Especie',
         anchor:'98%',
@@ -147,7 +158,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
         emptyText:'Seleccione una especie',
         forceSelection: true
     });
-	
+
     /**
      * IDENTIFICATIVO UNICO DE REGISTRO DE TIPO DE TRAMITE
      */
@@ -187,7 +198,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
         id:'txtCrtst_observacion',
         name:'txtCrtst_observacion',
         fieldLabel:'Observaci\u00F3n',
-		height:46,
+        height:46,
         width:'98%'
     });
     /**
@@ -201,11 +212,11 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
         disabled:true,
         listeners:{
             check:function(inThis,inChecked){
-                if(inChecked == true){
+                /*if(inChecked == true){
                     Ext.getCmp('tpGarantia').enable();
                 }else{
                     Ext.getCmp('tpGarantia').disable();
-                }
+                }*/
             }
         }
     });
@@ -229,6 +240,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                 chkCrtst_aplica_beneficiario.setDisabled(!inChecked);
                 chkCrtst_aplica_otro.setDisabled(!inChecked);
                 Ext.getCmp('tpRequisito').setDisabled(!inChecked);
+                Ext.getCmp('tpAdjunto').setDisabled(!inChecked);
                 chkCrtst_restringido.setValue(false);
             }
         }
@@ -324,11 +336,11 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
         id:'chkCrtst_aplica_otro',
         name:'chkCrtst_aplica_otro',
         fieldLabel :'Aplica transeunte',
-        disabled:true        
+        disabled:true
     });
     /**
-	* Ext.form.Checkbox SI EL TIPO DE SOLICITUD REQUIERE DE UN BENEFICIARIO
-	*/
+     * Ext.form.Checkbox SI EL TIPO DE SOLICITUD REQUIERE DE UN BENEFICIARIO
+     */
     var chkCrtst_aplica_beneficiario = new Ext.form.Checkbox({
         id:'chkCrtst_aplica_beneficiario',
         name:'chkCrtst_aplica_beneficiario',
@@ -338,12 +350,12 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
     });
 
     /**
-* Ext.form.NumberField INDICE NUMERICO UTIL PARA LA GENERACION DE EXPEDIENTE DE PERSONA O NUMERO DE CARNET PARA RESIDENCIA
-*/
+     * Ext.form.NumberField INDICE NUMERICO UTIL PARA LA GENERACION DE EXPEDIENTE DE PERSONA O NUMERO DE CARNET PARA RESIDENCIA
+     */
     var numCrtst_indice = new Ext.form.NumberField({
         id:'numCrtst_indice',
         name:'numCrtst_indice',
-        fieldLabel :'Indice',        
+        fieldLabel :'Indice',
         allowDecimals:false,
         allowNegative:false,
         minValue:0,
@@ -362,8 +374,8 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
     });
 
     /**
-* Ext.form.TextField IDENTIFICATIVO UNICO DE REGISTRO DE RESOLUCIONES
-*/
+     * Ext.form.TextField IDENTIFICATIVO UNICO DE REGISTRO DE RESOLUCIONES
+     */
     var txtCrres_codigo = new Ext.form.TextField({
         id:'txtCrres_codigo',
         name:'txtCrres_codigo',
@@ -371,10 +383,10 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
         anchor:'98%',
         readOnly:'true'
     });
-     
+
     /**
-* IDENTIFICATIVO UNICO DE REGISTRO DE RESOLUCIONES
-*/
+     * IDENTIFICATIVO UNICO DE REGISTRO DE RESOLUCIONES
+     */
     var btnCrres_codigoCgg_res_tipo_solicitud_tramite = new Ext.Button({
         id:'btnCrres_codigoCgg_res_tipo_solicitud_tramite',
         iconCls:'iconBuscar',
@@ -466,7 +478,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                                     icon: Ext.MessageBox.ERROR
                                 });
                             }
-                            
+
                         }catch(inErr){
                             Ext.Msg.show({
                                 title:tituloCgg_res_tipo_solicitud_tramite,
@@ -503,9 +515,10 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                     param.add('inCrtst_aplica_beneficiario',chkCrtst_aplica_beneficiario.getValue());
                     param.add('inCrtst_indice',numCrtst_indice.getValue());
                     param.add('inCrtst_requisito',grdCgg_res_solicitud_requisito.getStore().getJsonData());
+                    param.add('inCrtst_adjunto',grdCgg_res_solicitud_adjunto.getStore().getJsonData());
                     param.add('inCrtst_garantia',grdCgg_res_garantia_solicitud.getStore().getJsonData());
                     param.add('inCrtst_regla',obtenerReglasJson());
-			param.add('inCrtst_opcion',gsCgg_res_tst_aplica.getJsonData());
+                    param.add('inCrtst_opcion',gsCgg_res_tst_aplica.getJsonData());
                     SOAPClient.invoke(urlCgg_res_tipo_solicitud_tramite,INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TRAMITE,param, true, CallBackCgg_res_tipo_solicitud_tramite);
                 }catch(inErr){
                     winFrmCgg_res_tipo_solicitud_tramite.getEl().unmask();
@@ -565,84 +578,84 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                 region:'center',
                 layout:'form',
                 items:[
-                {
-                    xtype:'panel',
-                    layout:'column',
-                    anchor:'100%',
-                    items:[{
-                        columnWidth:.5,
-                        layout:'form',
-                        items:[txtCrtst_descripcion,txtCrtst_observacion,spfCrtst_numero_dias,cbxCkesp_codigo]
-                    },{
-                        columnWidth:.45,
-                        layout:'form',
-                        items:[txtCrtpt_codigo,txtCgg_crtst_codigo,txtCrpro_codigo,txtCrres_codigo,numCrtst_indice]
-                    },{
-                        columnWidth:.05,
-                        layout:'form',
-                        buttonAlign:'center',                        
-                        items:[
-                        {
-                            items:[btnCrtpt_codigoCgg_res_tipo_solicitud_tramite]
-                        },
-                        {
-                            bodyStyle:'padding:4px 0px 0px 0px',
-                            items:[btnCgg_crtst_codigoCgg_res_tipo_solicitud_tramite]
-                        },
-                        {
-                            bodyStyle:'padding:4px 0px 0px 0px',
-                            items:[btnCrpro_codigoCgg_res_tipo_solicitud_tramite]
-                        },
+                    {
+                        xtype:'panel',
+                        layout:'column',
+                        anchor:'100%',
+                        items:[{
+                            columnWidth:.5,
+                            layout:'form',
+                            items:[txtCrtst_descripcion,txtCrtst_observacion,spfCrtst_numero_dias,cbxCkesp_codigo]
+                        },{
+                            columnWidth:.45,
+                            layout:'form',
+                            items:[txtCrtpt_codigo,txtCgg_crtst_codigo,txtCrpro_codigo,txtCrres_codigo,numCrtst_indice]
+                        },{
+                            columnWidth:.05,
+                            layout:'form',
+                            buttonAlign:'center',
+                            items:[
+                                {
+                                    items:[btnCrtpt_codigoCgg_res_tipo_solicitud_tramite]
+                                },
+                                {
+                                    bodyStyle:'padding:4px 0px 0px 0px',
+                                    items:[btnCgg_crtst_codigoCgg_res_tipo_solicitud_tramite]
+                                },
+                                {
+                                    bodyStyle:'padding:4px 0px 0px 0px',
+                                    items:[btnCrpro_codigoCgg_res_tipo_solicitud_tramite]
+                                },
 
-                        {
-                            bodyStyle:'padding:4px 0px 0px 0px',
-                            items:[btnCrres_codigoCgg_res_tipo_solicitud_tramite]
+                                {
+                                    bodyStyle:'padding:4px 0px 0px 0px',
+                                    items:[btnCrres_codigoCgg_res_tipo_solicitud_tramite]
+                                }
+                            ]
                         }
                         ]
-                    }
-                    ]
-                },
-                {
-                    items:[{
-                        xtype:'fieldset',
-                        title:'Opciones',                        
-                        items:[
-                        {
-                            xtype:'panel',
-                            layout:'column',
-                            items:[{
-                                columnWidth:.25,
-                                layout:'form',
-                                labelWidth:90,
-                                items:[chkCrtst_aplica_tramite,chkCrtst_aplica_beneficiario,chkCrtst_aplica_garantia]
-                            },
-                            {
-                                columnWidth:.25,
-                                layout:'form',
-                                labelWidth:90,
-                                items:[chkCrtst_aplica_grupo,chkCrtst_comunicado_radial]
+                    },
+                    {
+                        items:[{
+                            xtype:'fieldset',
+                            title:'Opciones',
+                            items:[
+                                {
+                                    xtype:'panel',
+                                    layout:'column',
+                                    items:[{
+                                        columnWidth:.25,
+                                        layout:'form',
+                                        labelWidth:90,
+                                        items:[chkCrtst_aplica_tramite,chkCrtst_aplica_beneficiario] //chkCrtst_aplica_garantia
+                                    },
+                                        {
+                                            columnWidth:.25,
+                                            layout:'form',
+                                            labelWidth:90,
+                                            items:[chkCrtst_aplica_grupo]   //chkCrtst_comunicado_radial
 
-                            },
-                            {
-                                columnWidth:.25,
-                                layout:'form',
-                                labelWidth:90,
-                                items:[chkCrtst_restringido,chkCrtst_vehiculo,chkCrtst_unanimidad]
+                                        },
+                                        {
+                                            columnWidth:.25,
+                                            layout:'form',
+                                            labelWidth:90,
+                                            items:[chkCrtst_restringido,chkCrtst_vehiculo,chkCrtst_unanimidad]
 
-                            },
-                            {
-                                columnWidth:.25,
-                                layout:'form',
-                                labelWidth:90,
-                                items:[chkCrtst_aplica_otro,chkCrtst_atencion_cliente]
+                                        },
+                                        {
+                                            columnWidth:.25,
+                                            layout:'form',
+                                            labelWidth:90,
+                                            items:[chkCrtst_aplica_otro,chkCrtst_atencion_cliente]
 
-                            }
+                                        }
+                                    ]
+                                }
                             ]
                         }
                         ]
                     }
-                    ]
-                }
                 ]
             }
             ]
@@ -658,7 +671,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
         typeAhead: true,
         mode: 'local',
         forceSelection:true,
-		editable:false,
+        editable:false,
         triggerAction:'all',
         selectOnFocus:true,
         valueField:'INDICE'
@@ -674,7 +687,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
         typeAhead: true,
         mode: 'local',
         forceSelection:true,
-		editable:true,
+        editable:true,
         triggerAction:'all',
         emptyText:'Seleccione un requisito',
         selectOnFocus:true,
@@ -766,32 +779,32 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
             method:"selectCgg_res_tipo_solicitud_tramite"
         }),
         reader:new Ext.data.JsonReader({},[
-        {
-            name:'CRSRQ_CODIGO'
-        },
+            {
+                name:'CRSRQ_CODIGO'
+            },
 
-        {
-            name:'CRTSR_CODIGO'
-        },
+            {
+                name:'CRTSR_CODIGO'
+            },
 
-        {
-            name:'CRREQ_CODIGO'
-        },
-        {
-            name:'CRSRQ_DESCRIPCION'
-        },
-        {
-            name:'CRSRQ_REQUERIDO'
-        },{
-            name:'CRSRQ_PARTICIPANTE'
-        }
+            {
+                name:'CRREQ_CODIGO'
+            },
+            {
+                name:'CRSRQ_DESCRIPCION'
+            },
+            {
+                name:'CRSRQ_REQUERIDO'
+            },{
+                name:'CRSRQ_PARTICIPANTE'
+            }
         ]),
         baseParams:{
             inCrtst_codigo:null,
             format:"JSON"
         }
     });
-    
+
     var reSolicitudRequisito = new Ext.ux.grid.RowEditor({
         saveText: 'Aceptar',
         errorSummary: false,
@@ -807,7 +820,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                     grdCgg_res_solicitud_requisito.getStore().remove(inRecord);
                 }else{
                     for(var i=0;i<grdCgg_res_solicitud_requisito.getStore().getCount();i++){
-                        
+
                         if(inRowIndex !== i &&
                             inRecord.get('CRREQ_CODIGO')==grdCgg_res_solicitud_requisito.getStore().getAt(i).get('CRREQ_CODIGO') &&
                             inRecord.get('CRSRQ_PARTICIPANTE') == grdCgg_res_solicitud_requisito.getStore().getAt(i).get('CRSRQ_PARTICIPANTE')){
@@ -824,7 +837,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
             }
         }
     });
-    
+
     /**
      * Ext.grid.GridPanel Representacion de los datos de la tabla Cgg_res_solicitud_requisito en un formato tabular de filas y columnas.
      */
@@ -860,6 +873,232 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
         valueField:'CRGRT_CODIGO',
         allowBlank:false
     });
+
+    //===>>AC
+    /**
+     * Ext.grid.ColumnModel Define el modelo de columnas para el objeto cgg_res_solicitud_adjunto.
+     */
+
+    var txtECMFileName = new Ext.form.TextField({
+        id:'txtECMFileName',
+        emptyText:'Nombre del Archivo'
+    });
+    var txtECMDescription = new Ext.form.TextField({
+        id:'txtECMDescription',
+        emptyText:'Descripci\u00F3n del Archivo'
+    });
+    var txtECMRepository = new Ext.form.TextField({
+        id:'txtECMRepository',
+        emptyText:'Repositorio'
+    });
+    /**
+     *Ext.form.ComboBox Combo para edicion de requisitos.
+     */
+    var dsTipoDocumentos = [['D:sii:respaldo','Respaldo'],['D:sii:personales','Personales']];
+    var cbxECMTipoDocumento = new Ext.form.ComboBox({
+        id:'cbxECMTipoDocumento',
+        store:dsTipoDocumentos,
+        typeAhead: true,
+        mode: 'local',
+        forceSelection:true,
+        editable:false,
+        triggerAction:'all',
+        selectOnFocus:true
+    });
+    var cbcECMOverride =  new Ext.grid.CheckColumn({
+        dataIndex:'overrideName',
+        header:'Renombra',
+        width:30,
+        editor:{
+            xtype:'checkbox'
+        }
+    });
+    var cbcECMInsertable =  new Ext.grid.CheckColumn({
+        dataIndex:'insertable',
+        header:'Subir',
+        width:30,
+        editor:{
+            xtype:'checkbox'
+        }
+    });
+    var cbcECMUpdateable =  new Ext.grid.CheckColumn({
+        dataIndex:'updateable',
+        header:'Actualizar',
+        width:30,
+        editor:{
+            xtype:'checkbox'
+        }
+    });
+    var cbcECMMandatory =  new Ext.grid.CheckColumn({
+        dataIndex:'mandatory',
+        header:'Mandatorio',
+        width:30,
+        editor:{
+            xtype:'checkbox'
+        }
+    });
+
+    var cmCgg_res_solicitud_adjunto = new Ext.grid.ColumnModel([
+        new Ext.grid.RowNumberer(),
+        {
+            dataIndex:'code',
+            header:'Codigo',
+            width:10,
+            sortable:true,
+            hidden:true,
+            hideable:false
+        },
+        {
+            dataIndex:'cgg_ecm_metadata_code',
+            header:'Metadata',
+            width:10,
+            sortable:true,
+            hidden:true,
+            hideable:false
+        },
+        {
+            dataIndex:'fileName',
+            header:'Nombre Archivo',
+            width:100,
+            sortable:true,
+            editor:txtECMFileName
+        },
+        {
+            dataIndex:'fileDescription',
+            header:'Descripci\u00F3n',
+            width:150,
+            sortable:true,
+            editor:txtECMDescription
+        },{
+            dataIndex:'documentType',
+            header:'Tipo Documento',
+            width:100,
+            sortable:true,
+            editor:cbxECMTipoDocumento,
+            renderer:function(inTipoDocumento){
+                for(var i = 0; i < dsTipoDocumentos.length ;i++){
+                    if(dsTipoDocumentos[i][0]==inTipoDocumento){
+                        return dsTipoDocumentos[i][1];
+                    }
+                }
+            }
+        },
+        {
+            dataIndex:'fileRepository',
+            header:'Repositorio',
+            width:200,
+            sortable:true,
+            editor:txtECMRepository
+        },cbcECMInsertable,cbcECMUpdateable,cbcECMMandatory,cbcECMOverride]);
+
+    /**
+     * Ext.data.Store Agrupacion de registros de la tabla cgg_ecm_file por un campo especifico.
+     */
+    var sCgg_res_solicitud_adjunto = new Ext.data.Store({
+        proxy:new Ext.ux.bsx.SoapProxy({
+            url:URL_WS+"Alf_query",
+            method:"getLocalMetadata"
+        }),
+        reader:new Ext.data.JsonReader({},[
+            {
+                name:'code'
+            },
+
+            {
+                name:'cgg_ecm_metadata_code'
+            },
+
+            {
+                name:'fileName'
+            },
+            {
+                name:'fileDescription'
+            },
+            {
+                name:'documentType'
+            }
+            ,
+            {
+                name:'fileRepository'
+            }
+            ,
+            {
+                name:'overrideName'
+            }
+            ,
+            {
+                name:'insertable'
+            }
+            ,
+            {
+                name:'updateable'
+            }
+            ,
+            {
+                name:'mandatory'
+            }
+        ]),
+        baseParams:{
+            tableName:'Cgg_res_tramite',
+            filter:"crtst_codigo='"+txtCrtst_codigo.getValue()+"'"
+        }
+    });
+
+    var reSolicitudAdjunto = new Ext.ux.grid.RowEditor({
+        saveText: 'Aceptar',
+        errorSummary: false,
+        listeners:{
+            canceledit:function(inRowEditor,inFlag){
+                /*var inRecord=grdCgg_res_solicitud_adjunto.getStore().getAt(0);
+                if(inRecord.get('codigo')==null){
+                    grdCgg_res_solicitud_adjunto.getStore().remove(inRecord);
+                }*/
+                //DO NOTHING
+                var kk=1;
+            },
+            afteredit:function(inRowEditor,inObject,inRecord,inRowIndex){
+                if(inRecord.get('codigo').trim().length==0){
+                    grdCgg_res_solicitud_adjunto.getStore().remove(inRecord);
+                }else{
+                    for(var i=0;i<grdCgg_res_solicitud_adjunto.getStore().getCount();i++){
+
+                        if(inRowIndex !== i &&
+                            inRecord.get('codigo')==grdCgg_res_solicitud_adjunto.getStore().getAt(i).get('codigo')){
+                            Ext.Msg.show({
+                                title:tituloCgg_res_tipo_solicitud_tramite,
+                                msg: 'El requerimiento seleccionado ya esta establecido.',
+                                buttons: Ext.Msg.OK,
+                                icon: Ext.MessageBox.WARNING
+                            });
+                            grdCgg_res_solicitud_adjunto.getStore().removeAt(inRowIndex);
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    /**
+     * Ext.grid.GridPanel Representacion de los datos de la tabla Cgg_res_solicitud_requisito en un formato tabular de filas y columnas.
+     */
+    var grdCgg_res_solicitud_adjunto = new Ext.grid.EditorGridPanel({
+        cm:cmCgg_res_solicitud_adjunto,
+        store:sCgg_res_solicitud_adjunto,
+        region:'center',
+        sm:new Ext.grid.RowSelectionModel({
+            singleSelect:true
+        }),
+        viewConfig: {
+            forceFit: true
+        },
+        loadMask:{
+            msg:"Cargando..."
+        },
+        plugins:[reSolicitudAdjunto]
+    });
+
+    //FIN===>>AC
+
 
     /**
      * Ext.grid.ColumnModel Define el modelo de columnas para el objeto cgg_res_garantia_solicitud.
@@ -910,17 +1149,17 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
             method:"selectCgg_res_tipo_solicitud_tramite"
         }),
         reader:new Ext.data.JsonReader({},[
-        {
-            name:'CRGTS_CODIGO'
-        },
+            {
+                name:'CRGTS_CODIGO'
+            },
 
-        {
-            name:'CRGRT_CODIGO'
-        },
+            {
+                name:'CRGRT_CODIGO'
+            },
 
-        {
-            name:'CRTST_CODIGO'
-        }
+            {
+                name:'CRTST_CODIGO'
+            }
         ]),
         baseParams:{
             inCrtst_codigo:null,
@@ -978,19 +1217,19 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
         }),
         remoteSort:true,
         reader:new Ext.data.JsonReader({},[
-        {
-            name:'CRVAL_CODIGO'
-        },
-        {
-            name:'CRVAL_NOMBRE'
-        },
+            {
+                name:'CRVAL_CODIGO'
+            },
+            {
+                name:'CRVAL_NOMBRE'
+            },
 
-        {
-            name:'CRVAL_DESCRIPCION'
-        },
-        {
-            name:'CRTSE_VALOR_1'
-        }
+            {
+                name:'CRVAL_DESCRIPCION'
+            },
+            {
+                name:'CRTSE_VALOR_1'
+            }
         ]),
         baseParams:{
             format:TypeFormat.JSON
@@ -1002,7 +1241,65 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
             var record = combo.findRecord(combo.valueField, value);
             return record ? record.get(combo.displayField) : combo.valueNotFoundText;
         }
-    }
+    };
+
+    //====>AC
+    var gsCrtt_codigo = new Ext.data.Store({
+        proxy:new Ext.ux.bsx.SoapProxy({
+            url:URL_WS+"Cgg_tipo_tramite",
+            method:"selectAll",
+            pagin:false
+        }),
+        remoteSort:false,
+        reader:new Ext.data.JsonReader({
+        },[
+            {
+                name:'CRTT_CODIGO'
+            },
+
+            {
+                name:'CRTT_NOMBRE'
+            }
+        ]),
+        baseParams:{
+            format:TypeFormat.JSON
+        },
+         listeners:{
+             load:function(){
+                 /*if(INRECORD_CGG_RES_PERSONA){
+                     try{
+                         //if(inRecordCgg_res_persona.get('CRDID_CODIGO') != undefined)
+                         cbxCrtt_codigo.setValue(inRecordCgg_res_persona.get('CRDID_CODIGO'));
+                     }catch(inErr){}
+                 }*/
+             }
+         }
+    });
+    gsCrtt_codigo.load();
+    var crtt_codigo=null;
+    var cbxCrtt_codigo = new Ext.form.ComboBox({
+        id:'cbxCrtt_codigo',
+        name:'cbxCrtt_codigo',
+        fieldLabel :'Tipo de tramite',
+        anchor:'100%',
+        store: gsCrtt_codigo,
+        displayField:'CRTT_NOMBRE',
+        typeAhead: true,
+        mode: 'local',
+        forceSelection:true,
+        triggerAction:'all',
+        emptyText:'Seleccione un tipo de tramite',
+        selectOnFocus:true,
+        tpl: '<tpl for="."><div ext:qtip="{CRTT_NOMBRE}. {CRTT_NOMBRE}" class="x-combo-list-item">{CRTT_NOMBRE}</div></tpl>',
+        valueField:'CRTT_CODIGO',
+        listeners:{
+            select:function(inThis,inRecord,inIndex){
+                crtt_codigo = inIndex;
+                grdCgg_res_tipo_solicitud_regla.getSelectionModel().getSelected()
+            }
+        }
+    });
+////AC<<====
 
     /**
      * Ext.form.TextField IDENTIFICATIVO de seleccion de funcion.
@@ -1028,34 +1325,34 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
      * Ext.grid.ColumnModel Define el modelo de columnas para el objeto cgg_res_tipo_solicitud_regla.
      */
     var cmCgg_res_tipo_solicitud_regla = new Ext.grid.ColumnModel([
-    {
-        dataIndex:'CRTSE_CODIGO',
-        header:'Codigo',
-        width:150,
-        sortable:true,
-        hidden:true,
-        hideable:false
-    },
+        {
+            dataIndex:'CRTSE_CODIGO',
+            header:'Codigo',
+            width:150,
+            sortable:true,
+            hidden:true,
+            hideable:false
+        },
 
-    {
-        dataIndex:'CRTST_CODIGO',
-        header:'Codigo',
-        width:150,
-        sortable:true,
-        hidden:true,
-        hideable:false
-    },
+        {
+            dataIndex:'CRTST_CODIGO',
+            header:'Codigo',
+            width:150,
+            sortable:true,
+            hidden:true,
+            hideable:false
+        },
 
-    {
-        dataIndex:'CRVAL_CODIGO',
-        header:'Regla validaci\u00f3n',
-        width:150,
-        sortable:true,
-        hidden:true
+        {
+            dataIndex:'CRVAL_CODIGO',
+            header:'Codigo Regla validaci\u00f3n',
+            width:150,
+            sortable:true,
+            hidden:true
 
-    //renderer: Ext.util.Format.comboRenderer(cbxCgg_regla_validacionEditor)
-    //editor:cbxCgg_regla_validacionEditor
-    /*renderer:function(inCRVAL_CODIGO){
+            //renderer: Ext.util.Format.comboRenderer(cbxCgg_regla_validacionEditor)
+            //editor:cbxCgg_regla_validacionEditor
+            /*renderer:function(inCRVAL_CODIGO){
              var scpReglaValidacion = new SOAPClientParameters();
              var resultRegla = null;
              scpReglaValidacion.add('inCRVAL_CODIGO',inCRVAL_CODIGO);
@@ -1070,31 +1367,45 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
              }
              return resultRegla;
              }*/
-    },
-    {
-        dataIndex:'CRVAL_NOMBRE',
-        header:'Regla validaci\u00f3n',
-        width:150,
-        sortable:true,
-        hidden:true
-    },
-    {
-        dataIndex:'CRTSE_VALOR_1',
-        header:'Parametro',
-        width:150,
-        sortable:true,
-        hidden:false,
-        hideable:false
-    },
-    {
-        dataIndex:'CRTSE_CAMPO_EVALUACION',
-        header:'Campo evaluaci\u00f3n',
-        width:150,
-        sortable:true,
-        editor:{
-            xtype:'textfield'
+        },
+        {
+            dataIndex:'CRVAL_NOMBRE',
+            header:'Regla validaci\u00f3n',
+            width:200,
+            sortable:true,
+            hidden:false
+        },
+        {
+            dataIndex:'CRTSE_VALOR_1',
+            header:'Parametro',
+            width:150,
+            sortable:true,
+            hidden:false,
+            hideable:false
+        },
+        {
+            dataIndex:'CRTSE_CAMPO_EVALUACION',
+            header:'Campo evaluaci\u00f3n',
+            width:150,
+            sortable:true,
+            editor:{
+                xtype:'textfield'
+            }
+        },
+        {
+            dataIndex:'CRTT_CODIGO',
+            header:'Tipo de tramite',
+            width:150,
+            sortable:true,
+            editor:cbxCrtt_codigo,
+            renderer:function(inCrttCodigo){
+                for(var i = 0; i < gsCrtt_codigo.data.items.length ;i++){
+                    if(gsCrtt_codigo.data.items[i].data.CRTT_CODIGO==inCrttCodigo){
+                        return gsCrtt_codigo.data.items[i].data.CRTT_NOMBRE;
+                    }
+                }
+            }
         }
-    }
     ]);
     /**
      * Ext.data.Store Agrupacion de registros de la tabla Cgg_res_tipo_solicitud_regla por un campo especifico.
@@ -1104,24 +1415,24 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
             url:URL_WS+"Cgg_res_tipo_solicitud_regla",
             method:"selectCGG_RES_TIPO_SOLICITUD_TRAMITE1"
         }),
-        remoteSort:true,
+        remoteSort:false,
         reader:new Ext.data.JsonReader({},rTipoSolicitudRegla),
         baseParams:{
             inCrtst_codigo:'',
             format:'JSON'
         },
-        groupField: 'CRVAL_NOMBRE'
+        groupField: 'CRTT_CODIGO'
     });
 
     var reTipoSolicitudRegla = new Ext.ux.grid.RowEditor({
         saveText: 'Aceptar',
         listeners:{
             canceledit:function(inRowEditor,inFlag){
-            /* var inRecord=grdCgg_res_tipo_solicitud_regla.getStore().getAt(0);
+                /* var inRecord=grdCgg_res_tipo_solicitud_regla.getStore().getAt(0);
                  grdCgg_res_tipo_solicitud_regla.getStore().remove(inRecord);*/
             },
             afteredit:function(inRowEditor,inObject,inRecord,inRowIndex){
-            /*  if(inRecord.get('CRVAL_CODIGO').trim().length==0){
+                /*  if(inRecord.get('CRVAL_CODIGO').trim().length==0){
                  grdCgg_res_tipo_solicitud_regla.getStore().remove(inRecord);
                  }else{
                  for(var i=0;i<grdCgg_res_tipo_solicitud_regla.getStore().getCount();i++){
@@ -1171,70 +1482,108 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
             format:'JSON'
         }
     });
-	///////////////////////////////OPCIONES DE LOS TIPOS DE SOLICITUD DE TRAMITE/////////////////
-	/**
-	* Ext.grid.ColumnModel Define el modelo de columnas para el objeto Cgg_res_tst_aplica.
-	*/
-	var chkAplica =  new Ext.grid.CheckColumn({
-		dataIndex:'APLICA',
-		header:'Aplica?',
-		width:70,
-		editor:{
-		xtype:'checkbox'
-		}
-	});
-	var cmCgg_res_tst_aplica = new Ext.grid.ColumnModel([
-		{dataIndex:'CRTSO_NOMBRE',header:'Nombre',width:200,sortable:true},
-		chkAplica,
-		{dataIndex:'CRTSO_DESCRIPCION',header:'Nombre',width:300,sortable:true}
-		]);
-	/**
-	* Ext.data.Store Agrupacion de registros de la tabla Cgg_res_tst_aplica por un campo especifico.
-	*/
-	var gsCgg_res_tst_aplica = new Ext.data.Store({
-			proxy:new Ext.ux.bsx.SoapProxy({
-					url:URL_WS+"Cgg_res_tst_aplica",
-					method:"selectCGG_RES_TIPO_SOLICITUD_TRAMITE",
-					pagin:false
-			}),
-			remoteSort:false,
-			reader:new Ext.data.JsonReader({},[
-				{name:'CRTAO_CODIGO'},
-				{name:'CRTSO_CODIGO'},
-				{name:'CRTST_CODIGO'},
-				{name:'CRTSO_NOMBRE'},
-				{name:'CRTSO_DESCRIPCION'},
-				{name:'APLICA'}
-			]),
-			baseParams:{format:'JSON',inCrtst_codigo:''}
-	});
-	/**
-	* Ext.grid.GridPanel Representacion de los datos de la tabla Cgg_res_tst_aplica en un formato tabular de filas y columnas.
-	*/
-	var grdCgg_res_tst_aplica = new Ext.grid.GridPanel({
-		title:'Opciones',
-		cm:cmCgg_res_tst_aplica,
-		store:gsCgg_res_tst_aplica,
-		region:'center',
-		sm:new Ext.grid.RowSelectionModel({singleSelect:true}),
-		loadMask:{msg:"Cargando..."},
-		plugins:[chkAplica],
-		listeners:{
-			rowdblclick:function(inGridComponent, inRowIndex, inEventObject){
-				if(!btnEditarCgg_res_tst_aplica.disabled){
-					btnEditarCgg_res_tst_aplica.fireEvent('click', btnEditarCgg_res_tst_aplica);
-				}
-	}}});
-	gsCgg_res_tst_aplica.reload({params:{
-			format:'JSON'
-		}
-	});
-	
+    ///////////////////////////////OPCIONES DE LOS TIPOS DE SOLICITUD DE TRAMITE/////////////////
+    /**
+     * Ext.grid.ColumnModel Define el modelo de columnas para el objeto Cgg_res_tst_aplica.
+     */
+    var chkAplica =  new Ext.grid.CheckColumn({
+        dataIndex:'APLICA',
+        header:'Aplica?',
+        width:70,
+        editor:{
+            xtype:'checkbox'
+        }
+    });
+    var cmCgg_res_tst_aplica = new Ext.grid.ColumnModel([
+        {dataIndex:'CRTSO_NOMBRE',header:'Nombre',width:200,sortable:true},
+        chkAplica,
+        {dataIndex:'CRTSO_DESCRIPCION',header:'Nombre',width:300,sortable:true}
+    ]);
+    /**
+     * Ext.data.Store Agrupacion de registros de la tabla Cgg_res_tst_aplica por un campo especifico.
+     */
+    var gsCgg_res_tst_aplica = new Ext.data.Store({
+        proxy:new Ext.ux.bsx.SoapProxy({
+            url:URL_WS+"Cgg_res_tst_aplica",
+            method:"selectCGG_RES_TIPO_SOLICITUD_TRAMITE",
+            pagin:false
+        }),
+        remoteSort:false,
+        reader:new Ext.data.JsonReader({},[
+            {name:'CRTAO_CODIGO'},
+            {name:'CRTSO_CODIGO'},
+            {name:'CRTST_CODIGO'},
+            {name:'CRTSO_NOMBRE'},
+            {name:'CRTSO_DESCRIPCION'},
+            {name:'APLICA'}
+        ]),
+        baseParams:{format:'JSON',inCrtst_codigo:''}
+    });
+    /**
+     * Ext.grid.GridPanel Representacion de los datos de la tabla Cgg_res_tst_aplica en un formato tabular de filas y columnas.
+     */
+    var grdCgg_res_tst_aplica = new Ext.grid.GridPanel({
+        title:'Opciones',
+        cm:cmCgg_res_tst_aplica,
+        store:gsCgg_res_tst_aplica,
+        region:'center',
+        sm:new Ext.grid.RowSelectionModel({singleSelect:true}),
+        loadMask:{msg:"Cargando..."},
+        plugins:[chkAplica],
+        listeners:{
+            rowdblclick:function(inGridComponent, inRowIndex, inEventObject){
+                if(!btnEditarCgg_res_tst_aplica.disabled){
+                    btnEditarCgg_res_tst_aplica.fireEvent('click', btnEditarCgg_res_tst_aplica);
+                }
+            }}});
+    gsCgg_res_tst_aplica.reload({params:{
+        format:'JSON'
+    }
+    });
+
     var pnlTabTipoSolicitud = new Ext.TabPanel({
         id:'pnlTabTipoSolicitud',
         activeTab: 0,
         region:'center',
         items: [{
+            id:'tpAdjunto',
+            title: 'Adjuntos',
+            layout:'border',
+            disabled:false,
+            items:[grdCgg_res_solicitud_adjunto],
+            tbar:[{
+                iconCls:'iconNuevo',
+                tooltip:'Agregar adjunto',
+                handler:function(){
+                    var rFilaAdjuntoSolicitud = new rSolicitudAdjunto({
+                        code:'KEYGEN',
+                        cgg_ecm_metadata_code:'KEYGEN',
+                        fileName:null,
+                        fileDescription:null,
+                        documentType:null,
+                        fileRepository:null,
+                        overrideName:true
+                    });
+                    reSolicitudAdjunto.stopEditing();
+                    sCgg_res_solicitud_adjunto.insert(0,rFilaAdjuntoSolicitud);
+                    grdCgg_res_solicitud_adjunto.getView().refresh();
+                    grdCgg_res_solicitud_adjunto.getSelectionModel().selectRow(0);
+                    reSolicitudAdjunto.startEditing(0);
+                }
+            },{
+                iconCls:'iconEliminar',
+                tooltip:'Eliminar requisito',
+                handler:function(){
+                    var seleccionado = grdCgg_res_solicitud_requisito.getSelectionModel().getSelected();
+                    if(seleccionado != null ){
+                        grdCgg_res_solicitud_requisito.getStore().remove(seleccionado);
+                    }else if(grdCgg_res_solicitud_requisito.getStore().getCount()>=1){
+                        grdCgg_res_solicitud_requisito.getSelectionModel().selectLastRow();
+                        grdCgg_res_solicitud_requisito.getStore().remove(grdCgg_res_solicitud_requisito.getSelectionModel().getSelected());
+                    }
+                }
+            }]
+        },{
             id:'tpRequisito',
             title: 'Requisitos',
             layout:'border',
@@ -1271,12 +1620,13 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                     }
                 }
             }]
-        },{
+        },/*{
             id:'tpGarantia',
-            title: 'Garant\u00EDas',
+            title: '',
             layout:'border',
             items:[grdCgg_res_garantia_solicitud],
             disabled:true,
+            hidden:true,
             tbar:[{
                 iconCls:'iconNuevo',
                 handler:function(){
@@ -1304,7 +1654,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                     }
                 }
             }]
-        },{
+        },*/{
             id:'tpReglaValidacion',
             title: 'Reglas de validaci\u00F3n',
             disabled:true,
@@ -1323,13 +1673,14 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                             if(tmpRecordRegla)
                             {
                                 recordRegla = tmpRecordRegla;
-                                var tmpRuleExist =gsCgg_res_tipo_solicitud_regla.getAt(gsCgg_res_tipo_solicitud_regla.findExact('CRVAL_CODIGO',recordRegla.get('CRVAL_CODIGO')));
+                                var tmpRuleExist =gsCgg_res_tipo_solicitud_regla.getAt(gsCgg_res_tipo_solicitud_regla.findExact('CRVAL_CODIGO',recordRegla.get('CRVAL_CODIGO')))
+                                    && gsCgg_res_tipo_solicitud_regla.getAt(gsCgg_res_tipo_solicitud_regla.findExact('CRTT_CODIGO',recordRegla.get('CRTT_CODIGO')));
                                 if (!tmpRuleExist)
                                 {
                                     var tmpParams = recordRegla.get('CRVAL_FUNCION_PLSQL_PARAMETROS');
                                     //tmpParams = tmpParams.substring(1,tmpParams.length-1).split(',');
-                                    //if(tmpParams.length>0)
-                                    //{
+                                    if(tmpParams.length>0)
+                                    {
                                         tmpParams = tmpParams.split(',');
                                         for(var i=0;i<(tmpParams.length-2);i++)
                                         {
@@ -1340,19 +1691,39 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                                                 CRVAL_CODIGO:recordRegla.get('CRVAL_CODIGO'),
                                                 CRVAL_NOMBRE:recordRegla.get('CRVAL_NOMBRE'),
                                                 CRTSE_VALOR_1:tmpParams[i].toUpperCase(),
-                                                CRTSE_CAMPO_EVALUACION:''
+                                                CRTSE_CAMPO_EVALUACION:'',
+                                                CRTT_CODIGO: recordRegla.get('CRTT_CODIGO')
                                             });
                                             reTipoSolicitudRegla.stopEditing();
                                             gsCgg_res_tipo_solicitud_regla.insert(0,rFilaRegla);
                                             grdCgg_res_tipo_solicitud_regla.getView().refresh();
                                         }
                                         grdCgg_res_tipo_solicitud_regla.getSelectionModel().selectRow(0);
+                                        //MO
+                                    }else{
+                                        var rFilaRegla = new rTipoSolicitudRegla({
+                                            CRTSE_CODIGO:'KEYGEN',
+                                            CRTST_CODIGO:inRecordCgg_res_tipo_solicitud_tramite != null?inRecordCgg_res_tipo_solicitud_tramite.get('CRTST_CODIGO'):'',
+                                            CRVAL_CODIGO:recordRegla.get('CRVAL_CODIGO'),
+                                            CRVAL_NOMBRE:recordRegla.get('CRVAL_NOMBRE'),
+                                            CRTSE_VALOR_1:recordRegla.get('CRVAL_FUNCION_VALIDACION'),
+                                            CRTSE_CAMPO_EVALUACION:'',
+                                            CRTT_CODIGO: recordRegla.get('CRTT_CODIGO')
+                                        });
+                                        reTipoSolicitudRegla.stopEditing();
+                                        gsCgg_res_tipo_solicitud_regla.insert(0,rFilaRegla);
+                                        grdCgg_res_tipo_solicitud_regla.getView().refresh();
+
+                                        grdCgg_res_tipo_solicitud_regla.getSelectionModel().selectRow(0);
+
                                     }
-                                //  reTipoSolicitudRegla.startEditing(0);
-                               // }
+                                    //FIN MO
+
+                                    //  reTipoSolicitudRegla.startEditing(0);
+                                }
                             }
                         }
-                        )
+                    );
                     objDlgBusquedas.show();
                 }
             },{
@@ -1362,7 +1733,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                     var seleccionado = grdCgg_res_tipo_solicitud_regla.getSelectionModel().getSelected();
                     if(seleccionado != null ){
                         grdCgg_res_tipo_solicitud_regla.getStore().each(function(inRecord){
-                            if(inRecord.get('CRVAL_NOMBRE')== seleccionado.get('CRVAL_NOMBRE')){
+                            if(inRecord.get('CRVAL_CODIGO')== seleccionado.get('CRVAL_CODIGO') && inRecord.get('CRTT_CODIGO')==seleccionado.get('CRTT_CODIGO')){
                                 grdCgg_res_tipo_solicitud_regla.getStore().remove(inRecord);
                             }
                         });
@@ -1371,7 +1742,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
             }]
         },grdCgg_res_tst_aplica]
     });
-  
+
     /**
      * Ext.form.FormPanel Panel principal que contiene los controles de la ventana winFrmCgg_res_tipo_solicitud_tramite.
      */
@@ -1403,6 +1774,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
             show:function(inThis){
                 Ext.getCmp('pnlTabTipoSolicitud').activate('tpGarantia');
                 Ext.getCmp('pnlTabTipoSolicitud').activate('tpRequisito');
+                Ext.getCmp('pnlTabTipoSolicitud').activate('tpAdjunto');
             }
         }
     });
@@ -1443,12 +1815,12 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                 try{
                     tmpProceso1 = Ext.util.JSON.decode(inServiceResponse);
                     tmpProceso1 = tmpProceso1[0];
-                                        
+
                     rProceso.set('CRPRO_CODIGO', tmpProceso1.CRPRO_CODIGO);
                     rProceso.set('CRPRO_NOMBRE', tmpProceso1.CRPRO_NOMBRE);
                     tmpProceso = rProceso;
                     txtCrpro_codigo.setValue(rProceso.get('CRPRO_NOMBRE'));
-                            
+
                 }catch(inErr){
                     txtCrpro_codigo.setValue(NO_DATA_MESSAGE);
                 }
@@ -1476,7 +1848,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
             txtCrtst_descripcion.setValue(inRecordCgg_res_tipo_solicitud_tramite.get('CRTST_DESCRIPCION'));
             txtCrtst_observacion.setValue(inRecordCgg_res_tipo_solicitud_tramite.get('CRTST_OBSERVACION'));
             chkCrtst_aplica_garantia.setValue(inRecordCgg_res_tipo_solicitud_tramite.get('CRTST_APLICA_GARANTIA'));
-            Ext.getCmp('tpGarantia').setDisabled(!inRecordCgg_res_tipo_solicitud_tramite.get('CRTST_APLICA_GARANTIA'));
+            //Ext.getCmp('tpGarantia').setDisabled(!inRecordCgg_res_tipo_solicitud_tramite.get('CRTST_APLICA_GARANTIA'));
 
             chkCrtst_aplica_tramite.setValue(inRecordCgg_res_tipo_solicitud_tramite.get('CRTST_APLICA_TRAMITE'));
             chkCrtst_aplica_grupo.setValue(inRecordCgg_res_tipo_solicitud_tramite.get('CRTST_APLICA_GRUPO'));
@@ -1499,6 +1871,13 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                 }
             });
 
+            sCgg_res_solicitud_adjunto.reload({
+                params:{
+                    tableName:'Cgg_res_tramite',
+                    filter:"crtst_codigo='"+inRecordCgg_res_tipo_solicitud_tramite.get('CRTST_CODIGO')+"'"
+                }
+            });
+
             sCgg_res_garantia_solicitud.reload({
                 params:{
                     inCrtst_codigo:inRecordCgg_res_tipo_solicitud_tramite.get('CRTST_CODIGO'),
@@ -1511,7 +1890,8 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                     format:"JSON"
                 }
             });
-            
+            sCgg_regla_validacion.load();
+
             gsCgg_res_tst_aplica.reload({
                 params:{
                     inCrtst_codigo:inRecordCgg_res_tipo_solicitud_tramite.get('CRTST_CODIGO'),
@@ -1522,7 +1902,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
             isEdit = true;
         }
     }
-    
+
     function obtenerReglasJson(){
         var tmpReglaGuardar ={};
         var tmpParams = {};
@@ -1549,6 +1929,7 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
                 tmpReglaGuardar.CRVAL_NOMBRE = rRegla.get('CRVAL_NOMBRE');
                 tmpReglaGuardar.CRTSE_VALOR_1  = '';
                 tmpReglaGuardar.CRTSE_CAMPO_EVALUACION = '';
+                tmpReglaGuardar.CRTT_CODIGO = rRegla.get('CRTT_CODIGO');
                 tmpNombreRegla = rRegla.get('CRVAL_NOMBRE');
                 tmpParams[rRegla.get('CRTSE_VALOR_1')] = rRegla.get('CRTSE_CAMPO_EVALUACION');
 
@@ -1589,19 +1970,19 @@ function FrmCgg_res_tipo_solicitud_tramite(INSENTENCIA_CGG_RES_TIPO_SOLICITUD_TR
         cargarCgg_res_tipo_solicitud_tramiteCtrls();
     }
     /**
-	* Establece el store de las especies.
-	*/
+     * Establece el store de las especies.
+     */
     this.setEspeciesStore = function (inStore) {
         cbxCkesp_codigo.store = inStore;
     }
-	
-	this.setStoreTipoTramite = function(inStoreTipoTramite){
-		tmpStoreTipoStramite = inStoreTipoTramite;
-	}
-	
-	this.setStoreGarantia = function(inStoreGarantia){
-		cbxCRGRT_CODIGOEditor.store = inStoreGarantia;
-	}
+
+    this.setStoreTipoTramite = function(inStoreTipoTramite){
+        tmpStoreTipoStramite = inStoreTipoTramite;
+    }
+
+    this.setStoreGarantia = function(inStoreGarantia){
+        cbxCRGRT_CODIGOEditor.store = inStoreGarantia;
+    }
 }
 /**
  * Funcion prototipo. Establece el store de las especies.
@@ -1638,6 +2019,7 @@ FrmCgg_res_tipo_solicitud_tramite.prototype.loadData = function(){
 FrmCgg_res_tipo_solicitud_tramite.prototype.setStoreTipoTramite = function(inStoreTipoTramite){
     this.setStoreTipoTramite(inStoreTipoTramite);
 }
+
 
 FrmCgg_res_tipo_solicitud_tramite.prototype.setStoreGarantia = function(inStoreGarantia){
     this.setStoreGarantia(inStoreGarantia);

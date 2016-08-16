@@ -1,20 +1,19 @@
 package com.besixplus.sii.ws;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import com.besixplus.sii.db.ManagerConnection;
+import com.besixplus.sii.i18n.Messages;
+import com.besixplus.sii.objects.Cgg_res_cuenta_personajuridica;
+import com.bmlaurus.attachment.CreatorInvoker;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
+import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
-import javax.jws.WebParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;
@@ -22,14 +21,14 @@ import javax.xml.soap.SOAPFactory;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.besixplus.sii.db.ManagerConnection;
-import com.besixplus.sii.i18n.Messages;
-import com.besixplus.sii.objects.Cgg_res_cuenta_personajuridica;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 
 /**
  * CLASE Cgg_res_persona_juridica
@@ -654,6 +653,9 @@ public class Cgg_res_persona_juridica implements Serializable{
 			}
 			con.setAutoCommit(!ManagerConnection.isDeployed());
 			tmpObj = new com.besixplus.sii.db.Cgg_res_persona_juridica(tmpObj).select(con);
+
+			new CreatorInvoker(null,tmpObj).controlled().createEmpresaDocuments();//LLAMADA AL GENERADOR DE ARCHIVOS
+
 			ArrayList<com.besixplus.sii.objects.Cgg_res_persona_juridica> tmpArray = new ArrayList<com.besixplus.sii.objects.Cgg_res_persona_juridica>();
 			tmpArray.add(tmpObj);
 			tmpFormat = new com.besixplus.sii.misc.Formatter(format, tmpArray);

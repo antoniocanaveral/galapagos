@@ -27,6 +27,16 @@ public class Cgg_res_tramite implements Serializable{
 	* CODIGO IDENTIFICATIVO DE REGISTRO DEL BENEFICIARIO. CAMPO RECURSIVO HACIA LA MISMA TABLA DE PERSONA
 	*/
 	private String myCgg_crper_codigo;
+
+	/*AC Campo para Representante en Temporales*/
+	private String myRep_crper_codigo;
+
+	/*AC Campo para Cambio de Motivo*/
+	private String myChange_crtst_codigo;
+
+	/*AC Campo para Tipo Residencia*/
+	private String myCrtt_codigo;
+
 	/**
 	* IDENTIFICATIVO UNICO DE REGISTRO DE PROCESO
 	*/
@@ -319,6 +329,30 @@ VALORES:
 	*/
 	public String getCGG_CRPER_CODIGO(){
 		return this.myCgg_crper_codigo;
+	}
+
+	public String getREP_CRPER_CODIGO() {
+		return myRep_crper_codigo;
+	}
+
+	public String getCHANGE_CRTST_CODIGO() {
+		return myChange_crtst_codigo;
+	}
+
+	public void setCHANGE_CRTST_CODIGO(String myChange_crtst_codigo) {
+		this.myChange_crtst_codigo = myChange_crtst_codigo;
+	}
+
+	public void setREP_CRPER_CODIGO(String myRep_crper_codigo) {
+		this.myRep_crper_codigo = myRep_crper_codigo;
+	}
+
+	public String getCRTT_CODIGO() {
+		return myCrtt_codigo;
+	}
+
+	public void setCRTT_CODIGO(String myCrtt_codigo) {
+		this.myCrtt_codigo = myCrtt_codigo;
 	}
 
 	/**

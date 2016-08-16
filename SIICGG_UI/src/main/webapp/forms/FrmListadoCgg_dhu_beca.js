@@ -140,8 +140,8 @@ function FrmListadoCgg_dhu_beca(inDesktop){
 				}
 		},
         {dataIndex:'CRPER_NOMBRES',header:'Nombre',width:150,sortable:true},
-        {dataIndex:'CRPER_APELLIDO_PATERNO',header:'Apellido paterno',width:150,sortable:true},
-        {dataIndex:'CRPER_APELLIDO_MATERNO',header:'Apellido materno',width:150,sortable:true},
+        {dataIndex:'CRPER_APELLIDO_PATERNO',header:'Primer apellido',width:150,sortable:true},
+        {dataIndex:'CRPER_APELLIDO_MATERNO',header:'Segundo apellido',width:150,sortable:true},
         {dataIndex:'CRPER_NUM_DOC_IDENTIFIC',header:'N.Identificativo',width:150,sortable:true},
         {dataIndex:'CRPER_NUMERO_RESIDENCIA',header:'Residencia',width:100,sortable:true,hidden:true},
         {dataIndex:'CRPER_LUGAR_NACIMIENTO',header:'Lugar de nacimiento',width:150,sortable:true,hidden:true},

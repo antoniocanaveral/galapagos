@@ -1,10 +1,16 @@
 package com.besixplus.sii.ws;
 
-import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.besixplus.sii.db.ManagerConnection;
+import com.besixplus.sii.i18n.Messages;
+import com.besixplus.sii.objects.Cgg_regla_validacion_metadatos;
+import com.besixplus.sii.util.Env;
+import com.bmlaurus.exception.EnvironmentVariableNotDefinedException;
+import com.bmlaurus.rule.RuleClass;
+import com.bmlaurus.rule.RuleData;
+import com.google.gson.Gson;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
@@ -13,21 +19,23 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
 import javax.servlet.http.HttpServletRequest;
-/*import javax.servlet.http.HttpServletResponse;*/
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFactory;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
+import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URLClassLoader;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.besixplus.sii.db.ManagerConnection;
-import com.besixplus.sii.i18n.Messages;
-import com.besixplus.sii.objects.Cgg_regla_validacion_metadatos;
+/*import javax.servlet.http.HttpServletResponse;*/
 
 /**
  * CLASE Cgg_regla_validacion
@@ -446,7 +454,6 @@ public class Cgg_regla_validacion implements Serializable{
 
 	/**
 	 * SELECCIONA VARIOS REGISTROS DE LA TABLA Cgg_regla_validacion DE ACUERDO AL TIPO DE SOLICITUD DE TRAMITE .
-	 * @param inConnection CONEXION A LA BASE DE DATOS.
 	 * @param inCrtst_codigo IDENTIFICATIVO UNICO DE REGISTRO DE TIPO DE SOLICITUD DE TRAMITE
 	 * @param format FORMATO DE SALIDA DE LOS DATOS (JSON, XML).
 	 * @return com.besixplus.sii.objects.Cgg_regla_validacion OBJETO EQUIVALENTE AL REGISTRO DE LA TABLA.
@@ -455,6 +462,7 @@ public class Cgg_regla_validacion implements Serializable{
 	@WebMethod
 	public String selectReglaTipoSolicitud(		
 			@WebParam(name="inCrtst_codigo")String inCrtst_codigo,
+			@WebParam(name="inCrtt_codigo") String inCrtt_codigo,
 			@WebParam(name="format")String format
 	) throws SOAPException{
 		HttpServletRequest tmpRequest = (HttpServletRequest) wctx.getMessageContext().get(MessageContext.SERVLET_REQUEST);
@@ -471,7 +479,7 @@ public class Cgg_regla_validacion implements Serializable{
 			}
 
 			con.setAutoCommit(!ManagerConnection.isDeployed());
-			obj = new com.besixplus.sii.db.Cgg_regla_validacion().selectReglaTipoSolicitud(con,inCrtst_codigo);
+			obj = new com.besixplus.sii.db.Cgg_regla_validacion().selectReglaTipoSolicitud(con,inCrtst_codigo,inCrtt_codigo);
 			tmpFormat = new com.besixplus.sii.misc.Formatter(format, obj);
 			outCadena = tmpFormat.getData();
 			con.close();
@@ -527,7 +535,6 @@ public class Cgg_regla_validacion implements Serializable{
 
 	/**
 	 * SELECCIONA VARIOS REGISTROS DE LA TABLA Cgg_regla_validacion DE ACUERDO AL TIPO DE OPERACION DE VALIDACION .
-	 * @param inConnection CONEXION A LA BASE DE DATOS.
 	 * @param inCopvl_formulario IDENTIFICATIVO UNICO DE REGISTRO DE TIPO DE SOLICITUD DE TRAMITE
 	 * @param format FORMATO DE SALIDA DE LOS DATOS (JSON, XML).
 	 * @return com.besixplus.sii.objects.Cgg_regla_validacion OBJETO EQUIVALENTE AL REGISTRO DE LA TABLA.
@@ -571,7 +578,6 @@ public class Cgg_regla_validacion implements Serializable{
 
 	/**
 	 * SELECCIONA VARIOS REGISTROS DE LA TABLA Cgg_regla_validacion DE ACUERDO AL TIPO DE OPERACION DE VALIDACION .
-	 * @param inConnection CONEXION A LA BASE DE DATOS.
 	 * @param inCopvl_codigo IDENTIFICATIVO UNICO DE REGISTRO DE OPERACION VALIDACION
 	 * @param format FORMATO DE SALIDA DE LOS DATOS (JSON, XML).
 	 * @return com.besixplus.sii.objects.Cgg_regla_validacion OBJETO EQUIVALENTE AL REGISTRO DE LA TABLA.
@@ -613,66 +619,40 @@ public class Cgg_regla_validacion implements Serializable{
 	/**
 	 * Ejecuta una regla de validacion y devuelve su evaluacion.\
 	 * @param inJSON_reglas_validacion Cadena de datos en formato JSON de la regla de validacion a ejecutar.
+	 * @param jsonData  jsonData es un arreglo de Datos de los Beneficiarios
 	 * @return Cadena de datos de la evaluacion.
 	 * @throws SOAPException 
 	 */
 	@WebMethod
-	public String ejecutarReglaTipoSolicitud(		
-			@WebParam(name="inJSON_reglas_validacion")String inJSON_reglas_validacion
+	public String ejecutarReglaTranseuntesTipoSolicitud(
+			@WebParam(name="inJSON_reglas_validacion")String inJSON_reglas_validacion,
+			@WebParam(name="jsonData")String jsonData
 	) throws SOAPException{
-		/*HttpServletRequest tmpRequest = (HttpServletRequest) wctx.getMessageContext().get(MessageContext.SERVLET_REQUEST);
-				ttpServletResponse tmpResponse = (HttpServletResponse) wctx.getMessageContext().get(MessageContext.SERVLET_RESPONSE);*/
-		JSONArray arrayJSONRegla = null;
-		JSONObject objJSONRegla = null;
-		boolean outResultadoValidacion =  true; 
-		String tmpResultado;
-		String [] outResult = null;
-		try{
-			Connection con = ManagerConnection.getConnection();
-			/*if(!com.besixplus.sii.db.Cgg_sec_objeto.isGrant(con, Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getClassName(), tmpRequest.getUserPrincipal().getName(), 1)){
-							con.close();
-							tmpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName());
-							return null;
-						}*/
+		List result = new ArrayList();
+		List data = new Gson().fromJson(jsonData,ArrayList.class);
+		List reglas = new Gson().fromJson(inJSON_reglas_validacion,ArrayList.class);
+		for(int i=0;i<data.size();i++){
+			String oneData = new Gson().toJson(data.get(i));
+			String oneRegla = (String) reglas.get(i);
 
-			con.setAutoCommit(false);
-
-			arrayJSONRegla = new JSONArray(inJSON_reglas_validacion);
-			for(int i=0;i< arrayJSONRegla.length();i++)
-			{
-				objJSONRegla = arrayJSONRegla.getJSONObject(i);
-				com.besixplus.sii.objects.Cgg_regla_validacion objRegla = new com.besixplus.sii.objects.Cgg_regla_validacion();
-				objRegla.setCRVAL_FUNCION_VALIDACION(objJSONRegla.getString("CRVAL_FUNCION_VALIDACION"));
-				Cgg_regla_validacion_metadatos objReglaMetadatos =  new Cgg_regla_validacion_metadatos();
-				objReglaMetadatos = new com.besixplus.sii.db.Cgg_regla_validacion(objRegla).selectReglaMetadatos(con);
-
-				tmpResultado = 	new com.besixplus.sii.db.Cgg_regla_validacion().reglaStatement(con,objReglaMetadatos,objJSONRegla);
-				outResult = tmpResultado.split(",");
-				if( Boolean.parseBoolean(outResult[0]) != objJSONRegla.getBoolean("CRVAL_RESULTADO_ACEPTACION") )
-				{
-					arrayJSONRegla.getJSONObject(i).put("CRVAL_APROBADO", "FALSE");
-					outResultadoValidacion = false;
-				}
-				else
-				{
-					arrayJSONRegla.getJSONObject(i).put("CRVAL_APROBADO", "TRUE");
-				}
-				if (outResult.length>1)
-				{
-					arrayJSONRegla.getJSONObject(i).put("CRVAL_SUGERENCIA",outResult[1]);
-				}
-			}
-			con.commit();
-			con.close();
-		}catch(SQLException inException){
-			com.besixplus.sii.db.SQLErrorHandler.errorHandler(inException);
-			throw new SOAPFaultException(SOAPFactory.newInstance().createFault(inException.getMessage(), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
-		} catch (JSONException e) {
-			e.printStackTrace();
-			throw new SOAPFaultException(SOAPFactory.newInstance().createFault(e.getMessage(), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
+			Object ruleRes = new Gson().fromJson(ejecutarReglaTipoSolicitudLocal(oneRegla, oneData), Map.class);
+			result.add(ruleRes);
 		}
-		return "{\"resultadoValidacion\":\""+outResultadoValidacion+"\",\"dataSet\":"+arrayJSONRegla.toString()+"}";
-		//return arrayJSONRegla.toString();
+		return new Gson().toJson(result);
+	}
+
+	/**
+	 * Ejecuta una regla de validacion y devuelve su evaluacion.\
+	 * @param inJSON_reglas_validacion Cadena de datos en formato JSON de la regla de validacion a ejecutar.
+	 * @return Cadena de datos de la evaluacion.
+	 * @throws SOAPException
+	 */
+	@WebMethod
+	public String ejecutarReglaTipoSolicitud(
+			@WebParam(name="inJSON_reglas_validacion")String inJSON_reglas_validacion,
+			@WebParam(name="jsonData")String jsonData
+	) throws SOAPException{
+		return ejecutarReglaTipoSolicitudLocal(inJSON_reglas_validacion, jsonData);
 	}
 
 	/** ESTABLECE LAS REGLAS DE VALIDACIONES.
@@ -706,7 +686,6 @@ public class Cgg_regla_validacion implements Serializable{
 	
 	/**
 	 * SELECCIONA VARIOS REGISTROS DE LA TABLA Cgg_regla_validacion DE ACUERDO AL TIPO DE OPERACION DE VALIDACION .
-	 * @param inConnection CONEXION A LA BASE DE DATOS.
 	 * @param inCopvl_formulario IDENTIFICATIVO UNICO DE REGISTRO DE TIPO DE SOLICITUD DE TRAMITE
 	 * @param format FORMATO DE SALIDA DE LOS DATOS (JSON, XML).
 	 * @return com.besixplus.sii.objects.Cgg_regla_validacion OBJETO EQUIVALENTE AL REGISTRO DE LA TABLA.
@@ -745,7 +724,8 @@ public class Cgg_regla_validacion implements Serializable{
 	 * @throws SOAPException 
 	 */
 	public String ejecutarReglaTipoSolicitudLocal(		
-			String inJSON_reglas_validacion
+			String inJSON_reglas_validacion,
+			String jsonData
 	) throws SOAPException{
 		
 		JSONArray arrayJSONRegla = null;
@@ -765,21 +745,40 @@ public class Cgg_regla_validacion implements Serializable{
 				objRegla.setCRVAL_FUNCION_VALIDACION(objJSONRegla.getString("CRVAL_FUNCION_VALIDACION"));
 				Cgg_regla_validacion_metadatos objReglaMetadatos =  new Cgg_regla_validacion_metadatos();
 				objReglaMetadatos = new com.besixplus.sii.db.Cgg_regla_validacion(objRegla).selectReglaMetadatos(con);
+				RuleData jsonRecord = null;
+				try{
+					if(jsonData!=null){
+						Gson parser = new Gson();
+						jsonRecord = parser.fromJson(jsonData,RuleData.class);
+					}
+				}catch (Exception e){
+					e.printStackTrace();
+				}
 
-				tmpResultado = 	new com.besixplus.sii.db.Cgg_regla_validacion().reglaStatement(con,objReglaMetadatos,objJSONRegla);
-				outResult = tmpResultado.split(",");
-				if( Boolean.parseBoolean(outResult[0]) != objJSONRegla.getBoolean("CRVAL_RESULTADO_ACEPTACION") )
-				{
-					arrayJSONRegla.getJSONObject(i).put("CRVAL_APROBADO", "FALSE");
+				if(objRegla.getCRVAL_FUNCION_VALIDACION().contains("com.bmlaurus.rule")){//es una regla de java
+					String className = objRegla.getCRVAL_FUNCION_VALIDACION();
+					URLClassLoader externalClassLoader = new URLClassLoader (Env.resolveClassPath("rules"), this.getClass().getClassLoader());
+					Class clazz = Class.forName(className,true,externalClassLoader);
+					RuleClass rule = (RuleClass) clazz.newInstance();
+					tmpResultado = rule.executeRule(objReglaMetadatos, objJSONRegla, jsonRecord);
+				}else
+					tmpResultado = 	new com.besixplus.sii.db.Cgg_regla_validacion().reglaStatement(con,objReglaMetadatos,objJSONRegla);
+
+				if(tmpResultado==null){
+					System.err.println("REGLA DEVULEVE NULL: "+objRegla.getCRVAL_FUNCION_VALIDACION());
 					outResultadoValidacion = false;
-				}
-				else
-				{
-					arrayJSONRegla.getJSONObject(i).put("CRVAL_APROBADO", "TRUE");
-				}
-				if (outResult.length>1)
-				{
-					arrayJSONRegla.getJSONObject(i).put("CRVAL_SUGERENCIA",outResult[1]);
+					arrayJSONRegla.getJSONObject(i).put("CRVAL_APROBADO", "FALSE");
+				}else {
+					outResult = tmpResultado.split(",");
+					if (Boolean.parseBoolean(outResult[0]) != objJSONRegla.getBoolean("CRVAL_RESULTADO_ACEPTACION")) {
+						arrayJSONRegla.getJSONObject(i).put("CRVAL_APROBADO", "FALSE");
+						outResultadoValidacion = false;
+					} else {
+						arrayJSONRegla.getJSONObject(i).put("CRVAL_APROBADO", "TRUE");
+					}
+					if (outResult.length > 1) {
+						arrayJSONRegla.getJSONObject(i).put("CRVAL_SUGERENCIA", outResult[1]);
+					}
 				}
 			}
 			con.commit();
@@ -788,6 +787,21 @@ public class Cgg_regla_validacion implements Serializable{
 			com.besixplus.sii.db.SQLErrorHandler.errorHandler(inException);
 			throw new SOAPFaultException(SOAPFactory.newInstance().createFault(inException.getMessage(), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
 		} catch (JSONException e) {
+			e.printStackTrace();
+			throw new SOAPFaultException(SOAPFactory.newInstance().createFault(e.getMessage(), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			throw new SOAPFaultException(SOAPFactory.newInstance().createFault(e.getMessage(), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+			throw new SOAPFaultException(SOAPFactory.newInstance().createFault(e.getMessage(), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+			throw new SOAPFaultException(SOAPFactory.newInstance().createFault(e.getMessage(), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			throw new SOAPFaultException(SOAPFactory.newInstance().createFault(e.getMessage(), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
+		} catch (EnvironmentVariableNotDefinedException e) {
 			e.printStackTrace();
 			throw new SOAPFaultException(SOAPFactory.newInstance().createFault(e.getMessage(), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
 		}

@@ -62,13 +62,29 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 						icon: Ext.MessageBox.INFO
 					});
 					cbxCrcnt_motivo.setValue(2);
+				}else if(inIndex == 1){
+					if(tmpCarnet){
+						if(tmpCarnet.CRCNT_FECHA_CADUCIDAD!=null){
+							var caducidad=new Date.parseDate(tmpCarnet.CRCNT_FECHA_CADUCIDAD,"Y-m-d H:i:s.u");
+							var hoy = new Date();
+							if(caducidad.getTime()>hoy.getTime()){
+								Ext.Msg.show({
+									title:tituloCgg_res_carnet,
+									msg: 'La persona mantiene un carnet vigente. Elija otro motivo.',
+									buttons: Ext.Msg.OK,
+									icon: Ext.MessageBox.INFO
+								});
+								cbxCrcnt_motivo.setValue(2);
+							}
+						}
+					}
 				}
-				if(inIndex > 1 ){	
+			/*	if(inIndex > 1 ){
 					dtCrcnt_fecha_emision.setValue(tmpCrrsdFechaInicio);
 					dtCrcnt_fecha_caducidad.setValue(tmpCrrsdFechaFin);
 				}else if(inIndex == 1){
 					if(tmpResidencia.CRRSD_MODALIDAD == 0){
-						dtCrcnt_fecha_emision.setValue(tmpCrrsdFechaFin);
+						dtCrcnt_fecha_emision.setValue(tmpCrrsdFechaInicio);
 						dtCrcnt_fecha_caducidad.setValue(tmpCrrsdFechaFin.add(Date.MONTH, tmpDuracion).add(Date.DAY,-1));
 					}else{
 						cbxCrcnt_motivo.setValue(2);
@@ -80,7 +96,10 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 						});
 					}
 					
-				}
+				}*/
+
+				dtCrcnt_fecha_emision.setValue(CURRENT_DATE);
+				dtCrcnt_fecha_caducidad.setValue(CURRENT_DATE.add(Date.MONTH, tmpDuracion).add(Date.DAY,-1));
 			}
 		}
     });
@@ -98,14 +117,17 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
     /**
      * Ext.form.DateField FECHA DE EMISION DEL CARNET
      */
-    var dtCrcnt_fecha_emision = new Ext.form.DateField({
-        id: 'dtCrcnt_fecha_emision',
-        name: 'dtCrcnt_fecha_emision',
-        fieldLabel: 'Aprobaci\u00f3n',
-        allowBlank: false,
+
+	var dtCrcnt_fecha_emision = new Ext.form.DateField({
+		id: 'dtCrcnt_fecha_emision',
+		name: 'dtCrcnt_fecha_emision',
+		fieldLabel: 'Aprobaci\u00f3n',
+		allowBlank: false,
 		readOnly:true,
-		submitValue:false
-    });
+		submitValue:false,
+		disabled: true
+	});
+
     /**
      * Ext.form.DateField FECHA DE CADUCIDAD DE LA ESPECIE
      */
@@ -116,8 +138,8 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
         allowBlank: false,
         format: 'd/m/Y',
         value: new Date(),
-		readOnly:true,
-		submitValue:false
+		submitValue:false,
+		disabled:true
     });
     /**
      * Ext.form.DateField FECHA DE REALIZACION DE DEPOSITO POR EL VALOR DE LA ESPECIE
@@ -170,7 +192,27 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 		anchor:'98%',
         allowBlank: false
     });
-	var filCompDeposito = new Ext.form.FileUploadField({
+
+	//AC==>
+	var btnAdjuntos = new Ext.ux.form.AlfrescoFM({
+		id:'compAdjunto',   //(opcional)
+		name:'compAdjunto', //(opcional)
+		fieldLabel :'Resp.',
+		text: 'Adjuntos',    //(opcional -> Texto del botón)
+		tableName: 'Cgg_res_carnet',
+		validateRecordID:true,
+		recordID : null,
+		filter : null
+	});
+	btnAdjuntos.addListener("updateData",function(t){
+		t.recordID = null;
+		t.recordID = txtCrcnt_codigo.getValue();
+		t.filter = null;
+		r=null;
+	});
+	//<== AC
+
+	/*var filCompDeposito = new Ext.form.FileUploadField({
 			id:'filCompDeposito',
 			name:'filCompDeposito',
 			fieldLabel :'Comp.',
@@ -180,7 +222,7 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 				text: '',
 				iconCls: 'iconAdjunto'
 			}
-	});
+	});*/
 	/**
 	* Ext.form.TextField IDENTIFICATIVO UNICO DE REGISTRO DE CUENTA BANCARIA EN LA QUE SE REALIZO EL DEPOSITO
 	*/
@@ -218,7 +260,7 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 		items:[{xtype:'panel',layout:'column',items:[
 			{columnWidth:.9,layout:'form',items:[txtCrcpj_codigo]},
 			{columnWidth:.1,layout:'form',items:[btnCrcpj_codigoCgg_res_carnet]}]},
-			txtCrcnt_numero_comp,numCrcnt_valor,dtCrcnt_fecha_deposito,filCompDeposito]
+			txtCrcnt_numero_comp,numCrcnt_valor,dtCrcnt_fecha_deposito,btnAdjuntos]//filCompDeposito]
 	});
     /**
      * Ext.form.TextArea INFORMACION ADICIONAL
@@ -325,7 +367,7 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 				txtCrcnt_observacion]
 	});
 	
-	var btnCapturarFoto = new Ext.Button({
+	/*var btnCapturarFoto = new Ext.Button({
 		id:'btnCapturarFoto',
 		text:'Capturar',
 		iconCls:'iconCamara',
@@ -345,7 +387,36 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
                 });
 			}
 		}
+	});*/
+	function LoadJs(url){
+		var js = document.createElement('script');
+
+		js.type = "text/javascript";
+		js.src = url;
+
+		document.body.appendChild(js);
+
+	}
+	var btnCapturarFoto = new Ext.Button({
+		id:'btnCapturarFoto',
+		text:'Capturar',
+		iconCls:'iconCamara',
+		handler:function(){
+			LoadJs("forms/FrmCaptureImage.js");
+			var captura = new FrmCaptureImage();
+			captura.closeHandler(function(){
+				tmpPrsFoto = captura.getImage();
+				if(tmpPrsFoto!=null && tmpPrsFoto.src!=null){
+					var tmpImgFoto = document.getElementById("imgFotoPrsnCrn");
+					tmpImgFoto.src = tmpPrsFoto.src;
+				}
+				//tmpImgFoto.src = 'data:image/jpg;base64,'+tmpPrsFoto;
+
+			});
+			captura.show();
+		}
 	});
+	
 	
 	var btnCapturarFirma = new Ext.Button({
 		id:'btnCapturarFirma',
@@ -418,7 +489,7 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 		frame:true,
 		title:'Foto',
 		iconCls:'iconCamara',
-		html:'<img id="imgFotoPrsnCrn" height="300" width="300" src="resources/images/male_avatar.jpeg"/>',
+		html:'<img id="imgFotoPrsnCrn" height="320" width="240" src="resources/images/male_avatar.jpeg"/>',
 		bbar:[btnCapturarFoto]
 	});
 	
@@ -528,13 +599,16 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 			}else
 				tmpCrrsdFechaFin = Date.parse(tmpResidencia.CRRSD_FECHA_CADUCIDAD.substr(0,tmpResidencia.CRRSD_FECHA_CADUCIDAD.lastIndexOf('.')));
 				
-			dtCrcnt_fecha_emision.setValue(Date.parse(tmpResidencia.CRRSD_FECHA_INICIO.substr(0,tmpResidencia.CRRSD_FECHA_INICIO.lastIndexOf('.'))));
-			dtCrcnt_fecha_caducidad.setValue(tmpCrrsdFechaFin);
+			/*dtCrcnt_fecha_emision.setValue(Date.parse(tmpResidencia.CRRSD_FECHA_INICIO.substr(0,tmpResidencia.CRRSD_FECHA_INICIO.lastIndexOf('.'))));
+			dtCrcnt_fecha_caducidad.setValue(tmpCrrsdFechaFin);*/
+			dtCrcnt_fecha_emision.setValue(CURRENT_DATE);
+			dtCrcnt_fecha_caducidad.setValue(CURRENT_DATE.add(Date.MONTH, tmpDuracion).add(Date.DAY,-1));
 		}else if (tmpResidencia){
 			dtCrcnt_fecha_emision.setReadOnly(tmpResidencia.CRRSD_MODALIDAD == 1);
 			dtCrcnt_fecha_caducidad.setReadOnly(tmpResidencia.CRRSD_MODALIDAD == 1);
 			tmpCrrsdFechaInicio = Date.parse(tmpResidencia.CRRSD_FECHA_INICIO.substr(0,tmpResidencia.CRRSD_FECHA_INICIO.lastIndexOf('.')));
-			dtCrcnt_fecha_emision.setValue(tmpCrrsdFechaInicio);
+			//dtCrcnt_fecha_emision.setValue(tmpCrrsdFechaInicio);
+			dtCrcnt_fecha_emision.setValue(CURRENT_DATE);
 			cbxCrcnt_motivo.setValue(0);
 			cbxCrcnt_motivo.setDisabled(true);
 			if(tmpResidencia.CRRSD_MODALIDAD == 0){
@@ -543,7 +617,8 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 			}else{
 				tmpCrrsdFechaFin = Date.parse(tmpResidencia.CRRSD_FECHA_CADUCIDAD.substr(0,tmpResidencia.CRRSD_FECHA_CADUCIDAD.lastIndexOf('.')));
 			}
-			dtCrcnt_fecha_caducidad.setValue(tmpCrrsdFechaFin);
+			//dtCrcnt_fecha_caducidad.setValue(tmpCrrsdFechaFin);
+			dtCrcnt_fecha_caducidad.setValue(CURRENT_DATE.add(Date.MONTH, tmpDuracion).add(Date.DAY,-1));
 		}
 	}
 	

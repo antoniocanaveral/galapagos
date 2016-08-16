@@ -318,7 +318,7 @@ public class Cgg_res_tramite implements Serializable{
 	){
 		String outResult = "true";
 		try{
-			CallableStatement stmUpdate = inConnection.prepareCall("{ call sii.F_CGG_RES_TRAMITE_UPDATE(?,?,?,?,?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?::smallint, ?::smallint, ?, ?, ?, ?, ?, ?, ?,?,?,?,?) }");
+			CallableStatement stmUpdate = inConnection.prepareCall("{ call sii.F_CGG_RES_TRAMITE_UPDATE(?,?,?,?,?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?::smallint, ?::smallint, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?) }");
 			stmUpdate.setString(1, this.getCgg_res_tramite().getCRTRA_CODIGO());
 			stmUpdate.setString(2, this.getCgg_res_tramite().getCRPER_CODIGO());
 			stmUpdate.setString(3, this.getCgg_res_tramite().getCRPJR_CODIGO());
@@ -349,6 +349,9 @@ public class Cgg_res_tramite implements Serializable{
 			stmUpdate.setTimestamp(28, this.getCgg_res_tramite().getCRTRA_FECHA_SALIDA()==null ? null:new java.sql.Timestamp(this.getCgg_res_tramite().getCRTRA_FECHA_SALIDA().getTime()));
 			stmUpdate.setBoolean(29, this.getCgg_res_tramite().getCRTRA_ESTADO());
 			stmUpdate.setString(30, this.getCgg_res_tramite().getCRTRA_USUARIO_UPDATE());
+			stmUpdate.setString(31, this.getCgg_res_tramite().getREP_CRPER_CODIGO());
+			stmUpdate.setString(32, this.getCgg_res_tramite().getCHANGE_CRTST_CODIGO());
+			stmUpdate.setString(33, this.getCgg_res_tramite().getCRTT_CODIGO());
 			stmUpdate.executeUpdate();
 			stmUpdate.close();
 		}catch(SQLException e){
@@ -402,6 +405,9 @@ public class Cgg_res_tramite implements Serializable{
 				this.getCgg_res_tramite().setCRTRA_FECHA_INGRESO(results.getTimestamp(27));
 				this.getCgg_res_tramite().setCRTRA_FECHA_SALIDA(results.getTimestamp(28));
 				this.getCgg_res_tramite().setCRTRA_ESTADO(results.getBoolean(29));
+
+				this.getCgg_res_tramite().setREP_CRPER_CODIGO(results.getString(35));
+				this.getCgg_res_tramite().setCHANGE_CRTST_CODIGO(results.getString(36));
 			}
 			results.close();
 			stmSelect.close();
@@ -1188,6 +1194,67 @@ public class Cgg_res_tramite implements Serializable{
 		}
 		return outCgg_res_tramite;
 	}
+	
+	/**
+	 * SELECCIONA LOS REGISTROS DE LA TABLA Cgg_res_tramite DE ACUERDO
+	 * AL CODIGO DE LA PERSONA, DEL AUSPICIANTE Y AL TIPO DE SOLICITUD
+	 * @param inConnection CONEXION A LA BASE DE DATOS.
+	 * @return com.besixplus.sii.objects.Cgg_res_tramite OBJETO EQUIVALENTE AL REGISTRO DE LA TABLA.
+	 */
+	public ArrayList<com.besixplus.sii.objects.Cgg_res_tramite> selectCGG_RES_PERSONA_TIPO(
+			java.sql.Connection inConnection
+	){
+		ArrayList<com.besixplus.sii.objects.Cgg_res_tramite> outCgg_res_tramite = new ArrayList<com.besixplus.sii.objects.Cgg_res_tramite>();
+		try{
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_TRAMITE_S_CGG_RES_PERSONA_TIPO(?, ?, ?) }");
+			stmSelect.registerOutParameter(1, Types.OTHER);
+			stmSelect.setString(2,this.getCgg_res_tramite().getCRPER_CODIGO());
+			stmSelect.setString(3,this.getCgg_res_tramite().getCGG_CRPER_CODIGO());
+			stmSelect.setString(4,this.getCgg_res_tramite().getCRTST_CODIGO());
+			stmSelect.execute();
+			ResultSet results = (ResultSet) stmSelect.getObject(1);
+			while (results.next()) {
+				com.besixplus.sii.objects.Cgg_res_tramite tmpCgg_res_tramite = new com.besixplus.sii.objects.Cgg_res_tramite();
+				tmpCgg_res_tramite.setCRTRA_CODIGO(results.getString(1));
+				tmpCgg_res_tramite.setCRPER_CODIGO(results.getString(2));
+				tmpCgg_res_tramite.setCRPJR_CODIGO(results.getString(3));
+				tmpCgg_res_tramite.setCGG_CRPER_CODIGO(results.getString(4));
+				tmpCgg_res_tramite.setCRPRO_CODIGO(results.getString(5));
+				tmpCgg_res_tramite.setCRTST_CODIGO(results.getString(6));
+				tmpCgg_res_tramite.setCVVEH_CODIGO(results.getString(7));
+				tmpCgg_res_tramite.setCRETT_CODIGO(results.getString(8));
+				tmpCgg_res_tramite.setCISLA_CODIGO(results.getString(9));
+				tmpCgg_res_tramite.setCVMTR_CODIGO(results.getString(10));
+				tmpCgg_res_tramite.setCGG_CVMTR_CODIGO(results.getString(11));
+				tmpCgg_res_tramite.setCGG_CVVEH_CODIGO(results.getString(12));
+				tmpCgg_res_tramite.setCRTRA_ANIO(results.getBigDecimal(13));
+				tmpCgg_res_tramite.setCRTRA_NUMERO(results.getBigDecimal(14));
+				tmpCgg_res_tramite.setCRTRA_FECHA_RECEPCION(results.getTimestamp(15));
+				tmpCgg_res_tramite.setCRTRA_ACTIVIDAD_RESIDENCIA(results.getString(16));
+				tmpCgg_res_tramite.setCRTRA_OBSERVACION(results.getString(17));
+				tmpCgg_res_tramite.setCRTRA_DIAS_PERMANENCIA(results.getInt(18));
+				tmpCgg_res_tramite.setCRTRA_PENDIENTE(results.getInt(19));
+				tmpCgg_res_tramite.setCRTRA_OBSERVACION_PENDIENTE(results.getString(20));
+				tmpCgg_res_tramite.setCRTRA_ATENCION_CLIENTE(results.getBoolean(21));
+				tmpCgg_res_tramite.setCRTRA_COMUNICADO_RADIAL(results.getString(22));
+				tmpCgg_res_tramite.setCRTRA_MOTIVO(results.getString(23));
+				tmpCgg_res_tramite.setCRTRA_FOLIO(results.getBigDecimal(24));
+				tmpCgg_res_tramite.setCRTRA_GRUPO(results.getBoolean(25));
+				tmpCgg_res_tramite.setCRTRA_ORDEN(results.getBigDecimal(26));
+				//tmpCgg_res_tramite.setCRTRA_FECHA_INGRESO(results.getTimestamp(27));
+				//tmpCgg_res_tramite.setCRTRA_FECHA_SALIDA(results.getTimestamp(28));
+				tmpCgg_res_tramite.setCRTRA_RECALIFICACION(results.getBoolean(29));
+				tmpCgg_res_tramite.setCRTRA_ESTADO(results.getBoolean(30));
+				outCgg_res_tramite.add(tmpCgg_res_tramite);
+			}
+			results.close();
+			stmSelect.close();
+		}catch(SQLException e){
+			com.besixplus.sii.db.SQLErrorHandler.errorHandler(e);
+		}
+		return outCgg_res_tramite;
+	}
+	
 
 	/**
 	 * ELIMINA LOS REGISTROS DE LA TABLA Cgg_res_tramite DE ACUERDO A LA CLAVE PRIMARIA DE LA TABLA Cgg_res_persona.
@@ -1240,7 +1307,7 @@ public class Cgg_res_tramite implements Serializable{
 	){
 		String [] outResult = null;
 		try{
-			CallableStatement stmInsert = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_TRAMITE_INSERT_1(?,?,?,?,?,?,?,?,?,?,?,?,?, ?, ?, ?, ?, ?::smallint,?::smallint, ?, ?, ?, ?, ?, ?, ?, ?,?) }");
+			CallableStatement stmInsert = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_TRAMITE_INSERT_1(?,?,?,?,?,?,?,?,?,?,?,?,?, ?, ?, ?, ?, ?::smallint,?::smallint, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?) }");
 			stmInsert.registerOutParameter(1, java.sql.Types.VARCHAR);
 			stmInsert.setString(2, this.getCgg_res_tramite().getCRTRA_CODIGO());
 			stmInsert.setString(3, this.getCgg_res_tramite().getCRPER_CODIGO());
@@ -1270,6 +1337,9 @@ public class Cgg_res_tramite implements Serializable{
 			stmInsert.setBoolean(27, this.getCgg_res_tramite().getCRTRA_ESTADO());
 			stmInsert.setString(28, this.getCgg_res_tramite().getCRTRA_USUARIO_INSERT());
 			stmInsert.setString(29, this.getCgg_res_tramite().getCRTRA_USUARIO_UPDATE());
+			stmInsert.setString(30, this.getCgg_res_tramite().getREP_CRPER_CODIGO());
+			stmInsert.setString(31, this.getCgg_res_tramite().getCHANGE_CRTST_CODIGO());
+			stmInsert.setString(32, this.getCgg_res_tramite().getCRTT_CODIGO());
 			stmInsert.execute();
 			String aux = stmInsert.getString(1);						
 			outResult = aux.split(",");						
@@ -1700,6 +1770,29 @@ public class Cgg_res_tramite implements Serializable{
 			stmUpdate.setString(2, this.getCgg_res_tramite().getCRPER_CODIGO());
 			stmUpdate.setString(3, this.getCgg_res_tramite().getCRPJR_CODIGO());
 			stmUpdate.setString(4, this.getCgg_res_tramite().getCRTRA_USUARIO_UPDATE());
+			stmUpdate.executeUpdate();
+			stmUpdate.close();
+		}catch(SQLException e){
+			com.besixplus.sii.db.SQLErrorHandler.errorHandler(e);
+			outResult = e.getMessage();
+		}
+		return outResult;
+	}
+
+	/**
+	 * ACTUALIZA UN REGISTRO DE LA TABLA Cgg_res_tramite.
+	 * @param inConnection CONEXION A LA BASE DE DATOS.
+	 * @return bool <code>true</code> SI SE ACTUALIZO EL REGISTRO, CASO CONTRARIO <code>false</code>.
+	 */
+	public String updateIsla(
+			java.sql.Connection inConnection
+	){
+		String outResult = "true";
+		try{
+			CallableStatement stmUpdate = inConnection.prepareCall("{ call sii.F_CGG_RES_TRAMITE_UPDATE_ISLA(?,?,?) }");
+			stmUpdate.setString(1, this.getCgg_res_tramite().getCRTRA_CODIGO());
+			stmUpdate.setString(2, this.getCgg_res_tramite().getCISLA_CODIGO());
+			stmUpdate.setString(3, this.getCgg_res_tramite().getCRTRA_USUARIO_UPDATE());
 			stmUpdate.executeUpdate();
 			stmUpdate.close();
 		}catch(SQLException e){

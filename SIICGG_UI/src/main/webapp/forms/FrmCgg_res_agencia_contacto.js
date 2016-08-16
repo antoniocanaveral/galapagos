@@ -10,13 +10,9 @@ function FrmCgg_res_agencia_contacto(IN_SENTENCIA_CGG_RES_AGENCIA_CONTACTO,IN_RE
 	var inSentenciaCgg_res_agencia_contacto = IN_SENTENCIA_CGG_RES_AGENCIA_CONTACTO;
 	var inRecordCgg_res_agencia_contacto=IN_RECORD_CGG_RES_AGENCIA_CONTACTO;
 	var urlCgg_res_agencia_contacto=URL_WS+"PublicWS/Cgg_res_agencia_contacto";
-	var urlCgg_web_agencia = URL_WS + "PublicWS/Cgg_web_agencia";
-	var urlCgg_res_tipo_contacto=URL_WS+"Cgg_res_tipo_contacto";
 	var tituloCgg_res_agencia_contacto='Contacto Agencia';
 	var descCgg_res_agencia_contacto='El formulario permite administrar la informaci\u00f3n del contacto de la agencia';
 	var isEdit = false;
-	var tmpCodigoTipoContacto;
-	var tmpCodigoAgencia;
 	/**
 	* Ext.form.TextField IDENTIFICATIVO UNICO DE REGISTRO
 	*/
@@ -36,7 +32,7 @@ function FrmCgg_res_agencia_contacto(IN_SENTENCIA_CGG_RES_AGENCIA_CONTACTO,IN_RE
 	var txtCwage_codigo = new Ext.form.TextField({
 			id:'txtCwage_codigo',
 			name:'txtCwage_codigo',
-			fieldLabel :'Agencia',
+			fieldLabel :'Codigo',
 			anchor:'98%',
 			readOnly:'true',
 			allowBlank :false
@@ -46,18 +42,16 @@ function FrmCgg_res_agencia_contacto(IN_SENTENCIA_CGG_RES_AGENCIA_CONTACTO,IN_RE
 	*/
 	var btnCwage_codigoCgg_res_agencia_contacto = new Ext.Button({
 			id:'btnCwage_codigoCgg_res_agencia_contacto',
-			//text:'Cwage_codigo',
-			iconCls:'iconBuscar',
+			text:'Cwage_codigo',
+			iconCls:'iconCwage_codigo',
 			listeners:{
 				click:function(){
 					var tmpFLCgg_web_agencia = new FrmListadoCgg_web_agencia();
 					var objBusqueda = new DlgBusqueda(tmpFLCgg_web_agencia.getStore(),tmpFLCgg_web_agencia.getColumnModel());
 					objBusqueda.closeHandler(function(){
 							var tmpRecord = objBusqueda.getSelectedRow();
-							if(tmpRecord){
-								tmpCodigoAgencia = tmpRecord.get('CWAGE_CODIGO');
-								txtCwage_codigo.setValue(tmpRecord.get('CWAGE_NOMBRE'));
-							}
+							if(tmpRecord)
+								txtCwage_codigo.setValue(tmpRecord.get('CWAGE_CODIGO'));
 					});
 					objBusqueda.show();
 			}}
@@ -68,7 +62,7 @@ function FrmCgg_res_agencia_contacto(IN_SENTENCIA_CGG_RES_AGENCIA_CONTACTO,IN_RE
 	var txtCrtco_codigo = new Ext.form.TextField({
 			id:'txtCrtco_codigo',
 			name:'txtCrtco_codigo',
-			fieldLabel :'Tipo Contacto',
+			fieldLabel :'Codigo',
 			anchor:'98%',
 			readOnly:'true',
 			allowBlank :false
@@ -78,18 +72,16 @@ function FrmCgg_res_agencia_contacto(IN_SENTENCIA_CGG_RES_AGENCIA_CONTACTO,IN_RE
 	*/
 	var btnCrtco_codigoCgg_res_agencia_contacto = new Ext.Button({
 			id:'btnCrtco_codigoCgg_res_agencia_contacto',
-			//text:'Crtco_codigo',
-			iconCls:'iconBuscar',
+			text:'Crtco_codigo',
+			iconCls:'iconCrtco_codigo',
 			listeners:{
 				click:function(){
 					var tmpFLCgg_res_tipo_contacto = new FrmListadoCgg_res_tipo_contacto();
 					var objBusqueda = new DlgBusqueda(tmpFLCgg_res_tipo_contacto.getStore(),tmpFLCgg_res_tipo_contacto.getColumnModel());
 					objBusqueda.closeHandler(function(){
 							var tmpRecord = objBusqueda.getSelectedRow();
-							if(tmpRecord){
-								tmpCodigoTipoContacto = tmpRecord.get('CRTCO_CODIGO');
-								txtCrtco_codigo.setValue(tmpRecord.get('CRTCO_NOMBRE'));
-							}
+							if(tmpRecord)
+								txtCrtco_codigo.setValue(tmpRecord.get('CRTCO_CODIGO'));
 					});
 					objBusqueda.show();
 			}}
@@ -101,7 +93,7 @@ function FrmCgg_res_agencia_contacto(IN_SENTENCIA_CGG_RES_AGENCIA_CONTACTO,IN_RE
 			id:'txtCwcag_descripcion',
 			name:'txtCwcag_descripcion',
 			fieldLabel :'Descripcion',
-			anchor:'92%',
+			anchor:'98%',
 			allowBlank :false
 	});
 	/**
@@ -111,7 +103,7 @@ function FrmCgg_res_agencia_contacto(IN_SENTENCIA_CGG_RES_AGENCIA_CONTACTO,IN_RE
 			id:'txtCwcag_contacto',
 			name:'txtCwcag_contacto',
 			fieldLabel :'Contacto',
-			anchor:'92%',
+			anchor:'98%',
 			allowBlank :false
 	});
 	/**
@@ -149,8 +141,8 @@ function FrmCgg_res_agencia_contacto(IN_SENTENCIA_CGG_RES_AGENCIA_CONTACTO,IN_RE
 						var param = new SOAPClientParameters();
 						if(isEdit)
 							param.add('inCwcag_codigo',txtCwcag_codigo.getValue());
-						param.add('inCwage_codigo',tmpCodigoAgencia);//txtCwage_codigo.getValue());
-						param.add('inCrtco_codigo',tmpCodigoTipoContacto);//txtCrtco_codigo.getValue());
+						param.add('inCwage_codigo',txtCwage_codigo.getValue());
+						param.add('inCrtco_codigo',txtCrtco_codigo.getValue());
 						param.add('inCwcag_descripcion',txtCwcag_descripcion.getValue());
 						param.add('inCwcag_contacto',txtCwcag_contacto.getValue());
 						SOAPClient.invoke(urlCgg_res_agencia_contacto,IN_SENTENCIA_CGG_RES_AGENCIA_CONTACTO,param, true, CallBackCgg_res_agencia_contacto);
@@ -189,17 +181,7 @@ function FrmCgg_res_agencia_contacto(IN_SENTENCIA_CGG_RES_AGENCIA_CONTACTO,IN_RE
 	var pnlCgg_res_agencia_contacto = new Ext.form.FormPanel({
 			frame:true,
 			labelWidth :100,
-			items:[txtCwcag_codigo,
-				{xtype:'panel',layout:'column',items:[
-					{columnWidth:.85,layout:'form',items:[txtCwage_codigo]},
-					{columnWidth:.15,layout:'form',items:[btnCwage_codigoCgg_res_agencia_contacto]}
-				]},
-				{xtype:'panel',layout:'column',items:[
-					{columnWidth:.85,layout:'form',items:[txtCrtco_codigo]},
-					{columnWidth:.15,layout:'form',items:[btnCrtco_codigoCgg_res_agencia_contacto]}
-				]},
-				txtCwcag_descripcion,
-				txtCwcag_contacto]
+			items:[txtCwcag_codigo,{xtype:'panel',layout:'column',items:[{columnWidth:.6,layout:'form',items:[txtCwage_codigo]},{columnWidth:.4,layout:'form',items:[btnCwage_codigoCgg_res_agencia_contacto]}]},{xtype:'panel',layout:'column',items:[{columnWidth:.6,layout:'form',items:[txtCrtco_codigo]},{columnWidth:.4,layout:'form',items:[btnCrtco_codigoCgg_res_agencia_contacto]}]},txtCwcag_descripcion,txtCwcag_contacto]
 	});
 	/**
 	* Ext.Window Ventana en la que reside los controles necesarios para administrar la informacion de los registros de la tabla Cgg_res_agencia_contacto.
@@ -241,23 +223,8 @@ function FrmCgg_res_agencia_contacto(IN_SENTENCIA_CGG_RES_AGENCIA_CONTACTO,IN_RE
 	function cargarCgg_res_agencia_contactoCtrls(){
 		if(inRecordCgg_res_agencia_contacto){
 			txtCwcag_codigo.setValue(inRecordCgg_res_agencia_contacto.get('CWCAG_CODIGO'));
-			tmpCodigoAgencia = inRecordCgg_res_agencia_contacto.get('CWAGE_CODIGO');
-			
-			var param = new SOAPClientParameters();			
-			param.add('format','JSON');
-			param.add('inCwage_codigo',tmpCodigoAgencia);
-			var r = SOAPClient.invoke(urlCgg_web_agencia, 'select', param, false, null);
-			r= eval('{'+r+'}');			
-			txtCwage_codigo.setValue(r[0].CWAGE_NOMBRE);
-			
-			tmpCodigoTipoContacto = inRecordCgg_res_agencia_contacto.get('CRTCO_CODIGO');
-			var param = new SOAPClientParameters();			
-			param.add('format','JSON');
-			param.add('inCrtco_codigo',tmpCodigoTipoContacto);
-			r = SOAPClient.invoke(urlCgg_res_tipo_contacto, 'select', param, false, null);
-			r= eval('{'+r+'}');			
-			txtCrtco_codigo.setValue(r[0].CRTCO_NOMBRE);
-			
+			txtCwage_codigo.setValue(inRecordCgg_res_agencia_contacto.get('CWAGE_CODIGO'));
+			txtCrtco_codigo.setValue(inRecordCgg_res_agencia_contacto.get('CRTCO_CODIGO'));
 			txtCwcag_descripcion.setValue(inRecordCgg_res_agencia_contacto.get('CWCAG_DESCRIPCION'));
 			txtCwcag_contacto.setValue(inRecordCgg_res_agencia_contacto.get('CWCAG_CONTACTO'));
 			isEdit = true;

@@ -4,7 +4,7 @@
  * @author Besixplus Cia. Ltda.
  */
 
-function FrmListadoCgg_res_carnet(inDesktop) {
+function FrmListadoCgg_res_carnet(inDesktop,crper_num_doc_identific) {
     var optMenu = 'Control de Residencia/Carnetizaci\u00f3n';
     var urlListadoCgg_res_carnet = URL_WS + "Cgg_res_carnet";
     var tituloListadoCgg_res_carnet = 'Carnets';
@@ -51,15 +51,15 @@ function FrmListadoCgg_res_carnet(inDesktop) {
                     '<td><div class="tituloTemplate">Ocupaci\u00f3n:</div></td>'+
                     '<td colspan="3"><div class="itemTemplate"><div id="divOcupacion"></div></div></td></tr>'+
                     '</table>',
-    {myTipoDoc:function(inTipoDoc){
-        for(i = 0; i < tmpStoreTipoDocumento.getTotalCount(); i++){
-            tmpRecord = tmpStoreTipoDocumento.getAt(i);
-            if(tmpRecord.data.CRDID_CODIGO = inTipoDoc)
-                return tmpRecord.data.CRDID_DESCRIPCION
+    {
+        myTipoDoc:function(inTipoDoc){
+            for(i = 0; i < tmpStoreTipoDocumento.getTotalCount(); i++){
+                tmpRecord = tmpStoreTipoDocumento.getAt(i);
+                if(tmpRecord.data.CRDID_CODIGO = inTipoDoc)
+                    return tmpRecord.data.CRDID_DESCRIPCION
+            }
         }
-    }
-    }
-            );
+    });
 
     var strPersona = new Ext.data.Store({
         proxy:new Ext.ux.bsx.SoapProxy({
@@ -192,7 +192,8 @@ function FrmListadoCgg_res_carnet(inDesktop) {
                 Ext.MessageBox.alert(tituloListadoCgg_res_carnet, 'La persona seleccionada no tiene una residencia vigente.');
                 return;
             }
-            btnNuevoCgg_res_carnet.setDisabled(false);
+            if(crper_num_doc_identific==null)
+                btnNuevoCgg_res_carnet.setDisabled(false);
             btnActualizarPersonaCgg_res_carnet.setDisabled(false);
             btnActualizarAuspicianteCgg_res_carnet.setDisabled(false);
             tmpResidencia = Ext.util.JSON.decode(inResponse);
@@ -235,9 +236,11 @@ function FrmListadoCgg_res_carnet(inDesktop) {
 
         function CallbackAdjuntoPersonal(inResponse){
             tmpAdjuntosPersonal = Ext.util.JSON.decode(inResponse);
+            var tmpImgFoto = document.getElementById("imgFotoPersonaCrn");
             if(tmpAdjuntosPersonal[0].CRPER_FOTO){
-                var tmpImgFoto = document.getElementById("imgFotoPersonaCrn");
                 tmpImgFoto.src = 'data:image/jpg;base64,'+tmpAdjuntosPersonal[0].CRPER_FOTO;
+            }else{
+                tmpImgFoto.src = 'resources/images/male_avatar.jpeg';
             }
 
         }
@@ -268,7 +271,7 @@ function FrmListadoCgg_res_carnet(inDesktop) {
         id: 'btnNuevoCgg_res_carnet',
         text: 'Nuevo',
         iconCls: 'iconNuevo',
-        disabled:true,
+        disabled: crper_num_doc_identific!=null,
         listeners: {
             click: function () {
                 if(tmpPersona){
@@ -408,6 +411,28 @@ function FrmListadoCgg_res_carnet(inDesktop) {
             }
         }
     });
+
+
+    //AC==>
+    var btnAdjuntos = new Ext.ux.form.AlfrescoFM({
+        id:'compAdjunto',   //(opcional)
+        name:'compAdjunto', //(opcional)
+        text: 'Adjuntos',    //(opcional -> Texto del botón)
+        tableName: 'Cgg_res_carnet',
+        validateRecordID:true,
+        recordID: null,
+        filter: null
+    });
+    btnAdjuntos.addListener("updateData",function(t){
+        t.recordID = null;
+        var r = grdCgg_res_carnet.getSelectionModel().getSelected();
+        if(r)
+            t.recordID = r.data.CRCNT_CODIGO;
+        t.filter = null;
+        r=null;
+    });
+    //<== AC
+
     /**
      * Ext.Button Boton para obtener reportes, general o individual.
      */
@@ -416,6 +441,7 @@ function FrmListadoCgg_res_carnet(inDesktop) {
         name: 'btnReporteCgg_res_carnet',
         text: 'Imprimir',
         iconCls: 'iconImprimir',
+        disabled: crper_num_doc_identific!=null,
         listeners:{
             click:function(){
                 var r = grdCgg_res_carnet.getSelectionModel().getSelected();
@@ -457,6 +483,7 @@ function FrmListadoCgg_res_carnet(inDesktop) {
         name: 'btnDatosPersonaCgg_res_carnet',
         text: 'Datos Persona',
         iconCls: 'iconImprimir',
+        disabled: crper_num_doc_identific!=null,
         listeners:{
             click:function(){
                 var r = tmpPersona.data.CRPER_CODIGO;
@@ -477,6 +504,25 @@ function FrmListadoCgg_res_carnet(inDesktop) {
         }
     });
 
+//MO
+
+    /**
+     * Ext.Button Boton para obtener información relevante para el área financiera
+     */
+    var btnNotificacionFinanCgg_res_carnet = new Ext.Button({
+        id: 'btnNotificacionFinanCgg_res_carnet',
+        name: 'btnNotificacionFinanCgg_res_carnet',
+        text: 'Generar Notificaci\u00f3n Finan.',
+        //iconCls: 'iconImprimir',
+        listeners:{
+                click: function () {
+                    abrirNotificacionFinan(tmpPersona.get('CRPER_CODIGO'),grdCgg_res_carnet.get('CRCNT_CODIGO'));
+                }
+            }
+    });
+
+//
+
     /**
      * Ext.Button Boton para obtener reportes, general o individual.
      */
@@ -485,6 +531,7 @@ function FrmListadoCgg_res_carnet(inDesktop) {
         name: 'btnPreviewCgg_res_carnet',
         text: 'Vista preliminar',
         iconCls: 'iconPreview',
+        disabled: crper_num_doc_identific!=null,
         listeners:{
             click:function(){
                 var r = grdCgg_res_carnet.getSelectionModel().getSelected();
@@ -618,7 +665,7 @@ function FrmListadoCgg_res_carnet(inDesktop) {
         var winFrmListadoCgg_res_carnet = inDesktop.createWindow({
             id: 'winFrmListadoCgg_res_carnet',
             title: tituloListadoCgg_res_carnet,
-            width: 600,
+            width: 800,
             minWidth: 600,
             frame:true,
             height: 600,
@@ -629,7 +676,7 @@ function FrmListadoCgg_res_carnet(inDesktop) {
             layout: 'border',
             tbar: getPanelTitulo(tituloListadoCgg_res_carnet, descListadoCgg_res_carnet),
             items: [pnlPersona,grdCgg_res_carnet],
-            bbar: [btnNuevoCgg_res_carnet,btnActualizarPersonaCgg_res_carnet,btnActualizarAuspicianteCgg_res_carnet,'-',btnPreviewCgg_res_carnet, btnReporteCgg_res_carnet,btnDatosPersonaCgg_res_carnet, '->', btnSalirCgg_res_carnet]
+            bbar: [btnNuevoCgg_res_carnet,btnActualizarPersonaCgg_res_carnet,btnActualizarAuspicianteCgg_res_carnet, btnAdjuntos,'-',btnPreviewCgg_res_carnet, btnReporteCgg_res_carnet,btnDatosPersonaCgg_res_carnet,/*'-',btnNotificacionFinanCgg_res_carnet,*/'->', btnSalirCgg_res_carnet]
         });
         /**
          * Funcion que aplica los privilegios del usuario.
@@ -643,61 +690,80 @@ function FrmListadoCgg_res_carnet(inDesktop) {
      */
     this.getWindow = function () {
         return winFrmListadoCgg_res_carnet;
-    }
+    };
     /**
      * Funcion miembro que carga los controles de la ventana winFrmListadoCgg_res_carnet.
      * @base FrmListadoCgg_res_carnet.prototype.loadData
      */
     this.loadData = function () {
         gsCgg_res_carnet.load();
-    }
+    };
     /**
      * Funcion miembro que develve el ColumnModel utilizado en el listado.
      */
     this.getColumnModel = function () {
         return cmCgg_res_carnet;
-    }
+    };
     /**
      * Funcion miembro que develve el Store utilizado en el listado.
      */
     this.getStore = function () {
         return gsCgg_res_carnet;
-    }
+    };
+
+    this.loadHistorico = function(){
+        /*Cuando se carga desde el historico de persona**/
+        if(crper_num_doc_identific!=null){
+            strPersona.baseParams.start = 0;
+            strPersona.baseParams.limit = RECORD_PAGE;
+            strPersona.baseParams.inCarnet = true;
+            strPersona.baseParams.inIdentificacion = crper_num_doc_identific;
+            strPersona.reload();
+            tmpLocal = true;
+            tmpFlag = true;
+            if(winFrmListadoCgg_res_carnet)
+                winFrmListadoCgg_res_carnet.getEl().mask('Cargando datos...', 'x-mask-loading');
+        }
+    };
 }
 /**
  * Funcion prototipo. Devuelve el ColumnModel utilizado en el formulario.
  */
 FrmListadoCgg_res_carnet.prototype.getColumnModel = function () {
     this.getColumnModel();
-}
+};
 /**
  * Funcion prototipo. Devuelve el Store utilizado en el formulario.
  */
 FrmListadoCgg_res_carnet.prototype.getStore = function () {
     this.getStore();
-}
+};
 /**
  * Funcion prototipo. Permite mostrar la ventana winFrmListadoCgg_res_carnet desde una instancia.
  */
 FrmListadoCgg_res_carnet.prototype.show = function () {
     this.getWindow().show();
-}
+};
 /**
  * Funcion prototipo. Permite cerrar la ventana winFrmListadoCgg_res_carnet desde una instancia.
  */
 FrmListadoCgg_res_carnet.prototype.close = function () {
     this.getWindow().close();
-}
+};
 /**
  * Funcion prototipo. Permite saber si se ha cerrado la ventana winFrmListadoCgg_res_carnet,
  * con el fin de realizar otras acciones desde una instancia.
  */
 FrmListadoCgg_res_carnet.prototype.closeHandler = function (inFunctionHandler) {
     this.getWindow().on('close', inFunctionHandler);
-}
+};
 /**
  * Funcion prototipo. Permite cargar los controles de la ventana winFrmListadoCgg_res_carnet desde una instancia.
  */
 FrmListadoCgg_res_carnet.prototype.loadData = function () {
     this.loadData();
-}
+};
+
+FrmListadoCgg_res_carnet.prototype.loadHistorico = function(){
+    this.loadHistorico();
+};

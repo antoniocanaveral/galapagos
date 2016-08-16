@@ -579,7 +579,7 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
     var txtCrper_apellido_paterno = new Ext.form.TextField({
         id:'txtCrper_apellido_paterno',
         name:'txtCrper_apellido_paterno',
-        fieldLabel :'Apellido paterno',
+        fieldLabel :'Primer apellido',
         anchor:'98%',
         allowBlank :false,
         invalidText : 'Es necesario ingresar el apellido  de la persona '
@@ -790,7 +790,6 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
     ]);
 
     function consultarPersona(){
-		btnGuardarCgg_tct_registro.setDisabled(true);
         function CallBackCgg_tct_persona(r){
             tmpNumeroDocumento = txtCrper_num_doc_identific.getValue();
             var tmpSelect = Ext.util.JSON.decode(r);
@@ -825,7 +824,7 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
                 tmpRecord.data.CRTRA_CODIGO = '';
                 txtCrtra_numero.setValue('');
                 txtCrtipo_persona.setValue('TURISTA');
-				btnGuardarCgg_tct_registro.setDisabled(false);
+
 
             }else{
                 var tmpRecord = gsCgg_res_persona.getAt(0);
@@ -1698,7 +1697,6 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
                                 gsCgg_res_persona.getAt(0).data.CKESP_CODIGO = SCGG_CONFIGURACION.getAt(SCGG_CONFIGURACION.findExact('CGCNF_CODIGO','CONF35')).get('CGCNF_VALOR_CADENA');
                         }
                     }
-					btnGuardarCgg_tct_registro.setDisabled(false);
                 }
                 catch (inErr) {
                     grdCgg_res_persona.getEl().unmask();
@@ -1717,6 +1715,7 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
             objReglasValidacion  = Ext.decode(tmpObjReglasValidacion);
             var param = new SOAPClientParameters();
             param.add('inJSON_reglas_validacion',evaluarReglasValidacion(objReglasValidacion));
+            param.add('jsonData',null);
             SOAPClient.invoke(URL_WS+'Cgg_regla_validacion' ,'ejecutarReglaTipoSolicitud',param, true, CallBackCgg_regla_validacion);
         }catch(inErr){
             Ext.MsgPopup.msg(tituloCgg_tct_registro, "No se ha podido validar la informaci\u00f3n a almacenar.\nError:"+inErr);

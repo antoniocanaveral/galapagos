@@ -102,7 +102,7 @@ function FrmHistorialTramite(inDesktop){
     });
     var actHstRptTramitePersonal = new Ext.Action({
         id:'actHstRptTramitePersonal',
-        text:'Tr\u00E1mites recibido - despachado',
+        text:'Tr\u00E1mites del personal recibidos - despachados',
         handler:function(){
 
             var params = [];
@@ -137,7 +137,7 @@ function FrmHistorialTramite(inDesktop){
             {
                 label:'Tipo residencia',
                 paramName:'P_CRTST_CODIGO',
-                value: dsTipoSolicitudPadreTranseunteTodos,
+                value: dsTipoSolicitudPadre,
                 paramValue:'',
                 type:'combo',
                 required:true
@@ -291,7 +291,23 @@ function FrmHistorialTramite(inDesktop){
             }
         }
     });
-        
+
+    var btnAdjuntos = new Ext.ux.form.AlfrescoFM({
+        id:'compAdjunto',   //(opcional)
+        name:'compAdjunto', //(opcional)
+        text: 'Adjuntos',    //(opcional -> Texto del botón)
+        tableName: 'Cgg_res_tramite',
+        validateRecordID:true
+    });
+
+    btnAdjuntos.addListener("updateData",function(t){
+        t.recordID = null;
+        var rTramite = grdHistorialTramite.getSelectionModel().getSelected();
+        t.recordID = rTramite.get('CRTRA_CODIGO');
+        t.filter = "crtst_codigo='"+rTramite.get('CRTST_CODIGO')+"'";
+        rTramite=null;
+    });
+
     function devolucionGarantia(inCrtra_codigo,inTodo, inVerificar){
         var scpHistorialTramite = new SOAPClientParameters();
         scpHistorialTramite.add('inCrtra_codigo', inCrtra_codigo);
@@ -420,7 +436,7 @@ function FrmHistorialTramite(inDesktop){
         name:'btnReporteHistorialTramite',
         text:'Reportes',
         iconCls:'iconImprimir',
-        menu:[actHstRptTramitePersonal,actHstRptFormularioPentacontrol,actHstRptInformeTecnico,actHstRptComprobanteTramite,'-',actHstRptCompDevGrn]
+        menu:[actHstRptTramitePersonal,actHstRptFormularioPentacontrol,actHstRptInformeTecnico,actHstRptComprobanteTramite]
     });
     var btnRevisarTramite = new Ext.Button({
         id:'btnRevisarTramite',
@@ -733,7 +749,7 @@ function FrmHistorialTramite(inDesktop){
             iconCls:'iconHistorial',
             tbar:getPanelTitulo('Listado '+tituloListadoHistorialTramite,descListadoHistorialTramite),
             items:[pnlHistorialTramite],
-            bbar:[btnRevisarHistorialTramite,btnAnularTramite,'-',btnRevisarTramite,btnHstRptDevolucionGarantia,'-',btnReporteHistorialTramite,'->',btnSalirHistorialTramite],
+            bbar:[btnRevisarHistorialTramite,btnAnularTramite,'-',btnRevisarTramite,btnAdjuntos,'-',btnReporteHistorialTramite,'->',btnSalirHistorialTramite],
             listeners:{
                 show:function(){
                     Ext.getCmp('sfBusquedaHistorial').focus(true,400);

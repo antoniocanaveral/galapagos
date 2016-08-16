@@ -353,7 +353,7 @@ function FrmCgg_res_tramite_transeunte_grupo(INSENTENCIA_CGG_RES_TRAMITE,INRECOR
                         txtCrtst_codigo.setValue(tmpRecord.get('CRTST_DESCRIPCION'));
 
                         //TODO CONSULTAR REGLAS DE VALIDACION
-                        listarReglasValidacion(tmpRecordTipoSolicitud.get('CRTST_CODIGO'));
+                        listarReglasValidacion(tmpRecordTipoSolicitud.get('CRTST_CODIGO'),tmpRecordTipoSolicitud.get('CRTT_CODIGO'));
 
                         // TODO CONSULTAR FASES DEL PROCESO
                         tmpProceso=tmpRecordTipoSolicitud.get('CRPRO_CODIGO');
@@ -412,6 +412,7 @@ function FrmCgg_res_tramite_transeunte_grupo(INSENTENCIA_CGG_RES_TRAMITE,INRECOR
                             params: {
                                 inCrpro_codigo:tmpProceso,
                                 inCisla_codigo:userInfo.CISLA_CODIGO,
+                                inCrtra_codigo:null,
                                 format: TypeFormat.JSON
                             }
                         });
@@ -908,7 +909,7 @@ function FrmCgg_res_tramite_transeunte_grupo(INSENTENCIA_CGG_RES_TRAMITE,INRECOR
 
     {
         dataIndex:'CRPER_APELLIDO_PATERNO',
-        header:'Apellido paterno',
+        header:'Primer apellido',
         width:150,
         sortable:true,
         hidden:true
@@ -916,7 +917,7 @@ function FrmCgg_res_tramite_transeunte_grupo(INSENTENCIA_CGG_RES_TRAMITE,INRECOR
 
     {
         dataIndex:'CRPER_APELLIDO_MATERNO',
-        header:'Apellido materno',
+        header:'Segundo apellido',
         width:150,
         sortable:true,
         hidden:true
@@ -1103,6 +1104,7 @@ function FrmCgg_res_tramite_transeunte_grupo(INSENTENCIA_CGG_RES_TRAMITE,INRECOR
         baseParams:{
             inCrpro_codigo:null,
             inCisla_codigo:null,
+            inCrtra_codigo:null,
             format:TypeFormat.JSON
         },
         sortInfo:{
@@ -1372,7 +1374,7 @@ function FrmCgg_res_tramite_transeunte_grupo(INSENTENCIA_CGG_RES_TRAMITE,INRECOR
                     return NO_DATA_MESSAGE;
                 }
             }
-        }, {
+        }, /*{
             dataIndex: 'CRFAS_SUMILLA',
             header: 'Comentario/Sumilla',
             width: 150,
@@ -1380,7 +1382,7 @@ function FrmCgg_res_tramite_transeunte_grupo(INSENTENCIA_CGG_RES_TRAMITE,INRECOR
             editor: {
                 xtype: 'textfield'
             }
-        }, {
+        },*/ {
             dataIndex: 'CRFAS_TAREA_REALIZA',
             header: 'Actividad',
             width: 150,
@@ -1722,7 +1724,7 @@ function FrmCgg_res_tramite_transeunte_grupo(INSENTENCIA_CGG_RES_TRAMITE,INRECOR
         grdCgg_res_faseTranseunte.getStore().removeAll();
     }
 
-    function listarReglasValidacion(inCrtst_codigo){
+    function listarReglasValidacion(inCrtst_codigo, inCrtt_codigo_select){
         function CallBackReglasTipoSolicitud(r)
         {
             try
@@ -1737,6 +1739,7 @@ function FrmCgg_res_tramite_transeunte_grupo(INSENTENCIA_CGG_RES_TRAMITE,INRECOR
         }
         var param = new SOAPClientParameters();
         param.add('inCrtst_codigo',inCrtst_codigo);
+        param.add('inCrtt_codigo',inCrtt_codigo_select);
         param.add('format',TypeFormat.JSON);
         SOAPClient.invoke(URL_WS+'Cgg_regla_validacion' ,'selectReglaTipoSolicitud',param, true,CallBackReglasTipoSolicitud);
     }

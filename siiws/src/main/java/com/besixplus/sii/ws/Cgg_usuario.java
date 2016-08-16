@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,6 +29,13 @@ import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
 
+import com.besixplus.sii.mail.ProcessMail;
+import com.besixplus.sii.objects.*;
+import com.besixplus.sii.objects.Cgg_buzon_correo;
+import com.besixplus.sii.objects.Cgg_configuracion;
+import com.besixplus.sii.objects.Cgg_not_mail;
+import com.besixplus.sii.objects.Cgg_sec_usuario_contacto;
+import com.besixplus.sii.objects.Cgg_sec_usuario_rol;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,11 +44,6 @@ import com.besixplus.sii.db.ManagerConnection;
 import com.besixplus.sii.i18n.Messages;
 import com.besixplus.sii.mail.Base64;
 import com.besixplus.sii.misc.Formatter;
-import com.besixplus.sii.objects.Cgg_buzon_correo;
-import com.besixplus.sii.objects.Cgg_configuracion;
-import com.besixplus.sii.objects.Cgg_sec_usuario_contacto;
-import com.besixplus.sii.objects.Cgg_sec_usuario_rol;
-import com.besixplus.sii.objects.Cgg_usuario_persona;
 
 /**
  * CLASE Cgg_usuario
@@ -230,7 +233,12 @@ EXTERNO.
 				JSONArray tmpJsonEmail = new JSONArray(inNotificaciones);
 				for(int i = 0; i < tmpJsonEmail.length(); i++){
 					JSONObject tmpCorreo = tmpJsonEmail.getJSONObject(i);
-					Cgg_buzon_correo tmpBuzon = new Cgg_buzon_correo();
+
+					Map<String,String> auxData = new HashMap<>();
+					auxData.put("$CUSU_NOMBRE_USUARIO",obj.getCUSU_NOMBRE_USUARIO());
+					auxData.put("$CUSU_PASSWORD",tmpBckClave);
+					auxData.put("$CUSU_URL",tmpConfiguracion.getCGCNF_VALOR_CADENA());
+					/*Cgg_buzon_correo tmpBuzon = new Cgg_buzon_correo();
 					tmpBuzon.setCBZC_CODIGO("KEYGEN");
 					tmpBuzon.setCBZC_ASUNTO("Control de acceso");
 					tmpBuzon.setCBZC_DESTINATARIO(tmpCorreo.getString("email"));
@@ -239,9 +247,19 @@ EXTERNO.
 					tmpBuzon.setCBZC_ESTADO(true);
 					tmpBuzon.setCBZC_USUARIO_INSERT(tmpRequest.getUserPrincipal().getName());
 					tmpBuzon.setCBZC_USUARIO_INSERT(tmpRequest.getUserPrincipal().getName());
-					res = new com.besixplus.sii.db.Cgg_buzon_correo(tmpBuzon).insert(con);
-					if(!res.equals("true"))
-						break;
+					res = new com.besixplus.sii.db.Cgg_buzon_correo(tmpBuzon).insert(con);*/
+					tmpConfiguracion = new Cgg_configuracion();
+					tmpConfiguracion.setCGCNF_CODIGO("CONF200");
+					new com.besixplus.sii.db.Cgg_configuracion(tmpConfiguracion).select(con);
+					Cgg_not_mail correo = new Cgg_not_mail();
+					correo.setNtml_codigo(tmpConfiguracion.getCGCNF_VALOR_CADENA());
+					correo = new com.besixplus.sii.db.Cgg_not_mail(correo).selectByCode(con);
+					if (correo != null) {
+						ProcessMail mail = new ProcessMail(correo,tmpCorreo.getString("email"),auxData);
+						mail.start();
+					}
+					/*if(!res.equals("true"))
+						break;*/
 				}
 			}
 			if(res.equals("true"))

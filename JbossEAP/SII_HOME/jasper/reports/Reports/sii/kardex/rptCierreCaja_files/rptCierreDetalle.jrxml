@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptCierreDetalle.jrxml" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1"/>
+	<subDataset name="New Dataset 1"/>
+	<subDataset name="New Dataset 2">
+		<queryString language="SQL">
+			<![CDATA[SELECT V.CKVNT_SERIE_INICIO,V.CKVNT_SERIE_FIN,V.CKVNT_CANTIDAD,ESP.CKESP_NOMBRE
+ FROM SII.CGG_KDX_CIERRE C
+INNER JOIN SII.CGG_KDX_VENTA_CIERRE VC ON (C.CKCRR_CODIGO = VC.CKCRR_CODIGO)
+INNER JOIN SII.CGG_KDX_VENTA V ON (V.CKVNT_CODIGO = VC.CKVNT_CODIGO)
+INNER JOIN SII.CGG_KDX_ASIGNACION A ON (A.CKASG_CODIGO = V.CKASG_CODIGO)
+INNER JOIN SII.CGG_KDX_TRANSFERENCIA TRA ON(TRA.CKTRN_CODIGO=A.CKTRN_CODIGO)
+INNER JOIN SII.CGG_KDX_ESPECIE ESP ON (ESP.CKESP_CODIGO=TRA.CKESP_CODIGO)]]>
+		</queryString>
+		<field name="ckvnt_serie_inicio" class="java.lang.Integer"/>
+		<field name="ckvnt_serie_fin" class="java.lang.Integer"/>
+		<field name="ckvnt_cantidad" class="java.lang.Integer"/>
+		<field name="ckesp_nombre" class="java.lang.String"/>
+		<group name="ckesp_nombre">
+			<groupExpression><![CDATA[$F{ckesp_nombre}]]></groupExpression>
+		</group>
+		<group name="ckvnt_serie_inicio">
+			<groupExpression><![CDATA[$F{ckvnt_serie_inicio}]]></groupExpression>
+		</group>
+		<group name="ckvnt_serie_fin">
+			<groupExpression><![CDATA[$F{ckvnt_serie_fin}]]></groupExpression>
+		</group>
+		<group name="ckvnt_cantidad">
+			<groupExpression><![CDATA[$F{ckvnt_cantidad}]]></groupExpression>
+		</group>
+	</subDataset>
+	<parameter name="P_CKCRR_CODIGO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+ESP.CKESP_NOMBRE,
+ESP.CKESP_PRECIO,
+V.CKVNT_SERIE_INICIO,
+V.CKVNT_SERIE_FIN,
+V.CKVNT_CANTIDAD,
+(ESP.CKESP_PRECIO * V.CKVNT_CANTIDAD)AS TOTAL
+ FROM SII.CGG_KDX_CIERRE C
+INNER JOIN SII.CGG_KDX_VENTA_CIERRE VC ON (C.CKCRR_CODIGO = VC.CKCRR_CODIGO)
+INNER JOIN SII.CGG_KDX_VENTA V ON (V.CKVNT_CODIGO = VC.CKVNT_CODIGO)
+INNER JOIN SII.CGG_KDX_ASIGNACION A ON (A.CKASG_CODIGO = V.CKASG_CODIGO)
+INNER JOIN SII.CGG_KDX_TRANSFERENCIA TRA ON(TRA.CKTRN_CODIGO=A.CKTRN_CODIGO)
+INNER JOIN SII.CGG_KDX_ESPECIE ESP ON (ESP.CKESP_CODIGO=TRA.CKESP_CODIGO)
+WHERE C.CKCRR_CODIGO = $P{P_CKCRR_CODIGO}]]>
+	</queryString>
+	<field name="ckesp_nombre" class="java.lang.String"/>
+	<field name="ckesp_precio" class="java.math.BigDecimal"/>
+	<field name="ckvnt_serie_inicio" class="java.lang.Integer"/>
+	<field name="ckvnt_serie_fin" class="java.lang.Integer"/>
+	<field name="ckvnt_cantidad" class="java.lang.Integer"/>
+	<field name="total" class="java.math.BigDecimal"/>
+	<variable name="vTotal" class="java.math.BigDecimal" resetType="Group" resetGroup="groupEspecie" calculation="Sum">
+		<variableExpression><![CDATA[$F{ckvnt_cantidad}]]></variableExpression>
+	</variable>
+	<variable name="vTotalVenta" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{ckvnt_cantidad}]]></variableExpression>
+	</variable>
+	<variable name="vTotalVentaEspecie" class="java.math.BigDecimal" resetType="Group" resetGroup="groupEspecie" calculation="Sum">
+		<variableExpression><![CDATA[$F{total}]]></variableExpression>
+	</variable>
+	<variable name="vTotalventaEspecie" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{total}]]></variableExpression>
+	</variable>
+	<group name="groupEspecie">
+		<groupExpression><![CDATA[$F{ckesp_nombre}]]></groupExpression>
+		<groupHeader>
+			<band height="21">
+				<textField>
+					<reportElement style="table_TH" mode="Transparent" x="31" y="0" width="166" height="21"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement>
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{ckesp_nombre}.toUpperCase()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="table_TH" mode="Transparent" x="197" y="0" width="74" height="21"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Serie inicio]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="table_TH" mode="Transparent" x="341" y="0" width="92" height="21"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Cantidad]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="table_TH" mode="Transparent" x="271" y="0" width="70" height="21"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Serie fin]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="433" y="0" width="85" height="21"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[ Valor Ventas]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20">
+				<staticText>
+					<reportElement x="197" y="0" width="144" height="20"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total Especies:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="341" y="0" width="92" height="20"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{vTotal}]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0.00">
+					<reportElement x="433" y="0" width="85" height="20"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{vTotalVentaEspecie}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="13">
+			<staticText>
+				<reportElement x="0" y="0" width="234" height="13"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Especies Vendidas]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<elementGroup>
+				<elementGroup/>
+			</elementGroup>
+			<textField>
+				<reportElement x="271" y="0" width="70" height="20" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ckvnt_serie_fin}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="341" y="0" width="92" height="20" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ckvnt_cantidad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="197" y="0" width="74" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ckvnt_serie_inicio}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement x="433" y="0" width="85" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="197" y="0" width="144" height="19"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total de Venta:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="341" y="0" width="92" height="19"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{vTotalVenta}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement x="433" y="0" width="85" height="19"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{vTotalventaEspecie}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

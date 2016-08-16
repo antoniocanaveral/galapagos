@@ -41,6 +41,9 @@ public class Cgg_res_tipo_solicitud_regla implements Serializable{
 	* USUARIO QUE REALIZO LA ACTUALIZACION DE LA INFORMACION
 	*/
 	private String myCrtse_usuario_update;
+	/*AC=> Tipo Tramite*/
+	private String CRTT_CODIGO;
+
 	/**
 	* CONSTRUCTOR DE LA CLASE Cgg_res_tipo_solicitud_regla
 	*/
@@ -196,4 +199,11 @@ public class Cgg_res_tipo_solicitud_regla implements Serializable{
 		return this.myCrtse_usuario_update;
 	}
 
+	public String getCRTT_CODIGO() {
+		return CRTT_CODIGO;
+	}
+
+	public void setCRTT_CODIGO(String CRTT_CODIGO) {
+		this.CRTT_CODIGO = CRTT_CODIGO;
+	}
 }

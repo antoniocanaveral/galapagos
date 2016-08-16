@@ -1,0 +1,19 @@
+.bg-screen {
+    background: rgba(0, 0, 0, 0) url("background.jpg") no-repeat scroll center -150px / 100% auto;
+    height: 100%;
+    position: absolute;
+    width: 100%;
+}
+
+.centered-container {
+    padding-top: 15%;
+}
+
+.panel-heading {
+    text-align: center;
+}
+
+.cgg-logo {
+    padding-bottom: 20px;
+}
+

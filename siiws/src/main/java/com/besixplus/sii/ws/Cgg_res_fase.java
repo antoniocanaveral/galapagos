@@ -1,27 +1,28 @@
 package com.besixplus.sii.ws;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.besixplus.sii.db.ManagerConnection;
+import com.besixplus.sii.i18n.Messages;
+
+import javax.annotation.Resource;
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
+import javax.jws.soap.SOAPBinding.Style;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.namespace.QName;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPFactory;
+import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.handler.MessageContext;
+import javax.xml.ws.soap.SOAPFaultException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.SQLException;
-import javax.annotation.Resource;
-import javax.jws.WebMethod;
-import javax.jws.WebService;
-import javax.xml.namespace.QName;
-import javax.jws.soap.SOAPBinding;
-import javax.jws.soap.SOAPBinding.Style;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPFactory;
-import javax.xml.ws.soap.SOAPFaultException;
-import javax.jws.WebParam;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.ws.WebServiceContext;
-import javax.xml.ws.handler.MessageContext;
-import com.besixplus.sii.db.ManagerConnection;
-import com.besixplus.sii.i18n.Messages;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * CLASE Cgg_res_fase
@@ -151,6 +152,7 @@ public class Cgg_res_fase implements Serializable{
 			@WebParam(name="inCrfas_sube_adjunto_requisito")boolean inCrfas_sube_adjunto_requisito,
 			@WebParam(name="inFaseUsuario_JSON")String inFaseUsuario_JSON,
 			@WebParam(name="inFaseCriterio_JSON")String inFaseCriterio_JSON,
+			@WebParam(name = "inFaseNotificacion_JSON") String inFaseNotificacion_JSON,
 			@WebParam(name="inCrfas_ejecuta_despacho")boolean inCrfas_ejecuta_despacho,
 			@WebParam(name="inCrfas_atencion_normal")boolean inCrfas_atencion_normal
 			){
@@ -225,12 +227,31 @@ public class Cgg_res_fase implements Serializable{
 						res = String.valueOf(new com.besixplus.sii.db.Cgg_jur_criterio(objFaseCriterio).insert(con));
 					}
 					if (res.equalsIgnoreCase("true")==true)
-					{
+						con.commit();
+
+					//Insert Mensajes
+					org.json.JSONArray objNotificacionJSON = new org.json.JSONArray(inFaseNotificacion_JSON);
+					if (objNotificacionJSON.length()>0)
+						res = "false";
+					for (int i = 0 ; i < objNotificacionJSON.length(); i++){
+						com.besixplus.sii.objects.Cgg_not_fase_notificacion objFaseNotificacion = new com.besixplus.sii.objects.Cgg_not_fase_notificacion();
+						objFaseNotificacion.setCRPRO_CODIGO(obj.getCRPRO_CODIGO());
+						objFaseNotificacion.setCRFAS_CODIGO(obj.getCRFAS_CODIGO());
+						objFaseNotificacion.setNTML_CODIGO(((org.json.JSONObject)objNotificacionJSON.get(i)).get("NTML_CODIGO").toString());
+						objFaseNotificacion.setNTFN_DESTINATARIO(((org.json.JSONObject)objNotificacionJSON.get(i)).get("NTFN_DESTINATARIO").toString());
+						objFaseNotificacion.setNTFN_TIPO_SOLICITUD(((org.json.JSONObject)objNotificacionJSON.get(i)).get("NTFN_TIPO_SOLICITUD").toString());
+						objFaseNotificacion.setNTFN_RESPUESTA_FASE(((org.json.JSONObject)objNotificacionJSON.get(i)).get("NTFN_RESPUESTA_FASE").toString());
+						objFaseNotificacion.setNTFN_ESTADO(true);
+						objFaseNotificacion.setNTFN_USUARIO_INSERT(tmpRequest.getUserPrincipal().getName());
+						objFaseNotificacion.setNTFN_USUARIO_UPDATE(tmpRequest.getUserPrincipal().getName());
+						res = String.valueOf(new com.besixplus.sii.db.Cgg_not_fase_notificacion(objFaseNotificacion).insert(con));
+					}
+
+					if (res.equalsIgnoreCase("true")==true){
 						con.commit();
 						con.setAutoCommit(true);
 						con.close();
 					}
-
 				}
 			}
 			con.close();
@@ -503,7 +524,8 @@ public class Cgg_res_fase implements Serializable{
 			@WebParam(name="inCrfas_ejecuta_despacho")boolean inCrfas_ejecuta_despacho,
 			@WebParam(name="inCrfas_atencion_normal")boolean inCrfas_atencion_normal,
 			@WebParam(name="inFaseUsuario_JSON")String inFaseUsuario_JSON,
-			@WebParam(name="inFaseCriterio_JSON")String inFaseCriterio_JSON
+			@WebParam(name="inFaseCriterio_JSON")String inFaseCriterio_JSON,
+			@WebParam(name = "inFaseNotificacion_JSON") String inFaseNotificacion_JSON
 			){
 		String res = "true";
 		HttpServletRequest tmpRequest = (HttpServletRequest) wctx.getMessageContext().get(MessageContext.SERVLET_REQUEST);
@@ -598,7 +620,27 @@ public class Cgg_res_fase implements Serializable{
 
 					}
 					if (res.equalsIgnoreCase("true")==true)
-					{
+						con.commit();
+
+					//Insert Mensajes
+					//FIXME:Controlar UPDATES
+					org.json.JSONArray objNotificacionJSON = new org.json.JSONArray(inFaseNotificacion_JSON);
+					if (objNotificacionJSON.length()>0)
+						res = "false";
+					for (int i = 0 ; i < objNotificacionJSON.length(); i++){
+						com.besixplus.sii.objects.Cgg_not_fase_notificacion objFaseNotificacion = new com.besixplus.sii.objects.Cgg_not_fase_notificacion();
+						objFaseNotificacion.setCRPRO_CODIGO(obj.getCRPRO_CODIGO());
+						objFaseNotificacion.setCRFAS_CODIGO(obj.getCRFAS_CODIGO());
+						objFaseNotificacion.setNTML_CODIGO(((org.json.JSONObject)objNotificacionJSON.get(i)).get("NTML_CODIGO").toString());
+						objFaseNotificacion.setNTFN_DESTINATARIO(((org.json.JSONObject)objNotificacionJSON.get(i)).get("NTFN_DESTINATARIO").toString());
+						objFaseNotificacion.setNTFN_TIPO_SOLICITUD(((org.json.JSONObject)objNotificacionJSON.get(i)).get("NTFN_TIPO_SOLICITUD").toString());
+						objFaseNotificacion.setNTFN_RESPUESTA_FASE(((org.json.JSONObject)objNotificacionJSON.get(i)).get("NTFN_RESPUESTA_FASE").toString());
+						objFaseNotificacion.setNTFN_ESTADO(true);
+						objFaseNotificacion.setNTFN_USUARIO_INSERT(tmpRequest.getUserPrincipal().getName());
+						objFaseNotificacion.setNTFN_USUARIO_UPDATE(tmpRequest.getUserPrincipal().getName());
+						res = String.valueOf(new com.besixplus.sii.db.Cgg_not_fase_notificacion(objFaseNotificacion).insert(con));
+					}
+					if (res.equalsIgnoreCase("true")==true){
 						con.commit();
 						con.setAutoCommit(true);
 						con.close();
@@ -711,6 +753,7 @@ public class Cgg_res_fase implements Serializable{
 	public String selectCGG_RES_PROCESO(
 			@WebParam(name="inCrpro_codigo")String inCrpro_codigo,
 			@WebParam(name="inCisla_codigo")String inCisla_codigo,
+			@WebParam(name="inCrtra_codigo")String inCrtra_codigo,
 			@WebParam(name="format")String format
 			) throws SOAPException{
 		com.besixplus.sii.misc.Formatter tmpFormat = null;
@@ -724,7 +767,7 @@ public class Cgg_res_fase implements Serializable{
 				throw new SOAPFaultException(SOAPFactory.newInstance().createFault(myInfoMessages.getMessage("sii.seguridad.acceso.negado", null), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));				
 			}
 			con.setAutoCommit(false);
-			ArrayList<HashMap<String, Object>> obj = new com.besixplus.sii.db.Cgg_res_fase(tmpObj).selectCGG_RES_PROCESO1(con,inCisla_codigo);			
+			ArrayList<HashMap<String, Object>> obj = new com.besixplus.sii.db.Cgg_res_fase(tmpObj).selectCGG_RES_PROCESO1(con,inCisla_codigo,inCrtra_codigo);
 			tmpFormat = new com.besixplus.sii.misc.Formatter(format, obj);
 			con.close();
 		}catch(SQLException inException){

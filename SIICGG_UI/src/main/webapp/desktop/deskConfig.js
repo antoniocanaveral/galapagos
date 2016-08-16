@@ -113,12 +113,6 @@ MyDesktop = new Ext.app.App({
                 scope:this,
                 menu: {
                     items:[{
-                        text: 'Manual de usuario',
-                        scope: this,
-                        handler:function(){
-                            window.open('resources/docs/manual.pdf');
-                        }
-                    },'-',{
                         text: 'Acerca de ..',
                         scope: this,
                         handler:function(){
@@ -628,6 +622,12 @@ MyDesktop.StartMenuItemConfiguracion = Ext.extend(MyDesktop.StartMenuItem, {
                             windowId:'FrmListadoCgg_res_agencia_contacto'
                         }]
                     }
+                },{
+                    text: 'Administraci\u00f3n de Archivos',
+                    iconCls:'iconAdjunto',
+                    handler :this.createWindow,
+                    scope:this,
+                    windowId:'FrmListadoCgg_ecm_archivo'
                 },{
                     text: 'Administraci\u00f3n sector productivo',
                     iconCls:'bogus',

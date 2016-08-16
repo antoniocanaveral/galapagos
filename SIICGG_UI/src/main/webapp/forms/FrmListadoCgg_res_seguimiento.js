@@ -493,7 +493,10 @@ function FrmListadoCgg_res_seguimiento(inDesktop){
         {name:'CRTRA_FECHA_SALIDA'},
         {name:'CRTRA_GRUPO'},
         {name:'CRTRA_ORDEN'},
-        {name:'CRETT_CODIGO'}
+        {name:'CRETT_CODIGO'},
+        {name:'REP_CRPER_CODIGO'},
+        {name:'CHANGE_CRTST_CODIGO'},
+        {name:'CRTT_CODIGO'}
         ]),
         groupField:'CRTRA_FECHA_RECEPCION',
         sortInfo:{

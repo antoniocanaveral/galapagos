@@ -192,7 +192,7 @@ public class Cgg_tct_adjunto_csv extends HttpServlet implements Serializable{
 											}
 											if (!objOperacionValidacion.getPersona().equals("false"))
 											{
-												resultRegla = new com.besixplus.sii.ws.Cgg_regla_validacion().ejecutarReglaTipoSolicitudLocal(arrayJSONRegla.toString());
+												resultRegla = new com.besixplus.sii.ws.Cgg_regla_validacion().ejecutarReglaTipoSolicitudLocal(arrayJSONRegla.toString(),null);
 											}
 											else
 											{

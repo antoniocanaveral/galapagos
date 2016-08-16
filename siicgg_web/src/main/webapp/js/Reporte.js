@@ -20,15 +20,40 @@ function Reporte(inReportName,inReportFolder,inParams){
     this.show = function(inShow){
         urlReport+='&ParentFolderUri='+inReportFolder+'&reportUnit='+inReportFolder+'/'+inReportName+'&output='+output;
         var tmpParams = '';
-        for(var p in params){
-            var value = eval('params.'+p);
-            urlReport+= '&'+p+'='+value;
+
+        //Verificamos la existencia del reporte en el servidor jasper. Nueva funcionalidad.
+        var param = new SOAPClientParameters();
+        param.add('reportFolder', inReportFolder);
+        param.add('reportName', inReportName);
+        var jasperResponse = SOAPClient.invoke(URL_WS+'JasperServerService', "validateReport", param, false, null);
+
+        if(jasperResponse) {
+            jasperResponse = eval("(" + jasperResponse + ')'); //Convierte string a Objeto JSON
+            if (jasperResponse.result == true) {
+
+                for (var p in params) {
+                    var value = eval('params.' + p);
+                    urlReport += '&' + p + '=' + (value != undefined ? value : '');
+                }
+                if (inShow == undefined || inShow == true) {
+                    try {
+                        var open_link = window.open('');
+                        open_link.location = urlReport;
+                    } catch (inErr) {
+
+                    }
+
+                }
+            }else {
+                Ext.Msg.show({
+                    title: "JasperServer",
+                    msg: jasperResponse.errorMessage,
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.MessageBox.ERROR
+                });
+            }
         }
-        if(inShow == undefined || inShow == true){
-            var open_link = window.open('');
-            open_link.location=urlReport;
-        }
-    }
+    };
 
     this.getUrl = function(){
         this.show(false);
@@ -42,8 +67,8 @@ function Reporte(inReportName,inReportFolder,inParams){
  */
 Reporte.prototype.show = function(){
     this.show();
-}
+};
 
 Reporte.prototype.getUrl= function(){
     return this.getUrl();
-}
+};

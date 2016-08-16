@@ -119,7 +119,7 @@ function loadModulo(){
 	tmpCell.style.cssText="border-bottom:1px solid #E7C794";
 		
 	var tmpCell= trTabBusqueda1.appendChild(document.createElement("TD"));	
-	tmpCell.height="30px";
+	tmpCell.height="20px";
 	tmpCell.colSpan=(valoresComboGrupo.length*2)+1;
 	tmpCell.className="tabFooter";		
 	

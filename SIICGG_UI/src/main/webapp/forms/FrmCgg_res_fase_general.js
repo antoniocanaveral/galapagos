@@ -97,8 +97,7 @@ var btnCerrarCgg_res_fase_general = new Ext.Button({
 });
 /**
      * Ext.Button Boton para obtener reportes, general o individual.
-     */
-    var btnOpcionesCgg_res_proceso = new Ext.Button({     
+     */var btnOpcionesCgg_res_proceso = new Ext.Button({
     id:'btnOpcionesCgg_res_proceso',
     name:'btnOpcionesCgg_res_proceso',
     text:'Opciones proceso',

@@ -1,50 +1,122 @@
 <html>
-<head>
-<title>Verificaci&oacute;n de usuario</title>
-<link rel="stylesheet" type="text/css" href="../login/resource.css" />
-</head>
-<body>
-<table width="100%" height="100%">
-	<tr valign="middle">
-		<td>
-		<table border=0 align="center" class="backGround" cellpadding=5
-			cellspacing=0>
-			<tr valign="middle">
-				<td class="titulo" align="center">Atenci&oacute;n al cliente</td>
-				<td rowspan=2 class="logo">&nbsp;</td>
-			</tr>
-			<tr valign="middle">
-				<td rowspan=2 class="areaLogin">
-				<form name="loginForm" method="post" action="j_security_check">
-				<table border=0 class="login" cellpadding=0 cellspacing=0
-					align="center">
-					<tr valign="bottom">
-						<td align="left" height="50px"><label>C&eacute;dula/Pasaporte</label><br />
-						<input class="txtIcon iconText" type="text" id="j_username"
-							name="j_username" /></td>
-					</tr>
-					<tr>
-						<td><label>Contrase&ntilde;a</label><br />
-						<input class="txtIcon iconkey" type="password" id="j_password"
-							name="j_password" /></td>
-					</tr>
-					<tr valign="top">
-						<td align="right">
-						<button type="submit">Aceptar</button>
-						</td>
-					</tr>
-				</table>
-				</form>
-				</td>
-			</tr>
-			<tr valign="top">
-				<td class="descripcion">Por favor ingrese los datos
-				correspondientes al <b>No. de documento de identificaci&oacute;n
-				y contrase�a</b> proporcionados por el administrador</td>
-			</tr>
-		</table>
-		</td>
-	</tr>
-</table>
-</body>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+        <title>Sistema Integral Inform&aacute;tico SIICGG</title>
+        <link rel="stylesheet" type="text/css" href="../login/custom.css" />
+        <link rel="stylesheet" type="text/css" href="../login/bootstrap/bootstrap.css" />
+        <link rel="stylesheet" type="text/css" href="../login/bootstrap/bootstrap.js" />
+        <script type="text/javascript"  language="javascript">
+            Date.prototype.addHours= function(h){
+                this.setHours(this.getHours()+h);
+                return this;
+            };
+            
+            function ManagerCookies(){
+
+                this.create = function Create(name,value,hours) {
+                    var expires='';
+                    if (hours) {
+                        var auxFecha =new Date().addHours(hours);
+                        expires = "; expires="+auxFecha.toGMTString();
+                    }else{
+                        expires = "";
+                    }
+                    document.cookie = name+"="+value+expires+"; path=/";
+                };
+
+                this.read = function Read(name) {
+                    var nameEQ = name + "=";
+                    var ca = document.cookie.split(';');
+                    for(var i=0;i < ca.length;i++) {
+                        var c = ca[i];
+                        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+                    }
+                    return null;
+                };
+
+                this.erase = function Erase(name) {
+                    this.create(name,"",-3);
+                }
+            }
+
+            ManagerCookies.prototype.create = function(inName,inValue,inHours){
+                this.create(inName,inValue,inHours);
+            };
+
+            ManagerCookies.prototype.read = function(inName){
+                this.read(inName);
+            };
+
+            ManagerCookies.prototype.erase = function(inName,inValue,inHours){
+                this.erase(inName);
+            };
+
+            function setFocus(inId){
+                 document.getElementById(inId).focus();
+            }
+
+            function visualizar(){
+                var usuario = new ManagerCookies().read('cgg_res_usuario');
+                if(usuario !== null && usuario !== undefined && usuario !== 'undefined'){
+                    document.getElementById('j_username').value = usuario;                    
+                    setFocus('j_password');
+                }else{                    
+                    setFocus('j_username');
+                }
+            }
+
+            function recordarme(){                
+				//document.loginForm.j_username.value = document.loginForm.j_username.value.toLowerCase();
+                new ManagerCookies().create('cgg_res_usuario',document.getElementById('j_username').value,10080);
+            }         
+        </script>
+    </head>
+    <body onload="visualizar()">
+        <div class="bg-screen"></div>
+        <div class="container centered-container">
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <div class="login-panel panel panel-default">
+                        <div class="panel-heading">
+                            <div class="cgg-logo" align="center"><img src="../login/logo-galapagos.png" /></div>
+                            <h3 class="panel-title">Sistema Integral Inform&aacute;tico SIICGG</h3>
+                        </div>
+                        <div class="panel-body">
+                            <form role="form" name="loginForm" method="post" action="j_security_check">
+                                <fieldset>
+                                    <div class="form-group has-feedback">
+                                        <input id="j_username" class="form-control" placeholder="Usuario" name="j_username" type="usuario" autofocus>
+                                        <span id="usuarioIcon" class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" style="display:none;"></span>
+                                        <span id="usuarioStatus" class="control-label"></span>
+                                        </input>
+
+                                    </div>
+                                    <div class="form-group has-feedback">
+                                        <input id="j_password" class="form-control" placeholder="Clave" name="j_password" type="password" value="">
+                                        <span id="passwordIcon" class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" style="display:none;"></span>
+                                        <span id="passwordStatus" class="control-label"></span>
+                                    </div>
+
+                                    <div id="msg" class="alert alert-danger" role="alert" style="display:none;">
+                                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+
+                                    </div>
+                                    <!--<div class="checkbox">-->
+                                    <!--<label>-->
+                                    <!--<input name="remember" type="checkbox" value="Remember Me">Remember Me-->
+                                    <!--</label>-->
+                                    <!--</div>-->
+                                    <!--&lt;!&ndash; Change this to a button or input when using this as a form &ndash;&gt;-->
+                                    <button type="submit" class="btn btn-lg btn-success btn-block" onclick="recordarme()">Login</button>
+                                    <!--a id="loginLink" class="btn btn-lg btn-success btn-block" onclick="recordarme()">Login</a-->
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
 </html>

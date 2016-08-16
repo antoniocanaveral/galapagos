@@ -61,7 +61,7 @@ public class Cgg_res_tipo_solicitud_regla implements Serializable{
 	){
 		String outResult = "true";
 		try{
-			CallableStatement stmInsert = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_TIPO_SOLICITUD_REGLA_INSERT(?, ?, ?, ?, ?, ?, ?, ?) }");
+			CallableStatement stmInsert = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_TIPO_SOLICITUD_REGLA_INSERT(?, ?, ?, ?, ?, ?, ?, ?, ?) }");
 			stmInsert.registerOutParameter(1, java.sql.Types.VARCHAR);
 			stmInsert.setString(2, this.getCgg_res_tipo_solicitud_regla().getCRTSE_CODIGO());
 			stmInsert.setString(3, this.getCgg_res_tipo_solicitud_regla().getCRTST_CODIGO());
@@ -71,6 +71,7 @@ public class Cgg_res_tipo_solicitud_regla implements Serializable{
 			stmInsert.setBoolean(7, this.getCgg_res_tipo_solicitud_regla().getCRTSE_ESTADO());
 			stmInsert.setString(8, this.getCgg_res_tipo_solicitud_regla().getCRTSE_USUARIO_INSERT());
 			stmInsert.setString(9, this.getCgg_res_tipo_solicitud_regla().getCRTSE_USUARIO_UPDATE());
+			stmInsert.setString(10, this.getCgg_res_tipo_solicitud_regla().getCRTT_CODIGO());
 			stmInsert.execute();
 			this.getCgg_res_tipo_solicitud_regla().setCRTSE_CODIGO(stmInsert.getString(1));
 			stmInsert.close();
@@ -271,7 +272,7 @@ public class Cgg_res_tipo_solicitud_regla implements Serializable{
 	){
 		String outResult = "true";
 		try{
-			CallableStatement stmUpdate = inConnection.prepareCall("{ call sii.F_CGG_RES_TIPO_SOLICITUD_REGLA_UPDATE(?, ?, ?, ?, ?, ?, ?) }");
+			CallableStatement stmUpdate = inConnection.prepareCall("{ call sii.F_CGG_RES_TIPO_SOLICITUD_REGLA_UPDATE(?, ?, ?, ?, ?, ?, ?, ?) }");
 			stmUpdate.setString(1, this.getCgg_res_tipo_solicitud_regla().getCRTSE_CODIGO());
 			stmUpdate.setString(2, this.getCgg_res_tipo_solicitud_regla().getCRTST_CODIGO());
 			stmUpdate.setString(3, this.getCgg_res_tipo_solicitud_regla().getCRVAL_CODIGO());
@@ -279,6 +280,7 @@ public class Cgg_res_tipo_solicitud_regla implements Serializable{
 			stmUpdate.setString(5, this.getCgg_res_tipo_solicitud_regla().getCRTSE_VALOR_1());
 			stmUpdate.setBoolean(6, this.getCgg_res_tipo_solicitud_regla().getCRTSE_ESTADO());
 			stmUpdate.setString(7, this.getCgg_res_tipo_solicitud_regla().getCRTSE_USUARIO_UPDATE());
+			stmUpdate.setString(8, this.getCgg_res_tipo_solicitud_regla().getCRTT_CODIGO());
 			stmUpdate.executeUpdate();
 			stmUpdate.close();
 		}catch(SQLException e){

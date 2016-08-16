@@ -1,22 +1,23 @@
 package com.besixplus.sii.ws;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.io.IOException;
-import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.SQLException;
+import com.besixplus.sii.db.ManagerConnection;
+
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
+import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
-import javax.jws.WebParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
-import com.besixplus.sii.db.ManagerConnection;
+import java.io.IOException;
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
 * CLASE Cgg_tct_adjunto_csv
@@ -34,7 +35,6 @@ public class Cgg_tct_adjunto_csv implements Serializable{
 
 	/**
 	* INSERTA UN REGISTRO EN LA TABLA Cgg_tct_adjunto_csv.
-	* @param inCtagv_codigo IDENTIFICATIVO UNICO DE REGISTRO DE AGENCIA DE VIAJES.
 	* @param inCtadc_nombre_adjunto NOMBRE DEL DOCUMENTO ADJUNTO.
 	* @param inCtadc_descripcion_adjunto DESCRIPCION DEL DOCUMENTO ADJUNTO.
 	* @param inCtadc_fecha_registro FECHA DE REGISTRO DEL ARCHIVO DIGITAL.
@@ -270,7 +270,6 @@ public class Cgg_tct_adjunto_csv implements Serializable{
 	/**
 	* ACTUALIZA UN REGISTRO EN LA TABLA Cgg_tct_adjunto_csv.
 	* @param inCtadc_codigo IDENTIFICATIVO UNICO DE REGISTRO DE ADJUNTO CSV
-	* @param inCtagv_codigo IDENTIFICATIVO UNICO DE REGISTRO DE AGENCIA DE VIAJES
 	* @param inCtadc_nombre_adjunto NOMBRE DEL DOCUMENTO ADJUNTO
 	* @param inCtadc_descripcion_adjunto DESCRIPCION DEL DOCUMENTO ADJUNTO
 	* @param inCtadc_fecha_registro FECHA DE REGISTRO DEL ARCHIVO DIGITAL

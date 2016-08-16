@@ -70,7 +70,7 @@ function FrmCgg_jur_proceso_judicial(IN_SENTENCIA_CGG_JUR_PROCESO_JUDICIAL,IN_RE
             format:"JSON"
         }
     });
-	this.getcm = function(){
+	this.getCm = function(){
         return cm;
     }
 

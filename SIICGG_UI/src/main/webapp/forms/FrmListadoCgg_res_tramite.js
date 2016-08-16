@@ -42,12 +42,14 @@ function FrmListadoCgg_res_tramite(inDesktop){
             }
         }
     });
+
+
     /**
 	 * Ext.Button Boton que permite editar un registro de la ventana winFrmListadoCgg_res_tramite.
 	 */
     var btnEditarCgg_res_tramite = new Ext.Button({
         id:'btnEditarCgg_res_tramite',
-        text:'Editar',
+        text:'Abrir',
         iconCls:'iconEditar',
         listeners:{
             click:function(){
@@ -290,7 +292,10 @@ function FrmListadoCgg_res_tramite(inDesktop){
 		{name:'CRTRA_FECHA_SALIDA'},
         {name:'CRTRA_FOLIO'},
 		{name:'CRTRA_GRUPO'},
-        {name:'CRTRA_ORDEN'}
+        {name:'CRTRA_ORDEN'},
+        {name:'REP_CRPER_CODIGO'},
+        {name:'CHANGE_CRTST_CODIGO'},
+        {name:'CRTT_CODIGO'}
         ]),
         groupField:'CRTRA_FECHA_RECEPCION',
         sortInfo:{
@@ -374,7 +379,10 @@ function FrmListadoCgg_res_tramite(inDesktop){
             constrain:true,
             layout:'border',
             iconCls:'iconTramite',
-            bbar:[btnNuevoCgg_res_tramite,btnNuevoTranseunte,btnEditarCgg_res_tramite,btnEliminarCgg_res_tramite,'-',btnReporteCgg_res_tramite,'->',btnSalirCgg_res_tramite]
+            //bbar:[btnNuevoCgg_res_tramite,btnEditarCgg_res_tramite,btnEliminarCgg_res_tramite,'-',btnReporteCgg_res_tramite,'->',btnSalirCgg_res_tramite]
+//MO
+           bbar:[btnNuevoCgg_res_tramite,btnNuevoTranseunte,btnEditarCgg_res_tramite,btnEliminarCgg_res_tramite,'-',btnReporteCgg_res_tramite,'->',btnSalirCgg_res_tramite]
+//
         });
     }else{
         winFrmListadoCgg_res_tramite = new Ext.Window({

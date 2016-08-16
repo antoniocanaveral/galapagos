@@ -61,7 +61,8 @@ function FrmListadoCgg_res_notificacion(inDesktop){
     /**
      * Ext.Button Boton que permite eliminar un registro de la ventana winFrmListadoCgg_res_notificacion.
      */
-    var btnEliminarCgg_res_notificacion = new Ext.Button({
+//MO
+    /*var btnEliminarCgg_res_notificacion = new Ext.Button({
         id:'btnEliminarCgg_res_notificacion',
         text:'Eliminar',
         iconCls:'iconEliminar',
@@ -108,7 +109,8 @@ function FrmListadoCgg_res_notificacion(inDesktop){
                 }
             }
         }
-    });    
+    });*/
+//
 
 	  var btnProcesarCgg_res_notificacion = new Ext.Button({
           id:'btnProcesarCgg_res_notificacion',
@@ -119,6 +121,26 @@ function FrmListadoCgg_res_notificacion(inDesktop){
                   ActualizarNotificacion();
               }}
       });
+
+//MO
+
+    /**
+     * Ext.Button BotÓn que permite generar reporte con las
+     personas que han sobrepasado el tiempo de 60 días.
+     */
+
+    var btnReporteCgg_res_notificacion = new Ext.Button({
+        id:'btnReporteCgg_res_notificacion',
+        text:'Generar Reporte',
+        listeners:{
+            click:function() {
+
+                //ActualizarNotificacion();
+            }}
+    });
+
+//
+
     /**
      * Ext.Button Boton que permite insertar un nuevo registro de la ventana winFrmListadoCgg_tct_registro.
      */
@@ -616,7 +638,8 @@ function FrmListadoCgg_res_notificacion(inDesktop){
             minimizable:true,
             constrainHeader:true,
             layout:'border',
-            bbar:[btnNuevoCgg_res_notificacion,btnEditarCgg_res_notificacion,btnEliminarCgg_res_notificacion,'-',btnProcesarCgg_res_notificacion,'->',btnSalirCgg_res_notificacion]
+            bbar:[btnNuevoCgg_res_notificacion,btnEditarCgg_res_notificacion,'-',btnProcesarCgg_res_notificacion,'-',btnReporteCgg_res_notificacion,'->',btnSalirCgg_res_notificacion]
+// MO       //bbar:[btnNuevoCgg_res_notificacion,btnEditarCgg_res_notificacion,btnEliminarCgg_res_notificacion,'-',btnProcesarCgg_res_notificacion,'->',btnSalirCgg_res_notificacion]
         });
         /**
          * Funcion que aplica los privilegios del usuario.

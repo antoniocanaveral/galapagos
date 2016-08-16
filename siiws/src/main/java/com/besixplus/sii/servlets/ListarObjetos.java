@@ -1,58 +1,58 @@
 package com.besixplus.sii.servlets;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.besixplus.sii.db.ManagerConnection;
+import com.besixplus.sii.objects.Cgg_sec_objeto;
+import org.reflections.Reflections;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
-
-import com.besixplus.sii.db.ManagerConnection;
-import com.besixplus.sii.objects.Cgg_sec_objeto;
+import java.io.IOException;
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ListarObjetos extends HttpServlet implements Serializable{
 	private static final long serialVersionUID = 3617013655726283946L;
 
-	private static final String CONTENT_TYPE = "text/html; charset=windows-1252";
+	//private static final String CONTENT_TYPE = "text/html; charset=windows-1252";
+
+	private static List<String> classNames;
 
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
+		classNames = new ArrayList<>();
 	}
 
 	/**Process the HTTP service request.
 	 */
-	public void service(HttpServletRequest request, 
-			HttpServletResponse response) throws ServletException, IOException {response.setContentType(CONTENT_TYPE);
+	public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+			//response.setContentType(CONTENT_TYPE);
 			if(request.getParameter("request")!= null && request.getParameter("request").equals("fill")){
-				SAXReader tmpXMLReader = new SAXReader();
-				String tmpConfigPath = System.getProperty("jboss.server.config.url");
-				Connection tmpCon = ManagerConnection.getConnection();
+				if(classNames==null || classNames.size()==0){
+					Reflections reflections = new Reflections("com.besixplus.sii.ws");
+					Set<Class<? extends Serializable>> allClasses = reflections.getSubTypesOf(Serializable.class);
+					for(Class c:allClasses){
+						classNames.add(c.getCanonicalName());
+					}
+				}
 				try {
-					Document tmpDocument = tmpXMLReader.read(tmpConfigPath+File.separatorChar+"sii-classes.xml");
-					List<Element> list = tmpDocument.selectNodes( "/com/besixplus/sii/ws/class");
+					Connection tmpCon = ManagerConnection.getConnection();
 					Method[] tmpBaseMethods = Object.class.getMethods();
 					Set<String> tmpBaseMethodNames = new HashSet<String>();
 					for(int i = 0; i < tmpBaseMethods.length; i++){
 						tmpBaseMethodNames.add(tmpBaseMethods[i].getName());
 					}
 					
-					for(int j = 0; j < list.size(); j++){
-						String tmpPath = list.get(j).getPath().replace("/", ".").substring(1);
-						tmpPath = tmpPath.substring(0, tmpPath.lastIndexOf("."))+"."+list.get(j).attributeValue("name");
+					for(int j = 0; j < classNames.size(); j++){
+						String tmpPath = classNames.get(j);
 						try {
 							
 							Method[] tmpMethods = Class.forName(tmpPath).getMethods();
@@ -76,8 +76,6 @@ public class ListarObjetos extends HttpServlet implements Serializable{
 						}
 					}
 					tmpCon.close();
-				} catch (DocumentException e) {
-					e.printStackTrace();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}

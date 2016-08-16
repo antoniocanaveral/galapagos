@@ -7,8 +7,10 @@ function bsxComboBox(v){
 	this.dom = document.createElement('select');	
 	if (v.id)this.dom.id=v.id;
 	
-	if  (v.width)
+	if(v.width)
 		this.dom.style.width=v.width;
+	if(v.style)
+		this.dom.style=v.style;
 	this.eventListeners=v.eventListeners;
 	this.webService =v.webService||null;	
 	this.method=(this.webService)?this.webService.method:null;
@@ -39,6 +41,11 @@ bsxComboBox.prototype.getRowSelected=function(){
 			return this.dataSet[i];
 	return null;
 }
+
+bsxComboBox.prototype.addEventListener=function(eventName, callback){
+	this.dom.addEventListener(eventName, callback);
+}
+
 bsxComboBox.prototype.reload=function(){
 	var displayField1=this.displayField;
 	var valueField1=this.valueField;

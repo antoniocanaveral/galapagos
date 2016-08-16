@@ -215,14 +215,14 @@ SOAPClient._sendSoapRequest = function(url, method, parameters, async, callback,
 				"</" + method + "></soap:Body></soap:Envelope>";
 */
     var sr ="<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
-    "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\""+ns+"\""+
+    "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ns1=\""+ns+"\""+
     " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" >"+
     "<soapenv:Header/>"+
     "<soapenv:Body>"+
-    "<ws:"+ method + ">";
+    "<ns1:"+ method + ">";
     if(parameters)
         sr = sr +parameters.toXml();
-    sr = sr + "</ws:"+ method + ">"+
+    sr = sr + "</ns1:"+ method + ">"+
     "</soapenv:Body>"+
     "</soapenv:Envelope>";
     // send request
@@ -237,27 +237,32 @@ SOAPClient._sendSoapRequest = function(url, method, parameters, async, callback,
 	
     //var soapaction = ((ns.lastIndexOf("/") != ns.length - 1) ? ns + "/" : ns) + method;
     //xmlHttp.setRequestHeader("SOAPAction", soapaction);
+
     xmlHttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
-    if(async)
-    {
-        xmlHttp.onreadystatechange = function()
-        {			
-            if(xmlHttp.readyState == 4)
-                SOAPClient._onSendSoapRequest(method, async, callback, wsdl, xmlHttp);
+
+    if(async) {
+        xmlHttp.onreadystatechange = function () {
+            if (xmlHttp.readyState == 4) {
+                if (xmlHttp.status == 200) {
+                    SOAPClient._onSendSoapRequest(method, true, callback, wsdl, xmlHttp);
+                }
+            }
         }
     }
-
     xmlHttp.send(sr);
+
     if (!async)
         return SOAPClient._onSendSoapRequest(method, async, callback, wsdl, xmlHttp);
 }
 
 SOAPClient._onSendSoapRequest = function(method, async, callback, wsdl, req){
-    var o = null;    
-    var nd = SOAPClient._getElementsByTagName(req.responseXML, 'ws:'+method + "Response");
-    if(nd !== null && nd.length == 0){
-        nd = SOAPClient._getElementsByTagName(req.responseXML, method + "Response");        
-    }
+    var o = null;
+    try {
+        var nd = SOAPClient._getElementsByTagName(req.responseXML, 'ns1:' + method + "Response");
+        if (nd !== null && nd.length == 0)
+            nd = SOAPClient._getElementsByTagName(req.responseXML, 'ws:' + method + "Response");
+        if (nd !== null && nd.length == 0)
+            nd = SOAPClient._getElementsByTagName(req.responseXML, method + "Response");
 
     if(nd==null || nd.length == 0){
         if(req.responseXML!=null && req.responseXML.getElementsByTagName("faultcode").length > 0){
@@ -273,10 +278,13 @@ SOAPClient._onSendSoapRequest = function(method, async, callback, wsdl, req){
         o = SOAPClient._soapresult2object(nd[0], wsdl);
     }
 
-    if(callback)
-        callback(o, req);
-    if(!async)
-        return o;
+        if (callback)
+            callback(o, req.responseXML);
+        if (!async)
+            return o;
+    }catch(e){
+        return new Error(e.message);
+    }
 }
 
 SOAPClient._soapresult2object = function(node, wsdl)

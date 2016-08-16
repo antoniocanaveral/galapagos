@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
@@ -23,6 +24,9 @@ import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
 
 import com.besixplus.sii.db.ManagerConnection;
+import com.bmlaurus.db.ResidenciaBeneficiarioData;
+import com.bmlaurus.objects.ResidenciaBeneficiario;
+import com.google.gson.Gson;
 
 /**
 * CLASE Cgg_res_residencia
@@ -500,6 +504,24 @@ NO
 		}
 		if (outCadena != null)
 			return outCadena.toString();
+		return null;
+	}
+
+	/**
+	* @param inCrper_codigo AUSPICIANTE
+	* */
+	@WebMethod
+	public String selectResidenciasByAuspiciante(
+			@WebParam(name="inCrper_codigo")String inCrper_codigo
+	)throws SOAPException
+	{
+		if(inCrper_codigo!=null) {
+			ResidenciaBeneficiarioData beneficiarioData = new ResidenciaBeneficiarioData(inCrper_codigo);
+			List<ResidenciaBeneficiario> beneficiarioList = beneficiarioData.selectBeneficiarios();
+			if (beneficiarioList != null && beneficiarioList.size() > 0) {
+				return new Gson().toJson(beneficiarioList);
+			}
+		}
 		return null;
 	}
 

@@ -53,7 +53,7 @@ function DlgExportableResidencia(){
         editable: false,
         triggerAction:'all',
         emptyText : 'Seleccione',        
-        value:0
+      value:'ARCHIVO'
     });
 
     var winDlgExportableResidencia = new Ext.Window({
@@ -62,8 +62,8 @@ function DlgExportableResidencia(){
         tbar:getPanelTitulo(tituloDlgSeleccionSeguimiento,descDlgSeleccionSeguimiento),
         iconCls:'iconDescargar',
         items:[{
-                xtype:'panel',
-            region:'center',
+          region:'center',
+          xtype:'panel',
             layout:'form',
             frame:true,
             items:[cbxTipoResidencia,cbxExportableTipo]
@@ -76,7 +76,7 @@ function DlgExportableResidencia(){
         layout:'border',        
         bbar:[btnNuevoDlgSeleccionSeguimiento,'->',btnCerrarDlgSeleccionSeguimiento]
     });
-	
+  
     this.getWindow=function(){
         return winDlgExportableResidencia;
     }

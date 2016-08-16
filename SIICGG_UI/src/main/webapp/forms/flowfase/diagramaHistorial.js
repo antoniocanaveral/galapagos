@@ -235,7 +235,7 @@ function crearFlujoTrabajo(inDiv,inNodeInfo){
                             datosTramite.CRTRA_DIAS_PERMANENCIA=node.data.myCrtra_dias_permanencia+' D\u00edas';
                         }
                                                 
-                        datosTramite.CRTRA_FECHA_RECEPCION = Date.parse(node.data.myCrtra_fecha_recepcion).toString('dd/MM/yyyy HH:mm');
+                        try{datosTramite.CRTRA_FECHA_RECEPCION = Date.parse(node.data.myCrtra_fecha_recepcion).toString('dd/MM/yyyy HH:mm');}catch(inErr){datosTramite.CRTRA_FECHA_RECEPCION = node.data.myCrtra_fecha_recepcion}
                         datosTramite.CRTRA_NUMERO = node.data.myCrtra_numero;
                         datosTramite.CRTRA_OBSERVACION = node.data.myCrtra_observacion?node.data.myCrtra_observacion:'';
                         datosTramite.CRTRA_COMUNICADO_RADIAL = node.data.myCrtra_comunicado_radial;
@@ -643,7 +643,8 @@ function crearFlujoTrabajo(inDiv,inNodeInfo){
                             datosTramite.CRTRA_DIAS_PERMANENCIA=node.data.myCrtra_dias_permanencia+' D\u00edas';
                         }
 
-                        datosTramite.CRTRA_FECHA_RECEPCION = Date.parse(node.data.myCrtra_fecha_recepcion).toString('dd/MM/yyyy HH:mm');
+                        try{datosTramite.CRTRA_FECHA_RECEPCION = Date.parse(node.data.myCrtra_fecha_recepcion).toString('dd/MM/yyyy HH:mm');}catch(inErr){datosTramite.CRTRA_FECHA_RECEPCION = node.data.myCrtra_fecha_recepcion}
+
                         datosTramite.CRTRA_NUMERO = node.data.myCrtra_numero;
                         datosTramite.CRTRA_OBSERVACION = node.data.myCrtra_observacion?node.data.myCrtra_observacion:'';
                         datosTramite.CRTRA_COMUNICADO_RADIAL = node.data.myCrtra_comunicado_radial;

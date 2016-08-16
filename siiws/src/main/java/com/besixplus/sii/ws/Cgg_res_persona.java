@@ -1,17 +1,14 @@
 package com.besixplus.sii.ws;
 
-import java.io.Serializable;
-
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import com.besixplus.sii.db.ManagerConnection;
+import com.besixplus.sii.i18n.Messages;
+import com.besixplus.sii.mail.Base64;
+import com.besixplus.sii.objects.Cgg_res_adjunto_temporal;
+import com.bmlaurus.attachment.CreatorInvoker;
+import com.bmlaurus.ws.dinardap.RegistroCivil;
+import com.bmlaurus.ws.dinardap.Utils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
@@ -26,14 +23,15 @@ import javax.xml.soap.SOAPFactory;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
-
-import com.besixplus.sii.mail.Base64;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.besixplus.sii.db.ManagerConnection;
-import com.besixplus.sii.i18n.Messages;
-import com.besixplus.sii.objects.Cgg_res_adjunto_temporal;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * CLASE Cgg_res_persona
@@ -371,6 +369,9 @@ public class Cgg_res_persona implements Serializable{
 			}
 			con.setAutoCommit(!ManagerConnection.isDeployed());
 			tmpObj = new com.besixplus.sii.db.Cgg_res_persona(tmpObj).select(con);
+
+			new CreatorInvoker(null,null,tmpObj).controlled().createPersonaDocuments();//LLAMADA AL GENERADOR DE ARCHIVOS
+
 			ArrayList<com.besixplus.sii.objects.Cgg_res_persona> tmpArray = new ArrayList<com.besixplus.sii.objects.Cgg_res_persona>();
 			tmpArray.add(tmpObj);
 			tmpFormat = new com.besixplus.sii.misc.Formatter(format, tmpArray);
@@ -413,6 +414,76 @@ public class Cgg_res_persona implements Serializable{
 		}
 		return new Boolean(outResult).toString();
 	}
+
+	@WebMethod
+	public String insertLite(
+			@WebParam(name="inNuevoBeneficiarioJSON")String inNuevoBeneficiarioJSON
+	){
+		JSONObject objTmpPersona;
+		com.besixplus.sii.objects.Cgg_res_persona objTmpBeneficiario;
+		com.besixplus.sii.objects.Cgg_res_persona objNuevoBeneficiario;
+		String resultado="false";
+		String cggCrperCodigo;
+		HttpServletRequest tmpRequest = (HttpServletRequest) wctx.getMessageContext().get(MessageContext.SERVLET_REQUEST);
+		Connection con = ManagerConnection.getConnection(); // No controlamos permisos
+		try{
+			con.setAutoCommit(false);
+			if(inNuevoBeneficiarioJSON != null && inNuevoBeneficiarioJSON.trim().length()>=1){
+				//REGISTRO DEL BENEFICIARIO
+				objTmpPersona = new JSONObject(inNuevoBeneficiarioJSON);
+				objTmpBeneficiario = new com.besixplus.sii.objects.Cgg_res_persona();
+				objTmpBeneficiario.setCRPER_NUM_DOC_IDENTIFIC(objTmpPersona.getString("CRPER_NUM_DOC_IDENTIFIC"));
+				objTmpBeneficiario = new com.besixplus.sii.db.Cgg_res_persona(objTmpBeneficiario).selectNumDoc(con);
+				if(objTmpBeneficiario.getCRPER_CODIGO()!=null && objTmpBeneficiario.getCRPER_CODIGO().trim().length()>=1){
+					cggCrperCodigo = "true";
+					objNuevoBeneficiario = new com.besixplus.sii.objects.Cgg_res_persona();
+					objNuevoBeneficiario.setCRPER_CODIGO(objTmpBeneficiario.getCRPER_CODIGO());
+					//EXISTE! devolvemos el codigo;
+					resultado = "{'CRPER_CODIGO':'" + objNuevoBeneficiario.getCRPER_CODIGO() + "'}";
+				}else{
+					objNuevoBeneficiario = new com.besixplus.sii.objects.Cgg_res_persona();
+					objNuevoBeneficiario.setCRPER_CODIGO("KEYGEN");
+					//objNuevoBeneficiario.setCRECV_CODIGO(objTmpPersona.getString("CRECV_CODIGO"));
+					objNuevoBeneficiario.setCRDID_CODIGO(objTmpPersona.getString("CRDID_CODIGO"));
+					objNuevoBeneficiario.setCRPER_NOMBRES(objTmpPersona.getString("CRPER_NOMBRES"));
+					objNuevoBeneficiario.setCRPER_APELLIDO_PATERNO(objTmpPersona.getString("CRPER_APELLIDO_PATERNO"));
+					objNuevoBeneficiario.setCRPER_APELLIDO_MATERNO(objTmpPersona.getString("CRPER_APELLIDO_MATERNO"));
+					objNuevoBeneficiario.setCRPER_NUM_DOC_IDENTIFIC(objTmpPersona.getString("CRPER_NUM_DOC_IDENTIFIC"));
+					objNuevoBeneficiario.setCPAIS_CODIGO(objTmpPersona.getString("CPAIS_CODIGO"));
+					objNuevoBeneficiario.setCGG_CPAIS_CODIGO(objTmpPersona.getString("CGG_CPAIS_CODIGO"));
+					objNuevoBeneficiario.setCRPER_GENERO(objTmpPersona.getInt("CRPER_GENERO"));
+					objNuevoBeneficiario.setCRPER_ATENCION_CLIENTE(true);
+
+					DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+					Date fechaNacimiento = null;
+					try{
+						fechaNacimiento = df.parse(objTmpPersona.getString("CRPER_FECHA_NACIMIENTO"));
+					} catch (ParseException e){
+						e.printStackTrace();
+						fechaNacimiento = new Date();
+					}
+					objNuevoBeneficiario.setCRPER_FECHA_NACIMIENTO( fechaNacimiento );
+					objNuevoBeneficiario.setCRPER_ESTADO(true);
+					objNuevoBeneficiario.setCRPER_USUARIO_INSERT(tmpRequest.getUserPrincipal().getName());
+					objNuevoBeneficiario.setCRPER_USUARIO_UPDATE(tmpRequest.getUserPrincipal().getName());
+					cggCrperCodigo = new com.besixplus.sii.db.Cgg_res_persona(objNuevoBeneficiario).insert(con);
+					if(cggCrperCodigo.equals("true")) {
+						con.commit();
+						resultado = "{'CRPER_CODIGO':'" + objNuevoBeneficiario.getCRPER_CODIGO() + "'}";
+						new CreatorInvoker(null,null,objNuevoBeneficiario).createPersonaDocuments();
+					}else
+						con.rollback();
+				}
+
+			}
+			con.close();
+		}catch(SQLException inException){
+			com.besixplus.sii.db.SQLErrorHandler.errorHandler(inException);
+		}
+		return resultado;
+	}
+
+
 	/**
 	 * INSERTA UN REGISTRO EN LA TABLA Cgg_res_persona.
 	 * @param inCrecv_codigo IDENTIFICATIVO UNICO DE REGISTRO DEL ESTADO CIVIL.
@@ -436,8 +507,6 @@ public class Cgg_res_persona implements Serializable{
 	 * @param inCrper_observaciones OBSERVACIONES O COMENTARIOS PARA CON LA PERSONA
 .
 	 * @param inCrper_numero_residencia NUMERO UNICO DE IDENTIFICACION DE RESIDENCIA.
-	 * @param inCrper_foto FOTOGRAFIA DE LA PERSONA.
-	 * @param inCrper_foto_curriculum FOTOGRAFIA DE LA PERSONA PARA PUBLICACION EN EL CURRICULUM.
 	 * @param inCrper_huella_dactilar HUELLA DACTILAR DE LA PERSONA.
 	 * @param inCrper_huella_imagen IMAGEN DE LA HUELLA DE LA PERSONA
 	 * @param inCrper_huella_cadena HUELLA DE LA PERSONA
@@ -914,10 +983,6 @@ public class Cgg_res_persona implements Serializable{
 	 * @param inCrper_observaciones OBSERVACIONES O COMENTARIOS PARA CON LA PERSONA
 
 	 * @param inCrper_numero_residencia NUMERO UNICO DE IDENTIFICACION DE RESIDENCIA
-	 * @param inCrper_foto FOTOGRAFIA DE LA PERSONA
-	 * @param inCrper_foto_curriculum FOTOGRAFIA DE LA PERSONA PARA PUBLICACION EN EL CURRICULUM
-	 * @param inCrper_huella_dactilar HUELLA DACTILAR DE LA PERSONA
-	 * @param inCrper_firma FIRMA DIGITAL DE LA PERSONA
 	 * @param inCrper_autorizado ESTADO DEL REGISTRO QUE DEFINE SI UNA PERSONA TIENE AUTORIZADO SU INGRESO A LA PROVINCIA
 	 * @param inCrper_numero_expediente NUMERO DE EXPEDIENTE UNICO
 	 * @param inCrper_fecha_archivo FECHA DE ARCHIVO DE LA DOCUMENTACION DE LA PERSONA
@@ -1316,6 +1381,57 @@ public class Cgg_res_persona implements Serializable{
 			}
 			con.setAutoCommit(!ManagerConnection.isDeployed());
 			tmpObj = new com.besixplus.sii.db.Cgg_res_persona(tmpObj).selectNumDoc(con);
+
+			boolean needService = true;
+			/*if(tmpObj.getCRPER_CODIGO()==null || tmpObj.getCRPER_CODIGO().equals("KEYGEN"))
+				needService = true;
+			else{
+				Date reference = tmpObj.getCRPER_FECHA_DINARDAP();
+				int dias = 5;//FIXME: Obtener este valor de un parámetro de la base
+				Date maxDate = new Date(reference.getTime()+dias * 24 * 60 * 60 * 1000);
+				Date hoy = new Date();
+				if(maxDate.before(hoy))
+					needService=true;
+			}*/
+			//MO
+			if(needService) {
+				try {
+					RegistroCivil registroCivil = new RegistroCivil(tmpObj.getCRPER_NUM_DOC_IDENTIFIC());//cedula del beneficiario
+					if (registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_OK)) {
+						if (registroCivil.getCedula() != null && !registroCivil.getCedula().trim().isEmpty()) {
+							List<String> apellidos = Utils.buildNombresApellidos(registroCivil.getNombre(), registroCivil.getNombrePadre(), registroCivil.getNombreMadre());
+							if (apellidos != null && apellidos.size() == 3) {
+								if (apellidos.get(0).length() > 0)
+									tmpObj.setCRPER_APELLIDO_PATERNO(apellidos.get(0));
+								if (apellidos.get(1).length() > 0)
+									tmpObj.setCRPER_APELLIDO_MATERNO(apellidos.get(1));
+								if (apellidos.get(2).length() > 0)
+									tmpObj.setCRPER_NOMBRES(apellidos.get(2));
+							}
+							SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+							tmpObj.setCRPER_FECHA_NACIMIENTO(sdf.parse(registroCivil.getFechaNacimiento()));
+							if (registroCivil.getFechaMatrimonio() != null && registroCivil.getFechaMatrimonio().length() > 0)
+								tmpObj.setCRPER_FECHA_MATRIMONIO(sdf.parse(registroCivil.getFechaMatrimonio()));
+							if (registroCivil.getCedulaConyuge() != null && registroCivil.getCedulaConyuge().length() > 0)
+								tmpObj.setCRPER_CONYUGE(registroCivil.getCedulaConyuge());
+
+							if (registroCivil.getNacionalidad().equals("ECUATORIANA")) {
+								tmpObj.setCPAIS_CODIGO("61");
+							}
+							if (registroCivil.getGenero().equals("MUJER")) {
+								tmpObj.setCRPER_GENERO(1);
+							} else {
+								tmpObj.setCRPER_GENERO(0);
+							}
+
+							new CreatorInvoker(registroCivil,null,tmpObj).createPersonaDocuments();
+						}
+					}
+					//
+				} catch (Exception ex) {
+					com.besixplus.sii.db.SQLErrorHandler.errorHandler(ex);
+				}
+			}
 			ArrayList<com.besixplus.sii.objects.Cgg_res_persona> tmpArray = new ArrayList<com.besixplus.sii.objects.Cgg_res_persona>();
 			tmpArray.add(tmpObj);
 			tmpFormat = new com.besixplus.sii.misc.Formatter(format, tmpArray);
@@ -1328,6 +1444,7 @@ public class Cgg_res_persona implements Serializable{
 			return tmpFormat.getData().toString();
 		return null;
 	}
+
 	/**
 	 * OBTIENE LOS REGISTROS DE LA TABLA Cgg_res_persona EN UNA ESTRUCTURA JSON o XML QUE CUMPLEN CON EL CRITERIO DE BUSQUEDA.
 	 * @param start INDICE DE INICIO DE LOS REGISTROS DE LA TABLA.
@@ -1408,7 +1525,7 @@ public class Cgg_res_persona implements Serializable{
 				con.close();
 				throw new SOAPFaultException(SOAPFactory.newInstance().createFault(myInfoMessages.getMessage("sii.seguridad.acceso.negado", null), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
 			}
-			tmpCount = com.besixplus.sii.db.Cgg_res_persona.selectPersonaHistorialCount(con, keyword,inIdentificacion);
+			tmpCount = com.besixplus.sii.db.Cgg_res_persona.selectPersonaHistorialCount(con, keyword);
 			con.setAutoCommit(!ManagerConnection.isDeployed());
 			obj = com.besixplus.sii.db.Cgg_res_persona.selectConsultaGeneralPersona(con,tmpRequest.getUserPrincipal().getName(), start, limit, sort, dir, keyword, inIdentificacion);
 			tmpFormat = new com.besixplus.sii.misc.Formatter(format, obj);

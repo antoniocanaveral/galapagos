@@ -70,15 +70,32 @@ function JasperServer(){
 	this.run = function(){
 		var c = 0;
 		var tmpParams='';
-		for(var tmpParamName in this.myParams){
-			if(typeof(this.myParams[tmpParamName]) == 'function')
-				break;
-			if(c > 0)
-				tmpParams +='&';
-			tmpParams += tmpParamName+'='+this.myParams[tmpParamName];
-			c++;
+		//Verificamos la existencia del reporte en el servidor jasper. Nueva funcionalidad.
+		var param = new SOAPClientParameters();
+		param.add('reportFolder', this.myReportFolder);
+		param.add('reportName', this.myReportName);
+		var jasperResponse = SOAPClient.invoke(URL_WS+'JasperServerService', "validateReport", param, false, null);
+		if(jasperResponse) {
+			jasperResponse = eval("(" + jasperResponse + ')');
+			if (jasperResponse.result == true) {
+				for (var tmpParamName in this.myParams) {
+					if (typeof(this.myParams[tmpParamName]) == 'function')
+						break;
+					if (c > 0)
+						tmpParams += '&';
+					tmpParams += tmpParamName + '=' + this.myParams[tmpParamName];
+					c++;
+				}
+				window.open(URL_REPORT + '&j_username=' + this.myUserName + '&j_password=' + this.myPassword + '&output=' + this.myFormat + '&reportUnit=' + this.myReportFolder + '/' + this.myReportName + '&ParentFolderUri=' + this.myReportFolder + '&' + tmpParams, this.myTitle, 'location=no');
+				this.myParams = new Array();
+			} else {
+				Ext.Msg.show({
+					title: "JasperServer",
+					msg: jasperResponse.errorMessage,
+					buttons: Ext.Msg.OK,
+					icon: Ext.MessageBox.ERROR
+				});
+			}
 		}
-		window.open(URL_REPORT+'&j_username='+this.myUserName+'&j_password='+this.myPassword+'&output='+this.myFormat+'&reportUnit='+this.myReportFolder+'/'+this.myReportName+'&ParentFolderUri='+this.myReportFolder+'&'+tmpParams, this.myTitle, 'location=no');
-		this.myParams = new Array();
 	}
 }

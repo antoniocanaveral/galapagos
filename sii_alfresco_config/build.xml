@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="deploy-jar">
+
+    <!-- Set these as required -->
+    <property name="jar.name" value="SIIContentModel.jar"/>
+    <property name="jar.deploy.dir" value="./target/deploy/alfresco-x.y.z/tomcat/shared/lib"/>
+
+    <property name="project.dir" value="."/>
+    <property name="build.dir" value="${project.dir}/target"/>
+    <property name="jar.file" value="${build.dir}/lib/${jar.name}"/>
+
+    <target name="mkdirs">
+        <mkdir dir="${build.dir}/lib" />
+    </target>
+
+    <target name="package-jar" depends="mkdirs">
+        <jar destfile="${jar.file}" >
+            <fileset dir="${project.dir}/config" includes="**/*" />
+            <metainf dir="${project.dir}/config/alfresco/web-extension" includes="**/share-config-custom.xml"/>
+        </jar>
+    </target>
+
+    <target name="deploy-jar" depends="package-jar">
+        <copy file="${jar.file}" todir="${jar.deploy.dir}"/>
+    </target>
+
+    <target name="clean">
+        <delete file="${jar.file}"/>
+        <delete file="${jar.deploy.dir}/${jar.name}"/>
+        <delete dir="target/lib"/>
+        <delete dir="target/deploy"/>
+    </target>
+
+</project>

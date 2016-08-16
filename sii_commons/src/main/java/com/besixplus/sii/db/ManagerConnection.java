@@ -1,10 +1,11 @@
 package com.besixplus.sii.db;
 
 import com.besixplus.sii.util.InitParameters;
+import com.bmlaurus.virtual.VirtualCache;
 
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -51,22 +52,17 @@ public class ManagerConnection {
 				try{
 					ManagerConnection.DATA_SOURCE = (DataSource)new InitialContext().lookup("java:/sii");
 					ManagerConnection.IS_DEPLOYED= true;
-				} catch (NamingException e) {
-					e.printStackTrace();
+				} catch (Exception  e) {
 					ManagerConnection.IS_DEPLOYED= false;
 				}
 			}
 			if(!ManagerConnection.IS_DEPLOYED){
 				try {
 					DriverManager.registerDriver(new org.postgresql.Driver());
-					Properties prop = new Properties();
-					ManagerConnection.setUserName(USER_NAME_DB);
-					ManagerConnection.setPassword(PASS_DB);
-					prop.put("user", ManagerConnection.getUserName());
-					prop.put("password", ManagerConnection.getPassword());
-					//jdbc:postgresql://localhost:5435/MyDB?ApplicationName=MyApp
-					prop.put("ApplicationName",appName);
-					return DriverManager.getConnection("jdbc:postgresql://"+IP_DB+"/"+DATABASE_NAME, prop);
+					Properties prop = VirtualCache.getConfig(VirtualCache.PROP_DATABASE_CONF);
+					ManagerConnection.setUserName(prop.getProperty("user"));
+					ManagerConnection.setPassword(prop.getProperty("password"));
+					return DriverManager.getConnection("jdbc:postgresql://"+prop.getProperty("host")+"/"+prop.getProperty("dbname"), prop);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -85,11 +81,19 @@ public class ManagerConnection {
 	/**OBTIENE LA SESION ESTABLECIDA A LA BASE DE DATOS
 	 * @return SESION
 	 */
-	public synchronized static Session getMailSession(){
+	public static Session getMailSession(){
 		if(MAIL_SESSION == null)
 			try {
-				MAIL_SESSION = (Session) new InitialContext().lookup("java:/Mail");
-			} catch (NamingException e) {
+				//MAIL_SESSION = (Session) new InitialContext().lookup("java:/Mail");
+				//Vamos a crear la conexion a partir de un archivo de propiedades
+				Properties props = VirtualCache.getConfig(VirtualCache.PROP_MAILING_CONF);
+				MAIL_SESSION = Session.getInstance(props, new javax.mail.Authenticator() {
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(props.getProperty("mail.username"), props.getProperty("mail.password"));
+					}
+				});
+				MAIL_SESSION.setDebug(Boolean.parseBoolean(props.getProperty("mail.debug")));
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		return MAIL_SESSION;

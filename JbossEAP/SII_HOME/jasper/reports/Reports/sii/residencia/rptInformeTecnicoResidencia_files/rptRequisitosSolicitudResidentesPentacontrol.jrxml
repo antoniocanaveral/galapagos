@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptRequisitosSolicitudResidentesPentacontrol.jrxml" language="groovy" pageWidth="555" pageHeight="822" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.4641000000000008"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="P_CRTRA_CODIGO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+  COALESCE(RSR.CRSRQ_DESCRIPCION,'') CRSRQ_DESCRIPCION,
+  CASE
+   WHEN RSR.CRSRQ_REQUERIDO=TRUE THEN 'Obligatorio'
+   WHEN RSR.CRSRQ_REQUERIDO=TRUE THEN 'Opcional'
+  END AS CRSRQ_REQUERIDO,
+  CASE
+   WHEN RSR.CRSRQ_PARTICIPANTE=0 THEN 'Auspiciante'
+   WHEN RSR.CRSRQ_PARTICIPANTE=1 THEN 'Beneficiario'
+   WHEN RSR.CRSRQ_PARTICIPANTE=2 THEN 'Conyuge/Conviviente'
+   WHEN RSR.CRSRQ_PARTICIPANTE=3 THEN 'Padre/Madre'
+   WHEN RSR.CRSRQ_PARTICIPANTE=4 THEN 'General'
+  END AS CRSRQ_PARTICIPANTE,
+  REQ.CRREQ_DESCRIPCION,
+  CASE
+    WHEN RQT.CRRQT_CUMPLE=TRUE THEN 'X'
+    WHEN RQT.CRRQT_CUMPLE=FALSE THEN ''
+  END AS CRRQT_CUMPLE
+FROM
+  SII.CGG_RES_SOLICITUD_REQUISITO RSR
+  INNER JOIN SII.CGG_RES_REQUISITO REQ ON (REQ.CRREQ_CODIGO = RSR.CRREQ_CODIGO)
+  LEFT JOIN SII.CGG_RES_REQUISITO_TRAMITE RQT ON (RSR.CRSRQ_CODIGO = RQT.CRSRQ_CODIGO)
+WHERE REQ.CRREQ_ESTADO
+AND RQT.CRTRA_CODIGO=$P{P_CRTRA_CODIGO}
+ORDER BY CRSRQ_PARTICIPANTE DESC]]>
+	</queryString>
+	<field name="crsrq_descripcion" class="java.lang.String"/>
+	<field name="crsrq_requerido" class="java.lang.String"/>
+	<field name="crsrq_participante" class="java.lang.String"/>
+	<field name="crreq_descripcion" class="java.lang.String"/>
+	<field name="crrqt_cumple" class="java.lang.String"/>
+	<group name="gParticipante">
+		<groupExpression><![CDATA[$F{crsrq_participante}]]></groupExpression>
+		<groupHeader>
+			<band height="13">
+				<textField>
+					<reportElement x="65" y="0" width="490" height="13"/>
+					<box leftPadding="3">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{crsrq_participante}.toUpperCase()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="0" width="65" height="13"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[ Requisitos:]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="21"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REQUISITOS ADJUNTOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="21" width="555" height="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[RESOLUCION 2058-CCCRCI-20-XI-2007]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="21" height="15" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{REPORT_COUNT}.toString()+"."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="21" y="0" width="478" height="15" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crreq_descripcion}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="499" y="0" width="56" height="15" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crrqt_cumple}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

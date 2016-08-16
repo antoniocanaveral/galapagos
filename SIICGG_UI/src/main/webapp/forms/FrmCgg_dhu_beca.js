@@ -325,7 +325,7 @@ function FrmCgg_dhu_beca(IN_SENTENCIA_CGG_DHU_BECA,IN_RECORD_CGG_DHU_BECA){
     var txtCrper_apellido_paterno_representante = new Ext.form.TextField({
         id:'txtCrper_apellido_paterno_representante',
         name:'txtCrper_apellido_paterno_representante',
-        fieldLabel :'Apellido paterno',
+        fieldLabel :'Primer apellido',
         anchor:'98%',
 		readOnly : true
     });
@@ -335,7 +335,7 @@ function FrmCgg_dhu_beca(IN_SENTENCIA_CGG_DHU_BECA,IN_RECORD_CGG_DHU_BECA){
     var txtCrper_apellido_materno_representante = new Ext.form.TextField({
         id:'txtCrper_apellido_materno_representante',
         name:'txtCrper_apellido_materno_representante',
-        fieldLabel :'Apellido materno',
+        fieldLabel :'Segundo apellido',
         anchor:'98%',
 		readOnly : true
     });
@@ -498,13 +498,13 @@ function FrmCgg_dhu_beca(IN_SENTENCIA_CGG_DHU_BECA,IN_RECORD_CGG_DHU_BECA){
         },
         {
             dataIndex:'CRPER_APELLIDO_PATERNO',
-            header:'Apellido paterno',
+            header:'Primer apellido',
             width:150,
             sortable:true,
             editor:txtCrper_apellido_paterno_representante
         },{
             dataIndex:'CRPER_APELLIDO_MATERNO',
-            header:'Apellido materno',
+            header:'Segundo apellido',
             width:150,
             sortable:true,
             editor:txtCrper_apellido_materno_representante
@@ -1261,8 +1261,8 @@ function FrmCgg_dhu_beca(IN_SENTENCIA_CGG_DHU_BECA,IN_RECORD_CGG_DHU_BECA){
         cmPersonaFuncionario = new Ext.grid.ColumnModel([
             {dataIndex:'CRPER_CODIGO',header:'Codigo',width:150,sortable:true},
             {dataIndex:'CRPER_NOMBRES',header:'Nombres',width:150,sortable:true},
-            {dataIndex:'CRPER_APELLIDO_PATERNO',header:'Apellido paterno',width:150,sortable:true},
-            {dataIndex:'CRPER_APELLIDO_MATERNO',header:'Apellido materno',width:150,sortable:true},
+            {dataIndex:'CRPER_APELLIDO_PATERNO',header:'Primer apellido',width:150,sortable:true},
+            {dataIndex:'CRPER_APELLIDO_MATERNO',header:'Segundo apellido',width:150,sortable:true},
             {dataIndex:'CRPER_NUM_DOC_IDENTIFIC',header:'Num doc identific',width:150,sortable:true},
             {dataIndex:'CUSU_USUARIO_INTERNO',header:'Usuario',width:150,sortable:true}]);
         /**

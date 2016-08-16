@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.1000000000000005"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["E:\\CGG\\APP\\REPORTS\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NUMERO_CERTIFICADO" class="java.lang.String"/>
+	<parameter name="P_CUSU_CODIGO" class="java.lang.String"/>
+	<parameter name="P_CRPER_NUM_DOC_IDENTIFIC" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+PER.CRPER_CODIGO,
+(SELECT SII.F_CGG_RES_PERSONA_SELECT_NOMBRES(USU.CRPER_CODIGO) FROM SII.CGG_USUARIO USU WHERE USU.CUSU_CODIGO=$P{P_CUSU_CODIGO}) AS CRPER_RESPONSABLE,
+(SELECT C.CRCRG_NOMBRE FROM SII.CGG_RES_CARGO C INNER JOIN SII.CGG_USUARIO U ON (U.CRCRG_CODIGO = C.CRCRG_CODIGO) WHERE U.CUSU_CODIGO=$P{P_CUSU_CODIGO}) AS CARGO_RESPONSABLE,
+(SELECT ISL.CISLA_NOMBRE FROM SII.CGG_USUARIO USU INNER JOIN SII.CGG_ISLA ISL ON(ISL.CISLA_CODIGO=USU.CISLA_CODIGO)WHERE USU.CUSU_CODIGO=$P{P_CUSU_CODIGO}) AS CISLA_NOMBRE,
+SII.F_CGG_RES_PERSONA_SELECT_NOMBRES(PER.CRPER_CODIGO) AS CRPER_NOMBRES,
+PER.CRPER_NUM_DOC_IDENTIFIC,
+CASE
+WHEN F_BENEFICIARIO_NOTIFICADO(PER.CRPER_NUM_DOC_IDENTIFIC,'>','TRUE')::BOOLEAN =FALSE THEN 'NO'
+WHEN F_BENEFICIARIO_NOTIFICADO(PER.CRPER_NUM_DOC_IDENTIFIC,'>','TRUE')::BOOLEAN =TRUE THEN 'SI'
+END AS MENS_NOTIFICADO,
+CASE
+WHEN SII.F_PERSONA_EN_LA_PROVINCIA(PER.CRPER_CODIGO,'=','1')::BOOLEAN = FALSE THEN 'SI'
+WHEN SII.F_PERSONA_EN_LA_PROVINCIA(PER.CRPER_CODIGO,'=','1')::BOOLEAN = TRUE THEN 'NO'
+END AS CRMOV_TIPO_OPERACION
+FROM SII.CGG_RES_PERSONA PER
+WHERE PER.CRPER_ESTADO
+AND TRIM(PER.CRPER_NUM_DOC_IDENTIFIC)=$P{P_CRPER_NUM_DOC_IDENTIFIC}]]>
+	</queryString>
+	<field name="crper_codigo" class="java.lang.String"/>
+	<field name="crper_responsable" class="java.lang.String"/>
+	<field name="cargo_responsable" class="java.lang.String"/>
+	<field name="cisla_nombre" class="java.lang.String"/>
+	<field name="crper_nombres" class="java.lang.String"/>
+	<field name="crper_num_doc_identific" class="java.lang.String"/>
+	<field name="mens_notificado" class="java.lang.String"/>
+	<field name="crmov_tipo_operacion" class="java.lang.String"/>
+	<variable name="V_FILA" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[new BigDecimal($V{V_FILA}.intValue()+1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<variable name="V_FECHA_ACTUAL" class="java.util.Date">
+		<variableExpression><![CDATA[new Date()]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="20" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="554" height="20"/>
+				<subreportParameter name="SUBREPORT_DIR"/>
+				<subreportParameter name="P_SUBTITULO_2">
+					<subreportParameterExpression><![CDATA[""]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="P_SUBTITULO_1">
+					<subreportParameterExpression><![CDATA[""]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptEncabezado"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="56" splitType="Stretch">
+			<staticText>
+				<reportElement x="178" y="0" width="120" height="56"/>
+				<textElement verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[CERTIFICACIÓN]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="298" y="0" width="188" height="56"/>
+				<textElement verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{P_NUMERO_CERTIFICADO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="26" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="444" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="22" y="0" width="514" height="43" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["El suscrito(a). "+$F{crper_responsable}+", <b>"+ ( $F{cargo_responsable} ==null ? "No definido": $F{cargo_responsable}  ) +"</b> del Departamento de Control de Residencia del <b>CONSEJO DE GOBIERNO DE GALÁPAGOS</b>, en "+$F{cisla_nombre}+", certifico:"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="22" y="70" width="514" height="181" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Que <b>"+$F{crper_nombres}+",</b> con documento Nº <b>"+$F{crper_num_doc_identific}+",</b> "+$F{mens_notificado}+" se encuentra notificado, y actualmente "+$F{crmov_tipo_operacion}+" se encuentra en la Provincia de Galápagos, según la información que registra la Unidad de Control de Residencia en la Provincia de Galápagos. <br><br><br> Particular que hago de su conocimiento. <br><br><br>"+$F{cisla_nombre}+" "+new java.text.SimpleDateFormat("EEEEE, dd MMMMM yyyy").format($V{V_FECHA_ACTUAL})+"."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="22" y="288" width="514" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Atentamente,"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="22" y="388" width="514" height="56" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center" markup="html">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_responsable}+".<br> Departamento de Control de Residencia<br>Del Consejo de Gobierno de Galápagos en "+$F{cisla_nombre}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="52" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="18" width="554" height="13"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptPie"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement x="511" y="3" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="488" y="3" width="23" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Pág.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="524" y="3" width="12" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[de ]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="3" y="3" width="120" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="2" y="1" width="552" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="536" y="3" width="17" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

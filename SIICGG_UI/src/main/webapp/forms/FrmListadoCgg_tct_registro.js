@@ -122,22 +122,6 @@ function FrmListadoCgg_tct_registro(inDesktop){
             }
         }
     });
-	/**
-     * Ext.Button Boton que permite insertar un nuevo registro de la ventana winFrmListadoCgg_tct_registro.
-     */
-    var btnOfflineCSVCgg_tct_registro = new Ext.Button({
-        id:'btnOfflineCSVCgg_tct_registro',
-        text:'Subir CSV offline',
-        iconCls:'iconAddCSV',
-        listeners:{
-            click:function(){
-				var winCSV = MyDesktop.desktop.getWindow('winFrmCgg_tct_adjunto_CSVOFF_offline');
-				if (!winCSV)
-					winCSV = new FrmCgg_tct_adjunto_CSVOFF_offline(MyDesktop.desktop);				
-				winCSV.show();				
-            }
-        }
-    });
     /**
      * Ext.Button Boton que permite editar un registro de la ventana winFrmListadoCgg_tct_registro.
      */
@@ -560,7 +544,7 @@ function FrmListadoCgg_tct_registro(inDesktop){
             layout:'border',
             tbar:getPanelTitulo('Listado '+tituloListadoCgg_tct_registro,descListadoCgg_tct_registro),
             items:[grdCgg_tct_registro],
-            bbar:[btnNuevoCgg_tct_registro,btnNuevoCSVCgg_tct_registro,btnOfflineCSVCgg_tct_registro,btnEditarCgg_tct_registro,'-',btnTctPrintLst,btnReporteCgg_tct_registro,btnEspecieCgg_tct_registro,'->',btnSalirCgg_tct_registro]
+            bbar:[btnNuevoCgg_tct_registro,btnNuevoCSVCgg_tct_registro,btnEditarCgg_tct_registro,'-',btnTctPrintLst,btnReporteCgg_tct_registro,btnEspecieCgg_tct_registro,'->',btnSalirCgg_tct_registro]
         });
         /**
          * Funcion que aplica los privilegios del usuario.

@@ -9,7 +9,9 @@
 <%@page import="java.io.FileInputStream"%>
 <%@page import="java.io.BufferedReader"%>
 <%@page import="java.io.FileReader"%>
-<%@page import="java.io.FileFilter"%><html>
+<%@page import="java.io.FileFilter"%>
+<%@ page import="com.besixplus.sii.util.Env" %>
+<html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <title>Sistema inform&aacute;tico integral</title>
@@ -99,6 +101,8 @@
         <script type="text/javascript" src="lib/extjs/WsdlContainer.js"></script>        
         <script type="text/javascript" src="lib/extjs/MsgPopup.js"></script>
         <script type="text/javascript" src="lib/extjs/ux-DataViewTransition.js"></script>
+        <script type="text/javascript" src="lib/extjs/attachment.js"></script>
+        <script type="text/javascript" src="lib/extjs/AlfrescoMng.js"></script>
         <%
                     java.io.File tmpFilesDeps = new java.io.File(request.getSession().getServletContext().getRealPath("/") + "lib" + java.io.File.separatorChar + "dep");
                     java.util.ArrayList<String> tmpJSLines = new java.util.ArrayList<String>();
@@ -156,7 +160,8 @@
         <script type="text/javascript" src="forms/FrmCriterioReporte.js"></script>
         <script type="text/javascript" src="forms/FrmAcercade.js"></script>
         <script type="text/javascript" src="forms/DlgIngresoFecha.js"></script>
-        <script type="text/javascript" src="forms/bsxExtras.js"></script>
+        <%out.println(Env.loadExternalScripts("siicgg_ui/javascripts.properties"));%>
+        <!--script type="text/javascript" src="forms/bsxExtras.js"></script-->
         <script type="text/javascript" src="forms/DlgBusqueda.js"></script>
         <script type="text/javascript" src="forms/DlgBusquedaNoPaginado.js"></script>
         <script type="text/javascript" src="forms/DlgSeleccionDespacho.js"></script>
@@ -191,6 +196,10 @@
                     }
         %>
         <script type="text/javascript" src="lib/reports.js"></script>
+
+        <!-- ALFRESCO MNG-->
+        <script type="text/javascript" src="lib/extjs/attachment.js"></script>
+        <script type="text/javascript" src="lib/extjs/AlfrescoMng.js"></script>
     </head>
     <body scroll="no" id="body">
         <div id="x-desktop">
@@ -248,7 +257,7 @@
                             </table>
                         </div>
                     </td>
-                    <td colspan="2" width="80%" valign="top"><a href="http://www.cgg.gob.ec/"
+                    <td colspan="2" width="80%" valign="top"><a href="http://www.gobiernogalapagos.gob.ec"
                                                                 target="_blank" style="margin: 5px; float: right;"> <img
                                 src="resources/images/cgg.png" /> </a>
                     </td>
@@ -259,12 +268,10 @@
                 </tr>
                 <tr style="height: 50px">
                     <td>
-                        <div align="left"><span class="headline1"> Sistema integral inform&aacute;tico SIICGG</span><br></div>                                                
+                        <div align="left"><span class="headline1"> Sistema integral inform&aacute;tico SIICGG</span><br></div>
                     </td>
                     <td>
-                        <div align="center"><a href="http://www.besixplus.com"
-                                               target="_blank" style="margin: 5px; float: right;"> <img
-                                    src="resources/images/besixplus.png" /> </a></div>
+
                     </td>
                 </tr>
             </table>            

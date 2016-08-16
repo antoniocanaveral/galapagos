@@ -38,7 +38,7 @@ function FrmCgg_res_beneficiario(inRecordCgg_res_beneficiario){
     var txtCrben_apellido_paterno = new Ext.form.TextField({
         id:'txtCrben_apellido_paterno',
         name:'txtCrben_apellido_paterno',
-        fieldLabel :'Apellido paterno',
+        fieldLabel :'Primer apellido',
         anchor:'98%',
         allowBlank :false
     });
@@ -46,7 +46,7 @@ function FrmCgg_res_beneficiario(inRecordCgg_res_beneficiario){
     var txtCrben_apellido_materno = new Ext.form.TextField({
         id:'txtCrben_apellido_materno',
         name:'txtCrben_apellido_materno',
-        fieldLabel :'Apellido materno',
+        fieldLabel :'Segundo apellido',
         anchor:'98%',
         allowBlank :false
     });
@@ -366,10 +366,12 @@ function FrmCgg_res_beneficiario(inRecordCgg_res_beneficiario){
             //COMENTARIO : revisar relacion con pais
             }else{
                 txtCrben_codigo.setValue('KEYGEN');
-                txtCrben_nombres.setValue('');
-                txtCrben_apellido_materno.setValue('');
-                txtCrben_apellido_paterno.setValue('');                
-                dtCrper_fecha_nacimiento.setValue(new Date());
+                txtCrben_nombres.setValue(tmpRecordPersona[0].CRPER_NOMBRES!=null?tmpRecordPersona[0].CRPER_NOMBRES:'');
+                if(tmpRecordPersona[0].CRPER_APELLIDO_MATERNO)
+                    txtCrben_apellido_materno.setValue(tmpRecordPersona[0].CRPER_APELLIDO_MATERNO);
+                txtCrben_apellido_paterno.setValue(tmpRecordPersona[0].CRPER_APELLIDO_PATERNO!=null?tmpRecordPersona[0].CRPER_APELLIDO_PATERNO:'');
+                cbxCrben_genero.setValue(tmpRecordPersona[0].CRPER_GENERO!=null?tmpRecordPersona[0].CRPER_GENERO:0);
+                dtCrper_fecha_nacimiento.setValue(tmpRecordPersona[0].CRPER_FECHA_NACIMIENTO?truncDate(tmpRecordPersona[0].CRPER_FECHA_NACIMIENTO):new Date());
             }
         });                    
     }
