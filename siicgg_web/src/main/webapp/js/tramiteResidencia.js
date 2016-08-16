@@ -1357,8 +1357,7 @@ $(function() {
         }
     });
 
-    function consultarBeneficiario()
-    {
+    function consultarBeneficiario() {
         var documentoValido = true;
         if (dataConfiguracion.TIPO_DOCUMENTO == $('#cbxTipoDocumentoBeneficiario').val())
         {
@@ -1478,11 +1477,12 @@ $(function() {
 
     consultarDatosAuspiciante();
 
-    function insertPersona(objBeneficiario){
-        if (objBeneficiario.CGGCRPER_CODIGO == 'KEYGEN') {
-            var objBeneficiarioJSON = JSON.stringify(objBeneficiario);
+    function insertPersona(objPersona){
+        if (objPersona.CRPER_CODIGO == null || objPersona.CRPER_CODIGO == "KEYGEN") {
+            objPersona.CRPER_CODIGO=null;
+            var objPersonaJSON = JSON.stringify(objPersona);
             var param = new SOAPClientParameters();
-            param.add('inNuevoBeneficiarioJSON', objBeneficiarioJSON);
+            param.add('inNuevoBeneficiarioJSON', objPersonaJSON);
             var tmpPersona = SOAPClient.invoke(URL_WS + 'Cgg_res_persona', 'insertLite', param, false, null);
             try {
                 var result = eval('(' + tmpPersona + ')');
@@ -1494,14 +1494,16 @@ $(function() {
                     });
                     return false;
                 } else {
-                    objBeneficiario.CGGCRPER_CODIGO = result.CRPER_CODIGO;
+                    tmpRecordPersona[0].CRPER_CODIGO = result.CRPER_CODIGO;
+                    objPersona.CRPER_CODIGO = result.CRPER_CODIGO;
                 }
                 return true;
             } catch (inErr) {
                 console.log(inErr.message);
                 return false;
             }
-        }
+        }else
+            return true;
     }
 
 
@@ -1576,24 +1578,22 @@ $(function() {
                     }
                     else
                     {
-
-                        var objBeneficiario = {
-                            CRPER_CODIGO: tmpRecordAuspiciante[0].CRPER_CODIGO,
-                            CGGCRPER_CODIGO: tmpRecordBeneficiario != null ? tmpRecordBeneficiario[0].CRPER_CODIGO : 'KEYGEN',
+                        /*var objBeneficiario = {
+                            CRPER_CODIGO: null,
                             CRPER_NUM_DOC_IDENTIFIC: $('#txtNumDocBeneficiario').val(),
-                            CRDID_CODIGO: cbxTipoDocumentoBeneficiario.dom.value,
-                            CRPER_NOMBRES: $('#txtNombreBeneficiario').val(),
-                            CRPER_APELLIDO_PATERNO: $('#txtApellidoPaternoBeneficiario').val(),
-                            CRPER_APELLIDO_MATERNO: $('#txtApellidoMaternoBeneficiario').val(),
-                            CRPER_GENERO: $("input[name='rdbtnGenero']:checked").val(),
-                            CRPER_FECHA_NACIMIENTO: $('#dtFechaNacimiento').val(),
-                            CPAIS_CODIGO: cbxNacionalidad.dom.value,
+                            CRDID_CODIGO: tmpRecordPersona[0].CRDID_CODIGO,
+                            CRPER_NOMBRES: tmpRecordPersona[0].CRPER_NOMBRES,
+                            CRPER_APELLIDO_PATERNO: tmpRecordPersona[0].CRPER_APELLIDO_PATERNO,
+                            CRPER_APELLIDO_MATERNO: tmpRecordPersona[0].CRPER_APELLIDO_MATERNO,
+                            CRPER_GENERO: tmpRecordPersona[0].CRPER_GENERO,
+                            CRPER_FECHA_NACIMIENTO: tmpRecordPersona[0].CRPER_FECHA_NACIMIENTO,
+                            CPAIS_CODIGO: tmpRecordPersona[0].CPAIS_CODIGO,
                             CRDPT_CODIGO: crdptCodigo,
-                            CGG_CPAIS_CODIGO: cbxPaisResidencia.dom.value
+                            CGG_CPAIS_CODIGO: tmpRecordPersona[0].CPAIS_CODIGO
                         };
                         insertPersona(objBeneficiario);
-                        tmpRecordPersona[0].CRPER_CODIGO = objBeneficiario.CGGCRPER_CODIGO;
-
+                        tmpRecordPersona[0].CRPER_CODIGO = objBeneficiario.CRPER_CODIGO;
+*/
                         if(inTipoPersona == 'AUSPICIANTE')
                         {
                             //alert('');
@@ -1768,6 +1768,25 @@ $(function() {
                 $('#divCargando1').hide();
                 $('#divCargando1').html('Cargando..');
                 return;
+            }else{
+                //HACEMOS DE UNA VEZ EL INSERT DE LA PERSONA PARA PODER VALIDAR
+                var objPersona = {
+                    CRPER_CODIGO: tmpRecordBeneficiario != null ? tmpRecordBeneficiario[0].CRPER_CODIGO :null,
+                    CRPER_NUM_DOC_IDENTIFIC: $('#txtNumDocBeneficiario').val(),
+                    CRDID_CODIGO: cbxTipoDocumentoBeneficiario.dom.value,
+                    CRPER_NOMBRES: $('#txtNombreBeneficiario').val(),
+                    CRPER_APELLIDO_PATERNO: $('#txtApellidoPaternoBeneficiario').val(),
+                    CRPER_APELLIDO_MATERNO: $('#txtApellidoMaternoBeneficiario').val(),
+                    CRPER_GENERO: $("input[name='rdbtnGenero']:checked").val(),
+                    CRPER_FECHA_NACIMIENTO: $('#dtFechaNacimiento').val(),
+                    CPAIS_CODIGO: cbxNacionalidad.dom.value,
+                    CRDPT_CODIGO: crdptCodigo,
+                    CGG_CPAIS_CODIGO: cbxPaisResidencia.dom.value
+                };
+                if(!insertPersona(objPersona))
+                    return;
+                else
+                    tmpRecordBeneficiario[0].CRPER_CODIGO=objPersona.CRPER_CODIGO;
             }
         }
         if (inContactosJSON.length < 3) {

@@ -261,6 +261,8 @@ public class ProcessMail extends Thread{
     //      @$BENEFICIARIO@ -> Nombres Completos del Beneficiario
     //      @$BENEFICIARIO_ID@ -> Cédula del Beneficiario
     //      @$TIPO_RESIDENCIA@ -> Tipo de la Solicitud de Residencia
+    //      @$EMPRESA@ -> Nombre de la Empresa Auspiciante
+    //      @$EMPRESA_ID@ -> RUC de la Empresa Auspiciante
 
     //Obtener el contenido de las @ y reemplazarlo por la ejecución de la base de datos.
     //Seguir recorriendo el mensaje hasta el final.
@@ -343,6 +345,16 @@ public class ProcessMail extends Thread{
                 case "$BENEFICIARIO_ID":
                     recordId = tramite.getCGG_CRPER_CODIGO();
                     path.add("@crper_num_doc_identific@");
+                    break;
+                case "$EMPRESA":
+                    tableName="cgg_res_persona_juridica";
+                    recordId = tramite.getCRPJR_CODIGO();
+                    path.add("@crpjr_razon_social@");
+                    break;
+                case "$EMPRESA_ID":
+                    tableName="cgg_res_persona_juridica";
+                    recordId = tramite.getCRPJR_CODIGO();
+                    path.add("@crpjr_numero_identificacion@");
                     break;
                 case "$TIPO_RESIDENCIA":
                     tableName = "cgg_res_tramite";

@@ -1,6 +1,7 @@
 package com.bmlaurus.virtual;
 
 import com.besixplus.sii.util.Env;
+import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,5 +53,14 @@ public class VirtualCache {
 
     public static void resetCache(){
         cachedProperties = null;
+    }
+
+    public static String toJSON(){
+        String json = null;
+        if(cachedProperties!=null)
+            json = new Gson().toJson(cachedProperties);
+        else
+            json = "Cache is NULL";
+        return json;
     }
 }

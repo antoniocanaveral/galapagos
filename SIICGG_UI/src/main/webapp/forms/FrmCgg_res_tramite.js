@@ -2939,7 +2939,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
 
             if(inRecordCgg_res_tramite.get('REP_CRPER_CODIGO')==null){
                 tmpPersonaRepresentante = null;
-                txtCgg_crper_codigo.setValue('');
+                txtCgg_rep_crper_codigo.setValue('');
             }else{
                 var tmpRepresentante1 = Ext.util.Format.undef(inRecordCgg_res_tramite.get('REP_CRPER_CODIGO'));
                 var scpRepresentante = new SOAPClientParameters();
@@ -2948,15 +2948,15 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
                 var tmpCrperRepRegistro = SOAPClient.invoke(URL_WS + "Cgg_res_persona", 'select', scpRepresentante, false, null);
                 try {
                     tmpCrperRepRegistro = Ext.util.JSON.decode(tmpCrperRepRegistro);
-                    rRepresentante.set('CRPER_CODIGO', tmpCrperRegistro[0].CRPER_CODIGO);
-                    rRepresentante.set('CRPER_NOMBRES', tmpCrperRegistro[0].CRPER_NOMBRES);
-                    rRepresentante.set('CRPER_APELLIDO_PATERNO', tmpCrperRegistro[0].CRPER_APELLIDO_PATERNO);
-                    rRepresentante.set('CRPER_APELLIDO_MATERNO', tmpCrperRegistro[0].CRPER_APELLIDO_MATERNO);
+                    rRepresentante.set('CRPER_CODIGO', tmpCrperRepRegistro[0].CRPER_CODIGO);
+                    rRepresentante.set('CRPER_NOMBRES', tmpCrperRepRegistro[0].CRPER_NOMBRES);
+                    rRepresentante.set('CRPER_APELLIDO_PATERNO', tmpCrperRepRegistro[0].CRPER_APELLIDO_PATERNO);
+                    rRepresentante.set('CRPER_APELLIDO_MATERNO', tmpCrperRepRegistro[0].CRPER_APELLIDO_MATERNO);
                     tmpRepresentante = rRepresentante;
-                    txtCgg_crper_codigo.setValue(rRepresentante.get('CRPER_NOMBRES') + " " + rRepresentante.get('CRPER_APELLIDO_PATERNO')+' '+(rRepresentante.data.CRPER_APELLIDO_MATERNO?rRepresentante.data.CRPER_APELLIDO_MATERNO:''));
+                    txtCgg_rep_crper_codigo.setValue(rRepresentante.get('CRPER_NOMBRES') + " " + rRepresentante.get('CRPER_APELLIDO_PATERNO')+' '+(rRepresentante.data.CRPER_APELLIDO_MATERNO?rRepresentante.data.CRPER_APELLIDO_MATERNO:''));
                     repCrperCodigo = (rRepresentante)?rRepresentante.get('CRPER_CODIGO'):null;
                 }catch (inErr) {
-                    txtCgg_crper_codigo.setValue(NO_DATA_MESSAGE);
+                    txtCgg_rep_crper_codigo.setValue(NO_DATA_MESSAGE);
                     tmpRepresentante = null;
                 }
             }

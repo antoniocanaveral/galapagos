@@ -438,6 +438,8 @@ public class Cgg_res_persona implements Serializable{
 					cggCrperCodigo = "true";
 					objNuevoBeneficiario = new com.besixplus.sii.objects.Cgg_res_persona();
 					objNuevoBeneficiario.setCRPER_CODIGO(objTmpBeneficiario.getCRPER_CODIGO());
+					//EXISTE! devolvemos el codigo;
+					resultado = "{'CRPER_CODIGO':'" + objNuevoBeneficiario.getCRPER_CODIGO() + "'}";
 				}else{
 					objNuevoBeneficiario = new com.besixplus.sii.objects.Cgg_res_persona();
 					objNuevoBeneficiario.setCRPER_CODIGO("KEYGEN");
