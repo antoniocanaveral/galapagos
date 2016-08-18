@@ -1,5 +1,92 @@
 
+	  jQuery.noConflict();
+	  jQuery(document).ready(function() {
+		  jQuery("#chkDatosConyuge").click(function(){
+		        if (jQuery(this).is(":checked"))
+		        {
+		        	jQuery("#divConyuge").show();
+		            //setHeightForm();
+		            //alert('sii')
+		        }
+		        else{
+		        	jQuery("#divConyuge").hide();}
+		        setHeightForm();
+		    });
+		  
+	  });   
+	  var valorCalificacion1 = '';
+	  var valorCalificacion2 = '';
+	  var valorCalificacion3 = '';
+	  var valorCalificacion4 = '';
+	  var valorCalificacion5 = '';
+	  var valorCalificacion6 = '';
+	  var valorCalificacion7 = '';
+	  var valorCalificacion8 = '';
+	  var valorCalificacion9 = '';
+	  var valorCalificacion10 = '';
+	  var valorCalificacion11 = '';
+	  var valorCalificacion12 = '';
+	  var valorCalificacion13 = '';
+	  
+	  function colcarValorCal(tipo,valor){
+		  
+		  switch (tipo) {
+		  case '1':
+		    valorCalificacion1 = valor;
+		    break;
+		  case '2': 
+		    valorCalificacion2 = valor;
+		    break;
+		  case '3': 
+			valorCalificacion3 = valor;
+		    break; 
+		  case '4':
+			valorCalificacion4 = valor;
+		    break;
+		  case '5':
+			valorCalificacion5 = valor;
+			break;
+		  case '6':
+			valorCalificacion6 = valor;
+			break;
+		  case '7':
+			valorCalificacion7 = valor;
+			break;
+		  case '8':
+			valorCalificacion8 = valor;
+			break;
+		  case '9':
+			valorCalificacion9 = valor;
+			break;
+		  case '10':
+			valorCalificacion10 = valor;
+			break;
+		  case '11':
+			valorCalificacion11 = valor;
+		    break;
+		  case '12':
+			valorCalificacion12 = valor;
+			break;
+		  case '13':
+			valorCalificacion13 = valor;
+			break;
+		 }
+	}
+	  
+	  //Acepta solo numeros 
+	  function aceptarNumeros(e, field) {
+			key = e.keyCode ? e.keyCode : e.which;
+			if (key == 8 || key == 46)
+				return true;
+			
+			if (key > 47 && key < 58) {
+				return true;
+			}
+			return false;
+		}
+	  
 function loadIngresoTCT(){		
+
 	function showForm(frm){
 		$("divBgModal").style.display="block";
 		frm.style.display="block";	
@@ -44,8 +131,33 @@ function loadIngresoTCT(){
 	var mensaje;
 	dtFechaIngreso.value = Date.today().toString("dd/MM/yyyy");
     dtFechaSalida.value = Date.today().toString("dd/MM/yyyy");
+    jQuery("#divNombreHospedaje").show();
+	jQuery("#divNombreHospedajeIsla").hide();
+	jQuery("#divLugarHospedaje").hide();
+    jQuery("#labelHospedaje").html("* Nombre del sitio de hospedaje");
+    jQuery('#cbxNombreHospedaje').html('');
+	jQuery('#cbxNombreHospedaje').append("<option value='0'>Seleccione un item</option>");
+	jQuery("#txtNroVuelo").val('');
+	jQuery("#txtNumeroMiembros").val('');
+	jQuery("#txtCual").val('');
+	//jQuery("input:radio[checked=false]");
+	jQuery("input[type=radio]").attr('checked', false);
 	
 	
+	valorCalificacion1 = '';
+	valorCalificacion2 = '';
+	valorCalificacion3 = '';
+	valorCalificacion4 = '';
+	valorCalificacion5 = '';
+	valorCalificacion6 = '';
+	valorCalificacion7 = '';
+	valorCalificacion8 = '';
+	valorCalificacion9 = '';
+	valorCalificacion10 = '';
+	valorCalificacion11 = '';
+	valorCalificacion12 = '';
+	valorCalificacion13 = '';
+	  
 	btnSalirIngreso.onclick = function(){
 		btnSalirAll($("FrmIngresoPersona"));
 	}
@@ -71,81 +183,209 @@ function loadIngresoTCT(){
 		}
 	}
 	function fnVerificarDatos(){		
-		var flagActividad=false;
-        var flagHospedaje = false;
-        var colCheckActividad =$$('#tblActividad input[type="checkbox"]');
-        var colCheckHospedaje =$$('#tblHospedaje input[type="checkbox"]');
-        var colActividad = new Array();
-        var colHospedaje = new Array();
-        var x=0,y=0;		
-                        
-        colCheckActividad.each(function(inCheckbox){
-            if(inCheckbox.checked==true){
-                flagActividad = true;
-                colActividad[x] = inCheckbox.id;
-                x++;
-            }
-        });
+		jQuery('.form-line-error').removeClass("form-line-error");
+        var isComplete =  true;
+        if(jQuery("#cbxCategoria").val()==0)
+        {
+        	jQuery('#cbxCategoria').addClass("form-line-error");
+            isComplete = false;
+        }
+        if(jQuery("#cbxTipoRegistro").val()==0)
+        {
+        	jQuery('#cbxTipoRegistro').addClass("form-line-error");
+            isComplete = false;
+        }
 
-        if(flagActividad == false){
-			new bsxMessageBox({
-				title:"Actividad no seleccionada",
-				msg:'No se ha seleccionado ninguna actividad, por favor seleccione al menos una actividad para continuar.',
-				icon:"iconError"
-			});	            
-            return;
+       if(jQuery("#cbxAerolineaAux").val()==0)
+        {
+        	jQuery('#cbxAerolineaAux').addClass("form-line-error");
+            isComplete = false;
+        }
+        if(jQuery("#cbxOrigenAux").val()==0)
+        {
+        	jQuery('#cbxOrigenAux').addClass("form-line-error");
+            isComplete = false;
+        }
+        if(jQuery("#cbxDestinoAux").val()==0)
+        {
+        	jQuery('#cbxDestinoAux').addClass("form-line-error");
+            isComplete = false;
+        }
+        if(jQuery("#cbxTipoHospedaje").val()==0)
+        {
+        	jQuery('#cbxTipoHospedaje').addClass("form-line-error");
+            isComplete = false;
+        }else{
+        	if(jQuery("#cbxTipoHospedaje").val()==102){
+        		if(jQuery("#cbxNombreHospedaje").val()==0){
+        			jQuery('#cbxNombreHospedaje').addClass("form-line-error");
+                    isComplete = false;
+        		}    
+        	}else if(jQuery("#cbxTipoHospedaje").val()==104){
+        		if(jQuery("#cbxNombreHospedajeIsla").val()==0){
+        			jQuery('#cbxNombreHospedajeIsla').addClass("form-line-error");
+                    isComplete = false;
+        		}  
+        		if(jQuery("#cbxIslaHospedaje").val()==0){
+        			jQuery('#cbxIslaHospedaje').addClass("form-line-error");
+                    isComplete = false;
+        		} 
+        		
+        	}else if(jQuery("#cbxTipoHospedaje").val()==103){
+        		if(jQuery("#divLugarHospedaje").val().trim()==''){
+        			jQuery('#divLugarHospedaje').addClass("form-line-error");
+                    isComplete = false;
+        		}  
+        		if(jQuery("#cbxIslaHospedaje").val()==0){
+        			jQuery('#cbxIslaHospedaje').addClass("form-line-error");
+                    isComplete = false;
+        		} 
+        	}
+        	
+        	
+        }
+        if(jQuery("#cbxInformacionViaje1Aux").val()==0)
+        {
+        	jQuery('#cbxInformacionViaje1Aux').addClass("form-line-error");
+            isComplete = false;
+        }
+        if(jQuery("#cbxInformacionViaje2Aux").val()==0)
+        {
+        	jQuery('#cbxInformacionViaje2Aux').addClass("form-line-error");
+            isComplete = false;
+        }
+        if(jQuery("#cbxInformacionViaje3Aux").val()==0)
+        {
+        	jQuery('#cbxInformacionViaje3Aux').addClass("form-line-error");
+            isComplete = false;
+        }
+        if(jQuery("#cbxInformacionViaje4Aux").val()==0)
+        {
+        	jQuery('#cbxInformacionViaje4Aux').addClass("form-line-error");
+            isComplete = false;
         }
         
-        colCheckHospedaje.each(function(inCheckbox){
-            if(inCheckbox.checked==true){
-                flagHospedaje = true;
-                colHospedaje[y] = inCheckbox.id;
-                y++;
-            }
-        });		
+        if(jQuery("#txtNroVuelo").val().trim()=='')
+        {
+        	jQuery('#txtNroVuelo').addClass("form-line-error");
+            isComplete = false;
+        }
+        
+        if(jQuery("#txtNumeroMiembros").val().trim()=='')
+        {
+        	jQuery('#txtNumeroMiembros').addClass("form-line-error");
+            isComplete = false;
+        }
+        
+        if(jQuery("#txtCual").val().trim()=='')
+        {
+        	jQuery('#txtCual').addClass("form-line-error");
+            isComplete = false;
+        }
+        
+        if(valorCalificacion1==''){
+        	 jQuery('#vidaMarina').addClass("form-line-error");
+        	 isComplete = false;
+        }
+        
+        if(valorCalificacion2==''){
+       	 jQuery('#solyplaya').addClass("form-line-error");
+       	 isComplete = false;
+       }
+        
+        if(valorCalificacion3==''){
+       	 jQuery('#vidaterrestre').addClass("form-line-error");
+       	 isComplete = false;
+       }
+        
+        if(valorCalificacion4==''){
+       	 jQuery('#paisaje').addClass("form-line-error");
+       	 isComplete = false;
+       }
+        
+        if(valorCalificacion5==''){
+       	 jQuery('#crucero').addClass("form-line-error");
+       	 isComplete = false;
+       }
+        
+        if(valorCalificacion6==''){
+       	 jQuery('#buceo').addClass("form-line-error");
+       	 isComplete = false;
+       }
+        
+        if(valorCalificacion7==''){
+       	 jQuery('#snorkel').addClass("form-line-error");
+       	 isComplete = false;
+       }
+        
+        if(valorCalificacion8==''){
+       	 jQuery('#kayak').addClass("form-line-error");
+       	 isComplete = false;
+       }
+        
+        if(valorCalificacion9==''){
+       	 jQuery('#surf').addClass("form-line-error");
+       	 isComplete = false;
+       }
+        
+        if(valorCalificacion10==''){
+       	 jQuery('#senderisimo').addClass("form-line-error");
+       	 isComplete = false;
+       }
+        
+        if(valorCalificacion11==''){
+          	 jQuery('#observacion').addClass("form-line-error");
+          	 isComplete = false;
+          }
+        
+        if(valorCalificacion12==''){
+          	 jQuery('#fotografia').addClass("form-line-error");
+          	 isComplete = false;
+          }
+        
+        if(valorCalificacion13==''){
+          	 jQuery('#persa').addClass("form-line-error");
+          	 isComplete = false;
+          }
 		
-        if(flagHospedaje == false){
-			new bsxMessageBox({
-				title:"Hospedaje no seleccionado",
-				msg:'No se ha seleccionado ningun hospedaje, por favor seleccione al menos un hospedaje para continuar.',
-				icon:"iconError"
-			});            
-            return;
+        if(isComplete ==false){
+        	new bsxMessageBox({
+        		title:'Alerta',
+                msg: 'Por favor verifique que todos los datos del formulario hayan sido ingresados correctamente.',
+                icon: "iconInfo"
+			});	
+        	return false;
+        	
+        }else{
+        	if((jQuery("#cbxInformacionViaje1Aux").val()==16) || (jQuery("#cbxInformacionViaje1Aux").val()==15)){
+	        	 if((jQuery("#txtNumeroMiembros").val().trim()=='0') || (jQuery("#txtNumeroMiembros").val().trim()=='1')){
+	             	jQuery('#txtNumeroMiembros').addClass("form-line-error");
+	            			new bsxMessageBox({
+	            				title:"Error de Ingreso",
+	            				msg:'El n&uacute;mero de miembros debe ser mayor a 1',
+	            				icon:"iconError"
+	            			});			
+	            	 return false;
+	             }
+        	}
+        	
+        	var arrFecha =dtFechaIngreso.value.split('/');
+    		var dateIngreso= new Date (arrFecha[2],arrFecha[1],arrFecha[0]);
+    		var arrFecha =dtFechaSalida.value.split('/');
+    		var dateSalida= new Date (arrFecha[2],arrFecha[1],arrFecha[0]);
+        	if(dateSalida<dateIngreso){
+    			new bsxMessageBox({
+    				title:"Error de Ingreso",
+    				msg:'La fecha de salida debe ser mayor o igual a la fecha de ingreso',
+    				icon:"iconError"
+    			});		
+    			return false;
+        	}
+        	
         }
-		if(dtFechaIngreso.value.blank() ==true || dtFechaIngreso.value.empty() == true || isDate(dtFechaIngreso.value)==false){
-            new bsxMessageBox({
-				title:"Error al Agregar",
-				msg:'Ingrese la fecha de ingreso(Ejem. 01/01/1989), por favor.',
-				icon:"iconError"
-			});			
-            dtFechaIngreso.focus();
-            return;
-        }
-		if(dtFechaSalida.value.blank() ==true || dtFechaSalida.value.empty() == true || isDate(dtFechaSalida.value)==false){
-            new bsxMessageBox({
-				title:"Error al Agregar",
-				msg:'Ingrese la fecha de ingreso(Ejem. 01/01/1989), por favor.',
-				icon:"iconError"
-			});			
-            dtFechaSalida.focus();
-            return;
-        }
-		var arrFecha =dtFechaIngreso.value.split('/');
-		var dateIngreso= new Date (arrFecha[2],arrFecha[1],arrFecha[0]);
-		var arrFecha =dtFechaSalida.value.split('/');
-		var dateSalida= new Date (arrFecha[2],arrFecha[1],arrFecha[0]);
-		
-		if(dateSalida<dateIngreso){
-			new bsxMessageBox({
-				title:"Error de Ingreso",
-				msg:'La fecha de salida debe ser mayor o igual a la fecha de ingreso',
-				icon:"iconError"
-			});			
-			return;
-			
-		}
-		return true;
+		return isComplete;
 	}
+	
 	btnAgregar.onclick = function(){
 		frmPersona.reset();
 		txtNumeroDocumento.readOnly = false;
@@ -281,36 +521,7 @@ function loadIngresoTCT(){
 				btnGuardarTTC.disabled=false;
 				return
 			}
-			/*
-			* Formar Json de la datos chequeados de la tabla Hospedaje
-			*/
-			var colCheckHospedaje =$$('#tblHospedaje input[type="checkbox"]');
-			var jsonHostepaje = '[';
-			var i=0;
-			colCheckHospedaje.each(function(inCheckbox){
-				if(inCheckbox.checked == true){				
-					jsonHostepaje += ((i==0)?'':',')+'{"CTTHJ_CODIGO":"'+inCheckbox.id+'"}';
-					i++;
-				}			
-			});
-			jsonHostepaje += ']';		
-			
-			/*
-			* Formar Json de la datos chequeados de la tabla Actividades
-			*/
-			var colCheckActividad =$$('#tblActividad input[type="checkbox"]');
-			var jsonActividad = '[';
-			var i=0;
-			colCheckActividad.each(function(inCheckbox){
-				if(inCheckbox.checked == true){				
-					jsonActividad += ((i==0)?'':',')+'{"CTACT_CODIGO":"'+inCheckbox.id+'"}';
-					i++;
-				}			
-			});
-			jsonActividad += ']';
-			/*
-			* Formar Json de la tabla tblPersona
-			*/		
+				
 			var jsonPersona = '[';
 			var i=0;
 			var textos='';
@@ -355,16 +566,7 @@ function loadIngresoTCT(){
 					for (var i=totalFilas-1;i>=1;i--) {					
 						tbodyPersona.removeChild(tblPersona.rows[i]);
 					}
-					var tbodyHospedaje = tblHospedaje.tBodies[0];
-					var totalFilas = tblHospedaje.rows.length;
-					for (var i=totalFilas-1;i>=0;i--) {					
-						tbodyHospedaje.removeChild(tblHospedaje.rows[i]);
-					}
-					var tbodyActividad = tblActividad.tBodies[0];
-					var totalFilas = tblActividad.rows.length;
-					for (var i=totalFilas-1;i>=0;i--) {					
-						tbodyActividad.removeChild(tblActividad.rows[i]);
-					}
+					
 					loadIngresoTCT();
 				}else{
 					new bsxMessageBox({
@@ -388,6 +590,12 @@ function loadIngresoTCT(){
 			var fechaIngreso = arrFecha[2]+'-'+arrFecha[1]+'-'+arrFecha[0]+'T00:00:00';			
 			arrFecha = dtFechaSalida.value.split('/');
 			var fechaSalida = arrFecha[2]+'-'+arrFecha[1]+'-'+arrFecha[0]+'T00:00:00';	
+			var jsonAtractivos = '';
+			
+			jsonAtractivos = '[{"VALOR1":"'+valorCalificacion1+'", "VALOR2":"'+valorCalificacion2+'", "VALOR3":"'+valorCalificacion3 +'", "VALOR4":"'+valorCalificacion4 +
+			'", "VALOR5":"'+ valorCalificacion5+'", "VALOR6":"'+valorCalificacion6 +'", "VALOR7":"'+valorCalificacion7 +'", "VALOR8":"'+valorCalificacion8 +'", "VALOR9":"'+valorCalificacion9 +
+			'", "VALOR10":"'+ valorCalificacion10+'", "VALOR11":"'+ valorCalificacion11+'", "VALOR12":"'+ valorCalificacion12+'", "VALOR13":"'+ valorCalificacion13+'"}]';
+			
 			
 			param.add('inCarpt_codigo', cbxOrigenAux.dom.value);
 			param.add('inCgg_carpt_codigo', cbxDestinoAux.dom.value);
@@ -397,51 +605,39 @@ function loadIngresoTCT(){
 			param.add('inCtreg_fecha_ingreso',fechaIngreso);
 			param.add('inCtreg_codigo_barras', 0);
 			param.add('inCtreg_fecha_salida', fechaSalida);
-			param.add('inHospedaje_JSON', jsonHostepaje);
-			param.add('inActividad_JSON', jsonActividad);
+			param.add('inCtreg_categoria', cbxCategoria.dom.value );
+			param.add('inCtreg_tipo_registro', cbxTipoRegistro.dom.value);
+			param.add('inCtreg_vuelo', jQuery("#txtNroVuelo").val());
+			param.add('inCtreg_tipo_hospedaje', cbxTipoHospedaje.dom.value);
+			
+        	if(jQuery("#cbxTipoHospedaje").val()==102){
+        		param.add('inCtreg_nombre_crucero', cbxNombreHospedaje.dom.value);
+        		param.add('inCtreg_nombre_hotel', null);
+        		param.add('inCtreg_isla_hospedaje', null);
+        	}else if(jQuery("#cbxTipoHospedaje").val()==104){
+        		param.add('inCtreg_nombre_hotel', cbxNombreHospedajeIsla.dom.value);
+        		param.add('inCtreg_isla_hospedaje', cbxIslaHospedaje.dom.value);
+        		param.add('inCtreg_nombre_crucero', null);
+        	}else if(jQuery("#cbxTipoHospedaje").val()==103){
+        		param.add('inCtreg_isla_hospedaje', cbxIslaHospedaje.dom.value);
+        		param.add('inCtreg_nombre_crucero', null);
+        		param.add('inCtreg_nombre_hotel', null);
+        	}
+	        	
+			param.add('inCtreg_lugar_hospedaje', jQuery("#divLugarHospedaje").val());
+			param.add('inCtreg_viaje_acompanante', cbxInformacionViaje1Aux.dom.value);
+			param.add('inCtreg_viaje_motivo', cbxInformacionViaje2Aux.dom.value);
+			param.add('inCtreg_viaje_actividades', cbxInformacionViaje3Aux.dom.value);
+			param.add('inCtreg_viaje_miembros', jQuery("#txtNumeroMiembros").val());
+			param.add('inCtreg_viaje_tour', cbxInformacionViaje4Aux.dom.value);
+			param.add('inCtreg_viaje_cual', jQuery("#txtCual").val());
+			param.add('inAtractivos_JSON', jsonAtractivos);  	
 			param.add('inPersona_JSON', jsonPersona);  			
 			SOAPClient.invoke(URL_WS+"PublicWS/Cgg_tct_registro", "insert", param, true, CallBackCgg_tct_registro);
 		}else btnGuardarTTC.disabled=false;
 	}
 	
-	function CallBackCgg_tct_actividad(r){			
-		var a = eval('('+r+')');
-		var tbodyActividad = tblActividad.tBodies[0];
-		for(i=0;i<a.length;i++){
-			var fila =tbodyActividad.insertRow(-1);
-			var celda= fila.insertCell(-1);
-			celda.style.height = 'auto';
-			celda.innerHTML = '<input type="checkbox" id="'+a[i].CTACT_CODIGO+'"/>';
-
-			celda = fila.insertCell(-1);
-			celda.style.height = 'auto';
-			celda.innerHTML = a[i].CTACT_NOMBRE;			
-		}
-	}
 	
-	var param = new SOAPClientParameters();
-	param.add('format','JSON');
-	SOAPClient.invoke(URL_WS+"PublicWS/Cgg_tct_actividad","selectAll",param, true, CallBackCgg_tct_actividad);
-	
-	function CallBackCgg_tct_hospedaje(r){
-		var a = eval('('+r+')');
-		var tbodyHospedaje = tblHospedaje.tBodies[0];
-		for(i=0;i<a.length;i++){
-			var fila =tbodyHospedaje.insertRow(-1);
-			
-			var celda= fila.insertCell(-1);
-			celda.style.height = 'auto';
-			celda.innerHTML = '<input type="checkbox" id="'+a[i].CTTHJ_CODIGO+'"/>';
-			celda = fila.insertCell(-1);
-			celda.style.height = 'auto';
-			celda.innerHTML = a[i].CTTHJ_NOMBRE;			
-		}
-	}	
-	var param = new SOAPClientParameters();
-	param.add('format','JSON');
-	SOAPClient.invoke(URL_WS+"PublicWS/Cgg_tct_tipo_hospedaje","selectAll",param, true, CallBackCgg_tct_hospedaje);
-
-
 	/*
 	 *Creación de un combobox para Categoría
 	 */
@@ -457,7 +653,13 @@ function loadIngresoTCT(){
 				{name:"format",value:"JSON"}
 			]
 		},
-		width:100
+		width: 210,
+		events:{
+			load:function(v){
+				jQuery('#cbxCategoria').prepend("<option value='0'>Seleccione un item</option>");
+				jQuery("#cbxCategoria").val(0);
+			}
+		}
 	});
 	cbxCategoria.reload();
 
@@ -476,7 +678,13 @@ function loadIngresoTCT(){
 				{name:"format",value:"JSON"}
 			]
 		},
-		width:100
+		width: 210,
+		events:{
+			load:function(v){
+				jQuery('#cbxTipoRegistro').prepend("<option value='0'>Seleccione un item</option>");
+				jQuery("#cbxTipoRegistro").val(0);
+			}
+		}
 	});
 	cbxTipoRegistro.reload();
 	
@@ -495,7 +703,13 @@ function loadIngresoTCT(){
 				{name:"format",value:"JSON"}
 			]
 		},		
-		width:100
+		width: 210,
+		events:{
+			load:function(v){
+				jQuery('#cbxAerolineaAux').prepend("<option value='0'>Seleccione un item</option>");
+				jQuery("#cbxAerolineaAux").val(0);
+			}
+		}
 	});	
 	cbxAerolineaAux.reload();
 	/*
@@ -514,7 +728,13 @@ function loadIngresoTCT(){
 				{name:"inCarpt_tipo_aereopuerto",value:0}
 			]
 		},
-		width:140	
+		width: 210,
+		events:{
+			load:function(v){
+				jQuery('#cbxOrigenAux').prepend("<option value='0'>Seleccione un item</option>");
+				jQuery("#cbxOrigenAux").val(0);
+			}
+		}
 	});	
 	cbxOrigenAux.reload();
 	/*
@@ -533,9 +753,11 @@ function loadIngresoTCT(){
 				{name:"inCarpt_tipo_aereopuerto",value:1}
 			]
 		},
-		width:140,
+		width: 210,
 		events:{
-			load:function(v){				
+			load:function(v){
+				jQuery('#cbxDestinoAux').prepend("<option value='0'>Seleccione un item</option>");
+				jQuery("#cbxDestinoAux").val(0);
 			}
 		}
 	});	
@@ -555,10 +777,13 @@ function loadIngresoTCT(){
 				{name:"format",value:"JSON"}
 			]
 		},
-		events:{			
-            load:function(v){				
-            }
-        }		
+		width: 210,
+		events:{
+			load:function(v){
+				jQuery('#cbxTipoDocumento').prepend("<option value='0'>Seleccione un item</option>");
+				jQuery("#cbxTipoDocumento").val(0);
+			}
+		}	
 	});	
 	cbxTipoDocumento.reload();
 	
@@ -583,10 +808,13 @@ function loadIngresoTCT(){
 				{name:"format",value:"JSON"}
 			]
 		},
-		events:{			
-            load:function(v){				
-            }
-        }		
+		width: 210,
+		events:{
+			load:function(v){
+				jQuery('#cbxPaisResidencia').prepend("<option value='0'>Seleccione un item</option>");
+				jQuery("#cbxPaisResidencia").val(0);
+			}
+		}	
 	});	
 	cbxPaisResidencia.reload();
 	/*
@@ -604,10 +832,13 @@ function loadIngresoTCT(){
 				{name:"format",value:"JSON"}
 			]
 		},
-		events:{			
-            load:function(v){				
-            }
-        }		
+		width: 210,
+		events:{
+			load:function(v){
+				jQuery('#cbxPaisResidencia').prepend("<option value='0'>Seleccione un item</option>");
+				jQuery("#cbxPaisResidencia").val(0);
+			}
+		}	
 	});	
 	cbxNacionalidad.reload();
 	
@@ -627,8 +858,11 @@ function loadIngresoTCT(){
 				{name:"inCgcnf_codigo",value:"CONF35"}
 			]
 		},
+		width: 210,
 		events:{
-			load:function(v){				
+			load:function(v){
+				jQuery('#cbxConfiguracion').prepend("<option value='0'>Seleccione un item</option>");
+				jQuery("#cbxConfiguracion").val(0);
 			}
 		}
 	});	
@@ -650,11 +884,11 @@ function loadIngresoTCT(){
 				{name:"format",value:"JSON"}
 			]
 		},
+		width: 210,
 		events:{
 			load:function(v){
-				$('#cbxIslaHospedaje').prepend("<option value=></option>");
-				$("#cbxIslaHospedaje").val(0);
-
+				jQuery('#cbxIslaHospedaje').prepend("<option value='0'>Seleccione un item</option>");
+				jQuery("#cbxIslaHospedaje").val(0);
 			}
 		}
 	});
@@ -667,20 +901,21 @@ function loadIngresoTCT(){
 	var cbxTipoHospedaje = new bsxComboBox({
 		id:"cbxTipoHospedaje",
 		renderTo:"divTipoHospedaje",
-		displayField:"CTTHJ_NOMBRE",
-		valueField:"CTTHJ_CODIGO",
+		displayField:"CDCATA_DESCRIPCION",
+		valueField:"CDCATA_CODIGO",
 		webService:{
-			url:URL_WS+"Cgg_tct_tipo_hospedaje",
-			method:"selectAll",
-			params:[
-				{name:"format",value:"JSON"}
+			url:URL_WS+"PublicWS/Cgg_catalogo",
+			method:"selectByType",
+			params:[							
+				{name:"format",value:"JSON"},
+				{name:"in_identificador",value:"9"}
 			]
 		},
+		width: 210,
 		events:{
 			load:function(v){
-				$('#cbxTipoHospedaje').prepend("<option value=></option>");
-				$("#cbxTipoHospedaje").val(0);
-
+				jQuery('#cbxTipoHospedaje').prepend("<option value='0'>Seleccione un item</option>");
+				jQuery("#cbxTipoHospedaje").val(0);
 			}
 		}
 	});
@@ -693,26 +928,155 @@ function loadIngresoTCT(){
 	var cbxNombreHospedaje = new bsxComboBox({
 		id:"cbxNombreHospedaje",
 		renderTo:"divNombreHospedaje",
-		displayField:"CISLA_NOMBRE",
-		valueField:"CISLA_CODIGO",
+		displayField:"CDCATA_DESCRIPCION",
+		valueField:"CDCATA_CODIGO",
 		webService:{
-			url:URL_WS+"Cgg_isla",
-			method:"selectAllAtencionCliente",
-			params:[
-				{name:"format",value:"JSON"}
+			url:URL_WS+"PublicWS/Cgg_catalogo",
+			method:"selectByType",
+			params:[							
+				{name:"format",value:"JSON"},
+				{name:"in_identificador",value:"8"}
 			]
 		},
+		width: 210,
 		events:{
 			load:function(v){
-				$('#cbxNombreHospedaje').prepend("<option value=></option>");
-				$("#cbxNombreHospedaje").val(0);
-
+				jQuery('#cbxNombreHospedaje').prepend("<option value='0'>Seleccione un item</option>");
+				jQuery("#cbxNombreHospedaje").val(0);
 			}
 		}
 	});
-	cbxNombreHospedaje.reload();
+	
 
-
+	
+	var cbxNombreHospedajeIsla = new bsxComboBox({
+		id:"cbxNombreHospedajeIsla",
+		renderTo:"divNombreHospedajeIsla",
+		displayField:"CDISHO_NOMBRE",
+		valueField:"CDISHO_CODIGO",
+		webService:{
+			url:URL_WS+"PublicWS/Cgg_isla_hotel",
+			method:"selectByIsland",
+			params:[							
+				{name:"format",value:"JSON"},
+				{name:"in_isla_codigo",value:""}
+			]
+		},
+		width: 210,
+		events:{
+			load:function(v){
+				jQuery('#cbxNombreHospedajeIsla').prepend("<option value='0'>Seleccione un item</option>");
+				jQuery("#cbxNombreHospedajeIsla").val(0);
+			}
+		}
+	});
+	
+	/*
+	*Creacion de un combobox para la informacion del viaje - usted esta viajando con
+	*/
+	var cbxInformacionViaje1Aux = new bsxComboBox({
+		id:"cbxInformacionViaje1Aux",
+		renderTo:"tdInformacionViaje1",		
+		displayField:"CDCATA_DESCRIPCION",
+		valueField:"CDCATA_CODIGO",
+		webService:{
+			url:URL_WS+"PublicWS/Cgg_catalogo",
+			method:"selectByType",
+			params:[							
+				{name:"format",value:"JSON"},
+				{name:"in_identificador",value:"4"}
+			]
+		},
+		width: 210,
+		events:{
+			load:function(v){
+				jQuery('#cbxInformacionViaje1Aux').prepend("<option value='0'>Seleccione un item</option>");
+				jQuery("#cbxInformacionViaje1Aux").val(0);
+			}
+		}
+	});	
+	cbxInformacionViaje1Aux.reload();
+	
+	/*
+	*Creacion de un combobox para la informacion del viaje - usted esta viajando con
+	*/
+	var cbxInformacionViaje2Aux = new bsxComboBox({
+		id:"cbxInformacionViaje2Aux",
+		renderTo:"tdInformacionViaje2",		
+		displayField:"CDCATA_DESCRIPCION",
+		valueField:"CDCATA_CODIGO",
+		webService:{
+			url:URL_WS+"PublicWS/Cgg_catalogo",
+			method:"selectByType",
+			params:[							
+				{name:"format",value:"JSON"},
+				{name:"in_identificador",value:"5"}
+			]
+		},
+		width: 210,
+		events:{
+			load:function(v){
+				jQuery('#cbxInformacionViaje2Aux').prepend("<option value='0'>Seleccione un item</option>");
+				jQuery("#cbxInformacionViaje2Aux").val(0);
+			}
+		}
+	});	
+	cbxInformacionViaje2Aux.reload();
+	
+	/*
+	*Creacion de un combobox para la informacion del viaje - usted esta viajando con
+	*/
+	var cbxInformacionViaje3Aux = new bsxComboBox({
+		id:"cbxInformacionViaje3Aux",
+		renderTo:"tdInformacionViaje3",		
+		displayField:"CDCATA_DESCRIPCION",
+		valueField:"CDCATA_CODIGO",
+		webService:{
+			url:URL_WS+"PublicWS/Cgg_catalogo",
+			method:"selectByType",
+			params:[							
+				{name:"format",value:"JSON"},
+				{name:"in_identificador",value:"6"}
+			]
+		},
+		width: 210,
+		events:{
+			load:function(v){
+				jQuery('#cbxInformacionViaje3Aux').prepend("<option value='0'>Seleccione un item</option>");
+				jQuery("#cbxInformacionViaje3Aux").val(0);
+			}
+		}
+		
+	});	
+	cbxInformacionViaje3Aux.reload();
+	
+	
+	
+	/*
+	*Creacion de un combobox para la informacion del viaje - usted esta viajando con
+	*/
+	var cbxInformacionViaje4Aux = new bsxComboBox({
+		id:"cbxInformacionViaje4Aux",
+		renderTo:"tdInformacionViaje4",		
+		displayField:"CDCATA_DESCRIPCION",
+		valueField:"CDCATA_CODIGO",
+		webService:{
+			url:URL_WS+"PublicWS/Cgg_catalogo",
+			method:"selectByType",
+			params:[							
+				{name:"format",value:"JSON"},
+				{name:"in_identificador",value:"7"}
+			]
+		},
+		width: 210,
+		events:{
+			load:function(v){
+				jQuery('#cbxInformacionViaje4Aux').prepend("<option value='0'>Seleccione un item</option>");
+				jQuery("#cbxInformacionViaje4Aux").val(0);
+			}
+		}
+	});	
+	cbxInformacionViaje4Aux.reload();
 
 	function fnHabilitarControles(estado){
 		txtNombrePersona.readOnly = estado;
@@ -1000,5 +1364,63 @@ function loadIngresoTCT(){
             SOAPClient.invoke(URL_WS+'PublicWS/Cgg_regla_validacion' ,'ejecutarReglaTipoSolicitud',param, true, CallBackCgg_regla_validacion);
     }
 	setHeightForm();
+	jQuery("#cbxInformacionViaje1Aux").change(function() {
+		  var tipo = jQuery(this).val();
+		  if(tipo == 13){
+			  jQuery("#txtNumeroMiembros").val(1);
+			  jQuery("#txtNumeroMiembros").attr('disabled', true);
+		  } else if(tipo == 14){
+			  jQuery("#txtNumeroMiembros").val(2);
+			  jQuery("#txtNumeroMiembros").attr('disabled', true);
+		  } else if((tipo == 15)||(tipo == 16)||(tipo == 0)){
+			  jQuery("#txtNumeroMiembros").val(0);
+			  jQuery("#txtNumeroMiembros").attr('disabled', false);
+		  } 
+		 
+	});
+	
+	
+	
+	jQuery("#cbxTipoHospedaje").change(function() {
+		  var tipo = jQuery(this).val();
+		  if(tipo == 102){//CRUCERO
+			  jQuery("#cbxIslaHospedaje").val(0);
+			  jQuery("#cbxIslaHospedaje").attr('disabled', true);
+			  jQuery("#labelHospedaje").html("* Nombre del sitio de hospedaje");
+			  jQuery("#divNombreHospedaje").show();
+			  jQuery("#divNombreHospedajeIsla").hide();
+			  jQuery("#divLugarHospedaje").hide();
+			  jQuery("#divLugarHospedaje").val('');
+			  cbxNombreHospedaje.reload();
+		  } else if(tipo == 104){//HOTEL
+			  jQuery("#cbxIslaHospedaje").attr('disabled', false); 
+			  jQuery("#cbxIslaHospedaje").val(0);
+			  jQuery("#labelHospedaje").html("* Nombre del sitio de hospedaje");
+			  jQuery("#divNombreHospedaje").hide();
+			  jQuery("#divNombreHospedajeIsla").show();
+			  jQuery("#divLugarHospedaje").hide();
+			  jQuery('#cbxNombreHospedajeIsla').html('');
+			  jQuery('#cbxNombreHospedajeIsla').append("<option value='0'>Seleccione un item</option>");
+			  jQuery("#divLugarHospedaje").val('');
+		  }else{//DOMICILIO AMIGO/FAMILIAR
+			  jQuery("#cbxIslaHospedaje").attr('disabled', false); 
+			  jQuery("#cbxIslaHospedaje").val(0);
+			  jQuery("#labelHospedaje").html("* Lugar de hospedaje");
+			  jQuery("#divNombreHospedaje").hide();
+			  jQuery("#divNombreHospedajeIsla").hide();
+			  jQuery("#divLugarHospedaje").show();
+			  jQuery("#divLugarHospedaje").val('');
+		  }
+		 
+	});
+	
+	
+	jQuery("#cbxIslaHospedaje").change(function() {
+		var tipo = jQuery(this).val();
+		cbxNombreHospedajeIsla.setParam('in_isla_codigo',tipo);
+		cbxNombreHospedajeIsla.reload();
+		
+	});
+	
 }
 	
