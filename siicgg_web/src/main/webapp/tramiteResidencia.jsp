@@ -436,7 +436,7 @@
                             </div>
                         </div>
                         <div class="form-line">
-                            <label class="form-label-left" id="lblFechaMatrimonio" for="dtFechaMatrimonio"> Fecha matrimonio/uni&oacute;n de echo </label>
+                            <label class="form-label-left" id="lblFechaMatrimonio" for="dtFechaMatrimonio"> Fecha matrimonio/uni&oacute;n de hecho </label>
                             <div class="form-input">
                                 <input type="text" class="form-textbox" id="dtFechaMatrimonio" name="dtFechaMatrimonio" size="42"/>
                             </div>
