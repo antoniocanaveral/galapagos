@@ -26,6 +26,7 @@ public class LocalTests {
 
     @Test
     public void CreatePath(){
+        System.setProperty("sii.home","/Users/acanaveral/Desarrollo/Advance/fuentes/galapagos_ws/galapagos/JbossEAP/SII_HOME");
         System.err.println(validateReport("generated", "rptDinardapSRI"));
     }
 

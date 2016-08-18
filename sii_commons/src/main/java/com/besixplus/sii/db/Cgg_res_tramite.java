@@ -1307,7 +1307,7 @@ public class Cgg_res_tramite implements Serializable{
 	){
 		String [] outResult = null;
 		try{
-			CallableStatement stmInsert = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_TRAMITE_INSERT_1(?,?,?,?,?,?,?,?,?,?,?,?,?, ?, ?, ?, ?, ?::smallint,?::smallint, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?) }");
+			CallableStatement stmInsert = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_TRAMITE_INSERT_1(?,?,?,?,?,?,?,?,?,?,?,?,?, ?, ?, ?, ?, ?::smallint,?::smallint, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?) }");
 			stmInsert.registerOutParameter(1, java.sql.Types.VARCHAR);
 			stmInsert.setString(2, this.getCgg_res_tramite().getCRTRA_CODIGO());
 			stmInsert.setString(3, this.getCgg_res_tramite().getCRPER_CODIGO());
@@ -1340,6 +1340,7 @@ public class Cgg_res_tramite implements Serializable{
 			stmInsert.setString(30, this.getCgg_res_tramite().getREP_CRPER_CODIGO());
 			stmInsert.setString(31, this.getCgg_res_tramite().getCHANGE_CRTST_CODIGO());
 			stmInsert.setString(32, this.getCgg_res_tramite().getCRTT_CODIGO());
+			stmInsert.setTimestamp(33, this.getCgg_res_tramite().getCRTRA_FECHA_INGRESO()==null?null:new java.sql.Timestamp(this.getCgg_res_tramite().getCRTRA_FECHA_INGRESO().getTime()));
 			stmInsert.execute();
 			String aux = stmInsert.getString(1);						
 			outResult = aux.split(",");						

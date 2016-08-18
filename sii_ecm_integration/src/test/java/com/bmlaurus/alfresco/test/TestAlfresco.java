@@ -109,7 +109,7 @@ public class TestAlfresco {
 
     @Test
     public void DocumentsAndAspects(){
-        System.setProperty("sii.home","/Users/acanaveral/Desarrollo/Advance/fuentes/galapagos_ws/galapagos/SII_HOME");
+        System.setProperty("sii.home","/Users/acanaveral/Desarrollo/Advance/fuentes/galapagos_ws/galapagos/JbossEAP/SII_HOME");
         BaseAPI cmis = new BaseAPI();
 
         File file = new File("/Users/antonio/Downloads/cedula.pdf");

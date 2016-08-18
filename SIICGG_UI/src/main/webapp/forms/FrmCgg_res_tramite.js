@@ -60,6 +60,8 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
     var repCrperCodigo = null;
     var cggcrperCodigo = null;
     var valFechaSalida = null;
+    var valFechaIngreso = null;
+    var valCrtraCodigo = '';
     var crperNumDocIdentific=null;
     var cggCrperFechaNacimiento = null;
     var crdptCodigo = null;
@@ -2894,7 +2896,8 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
         var tmpCislaRegistro =null;
         flagSoloGuardar = false;
         if (inRecordCgg_res_tramite){
-
+            valCrtraCodigo = inRecordCgg_res_tramite.get('CRTRA_CODIGO');
+            valFechaIngreso = inRecordCgg_res_tramite.get('CRTRA_FECHA_INGRESO');
             var scpTipoSolicitud=new SOAPClientParameters({
                 inCrtst_codigo:inRecordCgg_res_tramite.get('CRTST_CODIGO'),
                 format:TypeFormat.JSON

@@ -507,6 +507,7 @@ $(function() {
     var crdptCodigo = 'CRDPT_AT001';
     var valFechaIngreso = null;
     var valFechaSalida = null;
+    var valCrtraCodigo = '';
 
     /******************FIN DE DEFINICION DE VARIABLES PARA REGLA DE VALIDACION DE INFORMAICON*******************/
 
