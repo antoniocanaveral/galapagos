@@ -469,6 +469,26 @@
         <servlet-class>com.besixplus.sii.ws.Cgg_res_aerolinea</servlet-class>
     </servlet>
     <servlet>
+        <display-name>Cgg_catalogo</display-name>
+        <servlet-name>Cgg_catalogo</servlet-name>
+        <servlet-class>com.besixplus.sii.ws.Cgg_catalogo</servlet-class>
+    </servlet>
+    <servlet>
+        <display-name>Cgg_catalogo</display-name>
+        <servlet-name>PublicWS_Cgg_catalogo</servlet-name>
+        <servlet-class>com.besixplus.sii.ws.Cgg_catalogo</servlet-class>
+    </servlet>
+    <servlet>
+        <display-name>Cgg_isla_hotel</display-name>
+        <servlet-name>Cgg_isla_hotel</servlet-name>
+        <servlet-class>com.besixplus.sii.ws.Cgg_isla_hotel</servlet-class>
+    </servlet>
+    <servlet>
+        <display-name>Cgg_isla_hotel</display-name>
+        <servlet-name>PublicWS_Cgg_isla_hotel</servlet-name>
+        <servlet-class>com.besixplus.sii.ws.Cgg_isla_hotel</servlet-class>
+    </servlet>
+    <servlet>
         <display-name>Cgg_res_aeropuerto</display-name>
         <servlet-name>Cgg_res_aeropuerto</servlet-name>
         <servlet-class>com.besixplus.sii.ws.Cgg_res_aeropuerto</servlet-class>
@@ -1755,6 +1775,14 @@
         <servlet-name>Cgg_res_aeropuerto</servlet-name>
         <url-pattern>/Cgg_res_aeropuerto</url-pattern>
     </servlet-mapping>
+     <servlet-mapping>
+        <servlet-name>Cgg_catalogo</servlet-name>
+        <url-pattern>/Cgg_catalogo</url-pattern>
+    </servlet-mapping>
+     <servlet-mapping>
+        <servlet-name>Cgg_isla_hotel</servlet-name>
+        <url-pattern>/Cgg_isla_hotel</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Cgg_res_cargo</servlet-name>
         <url-pattern>/Cgg_res_cargo</url-pattern>
@@ -2414,6 +2442,14 @@
     <servlet-mapping>
         <servlet-name>PublicWS_Cgg_res_aeropuerto</servlet-name>
         <url-pattern>/PublicWS/Cgg_res_aeropuerto</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PublicWS_Cgg_catalogo</servlet-name>
+        <url-pattern>/PublicWS/Cgg_catalogo</url-pattern>
+    </servlet-mapping>
+     <servlet-mapping>
+        <servlet-name>PublicWS_Cgg_isla_hotel</servlet-name>
+        <url-pattern>/PublicWS/Cgg_isla_hotel</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>PublicWS_Cgg_res_documento_identificacio</servlet-name>

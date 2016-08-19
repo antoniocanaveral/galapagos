@@ -62,7 +62,7 @@ public class Cgg_tct_registro implements Serializable{
 	){
 		String outResult = "true";
 		try{
-			CallableStatement stmInsert = inConnection.prepareCall("{ ? = call sii.F_CGG_TCT_REGISTRO_INSERT(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?::smallint, ?, ?, ?) }");
+			CallableStatement stmInsert = inConnection.prepareCall("{ ? = call sii.F_CGG_TCT_REGISTRO_INSERT(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?::smallint, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }");
 			stmInsert.registerOutParameter(1, java.sql.Types.VARCHAR);
 			stmInsert.setString(2, this.getCgg_tct_registro().getCTREG_CODIGO());
 			stmInsert.setString(3, this.getCgg_tct_registro().getCRPER_CODIGO());
@@ -83,6 +83,22 @@ public class Cgg_tct_registro implements Serializable{
 			stmInsert.setString(18, this.getCgg_tct_registro().getCTREG_OBSERVACION());
 			stmInsert.setBoolean(19, this.getCgg_tct_registro().getCTREG_ESTADO());
 			stmInsert.setString(20, this.getCgg_tct_registro().getCTREG_USUARIO_INSERT());
+			stmInsert.setString(21, this.getCgg_tct_registro().getCTREG_CATEGORIA());
+			stmInsert.setString(22, this.getCgg_tct_registro().getCTREG_TIPO_REGISTRO());
+			stmInsert.setString(23, this.getCgg_tct_registro().getCTREG_NUMERO_VUELO());
+			stmInsert.setString(24, this.getCgg_tct_registro().getCTREG_TIPO_HOSPEDAJE());
+			stmInsert.setString(25, this.getCgg_tct_registro().getCTREG_ISLA_HOSPEDAJE());
+			stmInsert.setString(26, this.getCgg_tct_registro().getCTREG_NOMBRE_HOSPEDAJE_CRUCERO());
+			stmInsert.setString(27, this.getCgg_tct_registro().getCTREG_NOMBRE_HOSPEDAJE_HOTEL());
+			stmInsert.setString(28, this.getCgg_tct_registro().getCTREG_LUGAR_HOSPEDAJE());
+			stmInsert.setString(29, this.getCgg_tct_registro().getCTREG_VIAJE_ACOMPANANTE());
+			stmInsert.setString(30, this.getCgg_tct_registro().getCTREG_VIAJE_MOTIVO());
+			stmInsert.setString(31, this.getCgg_tct_registro().getCTREG_VIAJE_ACTIVIDADES());
+			stmInsert.setString(32, this.getCgg_tct_registro().getCTREG_VIAJE_NUM_MIEMBROS());
+			stmInsert.setString(33, this.getCgg_tct_registro().getCTREG_VIAJE_TOUR());
+			stmInsert.setString(34, this.getCgg_tct_registro().getCTREG_VIAJE_CUAL());
+			
+			
 			stmInsert.execute();
 			this.getCgg_tct_registro().setCTREG_CODIGO(stmInsert.getString(1));
 			stmInsert.close();

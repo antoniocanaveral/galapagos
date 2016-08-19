@@ -93,6 +93,23 @@ public class Cgg_tct_registro implements Serializable{
 	* USUARIO QUE REALIZO LA ACTUALIZACION DE LA INFORMACION
 	*/
 	private String myCtreg_usuario_update;
+	
+	private String myCtreg_ctreg_categoria; 
+	private String myCtreg_ctreg_tipo_registro; 
+	private String myCtreg_ctreg_numero_vuelo; 
+	private String myCtreg_ctreg_tipo_hospedaje; 
+	private String myCtreg_ctreg_isla_hospedaje; 
+	private String myCtreg_ctreg_nombre_hospedaje_crucero; 
+	private String myCtreg_ctreg_nombre_hospedaje_hotel; 
+	private String myCtreg_ctreg_lugar_hospedaje;
+	private String myCtreg_ctreg_viaje_acompanante; 
+	private String myCtreg_ctreg_viaje_motivo; 
+	private String myCtreg_ctreg_viaje_actividades; 
+	private String myCtreg_ctreg_viaje_num_miembros;
+	private String myCtreg_ctreg_viaje_tour; 
+	private String myCtreg_ctreg_viaje_cual;
+
+	
 	/**
 	* CONSTRUCTOR DE LA CLASE Cgg_tct_registro
 	*/
@@ -144,7 +161,21 @@ public class Cgg_tct_registro implements Serializable{
 		String inCtreg_observacion,
 		boolean inCtreg_estado,
 		String inCtreg_usuario_insert,
-		String inCtreg_usuario_update
+		String inCtreg_usuario_update,
+		String inCtreg_categoria, 
+		String inCtreg_tipo_registro, 
+		String inCtreg_numero_vuelo,
+		String inCtreg_tipo_hospedaje, 
+		String inCtreg_isla_hospedaje, 
+		String inCtreg_nombre_hospedaje_crucero, 
+		String inCtreg_nombre_hospedaje_hotel, 
+		String inCtreg_lugar_hospedaje,
+		String inCtreg_viaje_acompanante, 
+		String inCtreg_viaje_motivo, 
+		String inCtreg_viaje_actividades, 
+		String inCtreg_viaje_num_miembros,
+		String inCtreg_viaje_tour, 
+		String inCtreg_viaje_cual
 	){
 		this.setCTREG_CODIGO(inCtreg_codigo);
 		this.setCRPER_CODIGO(inCrper_codigo);
@@ -166,6 +197,21 @@ public class Cgg_tct_registro implements Serializable{
 		this.setCTREG_ESTADO(inCtreg_estado);
 		this.setCTREG_USUARIO_INSERT(inCtreg_usuario_insert);
 		this.setCTREG_USUARIO_UPDATE(inCtreg_usuario_update);
+		this.setCTREG_CATEGORIA(inCtreg_categoria); 
+		this.setCTREG_TIPO_REGISTRO(inCtreg_tipo_registro); 
+		this.setCTREG_NUMERO_VUELO(inCtreg_numero_vuelo); 
+		this.setCTREG_TIPO_HOSPEDAJE(inCtreg_tipo_hospedaje); 
+		this.setCTREG_ISLA_HOSPEDAJE(inCtreg_isla_hospedaje); 
+		this.setCTREG_NOMBRE_HOSPEDAJE_CRUCERO(inCtreg_nombre_hospedaje_crucero); 
+		this.setCTREG_NOMBRE_HOSPEDAJE_HOTEL(inCtreg_nombre_hospedaje_hotel); 
+		this.setCTREG_LUGAR_HOSPEDAJE(inCtreg_lugar_hospedaje);
+		this.setCTREG_VIAJE_ACOMPANANTE(inCtreg_viaje_acompanante); 
+		this.setCTREG_VIAJE_MOTIVO(inCtreg_viaje_motivo); 
+		this.setCTREG_VIAJE_ACTIVIDADES(inCtreg_viaje_actividades); 
+		this.setCTREG_VIAJE_NUM_MIEMBROS(inCtreg_viaje_num_miembros);
+		this.setCTREG_VIAJE_TOUR(inCtreg_viaje_tour); 
+		this.setCTREG_VIAJE_CUAL(inCtreg_viaje_cual);
+
 	}
 
 	/**
@@ -482,6 +528,92 @@ public class Cgg_tct_registro implements Serializable{
 	*/
 	public String getCTREG_USUARIO_UPDATE(){
 		return this.myCtreg_usuario_update;
+	}
+	
+	public String getCTREG_CATEGORIA() {
+		return this.myCtreg_ctreg_categoria;
+	}
+	public void setCTREG_CATEGORIA(String inCtreg_categoria) {
+		this.myCtreg_ctreg_categoria = inCtreg_categoria;
+	}
+	public String getCTREG_TIPO_REGISTRO() {
+		return this.myCtreg_ctreg_tipo_registro;
+	}
+	public void setCTREG_TIPO_REGISTRO(String inCtreg_tipo_registro) {
+		this.myCtreg_ctreg_tipo_registro=inCtreg_tipo_registro;
+	}
+	public String getCTREG_NUMERO_VUELO() {
+		return this.myCtreg_ctreg_numero_vuelo;
+	}
+	public void setCTREG_NUMERO_VUELO(String inCtreg_numero_vuelo) {
+		this.myCtreg_ctreg_numero_vuelo=inCtreg_numero_vuelo;
+	}
+	public String getCTREG_TIPO_HOSPEDAJE() {
+		return this.myCtreg_ctreg_tipo_hospedaje;
+	}
+	public void setCTREG_TIPO_HOSPEDAJE(String inCtreg_tipo_hospedaje) {
+		this.myCtreg_ctreg_tipo_hospedaje=inCtreg_tipo_hospedaje;
+	}
+	public String getCTREG_ISLA_HOSPEDAJE() {
+		return this.myCtreg_ctreg_isla_hospedaje;
+	}
+	public void setCTREG_ISLA_HOSPEDAJE(String inCtreg_isla_hospedaje) {
+		this.myCtreg_ctreg_isla_hospedaje=inCtreg_isla_hospedaje;
+	}
+	public String getCTREG_NOMBRE_HOSPEDAJE_CRUCERO() {
+		return this.myCtreg_ctreg_nombre_hospedaje_crucero;
+	}
+	public void setCTREG_NOMBRE_HOSPEDAJE_CRUCERO(
+			String inCtreg_nombre_hospedaje_crucero) {
+		this.myCtreg_ctreg_nombre_hospedaje_crucero=inCtreg_nombre_hospedaje_crucero;
+	}
+	public String getCTREG_NOMBRE_HOSPEDAJE_HOTEL() {
+		return this.myCtreg_ctreg_nombre_hospedaje_hotel;
+	}
+	public void setCTREG_NOMBRE_HOSPEDAJE_HOTEL(String inCtreg_nombre_hospedaje_hotel) {
+		this.myCtreg_ctreg_nombre_hospedaje_hotel=inCtreg_nombre_hospedaje_hotel;
+	}
+	public String getCTREG_LUGAR_HOSPEDAJE() {
+		return this.myCtreg_ctreg_lugar_hospedaje;
+	}
+	public void setCTREG_LUGAR_HOSPEDAJE(String inCtreg_lugar_hospedaje) {
+		this.myCtreg_ctreg_lugar_hospedaje=inCtreg_lugar_hospedaje;
+	}
+	public String getCTREG_VIAJE_ACOMPANANTE() {
+		return this.myCtreg_ctreg_viaje_acompanante;
+	}
+	public void setCTREG_VIAJE_ACOMPANANTE(String inCtreg_viaje_acompanante) {
+		this.myCtreg_ctreg_viaje_acompanante=inCtreg_viaje_acompanante;
+	}
+	public String getCTREG_VIAJE_MOTIVO() {
+		return this.myCtreg_ctreg_viaje_motivo;
+	}
+	public void setCTREG_VIAJE_MOTIVO(String inCtreg_viaje_motivo) {
+		this.myCtreg_ctreg_viaje_motivo=inCtreg_viaje_motivo;
+	}
+	public String getCTREG_VIAJE_ACTIVIDADES() {
+		return this.myCtreg_ctreg_viaje_actividades;
+	}
+	public void setCTREG_VIAJE_ACTIVIDADES(String inCtreg_viaje_actividades) {
+		this.myCtreg_ctreg_viaje_actividades=inCtreg_viaje_actividades;
+	}
+	public String getCTREG_VIAJE_NUM_MIEMBROS() {
+		return this.myCtreg_ctreg_viaje_num_miembros;
+	}
+	public void setCTREG_VIAJE_NUM_MIEMBROS(String inCtreg_viaje_num_miembros) {
+		this.myCtreg_ctreg_viaje_num_miembros=inCtreg_viaje_num_miembros;
+	}
+	public String getCTREG_VIAJE_TOUR() {
+		return this.myCtreg_ctreg_viaje_tour;
+	}
+	public void setCTREG_VIAJE_TOUR(String inCtreg_viaje_tour) {
+		this.myCtreg_ctreg_viaje_tour=inCtreg_viaje_tour;
+	}
+	public String getCTREG_VIAJE_CUAL() {
+		return this.myCtreg_ctreg_viaje_cual;
+	}
+	public void setCTREG_VIAJE_CUAL(String inCtreg_viaje_cual) {
+		this.myCtreg_ctreg_viaje_cual=inCtreg_viaje_cual;
 	}
 
 }
