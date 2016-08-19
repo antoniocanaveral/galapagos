@@ -5,6 +5,7 @@ import com.bmlaurus.nbio.api.entity.Enrollment;
 import com.bmlaurus.nbio.api.error.ErrorInterceptor;
 import com.bmlaurus.nbio.api.export.ExportDataHandler;
 import com.bmlaurus.nbio.api.export.ExportImgHandler;
+import com.bmlaurus.nbio.api.util.Utils;
 import com.nitgen.SDK.BSP.NBioBSPJNI;
 
 import java.util.ArrayList;
@@ -28,7 +29,6 @@ public class Device {
 
     public static final String DATA_TYPE_DATA = "DATA";
     public static final String DATA_TYPE_AUDIT = "AUDIT";
-    public static final String DATA_TYPE_IMAGE = "IMG";
     public static final String DATA_TYPE_TEXT = "TEXT";
 
     //**
@@ -142,15 +142,14 @@ public class Device {
             }
         }
 
-        //Generamos las imagenes
+        //Generamos la informacion de auditoria
         if (hSavedAuditFIR != null) {
-            enrolledData.put(DATA_TYPE_AUDIT, getEnrollmentRaw(hSavedAuditFIR));
-            enrolledData.put(DATA_TYPE_IMAGE, convertToWsq(hSavedAuditFIR));
-        }
+            enrolledData.put(DATA_TYPE_AUDIT, getEnrollmentAudit(hSavedAuditFIR));
 
-        hSavedAuditFIR.dispose();
-        hSavedAuditFIR = null;
-        System.gc();
+            hSavedAuditFIR.dispose();
+            hSavedAuditFIR = null;
+            System.gc();
+        }
 
         //Generamos la data
         enrolledData.put(DATA_TYPE_DATA,getEnrollmentData(hFIR,exportFormat));
@@ -161,36 +160,7 @@ public class Device {
         return enrolledData;
     }
 
-    private List<byte[]> convertToWsq(NBioBSPJNI.FIR_HANDLE hSavedAuditFIR){
-        byte[] img = null;
-        if (hSavedAuditFIR != null)  {
-            NBioBSPJNI.Export exportEngine = bsp.new Export();
-
-            NBioBSPJNI.INPUT_FIR inputFIR = bsp.new INPUT_FIR();
-            inputFIR.SetFIRHandle(hSavedAuditFIR);
-
-            NBioBSPJNI.Export.AUDIT exportAudit = exportEngine.new AUDIT();
-            exportEngine.ExportAudit(inputFIR, exportAudit);
-
-            if (checkError())
-                return null;
-
-            float fQuality = 0.7f;
-
-            NBioBSPJNI.Export.TEMPLATE_DATA SaveWSQData = exportEngine.new TEMPLATE_DATA();
-            exportEngine.ConvertRawToWsq(exportAudit.FingerData[0].Template[0].Data , exportAudit.ImageWidth, exportAudit.ImageHeight, SaveWSQData, fQuality);
-
-            if (checkError())
-                return null;
-
-            img = SaveWSQData.Data;
-        }
-        List<byte[]> tmpArray = new ArrayList<>();
-        tmpArray.add(img);
-        return tmpArray;
-    }
-
-    private List<ExportImgHandler> getEnrollmentRaw(NBioBSPJNI.FIR_HANDLE hSavedAuditFIR){
+    private List<ExportImgHandler> getEnrollmentAudit(NBioBSPJNI.FIR_HANDLE hSavedAuditFIR){
         if (!isInitialized())
             return null;
 
@@ -213,8 +183,10 @@ public class Device {
             String fileName;
 
             for (i = 0; i < exportAudit.FingerNum; i++)  {
+                String img = Utils.bufferedImageToPNGBase64(exportAudit.ImageWidth, exportAudit.ImageHeight, exportAudit.FingerData[i].Template[0].Data);
                 for (j = 0; j < exportAudit.SamplesPerFinger; j++)  {
-                    ExportImgHandler imgHandler = new ExportImgHandler(exportAudit.FingerData[i].FingerID, exportAudit.FingerData[i].Template[j].Data);
+                    ExportImgHandler imgHandler = new ExportImgHandler(exportAudit.FingerData[i].FingerID, j, exportAudit.FingerData[i].Template[j].Data);
+                    imgHandler.setBase64Img(img);
                     exportImgHandlers.add(imgHandler);
                 }
             }

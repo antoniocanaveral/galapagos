@@ -7,6 +7,8 @@
  * @author Besixplus Cia. Ltda.
  */
 var tmpPrsFirma;
+var tmpPrsFir;
+var tmpPrsFirAudit;
 
 function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET) {
     var inSentenciaCgg_res_carnet = IN_SENTENCIA_CGG_RES_CARNET;
@@ -24,8 +26,8 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 	var tmpCarnet;
 	var tmpPrsFoto;
 	tmpPrsFirma=null;
-	var tmpPrsFir;
-	var tmpPrsFirAudit;
+	tmpPrsFir=null;
+	tmpPrsFirAudit=null;
 	var tmpAdjuntos;
 	var tmpDuracion;
 	var tmpCuenta;
@@ -446,6 +448,7 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 		handler:function(){
 			if(!tmpPlugin)
 				tmpPlugin = document.getElementById("bsxCrnBiometric");
+
 			var tmpIdPersona;
 			if(tmpPersona.get('CRPER_NUM_DOC_IDENTIFIC') && tmpPersona.get('CRPER_NUM_DOC_IDENTIFIC').length > 0)
 				tmpIdPersona = tmpPersona.get('CRPER_NUM_DOC_IDENTIFIC');
@@ -453,34 +456,14 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 				tmpIdPersona = tmpPersona.get('CRPER_NUMERO_RESIDENCIA');
 			else if(tmpPersona.get('CRPER_CODIGO') && tmpPersona.get('CRPER_CODIGO').length > 0)
 				tmpIdPersona = tmpPersona.get('CRPER_CODIGO');
-				
-			var tmpHuella = tmpPlugin.enroll(tmpIdPersona);
-			if(tmpHuella == 0){
-				var tmpFirAuditText = tmpPlugin.firAuditText;
-				Ext.Ajax.request({
-					url: URL_WS+'Biometrico',
-					success: function(inResponse){
-						var tmpJSON = Ext.util.JSON.decode(inResponse.responseText)
-						var tmpImgHuella = document.getElementById("imgHuellaPrsnCrn");
-						tmpImgHuella.src = 'data:image/jpg;base64,'+tmpJSON.msg;
-						tmpPrsFir = tmpPlugin.firText;
-						tmpPrsFirAudit = tmpPlugin.firAuditText;
-					},
-					failure: function(inResponse){
-					},
-					params: { 
-						op: 'photo',
-						data: tmpFirAuditText
-					}
-				});
-			}else{
-				Ext.Msg.show({
-					title: tituloCgg_res_carnet,
-                    msg: tmpPlugin.message,
-                    buttons: Ext.Msg.OK,
-                    icon: Ext.MessageBox.ERROR
-                });
-			}
+
+			tmpPlugin.style.display='block';
+			tmpPlugin.width = '0';
+			tmpPlugin.height = '0';
+			tmpPlugin.innerHTML='<APPLET CODE="com.com.bmlaurus.signature.SigPlusImgDemo.class" NAME="appletFirma" WIDTH=260 HEIGHT=100 ALIGN=middle archive="applets/sii_applet_signature.jar">'
+				+' <PARAM name="userID" value="1"/>'
+				+' <PARAM name="identificationID" value="'+tmpIdPersona+'"/>'
+				+'</APPLET>';
 		}
 	});
 	
@@ -697,7 +680,9 @@ FrmCgg_res_carnet.prototype.closeHandler = function (inFunctionHandler) {
     this.getWindow().on('close', inFunctionHandler);
 };
 
-
+/**
+ * Funcion de callback para el applet de firma
+ * */
 function callbackApplet(e){
 	if(e && e.length > 0){
 		var tmpImgFirma = document.getElementById("imgFirmaPrsnCrn");
@@ -714,4 +699,43 @@ function callbackApplet(e){
 	var tmpPlugin = document.getElementById("bsxCrnBiometric");
 	tmpPlugin.innerHTML='';
 	tmpPlugin.style.display='none';
+}
+
+/**
+ * Funciones de callback para el applet de Huella
+ * */
+
+function storeEnrollment(e){
+	var tmpFirAuditText = tmpPlugin.firAuditText;
+	var enrollmentData = Ext.util.JSON.decode(inResponse.responseText);
+	Ext.Ajax.request({
+		url: URL_WS+'Biometrico',
+		success: function(inResponse){
+			var tmpJSON = Ext.util.JSON.decode(inResponse.responseText);
+			
+			var tmpImgHuella = document.getElementById("imgHuellaPrsnCrn");
+			tmpImgHuella.src = 'data:image/jpg;base64,'+tmpJSON.msg;
+			tmpPrsFir = enrollmentData.firText;
+			tmpPrsFirAudit = enrollmentData.firAuditText;
+
+			var tmpPlugin = document.getElementById("bsxCrnBiometric");
+			tmpPlugin.innerHTML='';
+			tmpPlugin.style.display='none';
+		},
+		failure: function(inResponse){
+		},
+		params: {
+			op: 'photo',
+			data: tmpFirAuditText
+		}
+	});
+}
+
+function showMessage(e) {
+	Ext.Msg.show({
+		title: "Biometrico",
+		msg: e,
+		buttons: Ext.Msg.OK,
+		icon: Ext.MessageBox.ERROR
+	});
 }

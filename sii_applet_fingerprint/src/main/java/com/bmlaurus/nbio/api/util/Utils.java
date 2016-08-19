@@ -47,9 +47,31 @@ public class Utils {
         return outBuffer.toByteArray();
     }
 
+    public static byte[] bufferedImageToPNG(int imageWidth, int imageHeight, byte[] data){
+        byte[] img = null;
+        BufferedImage bufImage = new BufferedImage(imageWidth, imageHeight,BufferedImage.TYPE_BYTE_GRAY);
+        bufImage.getRaster().setDataElements(0, 0, imageWidth, imageHeight,data);
+
+        ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
+        try {
+            ImageIO.write(bufImage, "JPG", outBuffer);
+            img = outBuffer.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return img;
+    }
+
+    public static String bufferedImageToPNGBase64(int imageWidth, int imageHeight, byte[] data){
+        return getBase64Image(bufferedImageToPNG(imageWidth,imageHeight,data));
+    }
+
     public static String getBase64Image(byte[] image){
         String base64 = null;
-        base64 = Base64.encodeBase64String(image);
+        if(image!=null)
+            base64 = Base64.encodeBase64String(image);
         return base64;
     }
 
