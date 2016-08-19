@@ -2550,6 +2550,18 @@
         <error-code>403</error-code>
         <location>/login/bad-login.html</location>
     </error-page>
+
+
+
+    <filter>
+       <filter-name>SoapInterceptFilter</filter-name>
+       <filter-class>com.besixplus.sii.filters.SoapInterceptFilter</filter-class>
+   </filter>
+   <filter-mapping>
+       <filter-name>SoapInterceptFilter</filter-name>
+       <url-pattern>/*</url-pattern>
+       <dispatcher>REQUEST</dispatcher>
+   </filter-mapping>
     <!--filter>
         <filter-name>CrossDomainControl</filter-name>
         <filter-class>com.besixplus.sii.filters.CrossDomainControl</filter-class>
