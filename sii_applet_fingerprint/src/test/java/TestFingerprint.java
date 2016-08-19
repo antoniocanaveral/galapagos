@@ -1,10 +1,11 @@
 /**
  * Created by acanaveral on 10/8/16.
  */
-import org.junit.Test;
+
 import com.bmlaurus.nbio.api.Device;
 import com.bmlaurus.nbio.api.entity.Enrollment;
 import com.nitgen.SDK.BSP.NBioBSPJNI;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.List;

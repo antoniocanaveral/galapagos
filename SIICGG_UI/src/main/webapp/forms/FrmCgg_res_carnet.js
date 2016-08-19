@@ -431,7 +431,7 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 			tmpPlugin.style.display='block';
 			tmpPlugin.width = '270';
 			tmpPlugin.height = '110';
-			tmpPlugin.innerHTML='<APPLET CODE="com.bmlaurus.signature.SigPlusImgDemo.class" NAME="appletFirma" WIDTH=260 HEIGHT=100 ALIGN=middle archive="applets/sii_applet.jar">'
+			tmpPlugin.innerHTML='<APPLET CODE="com.com.bmlaurus.signature.SigPlusImgDemo.class" NAME="appletFirma" WIDTH=260 HEIGHT=100 ALIGN=middle archive="applets/sii_applet_signature.jar">'
 				+' <PARAM name="model" value="SignatureGem1X5"/>'
 				+' <PARAM name="comPort" value="HID1"/>'
 				+' <PARAM name="generateImg" value="false"/>'

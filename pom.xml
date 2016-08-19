@@ -36,5 +36,6 @@
 		<module>siiws</module>
 		<module>sii_jasper_api</module>
 		<module>sii_java_validator</module>
+		<module>sii_applet_fingerprint</module>
 	</modules>
 </project>

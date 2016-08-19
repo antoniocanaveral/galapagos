@@ -2,22 +2,23 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
     <parent>
         <artifactId>sii</artifactId>
         <groupId>com.bmlaurus</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>sii_applet</artifactId>
+
+    <artifactId>sii_applet_fingerprint</artifactId>
+
 
     <dependencies>
         <!-- LECTOR DE HUELLAS -->
-        <dependency>
+        <!--dependency>
             <groupId>com.sun.jna</groupId>
             <artifactId>jna</artifactId>
             <version>3.0.9</version>
-        </dependency>
+        </dependency-->
         <!--dependency>
             <groupId>com.besixplus</groupId>
             <artifactId>com.besixplus.biometric</artifactId>
@@ -26,27 +27,26 @@
         <dependency>
             <groupId>com.nitgen</groupId>
             <artifactId>SDK</artifactId>
-            <version>1.0</version>
+            <version>1.0.0.7</version>
         </dependency>
 
-        <!-- FIRMA -->
+        <!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
         <dependency>
-            <groupId>com.topaz</groupId>
-            <artifactId>com.topaz.sigplus</artifactId>
-            <version>1.0</version>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.10</version>
         </dependency>
-        <dependency>
-            <groupId>javax.comm</groupId>
-            <artifactId>comm</artifactId>
-            <version>2.0.3</version>
-        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
+
+
     <build>
         <finalName>${artifactId}-${version}</finalName>
         <plugins>

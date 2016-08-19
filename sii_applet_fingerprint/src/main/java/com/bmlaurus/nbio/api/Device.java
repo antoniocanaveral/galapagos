@@ -26,6 +26,11 @@ public class Device {
 
     private int                     exportFormat;
 
+    public static final String DATA_TYPE_DATA = "DATA";
+    public static final String DATA_TYPE_AUDIT = "AUDIT";
+    public static final String DATA_TYPE_IMAGE = "IMG";
+    public static final String DATA_TYPE_TEXT = "TEXT";
+
     //**
     // Constructor -> initDevice -> [windowOptions](Enrollment&CaptureOpt)  -> enroll       -> closeAndDispose
     //                                                                      -> validate
@@ -120,7 +125,7 @@ public class Device {
         }
         List text = new ArrayList();
         text.add(textSavedFIR.TextFIR);
-        enrolledData.put("TEXT",text);
+        enrolledData.put(DATA_TYPE_TEXT,text);
 
         //Guardamos en el searchEngine para utilizarlo en este contexto
         if(persist){
@@ -138,15 +143,51 @@ public class Device {
         }
 
         //Generamos las imagenes
-        if (hSavedAuditFIR != null)
-            enrolledData.put("AUDIT",getEnrollmentRaw(hSavedAuditFIR));
+        if (hSavedAuditFIR != null) {
+            enrolledData.put(DATA_TYPE_AUDIT, getEnrollmentRaw(hSavedAuditFIR));
+            enrolledData.put(DATA_TYPE_IMAGE, convertToWsq(hSavedAuditFIR));
+        }
+
+        hSavedAuditFIR.dispose();
+        hSavedAuditFIR = null;
+        System.gc();
+
         //Generamos la data
-        enrolledData.put("DATA",getEnrollmentData(hFIR,exportFormat));
+        enrolledData.put(DATA_TYPE_DATA,getEnrollmentData(hFIR,exportFormat));
 
         hFIR.dispose();
         hFIR = null;
 
         return enrolledData;
+    }
+
+    private List<byte[]> convertToWsq(NBioBSPJNI.FIR_HANDLE hSavedAuditFIR){
+        byte[] img = null;
+        if (hSavedAuditFIR != null)  {
+            NBioBSPJNI.Export exportEngine = bsp.new Export();
+
+            NBioBSPJNI.INPUT_FIR inputFIR = bsp.new INPUT_FIR();
+            inputFIR.SetFIRHandle(hSavedAuditFIR);
+
+            NBioBSPJNI.Export.AUDIT exportAudit = exportEngine.new AUDIT();
+            exportEngine.ExportAudit(inputFIR, exportAudit);
+
+            if (checkError())
+                return null;
+
+            float fQuality = 0.7f;
+
+            NBioBSPJNI.Export.TEMPLATE_DATA SaveWSQData = exportEngine.new TEMPLATE_DATA();
+            exportEngine.ConvertRawToWsq(exportAudit.FingerData[0].Template[0].Data , exportAudit.ImageWidth, exportAudit.ImageHeight, SaveWSQData, fQuality);
+
+            if (checkError())
+                return null;
+
+            img = SaveWSQData.Data;
+        }
+        List<byte[]> tmpArray = new ArrayList<>();
+        tmpArray.add(img);
+        return tmpArray;
     }
 
     private List<ExportImgHandler> getEnrollmentRaw(NBioBSPJNI.FIR_HANDLE hSavedAuditFIR){
@@ -290,6 +331,8 @@ public class Device {
 
     @Deprecated
     public boolean verifyMatch(byte[] loadData, int nMinType){
+        if (!isInitialized())
+            return false;
         int nLoadLen = loadData.length;
         NBioBSPJNI.FIR_HANDLE hLoadFIR = bsp.new FIR_HANDLE();
         NBioBSPJNI.Export exportEngine = bsp.new Export();
@@ -309,6 +352,8 @@ public class Device {
     }
 
     public boolean loadIndexedDatabase(Map<Integer,String> fingers){
+        if (!isInitialized())
+            return false;
         if(IndexSearchEngine!=null){
             IndexSearchEngine.dispose();
             IndexSearchEngine = null;
@@ -334,6 +379,8 @@ public class Device {
     }
 
     public boolean loadData(byte[] loadData, int nUserID, int nMinType){
+        if (!isInitialized())
+            return false;
         int nLoadLen = loadData.length;
         NBioBSPJNI.FIR_HANDLE hLoadFIR = bsp.new FIR_HANDLE();
         NBioBSPJNI.Export exportEngine = bsp.new Export();

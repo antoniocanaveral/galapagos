@@ -29,5 +29,5 @@ mvn org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file \
    -Dfile=$ROOT_PATH/lib/NbioBSPJNI.jar \
    -DgroupId=com.nitgen \
    -DartifactId=SDK \
-   -Dversion=1.0 \
+   -Dversion=1.0.0.7 \
    -Dpackaging=jar

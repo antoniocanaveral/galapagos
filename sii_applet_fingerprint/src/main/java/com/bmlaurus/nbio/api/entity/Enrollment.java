@@ -11,16 +11,16 @@ public class Enrollment extends WindowOptions{
         super(winOption);
 
         //Set defaults
-        this.winOption.DisableFingerForEnroll0 = 1;
-        this.winOption.DisableFingerForEnroll1 = 1;
-        this.winOption.DisableFingerForEnroll2 = 1;
-        this.winOption.DisableFingerForEnroll3 = 1;
-        this.winOption.DisableFingerForEnroll4 = 1;
-        this.winOption.DisableFingerForEnroll5 = 1;
-        this.winOption.DisableFingerForEnroll6 = 1;
-        this.winOption.DisableFingerForEnroll7 = 1;
-        this.winOption.DisableFingerForEnroll8 = 1;
-        this.winOption.DisableFingerForEnroll9 = 1;
+        this.winOption.DisableFingerForEnroll0 = 0;
+        this.winOption.DisableFingerForEnroll1 = 0;
+        this.winOption.DisableFingerForEnroll2 = 0;
+        this.winOption.DisableFingerForEnroll3 = 0;
+        this.winOption.DisableFingerForEnroll4 = 0;
+        this.winOption.DisableFingerForEnroll5 = 0;
+        this.winOption.DisableFingerForEnroll6 = 0;
+        this.winOption.DisableFingerForEnroll7 = 0;
+        this.winOption.DisableFingerForEnroll8 = 0;
+        this.winOption.DisableFingerForEnroll9 = 0;
 
         //Para enrolar debe ser obligatoriamente popup.
         this.winOption.WindowStyle = NBioBSPJNI.WINDOW_STYLE.POPUP;
@@ -33,6 +33,17 @@ public class Enrollment extends WindowOptions{
     }
 
     public Enrollment fingersDisable(int ... fingers){
+        //Deshabilitamos Todos excepto los que llegan como parametro.
+        this.winOption.DisableFingerForEnroll0 = 1;
+        this.winOption.DisableFingerForEnroll1 = 1;
+        this.winOption.DisableFingerForEnroll2 = 1;
+        this.winOption.DisableFingerForEnroll3 = 1;
+        this.winOption.DisableFingerForEnroll4 = 1;
+        this.winOption.DisableFingerForEnroll5 = 1;
+        this.winOption.DisableFingerForEnroll6 = 1;
+        this.winOption.DisableFingerForEnroll7 = 1;
+        this.winOption.DisableFingerForEnroll8 = 1;
+        this.winOption.DisableFingerForEnroll9 = 1;
 
         for(int finger:fingers){
             switch (finger){
