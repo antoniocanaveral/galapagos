@@ -18,6 +18,8 @@ public class VirtualCache {
     public static final String PROP_JASPER_CONF = "jasper/config.properties";
 
     public static final String PROP_INVOKER_CONF = "invoker/config.properties";
+    public static final String PROP_INTEGRATION_CONF = "integration/config.properties";
+
 
     public static final String PROP_MAILING_FORMAT = "mailing/format.properties";
     public static final String PROP_MAILING_CONF = "mailing/config.properties";

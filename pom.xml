@@ -24,12 +24,24 @@
 
 	<properties>
 		<alfresco.version>4.2.e-SNAPSHOT</alfresco.version>
+		<!-- other plugin versions -->
+		<version.compiler.plugin>2.3.1</version.compiler.plugin>
+		<version.ear.plugin>2.6</version.ear.plugin>
+		<version.ejb.plugin>2.3</version.ejb.plugin>
+		<version.surefire.plugin>2.4.3</version.surefire.plugin>
+		<version.war.plugin>2.1.1</version.war.plugin>
+
+		<!-- maven-compiler-plugin -->
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
 	</properties>
 
 	<modules>
+
 		<module>sii_alfresco_config</module>
 		<module>sii_commons</module>
 		<module>sii_ecm_integration</module>
+		<module>sii_ejb</module>
 		<module>sii_applet</module>
 		<module>SIICGG_UI</module>
 		<module>siicgg_web</module>

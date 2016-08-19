@@ -20,6 +20,41 @@ public class BackendInvoker {
 
     private Properties config = VirtualCache.getConfig(VirtualCache.PROP_INVOKER_CONF);
 
+    public String invokeBackendWs(final BackEndInvokerVoParameter param ) throws Exception, IOException {
+        String result = null;
+        try {
+            URL siiServlet = new URL(param.getUrl());
+            Authenticator.setDefault(new Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(param.getUsername(), param.getPassword().toCharArray());
+                }
+            });
+
+            HttpURLConnection servletConnection = (HttpURLConnection) siiServlet.openConnection();
+            servletConnection.setRequestMethod(param.getMethod()); //"POST"
+            servletConnection.setDoOutput(true);
+            servletConnection.setDoInput(true);
+            servletConnection.setRequestProperty("Content-Type", "text/xml; charset=UTF-8");
+            servletConnection.setRequestProperty("Accept", "text/xml; charset=UTF-8");
+            servletConnection.setRequestProperty("SendByCamel","true");
+
+            OutputStreamWriter objOut = new OutputStreamWriter(servletConnection.getOutputStream());
+            objOut.write(param.getPayload());
+            objOut.flush();
+            objOut.close();
+
+            InputStream response = servletConnection.getInputStream();
+            result = IOUtils.toString(response, "UTF-8");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+
     public String invokeBackendServlet(String servletName, String method, String payload) throws Exception, IOException {
         String result = null;
 
