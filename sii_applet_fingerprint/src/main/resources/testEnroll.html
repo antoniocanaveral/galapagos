@@ -5,16 +5,14 @@
     <title>Test Enroll</title>
 </head>
 <body>
-<APPLET CODE="com.com.bmlaurus.fingerprint.Enroll.class" NAME="enrollApplet" WIDTH=0 HEIGHT=0 ALIGN=middle archive="./sii_applet-0.0.1-SNAPSHOT.jar">
-    <PARAM name="UserID" value="1710679968"/>
+<APPLET CODE="com.bmlaurus.fingerprint.Enroll.class" NAME="enrollApplet" WIDTH=0 HEIGHT=0 ALIGN=middle archive="./sii_applet_fingerprint.jar">
+    <PARAM name="userID" value="1"/>
+    <PARAM name="identificationID" value="1710679968"/>
 </APPLET>
 
 <script type="text/javascript">
     function storeEnrollment(e){
-        alert(e);
-    }
-    function storeImage(e){
-        alert(e);
+        console.log(e);
     }
     function showMessage(e){
         alert(e);

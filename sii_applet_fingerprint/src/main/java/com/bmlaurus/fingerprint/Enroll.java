@@ -1,10 +1,14 @@
 package com.bmlaurus.fingerprint;
 
+import com.bmlaurus.fingerprint.data.FingerData;
+import com.bmlaurus.fingerprint.data.FingerDetail;
 import com.bmlaurus.nbio.api.Device;
-import com.bmlaurus.nbio.api.util.Utils;
+import com.bmlaurus.nbio.api.export.ExportImgHandler;
+import com.google.gson.Gson;
 import netscape.javascript.JSObject;
 
 import java.applet.Applet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,21 +20,44 @@ public class Enroll extends Applet{
     @Override
     public void init() {
         super.init();
+        int userID = 0;
+        String identificationID = null;
+        try{
+            userID = new Integer(getParameter("userID"));
+            identificationID = getParameter("identificationID");
+            if(userID==0 || identificationID==null){
+                callbackMethod("showMessage", "Los paramtros no han sido definidos");
+                return;
+            }
+        }catch (Exception e){
+            callbackMethod("showMessage", "Los paramtros no han sido definidos");
+            return;
+        }
 
         Device bpt = new Device();
-
         //Iniciamos los dispositivos
         if(bpt.initDevice()){
             //Configuramos la ventana de enrolamiento sin Welcome y en primer plano
             bpt.configureEnrollment().hideWelcomeWindow();
             //Ejecutamos enroll
-            Map<String,List> enrollementData = bpt.enroll(new Integer(getParameter("UserID")));
+            Map<String,List> enrollementData = bpt.enroll(userID);
             if(enrollementData!=null) {
+                FingerData data = new FingerData();
                 String dataToSave = (String) enrollementData.get(Device.DATA_TYPE_TEXT).get(0);
-                callbackMethod("storeEnrollment", dataToSave);
-                for(byte[] img: (List<byte[]>) enrollementData.get(Device.DATA_TYPE_IMAGE))
-                    callbackMethod("storeImage",Utils.getBase64Image(img));
-
+                data.setUserId(userID);
+                data.setIdentification(identificationID);
+                data.setTextData(dataToSave);
+                List<FingerDetail> details = new ArrayList<>();
+                FingerDetail dataDetail = new FingerDetail();
+                for(ExportImgHandler img: (List<ExportImgHandler>) enrollementData.get(Device.DATA_TYPE_AUDIT)){
+                    if(img.getSample()==0){//Obtenemos las imagenes del primer sampler.
+                        dataDetail.setFingerID(img.getFingerID());
+                        dataDetail.setFingerImg(img.getBase64Img());
+                        details.add(dataDetail);
+                    }
+                }
+                data.setDetail(details);
+                callbackMethod("storeEnrollment", new Gson().toJson(data));
                 callbackMethod("showMessage", "Datos Biometricos Capturados");
             }else {
                 callbackMethod("showMessage", bpt.getErrorInterceptor().getMessage());
