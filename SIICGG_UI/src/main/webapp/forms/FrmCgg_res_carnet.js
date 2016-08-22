@@ -433,7 +433,7 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 			tmpPlugin.style.display='block';
 			tmpPlugin.width = '270';
 			tmpPlugin.height = '110';
-			tmpPlugin.innerHTML='<APPLET CODE="com.com.bmlaurus.signature.SigPlusImgDemo.class" NAME="appletFirma" WIDTH=260 HEIGHT=100 ALIGN=middle archive="applets/sii_applet_signature.jar">'
+			tmpPlugin.innerHTML='<APPLET CODE="com.bmlaurus.signature.SigPlusImgDemo.class" NAME="appletFirma" WIDTH=260 HEIGHT=100 ALIGN=middle archive="applets/sii_applet_signature.jar">'
 				+' <PARAM name="model" value="SignatureGem1X5"/>'
 				+' <PARAM name="comPort" value="HID1"/>'
 				+' <PARAM name="generateImg" value="false"/>'
@@ -460,7 +460,7 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 			tmpPlugin.style.display='block';
 			tmpPlugin.width = '0';
 			tmpPlugin.height = '0';
-			tmpPlugin.innerHTML='<APPLET CODE="com.com.bmlaurus.signature.SigPlusImgDemo.class" NAME="appletFirma" WIDTH=260 HEIGHT=100 ALIGN=middle archive="applets/sii_applet_signature.jar">'
+			tmpPlugin.innerHTML='<APPLET CODE="com.bmlaurus.fingerprint.Enroll.class" NAME="appletHuella" WIDTH=0 HEIGHT=0 archive="applets/sii_applet_fingerprint.jar">'
 				+' <PARAM name="userID" value="1"/>'
 				+' <PARAM name="identificationID" value="'+tmpIdPersona+'"/>'
 				+'</APPLET>';
@@ -473,7 +473,7 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 		iconCls:'iconCamara',
 		html:'<img id="imgFotoPrsnCrn" height="320" width="240" src="resources/images/male_avatar.jpeg"/>',
 		bbar:[btnCapturarFoto]
-	});
+	});	
 	
 	var pnlFirmaCrn = new Ext.Panel({
 		title:'Firma',
@@ -690,8 +690,8 @@ function callbackApplet(e){
 		tmpPrsFirma = e;
 	}else{
 		Ext.Msg.show({
-			title: tituloCgg_res_carnet,
-			msg: tmpPlugin.message,
+			title: "Captura de Firma",
+			msg: "No existen datos",
 			buttons: Ext.Msg.OK,
 			icon: Ext.MessageBox.ERROR
 		});
@@ -706,17 +706,26 @@ function callbackApplet(e){
  * */
 
 function storeEnrollment(e){
-	var tmpFirAuditText = tmpPlugin.firAuditText;
-	var enrollmentData = Ext.util.JSON.decode(inResponse.responseText);
-	Ext.Ajax.request({
+	var enrollmentData = Ext.util.JSON.decode(e);
+	var tmpImgHuella = document.getElementById("imgHuellaPrsnCrn");
+	tmpImgHuella.src = 'data:image/jpg;base64,'+enrollmentData.detail[0].fingerImg;
+
+	tmpPrsFir = enrollmentData.textData;
+	tmpPrsFirAudit = enrollmentData.textData;
+
+	var tmpPlugin = document.getElementById("bsxCrnBiometric");
+	tmpPlugin.innerHTML='';
+	tmpPlugin.style.display='none';
+
+	/*Ext.Ajax.request({
 		url: URL_WS+'Biometrico',
 		success: function(inResponse){
 			var tmpJSON = Ext.util.JSON.decode(inResponse.responseText);
 			
 			var tmpImgHuella = document.getElementById("imgHuellaPrsnCrn");
 			tmpImgHuella.src = 'data:image/jpg;base64,'+tmpJSON.msg;
-			tmpPrsFir = enrollmentData.firText;
-			tmpPrsFirAudit = enrollmentData.firAuditText;
+			tmpPrsFir = enrollmentData.﻿textData;
+			tmpPrsFirAudit = enrollmentData.﻿textData;
 
 			var tmpPlugin = document.getElementById("bsxCrnBiometric");
 			tmpPlugin.innerHTML='';
@@ -728,7 +737,7 @@ function storeEnrollment(e){
 			op: 'photo',
 			data: tmpFirAuditText
 		}
-	});
+	});*/
 }
 
 function showMessage(e) {
@@ -736,6 +745,6 @@ function showMessage(e) {
 		title: "Biometrico",
 		msg: e,
 		buttons: Ext.Msg.OK,
-		icon: Ext.MessageBox.ERROR
+		icon: Ext.MessageBox.INFO
 	});
 }
