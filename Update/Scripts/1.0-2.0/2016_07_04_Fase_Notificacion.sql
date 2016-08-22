@@ -137,7 +137,7 @@ BEGIN
 	WHERE CRPRO_CODIGO = in_crpro_codigo
 		AND CRFAS_CODIGO = in_crfas_codigo
 		AND ntml_codigo = in_ntml_codigo
-		AND ntfn_destinatario = in_ntfn_destinatario
+		AND ntfn_destinatario = in_ntfn_destinatario;
 END
 $BODY$
   LANGUAGE plpgsql VOLATILE
