@@ -18,6 +18,7 @@ Documentos de Instalación de la plataforma
 [Reglas]: ./doc/Reglas.md "Reglas Java"
 [Dinardap]: ./sii_java_validator/README.md
 [Fases]: ./doc/FasesJava.md
+[Manual]:./doc/documents/Tecnica/ManualTecnicoDeInstalacionIntegracionSII.docx
 
 - Se creó la carpeta Update en la raíz del proyecto, para registrar los [Scripts][] de base de datos
 - Separación de los componentes comunes en el proyecto **sii_commons** utilizado por los 3 proyectos originales
@@ -37,3 +38,4 @@ Documentos de Instalación de la plataforma
 - Mensajes HTML con templeta.
 - Permitir funciones java en las fases. [Fases][]
 - Todos los archivos de configuracion (.properties) se gestionan con un VirtualCache
+- Integración entre servidores mediante AMQ y Cammel. Refierase al manual técnico [Manual][]
