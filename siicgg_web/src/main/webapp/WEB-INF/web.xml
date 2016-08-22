@@ -45,25 +45,11 @@
         <welcome-file>default.jsp</welcome-file>
     </welcome-file-list>
     <security-constraint>
-        <display-name>PrivateWS</display-name>
-    <web-resource-collection>
-        <web-resource-name>WEB</web-resource-name>
-        <url-pattern>/PrivateWS/*</url-pattern>
-        <http-method>GET</http-method>
-        <http-method>POST</http-method>
-    </web-resource-collection>
-    <web-resource-collection>
-        <web-resource-name>WEB</web-resource-name>
-        <url-pattern>/*</url-pattern>
-        <http-method>GET</http-method>
-        <http-method>POST</http-method>
-    </web-resource-collection>
-        <auth-constraint>
-            <role-name>atencion_cliente</role-name>
-        </auth-constraint>
-        <user-data-constraint>
-            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-        </user-data-constraint>
+        <web-resource-collection>
+            <web-resource-name>siicgg_web</web-resource-name>
+            <url-pattern>/login/*</url-pattern>
+        </web-resource-collection>
+        <!-- OMIT auth-constraint -->
     </security-constraint>
     <security-constraint>
         <display-name>SIICGG_WEB</display-name>
@@ -73,16 +59,22 @@
             <http-method>GET</http-method>
             <http-method>POST</http-method>
         </web-resource-collection>
+        <auth-constraint>
+            <role-name>*</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
     </security-constraint>
     <login-config>
         <auth-method>FORM</auth-method>
         <realm-name>SD_SII_WS</realm-name>
         <form-login-config>
-            <form-login-page>/login/login.html</form-login-page>
-            <form-error-page>/login/error.html</form-error-page>
+            <form-login-page>/login/login.jsp</form-login-page>
+            <form-error-page>/login/error.jsp</form-error-page>
         </form-login-config>
     </login-config>
     <security-role>
-        <role-name>atencion_cliente</role-name>
+        <role-name>*</role-name>
     </security-role>
 </web-app>
