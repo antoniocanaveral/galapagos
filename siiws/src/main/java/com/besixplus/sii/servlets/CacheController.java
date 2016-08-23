@@ -33,7 +33,7 @@ public class CacheController extends HttpServlet implements Serializable {
             out.println("<h3>Client Info</h3>");
             out.println("<p>Request URI: " + req.getRequestURI() + "</p>");
             out.println("<p>Protocol: " + req.getProtocol() + "</p>");
-            out.println("<p>PathInfo: " + req.getPathInfo() + "</p>");
+            out.println("<p>Service Path: " + req.getServletPath() + "</p>");
             out.println("<p>Remote Address: " + req.getRemoteAddr() + "</p>");
             out.println("<br/><br/>");
 
@@ -45,10 +45,10 @@ public class CacheController extends HttpServlet implements Serializable {
                     switch (operationID){
                         case "reset":
                             VirtualCache.resetCache();
-                            out.println("<p>CACHE RESEATED</p>");
+                            out.println("<p>CACHE RESETED</p>");
                             break;
                         case "view":
-                            out.println("<p>"+VirtualCache.toJSON()+"</p>");
+                            out.println("<p>"+VirtualCache.toPrettyJSON()+"</p>");
                             break;
                         default:
                             out.println("<p>Not implemented yet</p>");

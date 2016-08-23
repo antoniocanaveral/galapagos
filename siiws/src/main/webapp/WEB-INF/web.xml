@@ -1399,6 +1399,15 @@
         <servlet-name>Cgg_ger_indicador_encargado</servlet-name>
         <servlet-class>com.besixplus.sii.ws.Cgg_ger_indicador_encargado</servlet-class>
     </servlet>
+    <servlet>
+        <display-name>CacheControllerSVR</display-name>
+        <servlet-name>CacheControllerSVR</servlet-name>
+        <servlet-class>com.besixplus.sii.servlets.CacheController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CacheControllerSVR</servlet-name>
+        <url-pattern>/CacheControllerSVR</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Cgg_sec_reporte_rol</servlet-name>
         <url-pattern>/Cgg_sec_reporte_rol</url-pattern>

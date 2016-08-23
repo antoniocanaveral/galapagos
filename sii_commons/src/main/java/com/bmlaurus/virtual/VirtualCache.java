@@ -2,6 +2,7 @@ package com.bmlaurus.virtual;
 
 import com.besixplus.sii.util.Env;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +11,7 @@ import java.util.Properties;
 /**
  * Created by acanaveral on 10/8/16.
  */
+
 public class VirtualCache {
 
     public static final String PROP_ALFRESCO_CONF = "alfresco/config.properties";
@@ -63,6 +65,17 @@ public class VirtualCache {
             json = new Gson().toJson(cachedProperties);
         else
             json = "Cache is NULL";
+        return json;
+    }
+
+    public static String toPrettyJSON(){
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String json = null;
+        if(cachedProperties!=null)
+            json = gson.toJson(cachedProperties);
+        else
+            json = "Cache is NULL";
+        gson = null;
         return json;
     }
 }

@@ -40,22 +40,21 @@ public class SoapInterceptFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        if(config!=null && Boolean.valueOf(config.getProperty("ENABLE_INTEGRATION"))) {
-            boolean doChain = true;
-            if (servletRequest instanceof HttpServletRequest) {
-                HttpServletRequest request = (HttpServletRequest) servletRequest;
-                try {
-                    SoapInterceptRequestWrapper myRequestWrapper = new SoapInterceptRequestWrapper(request);
+        boolean doChain = true;
+        if (servletRequest instanceof HttpServletRequest) {
+            HttpServletRequest request = (HttpServletRequest) servletRequest;
+            try {
+                SoapInterceptRequestWrapper myRequestWrapper = new SoapInterceptRequestWrapper(request);
+                if(config!=null && Boolean.valueOf(config.getProperty("ENABLE_INTEGRATION")))
                     callIntegration(myRequestWrapper);
-                    doChain = false;
-                    filterChain.doFilter(myRequestWrapper, servletResponse);
-                } catch (Exception e) {
-                    e.getStackTrace();
-                }
+                doChain = false;
+                filterChain.doFilter(myRequestWrapper, servletResponse);
+            } catch (Exception e) {
+                e.getStackTrace();
             }
-            if (doChain) {
-                filterChain.doFilter(servletRequest, servletResponse);
-            }
+        }
+        if (doChain) {
+            filterChain.doFilter(servletRequest, servletResponse);
         }
     }
 
