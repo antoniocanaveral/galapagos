@@ -19,6 +19,44 @@ or crtst_descripcion='Temporales por Recurso de Revisión' or crtst_descripcion=
 or crtst_descripcion='Temporales Contrato 1era Renovacion' or crtst_descripcion='Revisión de Residencias Temporales'
 or crtst_descripcion='Temporales Sin Reglas de Validación');
 
+-- Cambio de estado de permanentes, en tipo solicitud trámite para los que no aplican
+update sii.cgg_res_tipo_solicitud_tramite set crtst_estado = false where cgg_crtst_codigo = 'CRTST1'
+and (crtst_descripcion='Art. 26-2B' or crtst_descripcion='Art. 26-1'
+or crtst_descripcion='Art. 26-2A' or crtst_descripcion='Art. 26-3B'
+or crtst_descripcion='Art. 26-3A');
+
+-- Cambio para que solo liste los tipos de trámites: permanente, temporal, traseunte
+update sii.cgg_res_tipo_solicitud_tramite set crtst_estado = false where crtpt_codigo='CRTPT1'
+and (crtst_codigo='CRTST95' or crtst_codigo='CRTST9'
+or crtst_codigo='CRTST83' or crtst_codigo='CRTST82'
+or crtst_codigo='CRTST81' or crtst_codigo='CRTST80'
+or crtst_codigo='CRTST8' or crtst_codigo='CRTST79'
+or crtst_codigo='CRTST78' or crtst_codigo='CRTST77'
+or crtst_codigo='CRTST76' or crtst_codigo='CRTST74'
+or crtst_codigo='CRTST73' or crtst_codigo='CRTST68'
+or crtst_codigo='CRTST60' or crtst_codigo='CRTST59'
+or crtst_codigo='CRTST40' or crtst_codigo='CRTST39'
+or crtst_codigo='CRTST38' or crtst_codigo='CRTST37'
+or crtst_codigo='CRTST36' or crtst_codigo='CRTST350'
+or crtst_codigo='CRTST35' or crtst_codigo='CRTST349'
+or crtst_codigo='CRTST348' or crtst_codigo='CRTST347'
+or crtst_codigo='CRTST346' or crtst_codigo='CRTST345'
+or crtst_codigo='CRTST34' or crtst_codigo='CRTST33'
+or crtst_codigo='CRTST32' or crtst_codigo='CRTST312'
+or crtst_codigo='CRTST311' or crtst_codigo='CRTST31'
+or crtst_codigo='CRTST307' or crtst_codigo='CRTST30'
+or crtst_codigo='CRTST27' or crtst_codigo='CRTST269'
+or crtst_codigo='CRTST26' or crtst_codigo='CRTST25'
+or crtst_codigo='CRTST24' or crtst_codigo='CRTST230'
+or crtst_codigo='CRTST22' or crtst_codigo='CRTST207'
+or crtst_codigo='CRTST20' or crtst_codigo='CRTST19'
+or crtst_codigo='CRTST18' or crtst_codigo='CRTST16'
+or crtst_codigo='CRTST15' or crtst_codigo='CRTST142'
+or crtst_codigo='CRTST136' or crtst_codigo='CRTST13'
+or crtst_codigo='CRTST122' or crtst_codigo='CRTST117'
+or crtst_codigo='CRTST10');
+
+
 --CGG_RES_REQUISITOS
 
 ﻿-- Requisitos Nuevos
