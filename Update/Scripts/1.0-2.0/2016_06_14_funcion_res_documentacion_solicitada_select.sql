@@ -26,3 +26,12 @@ $BODY$
   ROWS 1000;
 ALTER FUNCTION sii.f_cgg_res_documentacion_solicitada_select(character varying, integer, integer, character varying, character varying, text)
   OWNER TO postgres;
+
+--> MIGRATION SCRIPT CONTROLLER <--
+
+INSERT INTO sii.cgg_migrationscript (mrgsp_codigo,mrgsp_fecha,mrgsp_usuario_insert,mrgsp_fecha_insert,mrgsp_usuario_update,mrgsp_fecha_update,
+	mrgsp_estado,mrgsp_developer,mrgsp_name,mrgsp_description,
+	mrgsp_releaseno,mrgsp_filename,mrgsp_isapply)
+VALUES(SII.F_KEYGEN('CGG_MIGRATIONSCRIPT','MRGSP_CODIGO','MRGSP'), current_timestamp,'ADMIN', current_timestamp,'ADMIN', current_timestamp,
+	true,'mortiz','f_cgg_res_documentacion_solicitada_select','',
+	'1.0','2016_06_14_f_cgg_res_documentacion_solicitada_select.sql',true);

@@ -6,6 +6,7 @@ import com.bmlaurus.Util.constantes.Constantes;
 import com.bmlaurus.camel.processor.ConsumeProcessor;
 import com.bmlaurus.camel.processor.ErrorProcessor;
 import com.bmlaurus.invoker.BackEndInvokerVoParameter;
+import com.bmlaurus.virtual.VirtualCache;
 import org.apache.activemq.camel.component.ActiveMQComponent;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
@@ -18,6 +19,7 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,29 +43,32 @@ public class CamelSingleton {
 
     @PostConstruct
     void init() {
-        ACTIVE_MQ_PORT = MensajeriaPropertiesManager.getActiveMqPort();
-        maximumRedeliveries = MensajeriaPropertiesManager.getMaximumDeliveries(maximumRedeliveries);
-        redeliveryDelay = MensajeriaPropertiesManager.getRedeliveryDelay(redeliveryDelay);
-        ipOrigen = MensajeriaPropertiesManager.getOriginIp();
-        ipDestino = MensajeriaPropertiesManager.getDestinyIp();
+        Properties config = VirtualCache.getConfig(VirtualCache.PROP_INTEGRATION_CONF);
+        if(config!=null && Boolean.valueOf(config.getProperty("ENABLE_INTEGRATION"))) {
+            ACTIVE_MQ_PORT = MensajeriaPropertiesManager.getActiveMqPort();
+            maximumRedeliveries = MensajeriaPropertiesManager.getMaximumDeliveries(maximumRedeliveries);
+            redeliveryDelay = MensajeriaPropertiesManager.getRedeliveryDelay(redeliveryDelay);
+            ipOrigen = MensajeriaPropertiesManager.getOriginIp();
+            ipDestino = MensajeriaPropertiesManager.getDestinyIp();
 
-        mapClassMethod= MensajeriaPropertiesManager.getClasesMetodosIntegrados();
+            mapClassMethod = MensajeriaPropertiesManager.getClasesMetodosIntegrados();
 
-        try {
-             camelContext = new DefaultCamelContext();
-            ConsumeProcessor consumeProcessor = new ConsumeProcessor();
-            ErrorProcessor errorProcessor = new ErrorProcessor(MensajeriaPropertiesManager.getHomePath());
-            template = camelContext.createProducerTemplate();
-            camelContext.addComponent(Constantes.ACTIVEMQ_ORIGEN, ActiveMQComponent.activeMQComponent(generateMqDestination(ipOrigen,ACTIVE_MQ_PORT)));
-            camelContext.addComponent(Constantes.ACTIVEMQ_DESTINO, ActiveMQComponent.activeMQComponent(generateMqDestination(ipDestino,ACTIVE_MQ_PORT)));
-            camelContext.addRoutes(createErrorRoute(errorProcessor));
-            camelContext.addRoutes(createRoute());
-            camelContext.addRoutes(createConsumerRoute(consumeProcessor));
-            camelContext.start();
+            try {
+                camelContext = new DefaultCamelContext();
+                ConsumeProcessor consumeProcessor = new ConsumeProcessor();
+                ErrorProcessor errorProcessor = new ErrorProcessor(MensajeriaPropertiesManager.getHomePath());
+                template = camelContext.createProducerTemplate();
+                camelContext.addComponent(Constantes.ACTIVEMQ_ORIGEN, ActiveMQComponent.activeMQComponent(generateMqDestination(ipOrigen, ACTIVE_MQ_PORT)));
+                camelContext.addComponent(Constantes.ACTIVEMQ_DESTINO, ActiveMQComponent.activeMQComponent(generateMqDestination(ipDestino, ACTIVE_MQ_PORT)));
+                camelContext.addRoutes(createErrorRoute(errorProcessor));
+                camelContext.addRoutes(createRoute());
+                camelContext.addRoutes(createConsumerRoute(consumeProcessor));
+                camelContext.start();
 
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error al inicializar el camel", e);
-            throw new RuntimeException("FAVOR INICIALIZAR LOS VALORES DE CAMEL CORRECTAMENTE,");
+            } catch (Exception e) {
+                logger.log(Level.SEVERE, "Error al inicializar el camel", e);
+                throw new RuntimeException("FAVOR INICIALIZAR LOS VALORES DE CAMEL CORRECTAMENTE,");
+            }
         }
     }
 
@@ -123,7 +128,8 @@ public class CamelSingleton {
     @PreDestroy
     public void destroy(){
         try {
-            camelContext.stop();
+            if(camelContext!=null)
+                camelContext.stop();
         }
         catch(Exception e){
             logger.log(Level.SEVERE,"",e);

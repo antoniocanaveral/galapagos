@@ -2,9 +2,9 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <title>Sistema Integral Inform&aacute;tico SIICGG</title>
-        <link rel="stylesheet" type="text/css" href="../login/custom.css" />
-        <link rel="stylesheet" type="text/css" href="../login/bootstrap/bootstrap.css" />
-        <link rel="stylesheet" type="text/css" href="../login/bootstrap/bootstrap.js" />
+        <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/login/custom.css" />
+        <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/login/bootstrap/bootstrap.css" />
+        <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/login/bootstrap/bootstrap.js" />
         <script type="text/javascript"  language="javascript">
             Date.prototype.addHours= function(h){
                 this.setHours(this.getHours()+h);
@@ -79,7 +79,7 @@
                 <div class="col-md-4 col-md-offset-4">
                     <div class="login-panel panel panel-default">
                         <div class="panel-heading">
-                            <div class="cgg-logo" align="center"><img src="../login/logo-galapagos.png" /></div>
+                            <div class="cgg-logo" align="center"><img src="<%=request.getContextPath()%>/login/logo-galapagos.png" /></div>
                             <h3 class="panel-title">Sistema Integral Inform&aacute;tico SIICGG</h3>
                         </div>
                         <div class="panel-body">

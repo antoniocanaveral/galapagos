@@ -42,6 +42,7 @@
 		<module>sii_commons</module>
 		<module>sii_ejb</module>
 		<module>sii_ecm_integration</module>
+		<module>sii_biometric_common</module>
 		<module>sii_applet_signature</module>
 		<module>sii_applet_fingerprint</module>
 		<module>SIICGG_UI</module>

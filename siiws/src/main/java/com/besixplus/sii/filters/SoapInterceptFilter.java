@@ -2,6 +2,7 @@ package com.besixplus.sii.filters;
 
 import com.bmlaurus.camel.CamelSingleton;
 import com.bmlaurus.invoker.BackEndInvokerVoParameter;
+import com.bmlaurus.virtual.VirtualCache;
 import org.jdom2.Content;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -16,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,29 +28,34 @@ public class SoapInterceptFilter implements Filter {
 
     private static Logger logger = Logger.getLogger("SoapInterceptFilter");
 
+    Properties config = null;
+
     @EJB
     CamelSingleton camelSingleton;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+        config = VirtualCache.getConfig(VirtualCache.PROP_INTEGRATION_CONF);
     }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        boolean doChain = true;
-        if (servletRequest instanceof HttpServletRequest) {
-            HttpServletRequest request = (HttpServletRequest) servletRequest;
-            try {
-                SoapInterceptRequestWrapper myRequestWrapper = new SoapInterceptRequestWrapper(request);
-                callIntegration(myRequestWrapper);
-                doChain = false;
-                filterChain.doFilter(myRequestWrapper, servletResponse);
-            } catch (Exception e) {
-                e.getStackTrace();
+        if(config!=null && Boolean.valueOf(config.getProperty("ENABLE_INTEGRATION"))) {
+            boolean doChain = true;
+            if (servletRequest instanceof HttpServletRequest) {
+                HttpServletRequest request = (HttpServletRequest) servletRequest;
+                try {
+                    SoapInterceptRequestWrapper myRequestWrapper = new SoapInterceptRequestWrapper(request);
+                    callIntegration(myRequestWrapper);
+                    doChain = false;
+                    filterChain.doFilter(myRequestWrapper, servletResponse);
+                } catch (Exception e) {
+                    e.getStackTrace();
+                }
             }
-        }
-        if (doChain) {
-            filterChain.doFilter(servletRequest, servletResponse);
+            if (doChain) {
+                filterChain.doFilter(servletRequest, servletResponse);
+            }
         }
     }
 

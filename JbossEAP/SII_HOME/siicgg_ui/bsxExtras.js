@@ -1,5 +1,6 @@
 Ext.BLANK_IMAGE_URL='lib/extjs/resources/images/default/s.gif';
 var URL_SERVER= document.URL.split('/')[2];
+//var URL_WS = "https://siiws.gobiernogalapagos.gob.ec:8443/siiws/";
 var URL_WS = "/siiws/";
 var URL_APP="/sii/";
 var URL_DOC_VIEWER="/siiws/DocViewer";

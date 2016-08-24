@@ -87,6 +87,9 @@ INSERT INTO sii.cgg_not_mail (ntml_codigo, ntml_name, ntml_description, ntml_sub
 <div style="border-radius: 3px ! important; border: 1px solid rgb(220, 220, 220);">
     <h3 style="color: #00aca2; display: block; font-family: Helvetica Neue, Helvetica, Roboto, Arial, sans-serif; font-size: 16px; font-weight: bold; line-height: 130%; margin: 16px 0 16px; padding-left: 16px; text-align: left;">Datos del Auspiciante</h3>
 	<p style="margin: 0 0 16px; padding-left: 16px;">
+		<strong>Empresa:</strong> @$EMPRESA@
+	</p>
+	<p style="margin: 0 0 16px; padding-left: 16px;">
 		<strong>Nombres:</strong> @$AUSPICIANTE@
 	</p>
 </div>
@@ -137,6 +140,9 @@ INSERT INTO sii.cgg_not_mail (ntml_codigo, ntml_name, ntml_description, ntml_sub
 
 <div style="border-radius: 3px ! important; border: 1px solid rgb(220, 220, 220);">
     <h3 style="color: #00aca2; display: block; font-family: Helvetica Neue, Helvetica, Roboto, Arial, sans-serif; font-size: 16px; font-weight: bold; line-height: 130%; margin: 16px 0 16px; padding-left: 16px; text-align: left;">Datos del Auspiciante</h3>
+	<p style="margin: 0 0 16px; padding-left: 16px;">
+		<strong>Empresa:</strong> @$EMPRESA@
+	</p>
 	<p style="margin: 0 0 16px; padding-left: 16px;">
 		<strong>Nombres:</strong> @$AUSPICIANTE@
 	</p>
