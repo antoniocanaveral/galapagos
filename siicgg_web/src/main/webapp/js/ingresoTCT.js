@@ -1312,7 +1312,7 @@ function loadIngresoTCT(){
      *
      * */
     function validarReglas(codigoPersona)
-    {        
+    {
 	btnAceptarIngreso.disabled = true;	
             function CallBackCgg_regla_validacion(r){                
 				var validacion = eval('('+r+')');    
