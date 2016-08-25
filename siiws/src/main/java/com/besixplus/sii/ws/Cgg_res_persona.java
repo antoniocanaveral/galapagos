@@ -5,6 +5,7 @@ import com.besixplus.sii.i18n.Messages;
 import com.besixplus.sii.mail.Base64;
 import com.besixplus.sii.objects.Cgg_res_adjunto_temporal;
 import com.bmlaurus.attachment.CreatorInvoker;
+import com.bmlaurus.util.Characters;
 import com.bmlaurus.ws.dinardap.RegistroCivil;
 import com.bmlaurus.ws.dinardap.Utils;
 import org.json.JSONException;
@@ -1402,11 +1403,11 @@ public class Cgg_res_persona implements Serializable{
 							List<String> apellidos = Utils.buildNombresApellidos(registroCivil.getNombre(), registroCivil.getNombrePadre(), registroCivil.getNombreMadre());
 							if (apellidos != null && apellidos.size() == 3) {
 								if (apellidos.get(0).length() > 0)
-									tmpObj.setCRPER_APELLIDO_PATERNO(apellidos.get(0));
+									tmpObj.setCRPER_APELLIDO_PATERNO(Characters.WHITESPACE.leftTrim(apellidos.get(0)));
 								if (apellidos.get(1).length() > 0)
-									tmpObj.setCRPER_APELLIDO_MATERNO(apellidos.get(1));
+									tmpObj.setCRPER_APELLIDO_MATERNO(Characters.WHITESPACE.leftTrim(apellidos.get(1)));
 								if (apellidos.get(2).length() > 0)
-									tmpObj.setCRPER_NOMBRES(apellidos.get(2));
+									tmpObj.setCRPER_NOMBRES(Characters.WHITESPACE.leftTrim(apellidos.get(2)));
 							}
 							SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 							tmpObj.setCRPER_FECHA_NACIMIENTO(sdf.parse(registroCivil.getFechaNacimiento()));
@@ -1444,7 +1445,6 @@ public class Cgg_res_persona implements Serializable{
 			return tmpFormat.getData().toString();
 		return null;
 	}
-
 	/**
 	 * OBTIENE LOS REGISTROS DE LA TABLA Cgg_res_persona EN UNA ESTRUCTURA JSON o XML QUE CUMPLEN CON EL CRITERIO DE BUSQUEDA.
 	 * @param start INDICE DE INICIO DE LOS REGISTROS DE LA TABLA.

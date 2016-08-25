@@ -113,6 +113,42 @@ public class Cgg_res_aerolinea implements Serializable{
 	}
 
 	/**
+	 * OBTIENE TODOS LOS REGISTROS DE LA TABLA Cgg_res_aerolinea.
+	 * @param inConnection CONEXION A LA BASE DE DATOS.
+	 * @param inUserName NOMBRE DEL USUARIO DEL SERVIDOR DE APLICACIONES.
+	 * @return ArrayList<com.besixplus.sii.objects.Cgg_res_aerolinea> VECTOR DE OBJETOS EQUIVALENTE A LOS REGISTROS DE LA TABLA.
+	 */
+	public static ArrayList<com.besixplus.sii.objects.Cgg_res_aerolinea> selectAll(
+			java.sql.Connection inConnection,
+			String tipo,
+			String inUserName
+	){
+		ArrayList<com.besixplus.sii.objects.Cgg_res_aerolinea> outCgg_res_aerolinea = new ArrayList<com.besixplus.sii.objects.Cgg_res_aerolinea>();
+		try{
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_AEROLINEA_SELECT_AS(?,?) }");
+			stmSelect.registerOutParameter(1, Types.OTHER);
+			stmSelect.setString(2,tipo);
+			stmSelect.setString(3, inUserName);
+			stmSelect.execute();
+			ResultSet results = (ResultSet) stmSelect.getObject(1);
+			while (results.next()) {
+				com.besixplus.sii.objects.Cgg_res_aerolinea tmpCgg_res_aerolinea = new com.besixplus.sii.objects.Cgg_res_aerolinea();
+				tmpCgg_res_aerolinea.setCRALN_CODIGO(results.getString(1));
+				tmpCgg_res_aerolinea.setCRALN_NOMBRE(results.getString(2));
+				tmpCgg_res_aerolinea.setCRALN_TIPO_AEROLINEA(results.getInt(3));
+				tmpCgg_res_aerolinea.setCRALN_ESTADO(results.getBoolean(4));
+				outCgg_res_aerolinea.add(tmpCgg_res_aerolinea);
+			}
+			results.close();
+			stmSelect.close();
+		}catch(SQLException e){
+			com.besixplus.sii.db.SQLErrorHandler.errorHandler(e);
+		}
+		return outCgg_res_aerolinea;
+	}
+
+
+	/**
 	* OBTIENE TODOS LOS REGISTROS DE LA TABLA Cgg_res_aerolinea QUE CUMPLEN CON EL CRITERIO DE BUSQUEDA.
 	* @param inConnection CONEXION A LA BASE DE DATOS.
 	* @param inUserName NOMBRE DEL USUARIO DEL SERVIDOR DE APLICACIONES.

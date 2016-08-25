@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
@@ -22,6 +22,14 @@ import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
 
+import com.bmlaurus.db.EncuestaData;
+import com.bmlaurus.db.TctTransporteData;
+import com.bmlaurus.objects.PreguntaEncuesta;
+import com.bmlaurus.objects.TctTransporte;
+import com.bmlaurus.util.Characters;
+import com.bmlaurus.ws.dinardap.RegistroCivil;
+import com.bmlaurus.ws.dinardap.Utils;
+import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -769,6 +777,38 @@ public class Cgg_tct_registro implements Serializable{
 		}
 		return new Boolean(outResult).toString();
 	}
+
+	@WebMethod
+	public String cargarEncuesta() throws SOAPException{
+		List<PreguntaEncuesta> preguntas =null;
+		Gson gson = new Gson();
+		try {
+			Connection con = ManagerConnection.getConnection();
+			preguntas = EncuestaData.getAllPreguntas(con,"ENCUESTA_TCT");
+			con.close();
+		}catch(SQLException inException){
+			com.besixplus.sii.db.SQLErrorHandler.errorHandler(inException);
+			throw new SOAPFaultException(SOAPFactory.newInstance().createFault(inException.getMessage(), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
+		}
+		return gson.toJson(preguntas);
+	}
+
+	@WebMethod
+	public String getTctTransporte() throws SOAPException{
+		List<TctTransporte> transportes =null;
+		Gson gson = new Gson();
+		try {
+			Connection con = ManagerConnection.getConnection();
+			transportes = TctTransporteData.getAllTransportes(con);
+			con.close();
+		}catch(SQLException inException){
+			com.besixplus.sii.db.SQLErrorHandler.errorHandler(inException);
+			throw new SOAPFaultException(SOAPFactory.newInstance().createFault(inException.getMessage(), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
+		}
+		return gson.toJson(transportes);
+	}
+
+
 	/**
 	 * OBTIENE LOS REGISTROS DE LA TABLA Cgg_tct_registro EN UNA ESTRUCTRA JSON o XML QUE CUMPLEN CON EL CRITERIO DE BUSQUEDA.
 	 * @param inCrdid_codigo CODIGO DEL TIPO DE DOCUMENTO DE IDENTIFICACION
@@ -800,6 +840,46 @@ public class Cgg_tct_registro implements Serializable{
 			con.setAutoCommit(!ManagerConnection.isDeployed());
 			obj = com.besixplus.sii.db.Cgg_tct_registro.selectPersona(con, inCrdid_codigo, inCrper_num_doc_identific,inCtreg_fecha_ingreso);
 			con.close();
+			//--> AC --> Conexion con Dinardap cuando no existen Datos.
+			if(inCrdid_codigo.equals("1") && obj.size()==0){
+				RegistroCivil registroCivil = new RegistroCivil(inCrper_num_doc_identific);
+				if (registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_OK)) {
+					if (registroCivil.getCedula() != null && !registroCivil.getCedula().trim().isEmpty()) {
+						HashMap<String,Object> valueMap = new HashMap<>();
+						List<String> apellidos = Utils.buildNombresApellidos(registroCivil.getNombre(), registroCivil.getNombrePadre(), registroCivil.getNombreMadre());
+						if (apellidos != null && apellidos.size() == 3) {
+							if (apellidos.get(0).length() > 0) {
+								valueMap.put("CRPER_APELLIDO_PATERNO", Characters.WHITESPACE.leftTrim(apellidos.get(0)));
+							}
+							if (apellidos.get(1).length() > 0) {
+								valueMap.put("CRPER_APELLIDO_MATERNO", Characters.WHITESPACE.leftTrim(apellidos.get(1)));
+							}
+							if (apellidos.get(2).length() > 0) {
+								valueMap.put("CRPER_NOMBRES", Characters.WHITESPACE.leftTrim(apellidos.get(2)));
+							}
+						}
+						SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+						try {
+							Date parsedDate = sdf.parse(registroCivil.getFechaNacimiento());
+							sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+							valueMap.put("CRPER_FECHA_NACIMIENTO", sdf.format(parsedDate));
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+
+						if (registroCivil.getNacionalidad().equals("ECUATORIANA")) {
+							valueMap.put("CGNCN_CODIGO", "61");
+							valueMap.put("NACIONALIDAD", "Ecuador");
+						}
+						if (registroCivil.getGenero().equals("MUJER")) {
+							valueMap.put("CRPER_GENERO", "1");
+						} else {
+							valueMap.put("CRPER_GENERO", "0");
+						}
+						obj.add(valueMap);
+					}
+				}
+			}
 			tmpFormat = new com.besixplus.sii.misc.Formatter(format, obj);
 		}catch(SQLException inException){
 			com.besixplus.sii.db.SQLErrorHandler.errorHandler(inException);

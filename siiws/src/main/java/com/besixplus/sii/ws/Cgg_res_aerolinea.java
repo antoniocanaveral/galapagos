@@ -3,6 +3,7 @@ package com.besixplus.sii.ws;
 import com.besixplus.sii.db.ManagerConnection;
 import com.besixplus.sii.i18n.Messages;
 
+import javax.annotation.Nullable;
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
@@ -92,7 +93,7 @@ public class Cgg_res_aerolinea implements Serializable{
 	* @throws SOAPException 
 	*/
 	@WebMethod
-	public String selectAll(
+	public String selectAll_OLD(
 		@WebParam(name="format")String format
 	) throws SOAPException{
 		HttpServletRequest tmpRequest = (HttpServletRequest) wctx.getMessageContext().get(MessageContext.SERVLET_REQUEST);
@@ -111,6 +112,44 @@ public class Cgg_res_aerolinea implements Serializable{
 			}
 			con.setAutoCommit(!ManagerConnection.isDeployed());
 			obj = com.besixplus.sii.db.Cgg_res_aerolinea.selectAll(con, usuarioName);
+			tmpFormat = new com.besixplus.sii.misc.Formatter(format, obj);
+			outCadena = tmpFormat.getData();
+			con.close();
+		}catch(SQLException inException){
+			com.besixplus.sii.db.SQLErrorHandler.errorHandler(inException);
+			throw new SOAPFaultException(SOAPFactory.newInstance().createFault(inException.getMessage(), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
+		}if (obj != null)
+			return outCadena.toString();
+		return null;
+	}
+
+	/**
+	 * OBTIENE TODOS LOS REGISTROS DE LA TABLA Cgg_res_aerolinea EN UNA ESTRUCTURA JSON o XML.
+	 * @param format FORMATO DE SALIDA DE LOS DATOS (JSON, XML).
+	 * @return VECTOR JSON o XML EQUIVALENTE A LOS REGISTROS DE LA TABLA.
+	 * @throws SOAPException
+	 */
+	@WebMethod
+	public String selectAll(
+			@WebParam(name="format")String format,
+			@Nullable @WebParam(name="tipo")String tipo
+	) throws SOAPException{
+		HttpServletRequest tmpRequest = (HttpServletRequest) wctx.getMessageContext().get(MessageContext.SERVLET_REQUEST);
+		ArrayList<com.besixplus.sii.objects.Cgg_res_aerolinea> obj = null;
+		StringBuilder outCadena = null;
+		com.besixplus.sii.misc.Formatter tmpFormat = null;
+		try{
+			Connection con = ManagerConnection.getConnection();
+			String usuarioName="";
+			if(tmpRequest.getUserPrincipal()!=null){
+				usuarioName = tmpRequest.getUserPrincipal().getName();
+				if(!com.besixplus.sii.db.Cgg_sec_objeto.isGrant(con, Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getClassName(), tmpRequest.getUserPrincipal().getName(), 1)){
+					con.close();
+					throw new SOAPFaultException(SOAPFactory.newInstance().createFault(myInfoMessages.getMessage("sii.seguridad.acceso.negado", null), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
+				}
+			}
+			con.setAutoCommit(!ManagerConnection.isDeployed());
+			obj = com.besixplus.sii.db.Cgg_res_aerolinea.selectAll(con,tipo, usuarioName);
 			tmpFormat = new com.besixplus.sii.misc.Formatter(format, obj);
 			outCadena = tmpFormat.getData();
 			con.close();

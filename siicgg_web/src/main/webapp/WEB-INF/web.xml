@@ -45,11 +45,25 @@
         <welcome-file>default.jsp</welcome-file>
     </welcome-file-list>
     <security-constraint>
+        <display-name>PrivateWS</display-name>
         <web-resource-collection>
             <web-resource-name>siicgg_web</web-resource-name>
-            <url-pattern>/login/*</url-pattern>
+            <url-pattern>/PrivateWS/*</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
         </web-resource-collection>
-        <!-- OMIT auth-constraint -->
+        <web-resource-collection>
+            <web-resource-name>siicgg_web</web-resource-name>
+            <url-pattern>/*</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>atencion_cliente</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
     </security-constraint>
     <security-constraint>
         <display-name>SIICGG_WEB</display-name>
@@ -59,12 +73,6 @@
             <http-method>GET</http-method>
             <http-method>POST</http-method>
         </web-resource-collection>
-        <auth-constraint>
-            <role-name>*</role-name>
-        </auth-constraint>
-        <user-data-constraint>
-            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-        </user-data-constraint>
     </security-constraint>
     <login-config>
         <auth-method>FORM</auth-method>
@@ -75,6 +83,6 @@
         </form-login-config>
     </login-config>
     <security-role>
-        <role-name>*</role-name>
+        <role-name>atencion_cliente</role-name>
     </security-role>
 </web-app>

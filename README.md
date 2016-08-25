@@ -5,7 +5,7 @@ Nuevo Branch de Desarrollo a partir de aqui.
 
 ## Instalación
 
-Documentos de Instalación de la plataforma
+Documentos de Compilación e Instalación de la plataforma
 
 [Docs]: ./doc/README.md "Documentación"
 [Docs][]

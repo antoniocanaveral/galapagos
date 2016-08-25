@@ -3,7 +3,7 @@
 Para la instalación del sistema SII, se requiere instalar Alfresco según el manuál de instalación, JasperServer y JBoss EAP.<br/>
 A continuación la descripción de cada componente:
 
-## Instalación del Servidor JBoss de SII
+## Instalación del Servidor JBoss de SII / Compilación del Proyecto
 [Instalador]: ./Install.md "Guía de Instalación"
 [Instalador][]
 

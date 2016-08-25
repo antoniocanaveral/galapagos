@@ -14,66 +14,8 @@
 		    });
 		  
 	  });   
-	  var valorCalificacion1 = '';
-	  var valorCalificacion2 = '';
-	  var valorCalificacion3 = '';
-	  var valorCalificacion4 = '';
-	  var valorCalificacion5 = '';
-	  var valorCalificacion6 = '';
-	  var valorCalificacion7 = '';
-	  var valorCalificacion8 = '';
-	  var valorCalificacion9 = '';
-	  var valorCalificacion10 = '';
-	  var valorCalificacion11 = '';
-	  var valorCalificacion12 = '';
-	  var valorCalificacion13 = '';
-	  
-	  function colcarValorCal(tipo,valor){
-		  
-		  switch (tipo) {
-		  case '1':
-		    valorCalificacion1 = valor;
-		    break;
-		  case '2': 
-		    valorCalificacion2 = valor;
-		    break;
-		  case '3': 
-			valorCalificacion3 = valor;
-		    break; 
-		  case '4':
-			valorCalificacion4 = valor;
-		    break;
-		  case '5':
-			valorCalificacion5 = valor;
-			break;
-		  case '6':
-			valorCalificacion6 = valor;
-			break;
-		  case '7':
-			valorCalificacion7 = valor;
-			break;
-		  case '8':
-			valorCalificacion8 = valor;
-			break;
-		  case '9':
-			valorCalificacion9 = valor;
-			break;
-		  case '10':
-			valorCalificacion10 = valor;
-			break;
-		  case '11':
-			valorCalificacion11 = valor;
-		    break;
-		  case '12':
-			valorCalificacion12 = valor;
-			break;
-		  case '13':
-			valorCalificacion13 = valor;
-			break;
-		 }
-	}
-	  
-	  //Acepta solo numeros 
+
+	  //Acepta solo numeros
 	  function aceptarNumeros(e, field) {
 			key = e.keyCode ? e.keyCode : e.which;
 			if (key == 8 || key == 46)
@@ -100,7 +42,6 @@ function loadIngresoTCT(){
 	var dtFechaIngreso = $("dtFechaIngreso");
 	var dtFechaSalida = $("dtFechaSalida");
 	var tblActividad = $("tblActividad");
-	var tblHospedaje = $("tblHospedaje");
 	var btnAgregar = $("btnAgregar");
 	var btnEliminar = $("btnEliminar");
 	var txtFechaNacimiento = $("txtFechaNacimiento");
@@ -120,6 +61,29 @@ function loadIngresoTCT(){
 	var txtCodigoEspecie = $("txtCodigoEspecie");
 	var btnEditar = $("btnEditar");
 	var tblPersona = $("tblPersona");
+	//AC->Medio de Transporte
+	var cbmMedioTransporte = jQuery("#cbmMedioTransporte");
+	//AC->Correo
+	var txtCorreoElectronico = $("txtCorreoElectronico");
+	var txtConfirCorreoElectronico = $("txtConfirCorreoElectronico");
+	//AC->Codigo Postal
+	var txtCodigoPostal = $("txtCodigoPostal");
+	//AC-> Hospedaje Dinamico
+	var btnAgregarHospedaje = $("btnAgregarHospedaje");
+	var btnEliminarHospedaje = $("btnEliminarHospedaje");
+	var btnAceptarHospedaje = $("btnAceptarHospedaje");
+	var btnSalirHospedaje = $("btnSalirHospedaje");
+	var frmHospedaje = $("frmHospedaje");
+	var tblHospedaje = $("tblHospedaje");
+	var dtFechaIngresoHospedaje = $("dtFechaIngresoHospedaje");
+	var dtFechaSalidaHospedaje = $("dtFechaSalidaHospedaje");
+	dtFechaIngresoHospedaje.value = Date.today().toString("dd/MM/yyyy");
+	dtFechaSalidaHospedaje.value = Date.today().toString("dd/MM/yyyy");
+	var filaTablaHospedaje = '';
+	var lugarHospedaje;
+	var lugarHospedajeId;
+	var tblEncuesta = $("tblEncuesta");
+
 	var filaTablaPersona = '';
 	var posicion = -1;
 	var posicionEdit = -1;
@@ -139,28 +103,111 @@ function loadIngresoTCT(){
 	jQuery('#cbxNombreHospedaje').append("<option value='0'>Seleccione un item</option>");
 	jQuery("#txtNroVuelo").val('');
 	jQuery("#txtNumeroMiembros").val('');
-	jQuery("#txtCual").val('');
 	//jQuery("input:radio[checked=false]");
 	jQuery("input[type=radio]").attr('checked', false);
-	
-	
-	valorCalificacion1 = '';
-	valorCalificacion2 = '';
-	valorCalificacion3 = '';
-	valorCalificacion4 = '';
-	valorCalificacion5 = '';
-	valorCalificacion6 = '';
-	valorCalificacion7 = '';
-	valorCalificacion8 = '';
-	valorCalificacion9 = '';
-	valorCalificacion10 = '';
-	valorCalificacion11 = '';
-	valorCalificacion12 = '';
-	valorCalificacion13 = '';
-	  
+
+
+	//AC--> Encuesta Dinamica
+	var raiting = [];
+	function CallBackCgg_cargar_encuesta(r){
+		var colSize = 3;
+		if (jQuery(window).width() < 960)
+			colSize = 2;
+		r = eval ("("+r+")");
+		var rowNum = tblEncuesta.rows.length-1;
+		if(r){
+			for(var i=0;i<r.length;i++){
+				var pregunta = r[i];
+				var tbodyEncuesta = tblEncuesta.tBodies[0];
+				//Pregunta
+				rowNum+=1;
+				var fila =tbodyEncuesta.insertRow(rowNum);
+				fila.id = 'enc_'+i;
+				var cell = fila.insertCell();
+				cell.id = pregunta.codigo;
+				cell.innerHTML = pregunta.descripcion;
+				cell.colSpan = colSize;
+
+				//Items STAR
+				if(pregunta.tipo=="SCORE"){
+					rowNum+=1;
+					fila =tbodyEncuesta.insertRow(rowNum);
+					fila.id = 'encItem_'+i;
+					fila.tipo = pregunta.tipo;
+					for(var j=0;j<pregunta.items.length;j++){
+						var cellItem = fila.insertCell();
+						cellItem.id = "star_"+i+"_"+j;
+						cellItem.innerHTML = "<div class='itemContainer'> <div class='itemRateYo' id='rateYo_" + i + "_" + j +"'></div> <div class='itemTitle'>"+pregunta.items[j].descripcion+" </div></div>";
+						if((j+1)%colSize==0){//Es multiplo de colSize. Creamos otra fila debajo.
+							rowNum+=1;
+							fila = tbodyEncuesta.insertRow(rowNum);
+							fila.id = 'encItem_'+i;
+						}
+						raiting.push("rateYo_" + i + "_" +j);
+					}
+				}else if(pregunta.tipo=="COMBO"){
+					rowNum+=1;
+					fila =tbodyEncuesta.insertRow(rowNum);
+					fila.id = 'encItem_'+i;
+					fila.tipo = pregunta.tipo;
+					var cellItem = fila.insertCell();
+					cellItem.id = "combo_"+i+"_"+j;
+					cellItem.innerHTML ="<select class='selectEncuesta' id='encuesta_"+i+"'></select>";
+					cellItem.colSpan = colSize;
+					jQuery("#encuesta_"+i).append("<option>Seleccione un Item</option>");
+					for(var j=0;j<pregunta.items.length;j++){
+						jQuery("#encuesta_"+i).append("<option value='"+pregunta.items[j].codigo+"'>"+pregunta.items[j].descripcion+"</option>");
+					}
+
+				}else if(pregunta.tipo=="TEXT"){
+					rowNum+=1;
+					fila =tbodyEncuesta.insertRow(rowNum);
+					fila.id = 'encItem_'+i;
+					fila.tipo = pregunta.tipo;
+					var cellItem = fila.insertCell();
+					cellItem.id = "text_"+i+"_"+j;
+					cellItem.innerHTML ="<input type='text' maxlength='200' class='inputEncuesta' id='encuesta_"+i+"'/>";
+					cellItem.colSpan = colSize;
+				}
+			}
+
+			if(raiting && raiting.length>0){
+				setTimeout(createStars,500);
+			}
+		}
+	}
+
+	function createStars(){
+		for(var i=0;i<raiting.length;i++){
+			jQuery("#"+raiting[i]).raty({
+				number:         4,
+				hintList:       ['1', '2', '3', '4']
+			});
+		}
+	}
+
+	function encuestaLlena(){
+		var llena = false;
+		if(raiting.length>0){
+			for(var i=0;i<raiting.length;i++){
+				if(jQuery("#"+raiting[i]).score != null)
+					llena = true;
+			}
+		}else
+			llena = true;
+		return llena;
+	}
+
+	function cargarEncuesta(){
+		SOAPClient.invoke(URL_WS+"PublicWS/Cgg_tct_registro", "cargarEncuesta", null, true, CallBackCgg_cargar_encuesta);
+	}
+
+	cargarEncuesta();
+
 	btnSalirIngreso.onclick = function(){
 		btnSalirAll($("FrmIngresoPersona"));
-	}
+	};
+
 	btnEditar.onclick = function(){
 		if (filaTablaPersona){
 			if(posicion>0){
@@ -181,7 +228,7 @@ function loadIngresoTCT(){
 				showForm(FrmIngresoPersona);			
 			}
 		}
-	}
+	};
 	function fnVerificarDatos(){		
 		jQuery('.form-line-error').removeClass("form-line-error");
         var isComplete =  true;
@@ -190,7 +237,12 @@ function loadIngresoTCT(){
         	jQuery('#cbxCategoria').addClass("form-line-error");
             isComplete = false;
         }
-        if(jQuery("#cbxTipoRegistro").val()==0)
+		if(jQuery("#cbxEstadoCivil").val()==0)
+		{
+			jQuery('#cbxEstadoCivil').addClass("form-line-error");
+			isComplete = false;
+		}
+		if(jQuery("#cbxTipoRegistro").val()==0)
         {
         	jQuery('#cbxTipoRegistro').addClass("form-line-error");
             isComplete = false;
@@ -211,60 +263,13 @@ function loadIngresoTCT(){
         	jQuery('#cbxDestinoAux').addClass("form-line-error");
             isComplete = false;
         }
-        if(jQuery("#cbxTipoHospedaje").val()==0)
-        {
-        	jQuery('#cbxTipoHospedaje').addClass("form-line-error");
-            isComplete = false;
-        }else{
-        	if(jQuery("#cbxTipoHospedaje").val()==102){
-        		if(jQuery("#cbxNombreHospedaje").val()==0){
-        			jQuery('#cbxNombreHospedaje').addClass("form-line-error");
-                    isComplete = false;
-        		}    
-        	}else if(jQuery("#cbxTipoHospedaje").val()==104){
-        		if(jQuery("#cbxNombreHospedajeIsla").val()==0){
-        			jQuery('#cbxNombreHospedajeIsla').addClass("form-line-error");
-                    isComplete = false;
-        		}  
-        		if(jQuery("#cbxIslaHospedaje").val()==0){
-        			jQuery('#cbxIslaHospedaje').addClass("form-line-error");
-                    isComplete = false;
-        		} 
-        		
-        	}else if(jQuery("#cbxTipoHospedaje").val()==103){
-        		if(jQuery("#divLugarHospedaje").val().trim()==''){
-        			jQuery('#divLugarHospedaje').addClass("form-line-error");
-                    isComplete = false;
-        		}  
-        		if(jQuery("#cbxIslaHospedaje").val()==0){
-        			jQuery('#cbxIslaHospedaje').addClass("form-line-error");
-                    isComplete = false;
-        		} 
-        	}
-        	
-        	
-        }
+
         if(jQuery("#cbxInformacionViaje1Aux").val()==0)
         {
         	jQuery('#cbxInformacionViaje1Aux').addClass("form-line-error");
             isComplete = false;
         }
-        if(jQuery("#cbxInformacionViaje2Aux").val()==0)
-        {
-        	jQuery('#cbxInformacionViaje2Aux').addClass("form-line-error");
-            isComplete = false;
-        }
-        if(jQuery("#cbxInformacionViaje3Aux").val()==0)
-        {
-        	jQuery('#cbxInformacionViaje3Aux').addClass("form-line-error");
-            isComplete = false;
-        }
-        if(jQuery("#cbxInformacionViaje4Aux").val()==0)
-        {
-        	jQuery('#cbxInformacionViaje4Aux').addClass("form-line-error");
-            isComplete = false;
-        }
-        
+
         if(jQuery("#txtNroVuelo").val().trim()=='')
         {
         	jQuery('#txtNroVuelo').addClass("form-line-error");
@@ -276,77 +281,10 @@ function loadIngresoTCT(){
         	jQuery('#txtNumeroMiembros').addClass("form-line-error");
             isComplete = false;
         }
-        
-        if(jQuery("#txtCual").val().trim()=='')
-        {
-        	jQuery('#txtCual').addClass("form-line-error");
-            isComplete = false;
-        }
-        
-        if(valorCalificacion1==''){
-        	 jQuery('#vidaMarina').addClass("form-line-error");
-        	 isComplete = false;
-        }
-        
-        if(valorCalificacion2==''){
-       	 jQuery('#solyplaya').addClass("form-line-error");
-       	 isComplete = false;
-       }
-        
-        if(valorCalificacion3==''){
-       	 jQuery('#vidaterrestre').addClass("form-line-error");
-       	 isComplete = false;
-       }
-        
-        if(valorCalificacion4==''){
-       	 jQuery('#paisaje').addClass("form-line-error");
-       	 isComplete = false;
-       }
-        
-        if(valorCalificacion5==''){
-       	 jQuery('#crucero').addClass("form-line-error");
-       	 isComplete = false;
-       }
-        
-        if(valorCalificacion6==''){
-       	 jQuery('#buceo').addClass("form-line-error");
-       	 isComplete = false;
-       }
-        
-        if(valorCalificacion7==''){
-       	 jQuery('#snorkel').addClass("form-line-error");
-       	 isComplete = false;
-       }
-        
-        if(valorCalificacion8==''){
-       	 jQuery('#kayak').addClass("form-line-error");
-       	 isComplete = false;
-       }
-        
-        if(valorCalificacion9==''){
-       	 jQuery('#surf').addClass("form-line-error");
-       	 isComplete = false;
-       }
-        
-        if(valorCalificacion10==''){
-       	 jQuery('#senderisimo').addClass("form-line-error");
-       	 isComplete = false;
-       }
-        
-        if(valorCalificacion11==''){
-          	 jQuery('#observacion').addClass("form-line-error");
-          	 isComplete = false;
-          }
-        
-        if(valorCalificacion12==''){
-          	 jQuery('#fotografia').addClass("form-line-error");
-          	 isComplete = false;
-          }
-        
-        if(valorCalificacion13==''){
-          	 jQuery('#persa').addClass("form-line-error");
-          	 isComplete = false;
-          }
+        if(!encuestaLlena()){
+			jQuery('#tblEncuesta').addClass("form-line-error");
+			isComplete = false;
+		}
 		
         if(isComplete ==false){
         	new bsxMessageBox({
@@ -393,14 +331,14 @@ function loadIngresoTCT(){
 		showForm($("FrmIngresoPersona"));
 		fnHabilitarControles(true);
 		btnAceptarIngreso.disabled = true;
-	}
+	};
 	btnEliminar.onclick = function(){
 		if(filaTablaPersona){
 			var tbodyPersona = tblPersona.tBodies[0];	
 			tbodyPersona.removeChild(filaTablaPersona);
 			filaTablaPersona='';
 		}
-	}
+	};
 	var objIngreso = new JsDatePick({
         useMode:2,
         target:"dtFechaIngreso",
@@ -422,7 +360,220 @@ function loadIngresoTCT(){
         imgPath:"..images/jsdatepicker/"
 		//limitToToday:true
     });
-	
+
+	//->AC Hospedaje Dinamico
+
+	btnAgregarHospedaje.onclick = function(){
+		frmHospedaje.reset();
+		jQuery("#dtFechaIngresoHospedaje").datepicker({
+			showOn: 'both',
+			buttonImage: 'css/icon/date.gif',
+			buttonImageOnly: false,
+			appendText: '(dd/mm/yyyy)',
+			dateFormat: 'dd/mm/yy',
+			defaultDate: Date.parseExact(dtFechaSalida.value,"dd/MM/yyyy"),
+			minDate: Date.parseExact(dtFechaSalida.value,"dd/MM/yyyy"),
+			maxDate: hospCont >=1 ?Date.parseExact(dtFechaSalida.value,"dd/MM/yyyy"):null,
+			changeYear: false,
+			changeMonth: false,
+			showButtonPanel: false,
+			beforeShow: function(input, inst)
+			{
+				inst.dpDiv.css({marginLeft: (input.offsetWidth+50) + 'px'});
+			}
+		});
+		var limite_dias = jQuery("#cbxTipoRegistro").val() == 1 ? 90:180;
+		document.getElementById("dtFechaSalidaHospedaje").disabled = true;
+		jQuery("#dtFechaIngresoHospedaje").change(function(v){
+			jQuery("#dtFechaSalidaHospedaje").datepicker({
+				showOn: 'both',
+				buttonImage: 'css/icon/date.gif',
+				buttonImageOnly: false,
+				appendText: '(dd/mm/yyyy)',
+				dateFormat: 'dd/mm/yy',
+				currentText: 'Hoy',
+				defaultDate: Date.parseExact(v.target.value,"dd/MM/yyyy").add(1).days(),
+				minDate: Date.parseExact(v.target.value,"dd/MM/yyyy").add(1).days(),
+				maxDate: Date.parseExact(dtFechaIngreso.value,"dd/MM/yyyy").add(limite_dias).days(),
+				changeYear: false,
+				changeMonth: true,
+				showButtonPanel: false,
+				nextText: 'Siguiente',
+				prevText: 'Anterior',
+				beforeShow: function(input, inst)
+				{
+					inst.dpDiv.css({marginLeft: (input.offsetWidth+50) + 'px'});
+				}
+			});
+			document.getElementById("dtFechaSalidaHospedaje").disabled = false;
+		});
+
+		showForm($("FrmIngresoHospedaje"));
+	};
+	btnEliminarHospedaje.onclick = function(){
+		if(filaTablaHospedaje && filaTablaHospedaje.id=="tr_"+(tblHospedaje.rows.length-2)){
+			var tbodyHospedaje = tblHospedaje.tBodies[0];
+			tbodyHospedaje.removeChild(filaTablaHospedaje);
+			filaTablaHospedaje='';
+			hospCont--;
+			if(hospCont==0){
+				dtFechaIngreso.value = Date.today().toString("dd/MM/yyyy");
+				dtFechaSalida.value = Date.today().toString("dd/MM/yyyy");
+			}else{
+				var fila = tblHospedaje.rows[hospCont];
+				dtFechaSalida.value = fila.cells[4].id;
+			}
+			calculaTotalDias();
+		}else{
+			new bsxMessageBox({
+				title:"Validaci\u00f3n",
+				msg:"<span>Por favor elimine el hospedaje desde el \u00f1ltimo registro</span>",
+				icon:"iconError"
+			});
+		}
+	};
+
+	function verificaHospedaje(){
+		jQuery('.form-line-error').removeClass("form-line-error");
+		var isComplete =  true;
+		if(jQuery("#cbxTipoHospedaje").val()==0){
+			jQuery('#cbxTipoHospedaje').addClass("form-line-error");
+			isComplete = false;
+		}
+		if(jQuery("#cbxTipoHospedaje").val()==102){
+			if(jQuery("#cbxNombreHospedaje").val()==0){
+				jQuery('#cbxNombreHospedaje').addClass("form-line-error");
+				isComplete = false;
+			}
+		}else if(jQuery("#cbxTipoHospedaje").val()==104){
+			if(jQuery("#cbxNombreHospedajeIsla").val()==0){
+				jQuery('#cbxNombreHospedajeIsla').addClass("form-line-error");
+				isComplete = false;
+			}
+			if(jQuery("#cbxIslaHospedaje").val()==0){
+				jQuery('#cbxIslaHospedaje').addClass("form-line-error");
+				isComplete = false;
+			}
+
+		}else if(jQuery("#cbxTipoHospedaje").val()==103){
+			if(jQuery("#divLugarHospedaje").val().trim()==''){
+				jQuery('#divLugarHospedaje').addClass("form-line-error");
+				isComplete = false;
+			}
+			if(jQuery("#cbxIslaHospedaje").val()==0){
+				jQuery('#cbxIslaHospedaje').addClass("form-line-error");
+				isComplete = false;
+			}
+		}
+		if(jQuery("#dtFechaIngresoHospedaje").val().trim()==''){
+			jQuery('#dtFechaIngresoHospedaje').addClass("form-line-error");
+			isComplete = false;
+		}
+		if(jQuery("#dtFechaSalidaHospedaje").val().trim()==''){
+			jQuery('#dtFechaSalidaHospedaje').addClass("form-line-error");
+			isComplete = false;
+		}
+
+		if(isComplete ==false){
+			new bsxMessageBox({
+				title:'Alerta',
+				msg: 'Por favor verifique que todos los datos del formulario hayan sido ingresados correctamente.',
+				icon: "iconInfo"
+			});
+			return false;
+
+		}
+
+		return isComplete;
+	}
+
+	btnAceptarHospedaje.onclick = function () {
+		if(verificaHospedaje()) {
+			fnLlenarHospedaje();
+			jQuery("#dtFechaIngresoHospedaje").datepicker("destroy");
+			jQuery("#dtFechaSalidaHospedaje").datepicker("destroy");
+			calculaTotalDias();
+		}
+	};
+
+	function calculaTotalDias(){
+		var txtTotalDias = 0;
+		var tbodyHospedaje = tblHospedaje.tBodies[0];
+		for(var i=0;i<tbodyHospedaje.rows.length;i++){
+			var fila = tbodyHospedaje.rows[i];
+			if(fila.cells[5] && fila.cells[5].id && fila.cells[5].id.toString().startsWith("dias_")){
+				txtTotalDias += parseInt(fila.cells[5].innerHTML);
+			}
+		}
+		jQuery("#txtTotalDias").val(txtTotalDias);
+	}
+
+	btnSalirHospedaje.onclick = function () {
+		btnSalirAll($("FrmIngresoHospedaje"));
+	};
+	var numeroDiasHospedaje = 0;
+	jQuery("#dtFechaSalidaHospedaje").change(function(v){
+		var oneDay = 24*60*60*1000;
+		var entrada = jQuery("#dtFechaIngresoHospedaje").val();
+		var salida = v.target.value;//jQuery("#dtFechaSalidaHospedaje").val();
+		numeroDiasHospedaje = Math.round(Math.abs((Date.parseExact(salida,"dd/MM/yyyy").getTime() - Date.parseExact(entrada,"dd/MM/yyyy").getTime())/(oneDay)));
+	});
+
+	var hospCont = 0;
+	var posicionHosp;
+	function fnLlenarHospedaje(){
+		var tbodyHospedaje = tblHospedaje.tBodies[0];
+		var fila =tbodyHospedaje.insertRow(tblHospedaje.rows.length-1);
+		fila.id = 'tr_'+hospCont;
+		fila.onclick = function(){
+			filaTablaHospedaje = this;
+			posicionHosp = this.sectionRowIndex+1;
+			for (var i=1;i<tblHospedaje.rows.length;i++) {
+				tblHospedaje.rows[i].className = "rowNoSelectTable";
+			}
+			this.className="rowSelectTable";
+
+		};
+		if(hospCont==0)
+			dtFechaIngreso.value = jQuery("#dtFechaIngresoHospedaje").val();
+
+		hospCont++;
+
+		var celda= fila.insertCell(0);
+		celda.id = cbxTipoHospedaje.dom.value;
+		celda.innerHTML = cbxTipoHospedaje.dom.options[cbxTipoHospedaje.dom.selectedIndex].text;
+		celda.width = 80;
+
+		celda= fila.insertCell(1);
+		celda.id = cbxIslaHospedaje.dom.value;
+		celda.innerHTML = cbxIslaHospedaje.dom.options[cbxIslaHospedaje.dom.selectedIndex].text;
+		celda.width = 80;
+
+		celda= fila.insertCell(2);
+		celda.id = lugarHospedajeId;
+		celda.innerHTML = lugarHospedaje;
+		celda.width = 110;
+
+		celda= fila.insertCell(3); //FECHA DE INGRESO
+		celda.id = jQuery("#dtFechaIngresoHospedaje").val();
+		celda.innerHTML = jQuery("#dtFechaIngresoHospedaje").val();
+		celda.width = 80;
+
+		celda= fila.insertCell(4); //FECHA SALIDA
+		celda.id = jQuery("#dtFechaSalidaHospedaje").val();
+		celda.innerHTML = jQuery("#dtFechaSalidaHospedaje").val();
+		celda.width = 80;
+
+		celda= fila.insertCell(5);// NUMERO DE DIAS
+		celda.id = "dias_"+numeroDiasHospedaje;
+		celda.innerHTML = numeroDiasHospedaje;
+		celda.width = 80;
+
+		numeroDiasHospedaje = 0;
+		dtFechaSalida.value = jQuery("#dtFechaSalidaHospedaje").val();
+		btnSalirAll($("FrmIngresoHospedaje"));
+	}
+
 	btnAceptarIngreso.onclick = function(){	
 		btnAceptarIngreso.disabled=true;	
 		if(cbxTipoDocumento.dom.value == 1){
@@ -450,7 +601,14 @@ function loadIngresoTCT(){
 			swVerificado = false;
 		}else{
 			swVerificado = true;
-		}		
+		}
+		if(txtCorreoElectronico.value && txtCorreoElectronico.value.length>0 && txtCorreoElectronico.value == txtConfirCorreoElectronico.value){
+			swVerificado = true;
+		}else{
+			txtCorreoElectronico.focus();
+			swVerificado = false;
+			mensaje = "Hay problemas validando el correo electronico.";
+		}
 		if (swVerificado == true && flagValido == true){
 			fnLlenarPersona();
 		}else{
@@ -460,7 +618,7 @@ function loadIngresoTCT(){
 				icon:"iconError"
 			});	
 		}
-	}
+	};
 	$("btnVerificar").onclick=function(){
 		if (cbxTipoDocumento.dom.value == 1 && validarCedula(txtNumeroDocumento.value) == false){
 			
@@ -478,7 +636,7 @@ function loadIngresoTCT(){
 			return;
 		}
 		consultarPersona();	
-	}
+	};
 	
 	txtNumeroDocumento.onkeypress = function (event){
 		fnHabilitarControles(true);
@@ -499,7 +657,7 @@ function loadIngresoTCT(){
 			}
 			consultarPersona();		
         }
-    }
+    };
 	function fnLimpiarControles(){
 		txtNombrePersona.value = '';			
 		txtApellidoPersona.value = '';
@@ -507,7 +665,7 @@ function loadIngresoTCT(){
 	}
 	txtNumeroDocumento.onchange = function (){			                    
 		fnLimpiarControles();		
-    }	
+    };
 	
 	btnGuardarTTC.onclick = function(){
 		btnGuardarTTC.disabled=false;
@@ -626,17 +784,44 @@ function loadIngresoTCT(){
 	        	
 			param.add('inCtreg_lugar_hospedaje', jQuery("#divLugarHospedaje").val());
 			param.add('inCtreg_viaje_acompanante', cbxInformacionViaje1Aux.dom.value);
-			param.add('inCtreg_viaje_motivo', cbxInformacionViaje2Aux.dom.value);
-			param.add('inCtreg_viaje_actividades', cbxInformacionViaje3Aux.dom.value);
+
+			//FIXME: param.add('inCtreg_viaje_motivo', cbxInformacionViaje2Aux.dom.value);
+			//FIXME: param.add('inCtreg_viaje_actividades', cbxInformacionViaje3Aux.dom.value);
 			param.add('inCtreg_viaje_miembros', jQuery("#txtNumeroMiembros").val());
-			param.add('inCtreg_viaje_tour', cbxInformacionViaje4Aux.dom.value);
-			param.add('inCtreg_viaje_cual', jQuery("#txtCual").val());
+			//FIXME:param.add('inCtreg_viaje_tour', cbxInformacionViaje4Aux.dom.value);
+			//FIXME: param.add('inCtreg_viaje_cual', jQuery("#txtCual").val());
 			param.add('inAtractivos_JSON', jsonAtractivos);  	
 			param.add('inPersona_JSON', jsonPersona);  			
 			SOAPClient.invoke(URL_WS+"PublicWS/Cgg_tct_registro", "insert", param, true, CallBackCgg_tct_registro);
 		}else btnGuardarTTC.disabled=false;
-	}
-	
+	};
+
+	/*
+	 *Creación de un combobox para Estado Civil
+	 */
+	var cbxEstadoCivil = new bsxComboBox({
+		id:"cbxEstadoCivil",
+		renderTo:"tdEstadoCivil",
+		displayField:"CRECV_DESCRPCION",
+		valueField:"CRECV_CODIGO",
+		webService:{
+			url:URL_WS+"Cgg_res_estado_civil",
+			method:"selectAll",
+			params:[
+				{name:"format",value:"JSON"}
+			]
+		},
+		width: '80%',
+		events:{
+			load:function(v){
+				jQuery('#cbxEstadoCivil').prepend("<option value='0'>Seleccione un item</option>");
+				jQuery("#cbxEstadoCivil").val(0);
+			}
+		}
+	});
+	cbxEstadoCivil.reload();
+
+
 	
 	/*
 	 *Creación de un combobox para Categoría
@@ -653,11 +838,11 @@ function loadIngresoTCT(){
 				{name:"format",value:"JSON"}
 			]
 		},
-		width: 210,
+		width: '80%',
 		events:{
 			load:function(v){
-				jQuery('#cbxCategoria').prepend("<option value='0'>Seleccione un item</option>");
-				jQuery("#cbxCategoria").val(0);
+				//jQuery('#cbxCategoria').prepend("<option value='0'>Seleccione un item</option>");
+				jQuery("#cbxCategoria").val(1);
 			}
 		}
 	});
@@ -678,16 +863,25 @@ function loadIngresoTCT(){
 				{name:"format",value:"JSON"}
 			]
 		},
-		width: 210,
+		width: '80%',
 		events:{
 			load:function(v){
-				jQuery('#cbxTipoRegistro').prepend("<option value='0'>Seleccione un item</option>");
-				jQuery("#cbxTipoRegistro").val(0);
+				//jQuery('#cbxTipoRegistro').prepend("<option value='0'>Seleccione un item</option>");
+				jQuery("#cbxTipoRegistro").val(1);
 			}
 		}
 	});
 	cbxTipoRegistro.reload();
-	
+
+	/*
+	* AC--> Obtencion de los datos de Transporte para mejorar el dinamismo
+	* */
+	var tctTransporte = {};
+
+	SOAPClient.invoke(URL_WS+"PublicWS/Cgg_tct_registro", "getTctTransporte", null, true, function(v){
+		tctTransporte = eval("("+v+")");
+	});
+
 	/*
 	*Creacion de un combobox para las aereolineas
 	*/
@@ -699,11 +893,12 @@ function loadIngresoTCT(){
 		webService:{
 			url:URL_WS+"PublicWS/Cgg_res_aerolinea",
 			method:"selectAll",
-			params:[							
-				{name:"format",value:"JSON"}
+			params:[
+				{name:"format",value:"JSON"},
+				{name:"tipo",value:cbmMedioTransporte.val()}
 			]
 		},		
-		width: 210,
+		width: '80%',
 		events:{
 			load:function(v){
 				jQuery('#cbxAerolineaAux').prepend("<option value='0'>Seleccione un item</option>");
@@ -712,6 +907,57 @@ function loadIngresoTCT(){
 		}
 	});	
 	cbxAerolineaAux.reload();
+
+	var transItems = [];
+	cbxAerolineaAux.dom.onchange = function(v){
+		if(cbxAerolineaAux.dom.value != "0")
+			document.getElementById("vueloDetail").style.display="table-row";
+		else
+			document.getElementById("vueloDetail").style.display="none";
+
+		transItems = [];
+		for(var i=0;i<tctTransporte.length;i++){
+			if(tctTransporte[i].codigoAerolinea==v.target.value){
+				transItems.push(tctTransporte[i]);
+			}
+		}
+		if(transItems.length>0){
+			var cmbNroVuelo = document.getElementById("cmbNroVuelo");
+			document.getElementById("txtNroVuelo").style.display='none';
+			document.getElementById("cbxDestinoAux").disabled = true;
+			cmbNroVuelo.style.display='block';
+			//Borramos todos los items previamente
+			jQuery("#cmbNroVuelo").empty();
+			jQuery("#cmbNroVuelo")
+				.append("<option>Seleccione un Item</option>");
+			for(var i=0;i<transItems.length;i++){
+				jQuery("#cmbNroVuelo")
+					.append("<option value='"+transItems[i].vuelo+"'>"+transItems[i].vuelo+"</option>");
+			}
+		}else{
+			document.getElementById("txtNroVuelo").style.display='block';
+			document.getElementById("cmbNroVuelo").style.display='none';
+			document.getElementById("cbxDestinoAux").disabled = false;
+			jQuery("#cbxDestinoAux").val(0);
+		}
+	};
+
+	cbmMedioTransporte.change(function(v){
+		cbxAerolineaAux.params=[	{name:"format",value:"JSON"},
+									{name:"tipo",value:v.target.value}];
+		cbxAerolineaAux.reload();
+
+		jQuery("#cbxAerolineaAux").val(0).trigger('change');
+	});
+
+	jQuery("#cmbNroVuelo").change(function(v){
+		for(var i=0;i<transItems.length;i++){
+			if(transItems[i].vuelo == v.target.value){
+				jQuery("#cbxDestinoAux").val(transItems[i].codigoAeropuerto);
+			}
+		}
+	});
+
 	/*
 	*Creacion de un combobox para los origenes de las aereolineas
 	*/
@@ -728,7 +974,7 @@ function loadIngresoTCT(){
 				{name:"inCarpt_tipo_aereopuerto",value:0}
 			]
 		},
-		width: 210,
+		width: '80%',
 		events:{
 			load:function(v){
 				jQuery('#cbxOrigenAux').prepend("<option value='0'>Seleccione un item</option>");
@@ -753,7 +999,7 @@ function loadIngresoTCT(){
 				{name:"inCarpt_tipo_aereopuerto",value:1}
 			]
 		},
-		width: 210,
+		width: '80%',
 		events:{
 			load:function(v){
 				jQuery('#cbxDestinoAux').prepend("<option value='0'>Seleccione un item</option>");
@@ -777,7 +1023,7 @@ function loadIngresoTCT(){
 				{name:"format",value:"JSON"}
 			]
 		},
-		width: 210,
+		width: '80%',
 		events:{
 			load:function(v){
 				jQuery('#cbxTipoDocumento').prepend("<option value='0'>Seleccione un item</option>");
@@ -792,7 +1038,7 @@ function loadIngresoTCT(){
 		fnHabilitarControles(true);
 		txtNumeroDocumento.value = '';
 		txtNumeroDocumento.focus();
-	}
+	};
 	/*
 	*Creacion de un combobox para las nacionalidades
 	*/
@@ -808,13 +1054,13 @@ function loadIngresoTCT(){
 				{name:"format",value:"JSON"}
 			]
 		},
-		width: 210,
+		width: '80%',
 		events:{
 			load:function(v){
 				jQuery('#cbxPaisResidencia').prepend("<option value='0'>Seleccione un item</option>");
 				jQuery("#cbxPaisResidencia").val(0);
 			}
-		}	
+		}
 	});	
 	cbxPaisResidencia.reload();
 	/*
@@ -832,11 +1078,11 @@ function loadIngresoTCT(){
 				{name:"format",value:"JSON"}
 			]
 		},
-		width: 210,
+		width: '80%',
 		events:{
 			load:function(v){
-				jQuery('#cbxPaisResidencia').prepend("<option value='0'>Seleccione un item</option>");
-				jQuery("#cbxPaisResidencia").val(0);
+				jQuery('#cbxNacionalidad').prepend("<option value='0'>Seleccione un item</option>");
+				jQuery("#cbxNacionalidad").val(0);
 			}
 		}	
 	});	
@@ -858,7 +1104,7 @@ function loadIngresoTCT(){
 				{name:"inCgcnf_codigo",value:"CONF35"}
 			]
 		},
-		width: 210,
+		width: '80%',
 		events:{
 			load:function(v){
 				jQuery('#cbxConfiguracion').prepend("<option value='0'>Seleccione un item</option>");
@@ -884,7 +1130,7 @@ function loadIngresoTCT(){
 				{name:"format",value:"JSON"}
 			]
 		},
-		width: 210,
+		width: '80%',
 		events:{
 			load:function(v){
 				jQuery('#cbxIslaHospedaje').prepend("<option value='0'>Seleccione un item</option>");
@@ -911,7 +1157,7 @@ function loadIngresoTCT(){
 				{name:"in_identificador",value:"9"}
 			]
 		},
-		width: 210,
+		width: '80%',
 		events:{
 			load:function(v){
 				jQuery('#cbxTipoHospedaje').prepend("<option value='0'>Seleccione un item</option>");
@@ -938,7 +1184,7 @@ function loadIngresoTCT(){
 				{name:"in_identificador",value:"8"}
 			]
 		},
-		width: 210,
+		width: '80%',
 		events:{
 			load:function(v){
 				jQuery('#cbxNombreHospedaje').prepend("<option value='0'>Seleccione un item</option>");
@@ -962,7 +1208,7 @@ function loadIngresoTCT(){
 				{name:"in_isla_codigo",value:""}
 			]
 		},
-		width: 210,
+		width: '80%',
 		events:{
 			load:function(v){
 				jQuery('#cbxNombreHospedajeIsla').prepend("<option value='0'>Seleccione un item</option>");
@@ -970,6 +1216,11 @@ function loadIngresoTCT(){
 			}
 		}
 	});
+
+	cbxNombreHospedajeIsla.dom.onchange = function(v){
+		lugarHospedajeId = cbxNombreHospedajeIsla.dom.value;
+		lugarHospedaje = cbxNombreHospedajeIsla.dom.options[cbxNombreHospedajeIsla.dom.selectedIndex].text;
+	};
 	
 	/*
 	*Creacion de un combobox para la informacion del viaje - usted esta viajando con
@@ -987,7 +1238,7 @@ function loadIngresoTCT(){
 				{name:"in_identificador",value:"4"}
 			]
 		},
-		width: 210,
+		width: '80%',
 		events:{
 			load:function(v){
 				jQuery('#cbxInformacionViaje1Aux').prepend("<option value='0'>Seleccione un item</option>");
@@ -996,87 +1247,6 @@ function loadIngresoTCT(){
 		}
 	});	
 	cbxInformacionViaje1Aux.reload();
-	
-	/*
-	*Creacion de un combobox para la informacion del viaje - usted esta viajando con
-	*/
-	var cbxInformacionViaje2Aux = new bsxComboBox({
-		id:"cbxInformacionViaje2Aux",
-		renderTo:"tdInformacionViaje2",		
-		displayField:"CDCATA_DESCRIPCION",
-		valueField:"CDCATA_CODIGO",
-		webService:{
-			url:URL_WS+"PublicWS/Cgg_catalogo",
-			method:"selectByType",
-			params:[							
-				{name:"format",value:"JSON"},
-				{name:"in_identificador",value:"5"}
-			]
-		},
-		width: 210,
-		events:{
-			load:function(v){
-				jQuery('#cbxInformacionViaje2Aux').prepend("<option value='0'>Seleccione un item</option>");
-				jQuery("#cbxInformacionViaje2Aux").val(0);
-			}
-		}
-	});	
-	cbxInformacionViaje2Aux.reload();
-	
-	/*
-	*Creacion de un combobox para la informacion del viaje - usted esta viajando con
-	*/
-	var cbxInformacionViaje3Aux = new bsxComboBox({
-		id:"cbxInformacionViaje3Aux",
-		renderTo:"tdInformacionViaje3",		
-		displayField:"CDCATA_DESCRIPCION",
-		valueField:"CDCATA_CODIGO",
-		webService:{
-			url:URL_WS+"PublicWS/Cgg_catalogo",
-			method:"selectByType",
-			params:[							
-				{name:"format",value:"JSON"},
-				{name:"in_identificador",value:"6"}
-			]
-		},
-		width: 210,
-		events:{
-			load:function(v){
-				jQuery('#cbxInformacionViaje3Aux').prepend("<option value='0'>Seleccione un item</option>");
-				jQuery("#cbxInformacionViaje3Aux").val(0);
-			}
-		}
-		
-	});	
-	cbxInformacionViaje3Aux.reload();
-	
-	
-	
-	/*
-	*Creacion de un combobox para la informacion del viaje - usted esta viajando con
-	*/
-	var cbxInformacionViaje4Aux = new bsxComboBox({
-		id:"cbxInformacionViaje4Aux",
-		renderTo:"tdInformacionViaje4",		
-		displayField:"CDCATA_DESCRIPCION",
-		valueField:"CDCATA_CODIGO",
-		webService:{
-			url:URL_WS+"PublicWS/Cgg_catalogo",
-			method:"selectByType",
-			params:[							
-				{name:"format",value:"JSON"},
-				{name:"in_identificador",value:"7"}
-			]
-		},
-		width: 210,
-		events:{
-			load:function(v){
-				jQuery('#cbxInformacionViaje4Aux').prepend("<option value='0'>Seleccione un item</option>");
-				jQuery("#cbxInformacionViaje4Aux").val(0);
-			}
-		}
-	});	
-	cbxInformacionViaje4Aux.reload();
 
 	function fnHabilitarControles(estado){
 		txtNombrePersona.readOnly = estado;
@@ -1091,12 +1261,26 @@ function loadIngresoTCT(){
 			btnAceptarIngreso.disabled = true;			
 			function CallBackCgg_tct_persona(r){
 				var tmpselect = eval('('+r+')');
-				if (tmpselect.length== 0 ){
-					txtNombrePersona.focus();				
-					txtNombrePersona.value = '';
-					txtApellidoPersona.value = '';
-					var numeroIdentificacion=txtNumeroDocumento.value;					
+				var personaExists = false;
+				//tmpselect.length== 0 )
+				if(tmpselect.length>0){
+					personaExists = tmpselect[0].CRPER_CODIGO!=null;
+				}
+
+				if (!personaExists) {
+					txtNombrePersona.focus();
+					txtNombrePersona.value = tmpselect.length > 0 ? (tmpselect[0].CRPER_NOMBRES?tmpselect[0].CRPER_NOMBRES:'') : '';
+					txtApellidoPersona.value = tmpselect.length > 0 ? (tmpselect[0].CRPER_APELLIDO_PATERNO?tmpselect[0].CRPER_APELLIDO_PATERNO:'') : '';
+					var numeroIdentificacion = txtNumeroDocumento.value;
 					txtCodigoPersona.value = '';
+					cbxNacionalidad.dom.value = tmpselect.length > 0 ? tmpselect[0].CGNCN_CODIGO : null;
+					cbxPaisResidencia.dom.value = tmpselect.length > 0 ? tmpselect[0].CGG_CPAIS_CODIGO : null;
+					if (tmpselect.length > 0) {
+						var fecha = tmpselect[0].CRPER_FECHA_NACIMIENTO.split(' ');
+						var b = fecha[0].split('-');
+						var fechaNacimiento = b[2] + '/' + b[1] + '/' + b[0];
+						txtFechaNacimiento.value = fechaNacimiento;
+					}
 					txtCodigoTramite.value = '';
 					txtCodigoEspecie.value = '';					
 					txtNumeroDocumento.value = numeroIdentificacion;
@@ -1104,23 +1288,22 @@ function loadIngresoTCT(){
 					btnAceptarIngreso.disabled = false;
 					$("divInfoValidacion").style.display = "none";
 				}else{
-					                        
 					fnHabilitarControles(true);
 					txtCodigoPersona.value=tmpselect[0].CRPER_CODIGO;					
 					txtNombrePersona.value = tmpselect[0].CRPER_NOMBRES;
 					txtApellidoPersona.value= tmpselect[0].CRPER_APELLIDO_PATERNO;				  
-				   var tmps= (tmpselect[0].CRPER_GENERO+" ").trim();
+				    var tmps= (tmpselect[0].CRPER_GENERO+" ").trim();
 					if (tmps.length>0)
 						cbmGenero.value = tmpselect[0].CRPER_GENERO;
 					
-					cbxNacionalidad.value = tmpselect[0].CGNCN_CODIGO;						
-					cbxPaisResidencia.value = tmpselect[0].CGG_CPAIS_CODIGO;
+					cbxNacionalidad.dom.value = tmpselect[0].CGNCN_CODIGO;
+					cbxPaisResidencia.dom.value = tmpselect[0].CGG_CPAIS_CODIGO;
 					if(tmpselect[0].CKESP_CODIGO)
 						txtCodigoEspecie.value=tmpselect[0].CKESP_CODIGO;
 					else
 						txtCodigoEspecie.value = cbxConfiguracion.dom.value;
 
-					var fecha = tmpselect[0].CRPER_FECHA_NACIMIENTO.split(' ')
+					var fecha = tmpselect[0].CRPER_FECHA_NACIMIENTO.split(' ');
 					var b = fecha[0].split('-');
 					var fechaNacimiento = b[2]+'/'+b[1]+'/'+b[0];
 					txtFechaNacimiento.value = fechaNacimiento;
@@ -1131,7 +1314,22 @@ function loadIngresoTCT(){
 						txtTipo.value = 'TRANSEUNTE';
 					}else{
 						txtTipo.value='TURISTA';
-					}					
+					}
+					//AC-> Correo
+					if(tmpselect[0].CRPRC_CONTACTO) {
+						txtCorreoElectronico.value = tmpselect[0].CRPRC_CONTACTO;
+						txtConfirCorreoElectronico.value = tmpselect[0].CRPRC_CONTACTO;
+						txtCorreoElectronico.readOnly=true;
+						txtConfirCorreoElectronico.readOnly=true;
+						txtCorreoElectronico.disabled=true;
+						txtConfirCorreoElectronico.disabled=true;
+					}else{
+						txtCorreoElectronico.readOnly=false;
+						txtConfirCorreoElectronico.readOnly=false;
+						txtCorreoElectronico.disabled=false;
+						txtConfirCorreoElectronico.disabled=false;
+					}
+
 					validarReglas(txtCodigoPersona.value);
 				}
              
@@ -1188,6 +1386,10 @@ function loadIngresoTCT(){
 			
 			tblPersona.rows[posicion].cells[12].id = (txtCodigoTramite.value)?txtCodigoTramite.value:"";			
 			tblPersona.rows[posicion].cells[12].innerHTML = txtCodigoTramite.value;
+
+			tblPersona.rows[posicion].cells[13].innerHTML = txtCorreoElectronico.value;
+			tblPersona.rows[posicion].cells[14].innerHTML = txtCodigoPostal.value;
+
 			swEdit = false;
 			btnSalirAll($("FrmIngresoPersona"));
 			
@@ -1246,30 +1448,39 @@ function loadIngresoTCT(){
 
 		celda= fila.insertCell(7);
 		celda.style.display = "none";
-		celda.id = cbxConfiguracion.dom.options[cbxConfiguracion.dom.selectedIndex].text;
+		celda.id = cbxConfiguracion.dom.selectedIndex;
 		celda.innerHTML = cbxConfiguracion.dom.options[cbxConfiguracion.dom.selectedIndex].text;
 	
 		celda= fila.insertCell(8);
-		
+		celda.style.display = "none";
 		celda.innerHTML = 'PREREGISTRADA';
-		celda.style.display = "none";		
 
 		celda= fila.insertCell(9);
 		celda.style.display="none";
 		celda.innerHTML = txtTipo.value;
 
 		celda= fila.insertCell(10);
+		celda.style.display = "none";
 		celda.innerHTML = txtNumeroAut.value;
 		
 		celda= fila.insertCell(11);
+		celda.style.display = "none";
 		celda.id = cbxPaisResidencia.dom.value;
-		celda.style.display="none";
 		celda.innerHTML = cbxPaisResidencia.dom.options[cbxPaisResidencia.dom.selectedIndex].text;
 		
-		celda= fila.insertCell(12);		
+		celda= fila.insertCell(12);
+		celda.style.display = "none";
 		celda.id = (txtCodigoTramite.value)?txtCodigoTramite.value:"";
-		celda.style.display="none";
 		celda.innerHTML = txtCodigoTramite.value;
+
+		celda= fila.insertCell(13);
+		celda.id = (txtCorreoElectronico.value)?txtCorreoElectronico.value:"";
+		celda.innerHTML = txtCorreoElectronico.value;
+
+		celda= fila.insertCell(14);
+		celda.id = (txtCodigoPostal.value)?txtCodigoPostal.value:"";
+		celda.innerHTML = txtCodigoPostal.value;
+
 		btnSalirAll($("FrmIngresoPersona"));		
 	}
 	function CallBackReglasTipoSolicitud(r)
@@ -1319,7 +1530,7 @@ function loadIngresoTCT(){
 				
 				if(validacion.resultadoValidacion != undefined){
 					if(validacion.resultadoValidacion == 'false'){
-						mensaje = '<table style="font-size:12">';							
+						mensaje = '<table style="font-size:12">';
 						var j=1;
 						for(i=0;i<validacion.dataSet.length;i++){								
 							if(validacion.dataSet[i].CRVAL_APROBADO == 'FALSE'){
