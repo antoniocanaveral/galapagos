@@ -127,7 +127,8 @@
 	}
 
 	.itemTitle{
-		color: #cccccc;
+		color: #888888;
+		font-size: 12px !important;
 		line-height: 2;
 	}
 
@@ -146,6 +147,23 @@
 		width: 27.7%;
 	}
 
+	.checkContainer {
+		display: inline-block;
+		margin: auto;
+		padding-left: 35%;
+	}
+
+	.checkItem {
+		display: inline-block;
+		float: left;
+		width: 50px !important;
+	}
+	.checkTitle {
+		color: #888888;
+		display: inline-block;
+		font-size: 12px !important;
+		line-height: 2;
+	}
 	#tblEncuesta.tabla {
 		/*border: 1px solid #e0e0e0 !important;*/
 		/*margin-left: -10px;*/
@@ -326,7 +344,7 @@ Gal&aacute;pagos</div>
 							<td width="35%">
 								<div style="float: right;">
 									<spam class="labelDate" style="float: left;">Total D&iacute;as:</spam>
-									<input name="txtTotalDias" style="float: left;margin-right: 30px; width: 100px;" type="text" id="txtTotalDias"readonly="true" disabled/>
+									<input name="txtTotalDias" style="float: left;margin-right: 30px; width: 100px;" type="text" id="txtTotalDias" value="0" readonly="true" disabled/>
 								</div>
 							</td>
 						</tr>
