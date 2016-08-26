@@ -253,8 +253,8 @@ function loadIngresoTCT(){
 
 	function encuestaLlena(){
 		var llena = true;
+		validarEncuesta();
 		if(objEncuesta){
-			validarEncuesta();
 			for(var pregunta in objEncuesta.preguntas){
 				if(objEncuesta.preguntas[pregunta].values && objEncuesta.preguntas[pregunta].values.length==0){
 					jQuery("#"+pregunta).addClass("form-line-error");
@@ -343,6 +343,7 @@ function loadIngresoTCT(){
         	jQuery('#txtNumeroMiembros').addClass("form-line-error");
             isComplete = false;
         }
+
         if(!encuestaLlena()){
 			isComplete = false;
 		}
@@ -778,13 +779,7 @@ function loadIngresoTCT(){
 
 			var jsonHospedaje = '[';
 			i=0;
-			for (var i=1;i<tblPersona.rows.length;i++) {
-				var genero = '0';
-				if (tblPersona.rows[i].cells[4].innerHTML == 'M'){
-					genero = '0';
-				}else{
-					genero = '1';
-				}
+			for (var i=1;i<tblHospedaje.rows.length;i++) {
 				jsonHospedaje += ((i==1)?'':',')+'{'+
 					'"tipoHospedaje":"'+tblHospedaje.rows[i].cells[0].id+'",'+
 					'"codigoIsla":"'+tblHospedaje.rows[i].cells[1].id+'",'+
@@ -814,8 +809,8 @@ function loadIngresoTCT(){
 					for (var i=totalFilas-1;i>=1;i--) {					
 						tbodyPersona.removeChild(tblPersona.rows[i]);
 					}
-					document.location = 'ingresoTCT.jsp';
-					//loadIngresoTCT();
+					//document.location = 'ingresoTCT.jsp';
+					loadIngresoTCT();
 				}else{
 					new bsxMessageBox({
 						title:"Pre-registro TCT",
@@ -878,7 +873,7 @@ function loadIngresoTCT(){
 			// param.add('inAtractivos_JSON', jsonAtractivos);
 			param.add('inPersona_JSON', jsonPersona);
 			param.add('inHospedaje_JSON', jsonHospedaje);
-			param.add('inEncuesta_JSON',objEncuesta?JSON.stringify(objEncuesta):null);
+			param.add('inEncuesta_JSON',objEncuesta!=null?JSON.stringify(objEncuesta):null);
 			SOAPClient.invoke(URL_WS+"PublicWS/Cgg_tct_registro", "insertLite", param, true, CallBackCgg_tct_registro);
 		}else btnGuardarTTC.disabled=false;
 	};

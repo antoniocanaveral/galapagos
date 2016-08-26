@@ -23,6 +23,8 @@ import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
 
+import com.besixplus.sii.objects.*;
+import com.besixplus.sii.objects.Cgg_res_persona_contacto;
 import com.bmlaurus.db.EncuestaData;
 import com.bmlaurus.db.TctHospedajeData;
 import com.bmlaurus.db.TctTransporteData;
@@ -42,7 +44,6 @@ import com.besixplus.sii.db.Cgg_tct_grupo_turista;
 import com.besixplus.sii.db.ManagerConnection;
 import com.besixplus.sii.i18n.Messages;
 import com.besixplus.sii.misc.CGGEnumerators.TipoAmbitoEspecie;
-import com.besixplus.sii.objects.ServerResponse;
 
 /**
  * CLASE Cgg_tct_registro
@@ -149,6 +150,46 @@ public class Cgg_tct_registro implements Serializable{
 						res = new com.besixplus.sii.db.Cgg_res_persona(objPer).updateTctPersona(con);
 					}
 					//Hay que verificar e ingresar el correo.
+					//Listado de contactos
+					boolean insertContacto = true;
+					String updateContacto = null;
+					String email = personaJson.getJSONObject(i).getString("CRPRC_CONTACTO");
+					com.besixplus.sii.objects.Cgg_res_persona_contacto contacto = new Cgg_res_persona_contacto();
+					contacto.setCRPER_CODIGO(objPer.getCRPER_CODIGO());
+					List<HashMap<String,Object>> contactos = new com.besixplus.sii.db.Cgg_res_persona_contacto(contacto).selectPersonaContacto(con);
+					if(contactos!=null){
+						for(HashMap<String,Object> cnt:contactos){
+							if(cnt.get("CRTCO_CODIGO").toString().equals("CRTCO1")){
+								if(!cnt.get("CRPRC_CONTACTO").toString().equals(email)){
+									updateContacto = cnt.get("CRTCO_CODIGO").toString();
+								}else {
+									insertContacto = false;
+									updateContacto = null;
+								}
+							}
+						}
+					}else
+						insertContacto = true;
+					if(updateContacto!=null){
+						contacto.setCRPRC_CODIGO(updateContacto);
+						contacto.setCRPER_CODIGO(objPer.getCRPER_CODIGO());
+						contacto.setCRTCO_CODIGO("CRTCO1");
+						contacto.setCRPRC_CONTACTO(email);
+						contacto.setCRPRC_DESCRIPCION("Inserted from TCT");
+						contacto.setCRPRC_ESTADO(true);
+						contacto.setCRPRC_USUARIO_UPDATE(usuarioName);
+						res = new com.besixplus.sii.db.Cgg_res_persona_contacto(contacto).update(con);
+					}else if(insertContacto){
+						contacto.setCRPRC_CODIGO("KEYGEN");
+						contacto.setCRPER_CODIGO(objPer.getCRPER_CODIGO());
+						contacto.setCRTCO_CODIGO("CRTCO1");
+						contacto.setCRPRC_CONTACTO(email);
+						contacto.setCRPRC_DESCRIPCION("Inserted from TCT");
+						contacto.setCRPRC_ESTADO(true);
+						contacto.setCRPRC_USUARIO_INSERT(usuarioName);
+						contacto.setCRPRC_USUARIO_UPDATE(usuarioName);
+						res = new com.besixplus.sii.db.Cgg_res_persona_contacto(contacto).insert(con);
+					}
 
 					if (res.equals("true")){
 						obj.setCTGTR_CODIGO(objGrupTuris.getCTGTR_CODIGO());
@@ -199,12 +240,12 @@ public class Cgg_tct_registro implements Serializable{
 						//Metemos la encuesta
 						if (res.equals("true")) {
 							if (inEncuesta_JSON != null) {
-
+								//TODO: Implementar inser de encuestas
 							}
 						}
 
-
-						if (res.equals("true")){
+						//AUN NO SE VENDE NADA.
+						/*if (res.equals("true")){
 							com.besixplus.sii.objects.Cgg_kdx_venta_detalle objKdx = new com.besixplus.sii.objects.Cgg_kdx_venta_detalle();
 							objKdx.setCKVDT_CODIGO("KEYGEN");
 							objKdx.setCKESP_CODIGO(personaJson.getJSONObject(i).getString("CKESP_CODIGO"));
@@ -213,7 +254,7 @@ public class Cgg_tct_registro implements Serializable{
 							objKdx.setCKVDT_USUARIO_INSERT(usuarioName);
 							objKdx.setCKVDT_USUARIO_UPDATE(usuarioName);
 							res = new com.besixplus.sii.db.Cgg_kdx_venta_detalle(objKdx).insert(con);
-						}
+						}*/
 
 					}
 				}
