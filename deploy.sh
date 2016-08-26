@@ -16,7 +16,7 @@ echo ""
 JBOSS_HOME="/opt/jboss-eap-6.4"
 
 USUARIO="antonio"
-REMOTE_SERVER="192.168.83.12"
+REMOTE_SERVER="sii.gobiernogalapagos.gob.ec"
 PATH_DESTINO="/opt/jboss-eap-6.4/standalone/deployments"
 
 export ROOT_PATH=$(pwd)

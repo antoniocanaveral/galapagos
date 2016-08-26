@@ -203,11 +203,11 @@ function loadIngresoTCT(){
 		}
 	}
 
-	var objEncuesta = {};
+	var objEncuesta = null;
 	function validarEncuesta(){
-		objEncuesta = {};
 		var tbodyEncuesta = tblEncuesta.tBodies[0];
-		if(tbodyEncuesta){
+		if(tbodyEncuesta && tbodyEncuesta.rows.length>0){
+			objEncuesta = {};
 			var tipo;
 			var pregunta;
 			objEncuesta.preguntas = {};
@@ -253,11 +253,13 @@ function loadIngresoTCT(){
 
 	function encuestaLlena(){
 		var llena = true;
-		validarEncuesta();
-		for(var pregunta in objEncuesta.preguntas){
-			if(objEncuesta.preguntas[pregunta].values && objEncuesta.preguntas[pregunta].values.length==0){
-				jQuery("#"+pregunta).addClass("form-line-error");
-				llena=false;
+		if(objEncuesta){
+			validarEncuesta();
+			for(var pregunta in objEncuesta.preguntas){
+				if(objEncuesta.preguntas[pregunta].values && objEncuesta.preguntas[pregunta].values.length==0){
+					jQuery("#"+pregunta).addClass("form-line-error");
+					llena=false;
+				}
 			}
 		}
 		return llena;
@@ -812,8 +814,8 @@ function loadIngresoTCT(){
 					for (var i=totalFilas-1;i>=1;i--) {					
 						tbodyPersona.removeChild(tblPersona.rows[i]);
 					}
-					
-					loadIngresoTCT();
+					document.location = 'ingresoTCT.jsp';
+					//loadIngresoTCT();
 				}else{
 					new bsxMessageBox({
 						title:"Pre-registro TCT",
@@ -977,7 +979,7 @@ function loadIngresoTCT(){
 		valueField:"CRALN_CODIGO",
 		webService:{
 			url:URL_WS+"PublicWS/Cgg_res_aerolinea",
-			method:"selectAll",
+			method:"selectAllRelated",
 			params:[
 				{name:"format",value:"JSON"},
 				{name:"tipo",value:cbmMedioTransporte.val()}
