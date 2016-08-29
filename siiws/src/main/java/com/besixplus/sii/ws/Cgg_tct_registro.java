@@ -1,6 +1,7 @@
 package com.besixplus.sii.ws;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -22,14 +23,20 @@ import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
 
+import com.besixplus.sii.objects.*;
+import com.besixplus.sii.objects.Cgg_res_persona_contacto;
 import com.bmlaurus.db.EncuestaData;
+import com.bmlaurus.db.TctHospedajeData;
 import com.bmlaurus.db.TctTransporteData;
 import com.bmlaurus.objects.PreguntaEncuesta;
+import com.bmlaurus.objects.TctHospedaje;
 import com.bmlaurus.objects.TctTransporte;
 import com.bmlaurus.util.Characters;
 import com.bmlaurus.ws.dinardap.RegistroCivil;
 import com.bmlaurus.ws.dinardap.Utils;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,7 +44,6 @@ import com.besixplus.sii.db.Cgg_tct_grupo_turista;
 import com.besixplus.sii.db.ManagerConnection;
 import com.besixplus.sii.i18n.Messages;
 import com.besixplus.sii.misc.CGGEnumerators.TipoAmbitoEspecie;
-import com.besixplus.sii.objects.ServerResponse;
 
 /**
  * CLASE Cgg_tct_registro
@@ -52,6 +58,227 @@ public class Cgg_tct_registro implements Serializable{
 	private static final long serialVersionUID = 2027721331;
 	private Messages myInfoMessages = new Messages(Messages.Types.Info);
 	@Resource WebServiceContext wctx;
+
+
+
+	@WebMethod
+	public String insertLite(
+			@WebParam(name="inCarpt_codigo")String inCarpt_codigo,
+			@WebParam(name="inCgg_carpt_codigo")String inCgg_carpt_codigo,
+			@WebParam(name="inCraln_codigo")String inCraln_codigo,
+			@WebParam(name="inCtreg_numero")String inCtreg_numero,
+			@WebParam(name="inCtreg_fecha_preregistro")java.util.Date inCtreg_fecha_preregistro,
+			@WebParam(name="inCtreg_fecha_ingreso")java.util.Date inCtreg_fecha_ingreso,
+			@WebParam(name="inCtreg_codigo_barras")String inCtreg_codigo_barras,
+			@WebParam(name="inCtreg_fecha_salida")java.util.Date inCtreg_fecha_salida,
+			@WebParam(name="inCtreg_categoria")String inCtreg_categoria,
+			@WebParam(name="inCtreg_tipo_registro")String inCtreg_tipo_registro,
+			@WebParam(name="inCtreg_vuelo")String inCtreg_vuelo,
+			@WebParam(name="inCtreg_viaje_acompanante")String inCtreg_viaje_acompanante,
+			@WebParam(name="inCtreg_viaje_miembros")String inCtreg_viaje_miembros,
+			@WebParam(name="inPersona_JSON")String inPersona_JSON,
+			@WebParam(name="inHospedaje_JSON")String inHospedaje_JSON,
+			@WebParam(name="inEncuesta_JSON")String inEncuesta_JSON
+	)throws SOAPException {
+		String res = "true";
+		String numRegistro;
+		String numGrupoTurista;
+		String codigoGrupTurisUsu;
+		String codigoRegisUsu;
+		ServerResponse tmpServerResponse = new ServerResponse();
+		HttpServletRequest tmpRequest = (HttpServletRequest) wctx.getMessageContext().get(MessageContext.SERVLET_REQUEST);
+		try{
+			Connection con = ManagerConnection.getConnection();
+			String usuarioName="";
+			if(tmpRequest.getUserPrincipal()!=null){
+				usuarioName = tmpRequest.getUserPrincipal().getName();
+				if(!com.besixplus.sii.db.Cgg_sec_objeto.isGrant(con, Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getClassName(), tmpRequest.getUserPrincipal().getName(), 1)){
+					con.close();
+					throw new SOAPFaultException(SOAPFactory.newInstance().createFault(myInfoMessages.getMessage("sii.seguridad.acceso.negado", null), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
+				}
+			}
+			con.setAutoCommit(false);
+			//org.json.JSONArray actividadJson = new org.json.JSONArray(inActividad_JSON);
+			org.json.JSONArray personaJson = new org.json.JSONArray(inPersona_JSON);
+			//org.json.JSONArray hospedajeJson = new org.json.JSONArray(inHospedaje_JSON);
+			///////////////////////////////////////
+			//Almacenar en la tabla Cgg_tct_grupo_turista
+			numGrupoTurista= com.besixplus.sii.db.Cgg_tct_grupo_turista.numeroGrupoTct(con);
+			codigoGrupTurisUsu= com.besixplus.sii.db.Cgg_tct_grupo_turista.selecUsuario(con,usuarioName);
+			com.besixplus.sii.objects.Cgg_tct_grupo_turista objGrupTuris = new com.besixplus.sii.objects.Cgg_tct_grupo_turista();
+			objGrupTuris.setCTGTR_CODIGO("KEYGEN");
+			objGrupTuris.setCUSU_CODIGO(codigoGrupTurisUsu);
+			objGrupTuris.setCTADC_CODIGO(null);
+			objGrupTuris.setCTGTR_NUMERO(Integer.valueOf(numGrupoTurista));
+			objGrupTuris.setCTGTR_FECHA_RESERVA(inCtreg_fecha_preregistro);
+			objGrupTuris.setCTGTR_FECHA_INGRESO(inCtreg_fecha_ingreso);
+			objGrupTuris.setCTGTR_FECHA_SALIDA(inCtreg_fecha_salida);
+			objGrupTuris.setCTGTR_ESTADO(true);//tmpRequest.getUserPrincipal().getName()
+			objGrupTuris.setCTGTR_USUARIO_INSERT(usuarioName);
+			objGrupTuris.setCTGTR_USUARIO_UPDATE(usuarioName);
+			res = new com.besixplus.sii.db.Cgg_tct_grupo_turista(objGrupTuris).insert(con);
+
+			if(res.equals("true")){
+				//////////////////////////////////////
+				//Almacenar en la tabla Cgg_tct_registro y persona
+				com.besixplus.sii.objects.Cgg_res_persona objPer = new com.besixplus.sii.objects.Cgg_res_persona();
+				com.besixplus.sii.objects.Cgg_tct_registro obj = new com.besixplus.sii.objects.Cgg_tct_registro();
+				codigoRegisUsu = com.besixplus.sii.db.Cgg_tct_registro.selecUsuario(con, usuarioName);
+				for (int i = 0 ; i < personaJson.length(); i++){
+					numRegistro=com.besixplus.sii.db.Cgg_tct_registro.numeroRegistroTct(con);
+					obj.setCTREG_CODIGO("KEYGEN");
+					//////////////////////////////////////////////////////////
+					//Almacenar personas y nuevas personas
+					objPer.setCRDID_CODIGO(personaJson.getJSONObject(i).getString("CRDID_CODIGO"));
+					objPer.setCGNCN_CODIGO(personaJson.getJSONObject(i).getString("CGNCN_CODIGO"));
+					objPer.setCRPER_NOMBRES(personaJson.getJSONObject(i).getString("CRPER_NOMBRES"));
+					objPer.setCRPER_APELLIDO_PATERNO(personaJson.getJSONObject(i).getString("CRPER_APELLIDO_PATERNO"));
+					objPer.setCRPER_NUM_DOC_IDENTIFIC(personaJson.getJSONObject(i).getString("CRPER_NUM_DOC_IDENTIFIC"));
+					objPer.setCRPER_FECHA_NACIMIENTO(Timestamp.valueOf(personaJson.getJSONObject(i).getString("CRPER_FECHA_NACIMIENTO").replace("T", " ")));
+					objPer.setCRPER_GENERO(personaJson.getJSONObject(i).getInt("CRPER_GENERO"));
+					objPer.setCGG_CPAIS_CODIGO(personaJson.getJSONObject(i).getString("CGG_CPAIS_CODIGO"));
+					objPer.setCRPER_ESTADO(true);
+					objPer.setCRPER_USUARIO_UPDATE(usuarioName);
+					if(((org.json.JSONObject)personaJson.get(i)).getString("CRPER_CODIGO").trim().isEmpty()){
+						objPer.setCRPER_CODIGO("KEYGEN");
+						objPer.setCRPER_USUARIO_INSERT(usuarioName);
+						res = new com.besixplus.sii.db.Cgg_res_persona(objPer).insertTctPersona(con);
+						obj.setCRPER_CODIGO(objPer.getCRPER_CODIGO());
+					}else{
+						obj.setCRPER_CODIGO(personaJson.getJSONObject(i).getString("CRPER_CODIGO"));
+						objPer.setCRPER_CODIGO(obj.getCRPER_CODIGO());
+						res = new com.besixplus.sii.db.Cgg_res_persona(objPer).updateTctPersona(con);
+					}
+					//Hay que verificar e ingresar el correo.
+					//Listado de contactos
+					boolean insertContacto = true;
+					String updateContacto = null;
+					String email = personaJson.getJSONObject(i).getString("CRPRC_CONTACTO");
+					com.besixplus.sii.objects.Cgg_res_persona_contacto contacto = new Cgg_res_persona_contacto();
+					contacto.setCRPER_CODIGO(objPer.getCRPER_CODIGO());
+					List<HashMap<String,Object>> contactos = new com.besixplus.sii.db.Cgg_res_persona_contacto(contacto).selectPersonaContacto(con);
+					if(contactos!=null){
+						for(HashMap<String,Object> cnt:contactos){
+							if(cnt.get("CRTCO_CODIGO").toString().equals("CRTCO1")){
+								if(!cnt.get("CRPRC_CONTACTO").toString().equals(email)){
+									updateContacto = cnt.get("CRTCO_CODIGO").toString();
+								}else {
+									insertContacto = false;
+									updateContacto = null;
+								}
+							}
+						}
+					}else
+						insertContacto = true;
+					if(updateContacto!=null){
+						contacto.setCRPRC_CODIGO(updateContacto);
+						contacto.setCRPER_CODIGO(objPer.getCRPER_CODIGO());
+						contacto.setCRTCO_CODIGO("CRTCO1");
+						contacto.setCRPRC_CONTACTO(email);
+						contacto.setCRPRC_DESCRIPCION("Inserted from TCT");
+						contacto.setCRPRC_ESTADO(true);
+						contacto.setCRPRC_USUARIO_UPDATE(usuarioName);
+						res = new com.besixplus.sii.db.Cgg_res_persona_contacto(contacto).update(con);
+					}else if(insertContacto){
+						contacto.setCRPRC_CODIGO("KEYGEN");
+						contacto.setCRPER_CODIGO(objPer.getCRPER_CODIGO());
+						contacto.setCRTCO_CODIGO("CRTCO1");
+						contacto.setCRPRC_CONTACTO(email);
+						contacto.setCRPRC_DESCRIPCION("Inserted from TCT");
+						contacto.setCRPRC_ESTADO(true);
+						contacto.setCRPRC_USUARIO_INSERT(usuarioName);
+						contacto.setCRPRC_USUARIO_UPDATE(usuarioName);
+						res = new com.besixplus.sii.db.Cgg_res_persona_contacto(contacto).insert(con);
+					}
+
+					if (res.equals("true")){
+						obj.setCTGTR_CODIGO(objGrupTuris.getCTGTR_CODIGO());
+						obj.setCUSU_CODIGO(codigoRegisUsu);
+						obj.setCGG_CUSU_CODIGO(null);
+						obj.setCARPT_CODIGO(inCarpt_codigo);
+						obj.setCGG_CARPT_CODIGO(inCgg_carpt_codigo);
+						obj.setCRALN_CODIGO(inCraln_codigo);
+						obj.setCRTRA_CODIGO((personaJson.getJSONObject(i).getString("CRTRA_CODIGO").trim().length())!=0?personaJson.getJSONObject(i).getString("CRTRA_CODIGO"):null);
+						obj.setCTREG_NUMERO(Integer.valueOf(numRegistro));
+						obj.setCTREG_FECHA_PREREGISTRO(inCtreg_fecha_preregistro);
+						obj.setCTREG_FECHA_INGRESO(inCtreg_fecha_ingreso);
+						obj.setCTREG_CODIGO_BARRAS(numGrupoTurista+numRegistro);
+						obj.setCTREG_FECHA_SALIDA(inCtreg_fecha_salida);
+						obj.setCTREG_ESTADO_REGISTRO(0);
+						obj.setCTREG_OBSERVACION(personaJson.getJSONObject(i).getString("CTREG_OBSERVACION"));
+						obj.setCTREG_ESTADO(true);
+						obj.setCTREG_USUARIO_INSERT(usuarioName);
+						obj.setCTREG_USUARIO_UPDATE(usuarioName);
+						obj.setCTREG_CATEGORIA(inCtreg_categoria);
+						obj.setCTREG_TIPO_REGISTRO(inCtreg_tipo_registro);
+						obj.setCTREG_NUMERO_VUELO(inCtreg_vuelo);
+						obj.setCTREG_VIAJE_ACOMPANANTE(inCtreg_viaje_acompanante);
+						obj.setCTREG_VIAJE_NUM_MIEMBROS(inCtreg_viaje_miembros);
+
+						res = new com.besixplus.sii.db.Cgg_tct_registro(obj).insert(con);
+
+						//Antes de controlar el stock debemos ingresar los hospedajes.
+						if (res.equals("true")) {
+							if (inHospedaje_JSON != null) {
+								Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+								Type listHospedaje = new TypeToken<List<TctHospedaje>>() {}.getType();
+								List<TctHospedaje> hospedajes = gson.fromJson(inHospedaje_JSON, listHospedaje);
+								for (TctHospedaje hospedaje : hospedajes) {
+									hospedaje.setCodigoPreregistro(obj.getCTREG_CODIGO());
+									hospedaje.setUsuarioInsert(usuarioName);
+									hospedaje.setUsuarioUpdate(usuarioName);
+
+									res = TctHospedajeData.insert(con, hospedaje);
+									if (res.equals("false"))
+										break;
+								}
+
+
+							} else
+								res = "false";
+						}
+						//Metemos la encuesta
+						if (res.equals("true")) {
+							if (inEncuesta_JSON != null) {
+								//TODO: Implementar inser de encuestas
+							}
+						}
+
+						//AUN NO SE VENDE NADA.
+						/*if (res.equals("true")){
+							com.besixplus.sii.objects.Cgg_kdx_venta_detalle objKdx = new com.besixplus.sii.objects.Cgg_kdx_venta_detalle();
+							objKdx.setCKVDT_CODIGO("KEYGEN");
+							objKdx.setCKESP_CODIGO(personaJson.getJSONObject(i).getString("CKESP_CODIGO"));
+							objKdx.setCTREG_CODIGO(obj.getCTREG_CODIGO());
+							objKdx.setCKVDT_ESTADO(true);
+							objKdx.setCKVDT_USUARIO_INSERT(usuarioName);
+							objKdx.setCKVDT_USUARIO_UPDATE(usuarioName);
+							res = new com.besixplus.sii.db.Cgg_kdx_venta_detalle(objKdx).insert(con);
+						}*/
+
+					}
+				}
+			}
+			if(res.equals("true")){
+				con.commit();
+				tmpServerResponse.setSuccess(true);
+				tmpServerResponse.setMsg(numGrupoTurista);
+			}else{
+				con.rollback();
+				tmpServerResponse.setMsg(res);
+			}
+			con.setAutoCommit(true);
+			con.close();
+		}catch(SQLException inException){
+			com.besixplus.sii.db.SQLErrorHandler.errorHandler(inException);
+			tmpServerResponse.setMsg(inException.getMessage());
+		} catch (JSONException e) {
+			e.printStackTrace();
+			tmpServerResponse.setMsg(e.getMessage());
+		}
+		return new JSONObject(tmpServerResponse).toString();
+	}
+
 
 	/**
 	 * INSERTA UN REGISTRO EN LA TABLA Cgg_tct_registro.

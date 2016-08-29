@@ -108,10 +108,11 @@ function loadIngresoTCT(){
 
 
 	//AC--> Encuesta Dinamica
-	var raiting = [];
 	function CallBackCgg_cargar_encuesta(r){
-		var colSize = 3;
-		if (jQuery(window).width() < 960)
+		var colSize = 4;
+		if (jQuery(window).width() < 1350)
+			colSize = 3;
+		if (jQuery(window).width() < 1065)
 			colSize = 2;
 		r = eval ("("+r+")");
 		var rowNum = tblEncuesta.rows.length-1;
@@ -122,79 +123,145 @@ function loadIngresoTCT(){
 				//Pregunta
 				rowNum+=1;
 				var fila =tbodyEncuesta.insertRow(rowNum);
-				fila.id = 'enc_'+i;
+				fila.id = 'filaEncuesta_' + rowNum;
+				fila.pregunta = pregunta.codigo;
+				fila.preguntaIndex = i;
+				fila.preguntaHeader = true;
+				fila.tipo = pregunta.tipo;
 				var cell = fila.insertCell();
 				cell.id = pregunta.codigo;
 				cell.innerHTML = pregunta.descripcion;
 				cell.colSpan = colSize;
 
 				//Items STAR
-				if(pregunta.tipo=="SCORE"){
-					rowNum+=1;
-					fila =tbodyEncuesta.insertRow(rowNum);
-					fila.id = 'encItem_'+i;
-					fila.tipo = pregunta.tipo;
-					for(var j=0;j<pregunta.items.length;j++){
+				if(pregunta.tipo=="SCORE") {
+					rowNum += 1;
+					fila = tbodyEncuesta.insertRow(rowNum);
+					fila.id = 'filaEncuesta_' + rowNum;
+					fila.pregunta = pregunta.codigo;
+					for (var j = 0; j < pregunta.items.length; j++) {
 						var cellItem = fila.insertCell();
-						cellItem.id = "star_"+i+"_"+j;
-						cellItem.innerHTML = "<div class='itemContainer'> <div class='itemRateYo' id='rateYo_" + i + "_" + j +"'></div> <div class='itemTitle'>"+pregunta.items[j].descripcion+" </div></div>";
-						if((j+1)%colSize==0){//Es multiplo de colSize. Creamos otra fila debajo.
-							rowNum+=1;
+						cellItem.id = "itemEncuesta_" + i + "_" + j;
+						cellItem.itemId = pregunta.items[j].codigo;
+						cellItem.rateYo = "rateYo_" + i + "_" + pregunta.items[j].codigo;
+						cellItem.innerHTML = "<div class='itemContainer'> <div class='itemRateYo' id='rateYo_" + i + "_" + pregunta.items[j].codigo + "'></div> <div class='itemTitle'>" + pregunta.items[j].descripcion + " </div></div>";
+						if ((j + 1) % colSize == 0) {//Es multiplo de colSize. Creamos otra fila debajo.
+							rowNum += 1;
 							fila = tbodyEncuesta.insertRow(rowNum);
-							fila.id = 'encItem_'+i;
+							fila.id = 'filaEncuesta_' + rowNum;
+							fila.pregunta = pregunta.codigo;
 						}
-						raiting.push("rateYo_" + i + "_" +j);
+						jQuery("#rateYo_" + i + "_" + pregunta.items[j].codigo).raty({
+								number:         4,
+								targetType:     'number'
+							});
+					}
+				}else if(pregunta.tipo=="MULTI"){
+					rowNum += 1;
+					fila = tbodyEncuesta.insertRow(rowNum);
+					fila.id = 'filaEncuesta_' + rowNum;
+					fila.pregunta = pregunta.codigo;
+					for (var j = 0; j < pregunta.items.length; j++) {
+						var cellItem = fila.insertCell();
+						cellItem.id = "itemEncuesta_" + i + "_" + j;
+						cellItem.itemId = pregunta.items[j].codigo;
+						cellItem.checkId = "check_" + i + "_" + j;
+						cellItem.innerHTML = "<div class='checkContainer'> <input type='checkbox' class='checkItem' id='check_" + i + "_" + j + "' value='"+pregunta.items[j].codigo+"'/> <div class='checkTitle'>" + pregunta.items[j].descripcion + " </div></div>";
+						if ((j + 1) % colSize == 0) {//Es multiplo de colSize. Creamos otra fila debajo.
+							rowNum += 1;
+							fila = tbodyEncuesta.insertRow(rowNum);
+							fila.id = 'filaEncuesta_' + rowNum;
+							fila.pregunta = pregunta.codigo;
+						}
 					}
 				}else if(pregunta.tipo=="COMBO"){
 					rowNum+=1;
 					fila =tbodyEncuesta.insertRow(rowNum);
-					fila.id = 'encItem_'+i;
-					fila.tipo = pregunta.tipo;
+					fila.id = 'filaEncuesta_' + rowNum;
+					fila.pregunta = pregunta.codigo;
 					var cellItem = fila.insertCell();
-					cellItem.id = "combo_"+i+"_"+j;
-					cellItem.innerHTML ="<select class='selectEncuesta' id='encuesta_"+i+"'></select>";
+					cellItem.id = "itemEncuesta_" + i;
+					cellItem.innerHTML ="<select class='selectEncuesta' id='select_"+ i +"'></select>";
 					cellItem.colSpan = colSize;
-					jQuery("#encuesta_"+i).append("<option>Seleccione un Item</option>");
+					jQuery("#select_"+ i).append("<option value=''>Seleccione un Item</option>");
 					for(var j=0;j<pregunta.items.length;j++){
-						jQuery("#encuesta_"+i).append("<option value='"+pregunta.items[j].codigo+"'>"+pregunta.items[j].descripcion+"</option>");
+						jQuery("#select_"+ i).append("<option value='"+pregunta.items[j].codigo+"'>"+pregunta.items[j].descripcion+"</option>");
 					}
 
 				}else if(pregunta.tipo=="TEXT"){
 					rowNum+=1;
 					fila =tbodyEncuesta.insertRow(rowNum);
-					fila.id = 'encItem_'+i;
-					fila.tipo = pregunta.tipo;
+					fila.id = 'filaEncuesta_' + rowNum;
+					fila.pregunta = pregunta.codigo;
 					var cellItem = fila.insertCell();
-					cellItem.id = "text_"+i+"_"+j;
-					cellItem.innerHTML ="<input type='text' maxlength='200' class='inputEncuesta' id='encuesta_"+i+"'/>";
+					cellItem.id = "itemEncuesta_" + i;
+					cellItem.codigo = pregunta.items[0].codigo;
+					cellItem.innerHTML ="<input type='text' maxlength='200' class='inputEncuesta' id='text_"+ i +"'/>";
 					cellItem.colSpan = colSize;
 				}
-			}
-
-			if(raiting && raiting.length>0){
-				setTimeout(createStars,500);
 			}
 		}
 	}
 
-	function createStars(){
-		for(var i=0;i<raiting.length;i++){
-			jQuery("#"+raiting[i]).raty({
-				number:         4,
-				hintList:       ['1', '2', '3', '4']
-			});
+	var objEncuesta = null;
+	function validarEncuesta(){
+		var tbodyEncuesta = tblEncuesta.tBodies[0];
+		if(tbodyEncuesta && tbodyEncuesta.rows.length>0){
+			objEncuesta = {};
+			var tipo;
+			var pregunta;
+			objEncuesta.preguntas = {};
+			for(var i=0;i<tbodyEncuesta.rows.length;i++){
+				var fila = tbodyEncuesta.rows[i];
+				if(fila.preguntaHeader){
+					tipo = fila.tipo;
+					pregunta = fila.pregunta;
+					var index = fila.preguntaIndex;
+					objEncuesta.preguntas[pregunta]={};
+					objEncuesta.preguntas[pregunta].values = [];
+				}else{
+					switch (tipo){
+						case "TEXT":
+							if(jQuery("#text_"+index).val() && jQuery("#text_"+index).val().length>0)
+								objEncuesta.preguntas[pregunta].values.push({"code":fila.cells[0].codigo, "value":jQuery("#text_"+index).val()});
+							break;
+						case "COMBO":
+							if(jQuery("#select_"+index).val() && jQuery("#select_"+index).val().length>0)
+								objEncuesta.preguntas[pregunta].values.push({"code":jQuery("#select_"+index).val(), "value":jQuery("#select_"+index).val()});
+							break;
+						case "MULTI":
+							for(var j=0;j<fila.cells.length;j++){
+								var col = fila.cells[j];
+								var check = document.getElementById(col.checkId);
+								if(check && check.checked)
+									objEncuesta.preguntas[pregunta].values.push({"code":col.itemId, "value":"true"});
+							}
+							break;
+						case "SCORE":
+							for(var j=0;j<fila.cells.length;j++){
+								var col = fila.cells[j];
+								if(jQuery("#"+col.rateYo).raty('score') &&  jQuery("#"+col.rateYo).raty('score') > 0){
+									objEncuesta.preguntas[pregunta].values.push({"code":col.itemId, "value":jQuery("#"+col.rateYo).raty('score')});
+								}
+							}
+							break;
+					}
+				}
+			}
 		}
 	}
 
 	function encuestaLlena(){
-		var llena = false;
-		if(raiting.length>0){
-			for(var i=0;i<raiting.length;i++){
-				if(jQuery("#"+raiting[i]).score != null)
-					llena = true;
+		var llena = true;
+		validarEncuesta();
+		if(objEncuesta){
+			for(var pregunta in objEncuesta.preguntas){
+				if(objEncuesta.preguntas[pregunta].values && objEncuesta.preguntas[pregunta].values.length==0){
+					jQuery("#"+pregunta).addClass("form-line-error");
+					llena=false;
+				}
 			}
-		}else
-			llena = true;
+		}
 		return llena;
 	}
 
@@ -237,11 +304,6 @@ function loadIngresoTCT(){
         	jQuery('#cbxCategoria').addClass("form-line-error");
             isComplete = false;
         }
-		if(jQuery("#cbxEstadoCivil").val()==0)
-		{
-			jQuery('#cbxEstadoCivil').addClass("form-line-error");
-			isComplete = false;
-		}
 		if(jQuery("#cbxTipoRegistro").val()==0)
         {
         	jQuery('#cbxTipoRegistro').addClass("form-line-error");
@@ -270,7 +332,7 @@ function loadIngresoTCT(){
             isComplete = false;
         }
 
-        if(jQuery("#txtNroVuelo").val().trim()=='')
+        if(jQuery("#txtNroVuelo").val().trim()=='' && jQuery("#cmbNroVuelo").val()=='0')
         {
         	jQuery('#txtNroVuelo').addClass("form-line-error");
             isComplete = false;
@@ -281,15 +343,15 @@ function loadIngresoTCT(){
         	jQuery('#txtNumeroMiembros').addClass("form-line-error");
             isComplete = false;
         }
+
         if(!encuestaLlena()){
-			jQuery('#tblEncuesta').addClass("form-line-error");
 			isComplete = false;
 		}
 		
         if(isComplete ==false){
         	new bsxMessageBox({
         		title:'Alerta',
-                msg: 'Por favor verifique que todos los datos del formulario hayan sido ingresados correctamente.',
+                msg: 'Por favor verifique que todos los datos del formulario hayan sido ingresados correctamente. ',
                 icon: "iconInfo"
 			});	
         	return false;
@@ -385,6 +447,10 @@ function loadIngresoTCT(){
 		var limite_dias = jQuery("#cbxTipoRegistro").val() == 1 ? 90:180;
 		document.getElementById("dtFechaSalidaHospedaje").disabled = true;
 		jQuery("#dtFechaIngresoHospedaje").change(function(v){
+			if(jQuery("#dtFechaSalidaHospedaje").datepicker){
+				jQuery("#dtFechaSalidaHospedaje").val('');
+				jQuery("#dtFechaSalidaHospedaje").datepicker("destroy");
+			}
 			jQuery("#dtFechaSalidaHospedaje").datepicker({
 				showOn: 'both',
 				buttonImage: 'css/icon/date.gif',
@@ -602,6 +668,10 @@ function loadIngresoTCT(){
 		}else{
 			swVerificado = true;
 		}
+		if(cbxEstadoCivil.dom.value==0){
+			swVerificado = false;
+			cbxEstadoCivil.focus();
+		}
 		if(txtCorreoElectronico.value && txtCorreoElectronico.value.length>0 && txtCorreoElectronico.value == txtConfirCorreoElectronico.value){
 			swVerificado = true;
 		}else{
@@ -702,10 +772,25 @@ function loadIngresoTCT(){
 				'"CRPER_CODIGO":"'+tblPersona.rows[i].cells[2].id+'",'+
 				'"CRTRA_CODIGO":"'+tblPersona.rows[i].cells[12].id+'",'+
 				'"CKESP_CODIGO":"'+tblPersona.rows[i].cells[7].id+'",'+
+				'"CRPRC_CONTACTO":"'+tblPersona.rows[i].cells[13].id+'",'+
 				'"CTREG_OBSERVACION":" "}';
 			}
-			jsonPersona += ']';			
-			
+			jsonPersona += ']';
+
+			var jsonHospedaje = '[';
+			i=0;
+			for (var i=1;i<tblHospedaje.rows.length;i++) {
+				jsonHospedaje += ((i==1)?'':',')+'{'+
+					'"tipoHospedaje":"'+tblHospedaje.rows[i].cells[0].id+'",'+
+					'"codigoIsla":"'+tblHospedaje.rows[i].cells[1].id+'",'+
+					'"lugarHospedaje":"'+tblHospedaje.rows[i].cells[2].id+'",'+
+					'"fechaIngreso":"'+tblHospedaje.rows[i].cells[3].id+'",'+
+					'"fechaSalida":"'+tblHospedaje.rows[i].cells[4].id+'"'+
+					//',"reserva":"'+tblHospedaje.rows[i].cells[6].id+'+'" +
+					'}';
+			}
+			jsonHospedaje += ']';
+
 			function CallBackCgg_tct_registro(r) {			
 				r = eval ("("+r+")");
 				if(r.success){
@@ -724,7 +809,7 @@ function loadIngresoTCT(){
 					for (var i=totalFilas-1;i>=1;i--) {					
 						tbodyPersona.removeChild(tblPersona.rows[i]);
 					}
-					
+					//document.location = 'ingresoTCT.jsp';
 					loadIngresoTCT();
 				}else{
 					new bsxMessageBox({
@@ -748,13 +833,7 @@ function loadIngresoTCT(){
 			var fechaIngreso = arrFecha[2]+'-'+arrFecha[1]+'-'+arrFecha[0]+'T00:00:00';			
 			arrFecha = dtFechaSalida.value.split('/');
 			var fechaSalida = arrFecha[2]+'-'+arrFecha[1]+'-'+arrFecha[0]+'T00:00:00';	
-			var jsonAtractivos = '';
-			
-			jsonAtractivos = '[{"VALOR1":"'+valorCalificacion1+'", "VALOR2":"'+valorCalificacion2+'", "VALOR3":"'+valorCalificacion3 +'", "VALOR4":"'+valorCalificacion4 +
-			'", "VALOR5":"'+ valorCalificacion5+'", "VALOR6":"'+valorCalificacion6 +'", "VALOR7":"'+valorCalificacion7 +'", "VALOR8":"'+valorCalificacion8 +'", "VALOR9":"'+valorCalificacion9 +
-			'", "VALOR10":"'+ valorCalificacion10+'", "VALOR11":"'+ valorCalificacion11+'", "VALOR12":"'+ valorCalificacion12+'", "VALOR13":"'+ valorCalificacion13+'"}]';
-			
-			
+
 			param.add('inCarpt_codigo', cbxOrigenAux.dom.value);
 			param.add('inCgg_carpt_codigo', cbxDestinoAux.dom.value);
 			param.add('inCraln_codigo', cbxAerolineaAux.dom.value);
@@ -766,9 +845,10 @@ function loadIngresoTCT(){
 			param.add('inCtreg_categoria', cbxCategoria.dom.value );
 			param.add('inCtreg_tipo_registro', cbxTipoRegistro.dom.value);
 			param.add('inCtreg_vuelo', jQuery("#txtNroVuelo").val());
+
+			/*
 			param.add('inCtreg_tipo_hospedaje', cbxTipoHospedaje.dom.value);
-			
-        	if(jQuery("#cbxTipoHospedaje").val()==102){
+			if(jQuery("#cbxTipoHospedaje").val()==102){
         		param.add('inCtreg_nombre_crucero', cbxNombreHospedaje.dom.value);
         		param.add('inCtreg_nombre_hotel', null);
         		param.add('inCtreg_isla_hospedaje', null);
@@ -781,18 +861,20 @@ function loadIngresoTCT(){
         		param.add('inCtreg_nombre_crucero', null);
         		param.add('inCtreg_nombre_hotel', null);
         	}
-	        	
-			param.add('inCtreg_lugar_hospedaje', jQuery("#divLugarHospedaje").val());
+	        param.add('inCtreg_lugar_hospedaje', jQuery("#divLugarHospedaje").val());
+			*/
 			param.add('inCtreg_viaje_acompanante', cbxInformacionViaje1Aux.dom.value);
 
-			//FIXME: param.add('inCtreg_viaje_motivo', cbxInformacionViaje2Aux.dom.value);
-			//FIXME: param.add('inCtreg_viaje_actividades', cbxInformacionViaje3Aux.dom.value);
+			// param.add('inCtreg_viaje_motivo', cbxInformacionViaje2Aux.dom.value);
+			// param.add('inCtreg_viaje_actividades', cbxInformacionViaje3Aux.dom.value);
 			param.add('inCtreg_viaje_miembros', jQuery("#txtNumeroMiembros").val());
-			//FIXME:param.add('inCtreg_viaje_tour', cbxInformacionViaje4Aux.dom.value);
-			//FIXME: param.add('inCtreg_viaje_cual', jQuery("#txtCual").val());
-			param.add('inAtractivos_JSON', jsonAtractivos);  	
-			param.add('inPersona_JSON', jsonPersona);  			
-			SOAPClient.invoke(URL_WS+"PublicWS/Cgg_tct_registro", "insert", param, true, CallBackCgg_tct_registro);
+			//param.add('inCtreg_viaje_tour', cbxInformacionViaje4Aux.dom.value);
+			// param.add('inCtreg_viaje_cual', jQuery("#txtCual").val());
+			// param.add('inAtractivos_JSON', jsonAtractivos);
+			param.add('inPersona_JSON', jsonPersona);
+			param.add('inHospedaje_JSON', jsonHospedaje);
+			param.add('inEncuesta_JSON',objEncuesta!=null?JSON.stringify(objEncuesta):null);
+			SOAPClient.invoke(URL_WS+"PublicWS/Cgg_tct_registro", "insertLite", param, true, CallBackCgg_tct_registro);
 		}else btnGuardarTTC.disabled=false;
 	};
 
@@ -892,7 +974,7 @@ function loadIngresoTCT(){
 		valueField:"CRALN_CODIGO",
 		webService:{
 			url:URL_WS+"PublicWS/Cgg_res_aerolinea",
-			method:"selectAll",
+			method:"selectAllRelated",
 			params:[
 				{name:"format",value:"JSON"},
 				{name:"tipo",value:cbmMedioTransporte.val()}
@@ -929,7 +1011,7 @@ function loadIngresoTCT(){
 			//Borramos todos los items previamente
 			jQuery("#cmbNroVuelo").empty();
 			jQuery("#cmbNroVuelo")
-				.append("<option>Seleccione un Item</option>");
+				.append("<option value='0'>Seleccione un Item</option>");
 			for(var i=0;i<transItems.length;i++){
 				jQuery("#cmbNroVuelo")
 					.append("<option value='"+transItems[i].vuelo+"'>"+transItems[i].vuelo+"</option>");
@@ -951,6 +1033,7 @@ function loadIngresoTCT(){
 	});
 
 	jQuery("#cmbNroVuelo").change(function(v){
+		jQuery("#txtNroVuelo").val(v.target.value);
 		for(var i=0;i<transItems.length;i++){
 			if(transItems[i].vuelo == v.target.value){
 				jQuery("#cbxDestinoAux").val(transItems[i].codigoAeropuerto);

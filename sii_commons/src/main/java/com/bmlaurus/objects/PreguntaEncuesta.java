@@ -22,6 +22,7 @@ public class PreguntaEncuesta implements Serializable{
     private static final String TIPO_SCORE = "SCORE";
     private static final String TIPO_COMBO = "COMBO";
     private static final String TIPO_TEXTO = "TEXT";
+    private static final String TIPO_MULTICHECK = "MULTI";
 
     private static final long serialVersionUID = 7502420380983384146L;
 

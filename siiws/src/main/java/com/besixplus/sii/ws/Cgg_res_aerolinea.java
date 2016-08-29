@@ -93,7 +93,7 @@ public class Cgg_res_aerolinea implements Serializable{
 	* @throws SOAPException 
 	*/
 	@WebMethod
-	public String selectAll_OLD(
+	public String selectAll(
 		@WebParam(name="format")String format
 	) throws SOAPException{
 		HttpServletRequest tmpRequest = (HttpServletRequest) wctx.getMessageContext().get(MessageContext.SERVLET_REQUEST);
@@ -130,7 +130,7 @@ public class Cgg_res_aerolinea implements Serializable{
 	 * @throws SOAPException
 	 */
 	@WebMethod
-	public String selectAll(
+	public String selectAllRelated(
 			@WebParam(name="format")String format,
 			@Nullable @WebParam(name="tipo")String tipo
 	) throws SOAPException{

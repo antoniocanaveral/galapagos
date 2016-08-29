@@ -68,7 +68,7 @@ CREATE TABLE sii.cgg_enc_pregunta
    encpr_codigo character varying PRIMARY KEY,
    encpr_descripcion character varying NOT NULL,
    encpr_categoria character varying,
-   encpr_type character varying NOT NULL DEFAULT 'SCORE', -- SCORE, COMBO, TEXT
+   encpr_type character varying NOT NULL DEFAULT 'SCORE', -- SCORE, COMBO, TEXT, MULTI
    encpr_estado boolean DEFAULT TRUE , -- ESTADO DEL REGISTRO
    encpr_fecha_insert timestamp with time zone, -- FECHA DE INGRESO DE INFORMACION AL SISTEMA...
    encpr_usuario_insert character varying(20), -- USUARIO QUE INGRESO LA INFORMACION EN EL SISTEMA...
@@ -76,7 +76,7 @@ CREATE TABLE sii.cgg_enc_pregunta
    encpr_usuario_update character varying(20)
 );
 
-INSERT INTO sii.cgg_enc_pregunta VALUES('ENCPR1','* ¿Qué motiva su viaje a Galápagos?','ENCUESTA_TCT','COMBO',
+INSERT INTO sii.cgg_enc_pregunta VALUES('ENCPR1','* ¿Qué motiva su viaje a Galápagos?','ENCUESTA_TCT','MULTI',
   true,current_timestamp,'admin',current_timestamp,'admin');
 
 INSERT INTO sii.cgg_enc_pregunta VALUES('ENCPR2','* ¿Usted está viajando a Galápagos dentro de un tour organizado y contratado fuera de Galápagos?','ENCUESTA_TCT','COMBO',
@@ -89,11 +89,11 @@ INSERT INTO sii.cgg_enc_pregunta VALUES('ENCPR4','* ¿Cuál?','ENCUESTA_TCT','TE
   true,current_timestamp,'admin',current_timestamp,'admin');
 
 INSERT INTO sii.cgg_enc_pregunta VALUES('ENCPR5',
-  'Califique con estrellas (1 menor valoración, 4 mayor valoración) qué tan importantes son los siguientes atractivos para su decisión de visitar Galápagos.','ENCUESTA_TCT','SCORE',
+  '* Califique con estrellas (1 menor valoración, 4 mayor valoración) qué tan importantes son los siguientes atractivos para su decisión de visitar Galápagos.','ENCUESTA_TCT','SCORE',
   true,current_timestamp,'admin',current_timestamp,'admin');
 
 INSERT INTO sii.cgg_enc_pregunta VALUES('ENCPR6',
-  'Califique con estrellas (1 menor valoración, 4 mayor valoración) qué tan importantes son las siguientes actividades en su decisión de visitar Galápagos.','ENCUESTA_TCT','SCORE',
+  '* Califique con estrellas (1 menor valoración, 4 mayor valoración) qué tan importantes son las siguientes actividades en su decisión de visitar Galápagos.','ENCUESTA_TCT','SCORE',
   true,current_timestamp,'admin',current_timestamp,'admin');
 
 CREATE TABLE sii.cgg_enc_item
@@ -204,6 +204,90 @@ INSERT INTO SII.CGG_TCT_TRANSPORTE VALUES(SII.F_KEYGEN('CGG_TCT_TRANSPORTE','TCT
 INSERT INTO SII.CGG_TCT_TRANSPORTE VALUES(SII.F_KEYGEN('CGG_TCT_TRANSPORTE','TCTTR_CODIGO','TCTTR'),'7','5','XL1553',true,current_timestamp,'admin',current_timestamp,'admin');
 INSERT INTO SII.CGG_TCT_TRANSPORTE VALUES(SII.F_KEYGEN('CGG_TCT_TRANSPORTE','TCTTR_CODIGO','TCTTR'),'7','5','XL1557',true,current_timestamp,'admin',current_timestamp,'admin');
 INSERT INTO SII.CGG_TCT_TRANSPORTE VALUES(SII.F_KEYGEN('CGG_TCT_TRANSPORTE','TCTTR_CODIGO','TCTTR'),'7','3','XL1561',true,current_timestamp,'admin',current_timestamp,'admin');
+
+
+-- TABLA DE HOSPEDAJES
+CREATE TABLE sii.cgg_tct_hospedaje
+(
+  cthos_codigo character varying(20) NOT NULL, -- IDENTIFICATIVO UNICO DE REGISTRO DE HOSPEDAJE
+  ctreg_codigo character varying(20) NOT NULL,-- IDENTIFICATIVO DE PRE-REGISTRO
+  cthos_tipo character varying, -- TIPO DE HOSPEDAJE
+  cisla_codigo character varying, -- ISLA DE HOSPEDAJE
+  cthos_lugar character varying, -- LUGAR HOSPEDAJE
+  cthos_fechaIngreso timestamp,
+  cthos_fechaSalida timestamp,
+  cthos_reserva character varying, -- NO SE USA. RESERVA DEL HOSPEDAJE
+  cthos_estado boolean DEFAULT true, -- ESTADO DEL REGISTRO
+  cthos_fecha_insert timestamp with time zone, -- FECHA DE INGRESO DE INFORMACION AL SISTEMA...
+  cthos_usuario_insert character varying(20), -- USUARIO QUE INGRESO LA INFORMACION EN EL SISTEMA...
+  cthos_fecha_update timestamp with time zone, -- FECHA QUE SE REALIZO LA ACTUALIZACION DE LA INFORMACION...
+  cthos_usuario_update character varying(20), -- USUARIO QUE REALIZO LA ACTUALIZACION DE LA INFORMACION...
+  CONSTRAINT pk_cgg_tct_hospedaje PRIMARY KEY (cthos_codigo)
+);
+
+
+-- LAS VENTAS NO SE HACEN HASTA EL FINAL
+CREATE OR REPLACE FUNCTION f_cgg_tct_registro_persona(
+    in_ctgtr_codigo character varying,
+    in_ctreg_estado_registro character varying)
+  RETURNS SETOF refcursor AS
+$BODY$
+DECLARE
+	TMP_REF REFCURSOR;
+BEGIN
+	OPEN TMP_REF FOR
+	WITH RECURSIVE TIPO(CRTST_CODIGO, CGG_CRTST_CODIGO, CRTST_DESCRIPCION)AS(
+			SELECT CRTST_CODIGO, CGG_CRTST_CODIGO, CRTST_DESCRIPCION FROM CGG_RES_TIPO_SOLICITUD_TRAMITE WHERE CRTST_CODIGO = (SELECT CGCNF_VALOR_CADENA
+			FROM CGG_CONFIGURACION
+			WHERE CGCNF_CODIGO = '05')
+			UNION SELECT TST.CRTST_CODIGO, TST.CGG_CRTST_CODIGO, TP.CRTST_DESCRIPCION FROM CGG_RES_TIPO_SOLICITUD_TRAMITE TST, TIPO TP
+			WHERE TST.CGG_CRTST_CODIGO = TP.CRTST_CODIGO
+		),
+	RESIDENCIA AS(
+		SELECT RG.CRPER_CODIGO,RS.CRTRA_CODIGO,RS.CRTST_CODIGO FROM  SII.CGG_TCT_REGISTRO RG
+		LEFT JOIN SII.CGG_RES_RESIDENCIA RS ON (RS.CRPER_CODIGO = RG.CRPER_CODIGO AND RS.CRRSD_VIGENTE AND RS.CRRSD_FECHA_INICIO::DATE = RG.CTREG_FECHA_INGRESO::DATE)
+		AND RS.CRTST_CODIGO IN (SELECT CRTST_CODIGO  FROM TIPO)
+		WHERE CTGTR_CODIGO = IN_CTGTR_CODIGO)
+	SELECT DISTINCT
+		RG.CTREG_CODIGO,
+		GT.CTGTR_CODIGO,
+		LPAD(GT.CTGTR_NUMERO::VARCHAR,7,'0'::VARCHAR) CTGTR_NUMERO,
+		PR.CRPER_CODIGO,
+		PR.CRDID_CODIGO,
+		PR.CRPER_NUM_DOC_IDENTIFIC,
+		PR.CRPER_NOMBRES,
+		PR.CRPER_APELLIDO_PATERNO,
+		PR.CRPER_GENERO,
+		PR.CGNCN_CODIGO,
+		PR.CRPER_FECHA_NACIMIENTO,
+		PR.CGG_CPAIS_CODIGO,
+		--VDT.CKESP_CODIGO,
+		--CKESP_REPORTE,
+		RG.CTREG_ESTADO_REGISTRO,
+		RG.CTREG_OBSERVACION,
+		TR.CRTRA_CODIGO,
+		TR.CRTRA_NUMERO,
+		PR.CRPER_SEGUIMIENTO,
+		(CASE WHEN RS.CRTST_CODIGO IS NULL THEN 'Turista' ELSE 'Transeunte' END)TIPO_RESIDENCIA,
+		RG.CTREG_FECHA_INSERT
+	FROM  SII.CGG_TCT_REGISTRO RG
+	INNER JOIN SII.CGG_RES_PERSONA PR ON PR.CRPER_CODIGO = RG.CRPER_CODIGO
+	INNER JOIN SII.CGG_TCT_GRUPO_TURISTA GT ON (GT.CTGTR_CODIGO = RG.CTGTR_CODIGO)
+	--INNER JOIN SII.CGG_KDX_VENTA_DETALLE VDT ON (VDT.CTREG_CODIGO = RG.CTREG_CODIGO)
+	--INNER JOIN SII.CGG_KDX_ESPECIE CKESP ON (CKESP.CKESP_CODIGO = VDT.CKESP_CODIGO)
+	INNER JOIN RESIDENCIA RS ON (RS.CRPER_CODIGO = RG.CRPER_CODIGO)
+	LEFT JOIN SII.CGG_RES_TRAMITE TR ON (TR.CRTRA_CODIGO=RS.CRTRA_CODIGO)
+	WHERE RG.CTREG_ESTADO AND
+		GT.CTGTR_CODIGO = IN_CTGTR_CODIGO AND
+		CTREG_ESTADO_REGISTRO = ANY(STRING_TO_ARRAY(IN_CTREG_ESTADO_REGISTRO,',')::smallint[])
+		AND NOT RG.CTREG_COMPLETO
+	ORDER BY RG.CTREG_FECHA_INSERT;
+	RETURN NEXT TMP_REF;
+END
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100
+  ROWS 1000;
 
 --> MIGRATION SCRIPT CONTROLLER <--
 INSERT INTO sii.cgg_migrationscript (mrgsp_codigo,mrgsp_fecha,mrgsp_usuario_insert,mrgsp_fecha_insert,mrgsp_usuario_update,mrgsp_fecha_update,
