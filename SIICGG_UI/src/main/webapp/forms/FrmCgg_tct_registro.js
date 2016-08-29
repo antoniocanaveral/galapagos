@@ -230,6 +230,8 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
         }
     });
 
+
+
     /**
      * Ext.form.ComboBox Aereolinea de la tct.
      */
@@ -562,6 +564,16 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
         emptyText : 'Seleccione el G\u00e9nero',
         value:0
     });
+
+/* Ext.form.Checkbox Seguimiento
+    */
+    var chk_seguimiento_persona = new Ext.form.Checkbox({
+        id: 'chk_seguimiento_persona',
+        name: 'chk_seguimiento_persona',
+        fieldLabel: 'Seguimiento',
+        checked: false
+    });
+
     /**
      * Ext.form.TextField NOMBRES DE LA PERSONA
      */
@@ -786,7 +798,7 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
         {dataIndex:'CRTRA_CODIGO',header:'codigo',width:10,sortable:true,editor:txtCrtra_codigo,hidden:true,hiddeable:true,editable:!inPrintMode},
         {dataIndex:'CRTRA_NUMERO',header:'No. aut.',width:50,sortable:true,editor:txtCrtra_numero,editable:true},
         {dataIndex:'CTREG_OBSERVACION',header:'Observaci\u00f3n',width:80,sortable:true,editable:true,editor:new Ext.form.TextField({})},
-
+        {dataIndex:'CRPER_SEGUIMIENTO',header:'Seguimiento',width:80,sortable:true,align:'center',editor:chk_seguimiento_persona},
     ]);
 
     function consultarPersona(){
@@ -824,6 +836,7 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
                 tmpRecord.data.CRTRA_CODIGO = '';
                 txtCrtra_numero.setValue('');
                 txtCrtipo_persona.setValue('TURISTA');
+                chk_seguimiento_persona.setValue(false);
 
 
             }else{
@@ -897,7 +910,8 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
             {name:'TIPO_RESIDENCIA'},
             {name:'CKESP_CODIGO'},
             {name:'CKESP_REPORTE'},
-            {name:'CTREG_OBSERVACION'}
+            {name:'CTREG_OBSERVACION'},
+            {name:'CRPER_SEGUIMIENTO'}
 
         ]),
         baseParams:{
@@ -1062,8 +1076,8 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
                             CKESP_CODIGO:SCGG_CONFIGURACION.getAt(SCGG_CONFIGURACION.findExact('CGCNF_CODIGO','CONF35')).get('CGCNF_VALOR_CADENA'),
                             CRTRA_CODIGO:'',
                             CRTRA_NUMERO:'',
-                            CTREG_OBSERVACION:''
-
+                            CTREG_OBSERVACION:'',
+                            CRPER_SEGUIMIENTO:'FALSE'
                         })
                         );
                 grdCgg_res_persona.getView().refresh();
