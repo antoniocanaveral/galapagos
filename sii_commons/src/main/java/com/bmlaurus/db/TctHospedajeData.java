@@ -28,6 +28,7 @@ public class TctHospedajeData {
         String res="false";
         try {
 
+            hospedaje.setEstado(true);
             hospedaje.setCodigo(getNewCode(conn));
             hospedaje.setFechaInsert(new Date(System.currentTimeMillis()));
             hospedaje.setFechaUpdate(new Date(System.currentTimeMillis()));

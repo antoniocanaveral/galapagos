@@ -106,6 +106,14 @@ function loadIngresoTCT(){
 	//jQuery("input:radio[checked=false]");
 	jQuery("input[type=radio]").attr('checked', false);
 
+	//Preset
+	jQuery("#cbmMedioTransporte").val("AVION");
+	jQuery("#cbxOrigenAux").val("0");
+	jQuery("#cmbNroVuelo").val("0");
+	jQuery("#txtNroVuelo").val("");
+	jQuery("#txtTotalDias").val("0");
+
+
 
 	//AC--> Encuesta Dinamica
 	function CallBackCgg_cargar_encuesta(r){
@@ -142,7 +150,7 @@ function loadIngresoTCT(){
 					for (var j = 0; j < pregunta.items.length; j++) {
 						var cellItem = fila.insertCell();
 						cellItem.id = "itemEncuesta_" + i + "_" + j;
-						cellItem.itemId = pregunta.items[j].codigo;
+						cellItem.itemId = ""+pregunta.items[j].codigo;
 						cellItem.rateYo = "rateYo_" + i + "_" + pregunta.items[j].codigo;
 						cellItem.innerHTML = "<div class='itemContainer'> <div class='itemRateYo' id='rateYo_" + i + "_" + pregunta.items[j].codigo + "'></div> <div class='itemTitle'>" + pregunta.items[j].descripcion + " </div></div>";
 						if ((j + 1) % colSize == 0) {//Es multiplo de colSize. Creamos otra fila debajo.
@@ -164,7 +172,7 @@ function loadIngresoTCT(){
 					for (var j = 0; j < pregunta.items.length; j++) {
 						var cellItem = fila.insertCell();
 						cellItem.id = "itemEncuesta_" + i + "_" + j;
-						cellItem.itemId = pregunta.items[j].codigo;
+						cellItem.itemId = ""+pregunta.items[j].codigo;
 						cellItem.checkId = "check_" + i + "_" + j;
 						cellItem.innerHTML = "<div class='checkContainer'> <input type='checkbox' class='checkItem' id='check_" + i + "_" + j + "' value='"+pregunta.items[j].codigo+"'/> <div class='checkTitle'>" + pregunta.items[j].descripcion + " </div></div>";
 						if ((j + 1) % colSize == 0) {//Es multiplo de colSize. Creamos otra fila debajo.
@@ -612,7 +620,7 @@ function loadIngresoTCT(){
 
 		celda= fila.insertCell(1);
 		celda.id = cbxIslaHospedaje.dom.value;
-		celda.innerHTML = cbxIslaHospedaje.dom.options[cbxIslaHospedaje.dom.selectedIndex].text;
+		celda.innerHTML = cbxIslaHospedaje.dom.value=="0"?"No Aplica":cbxIslaHospedaje.dom.options[cbxIslaHospedaje.dom.selectedIndex].text;
 		celda.width = 80;
 
 		celda= fila.insertCell(2);
@@ -641,7 +649,7 @@ function loadIngresoTCT(){
 	}
 
 	btnAceptarIngreso.onclick = function(){	
-		btnAceptarIngreso.disabled=true;	
+		//btnAceptarIngreso.disabled=true;
 		if(cbxTipoDocumento.dom.value == 1){
 			if (validarCedula(txtNumeroDocumento.value) == false){
 				new bsxMessageBox({
@@ -670,7 +678,7 @@ function loadIngresoTCT(){
 		}
 		if(cbxEstadoCivil.dom.value==0){
 			swVerificado = false;
-			cbxEstadoCivil.focus();
+			//cbxEstadoCivil.focus();
 		}
 		if(txtCorreoElectronico.value && txtCorreoElectronico.value.length>0 && txtCorreoElectronico.value == txtConfirCorreoElectronico.value){
 			swVerificado = true;
@@ -809,6 +817,16 @@ function loadIngresoTCT(){
 					for (var i=totalFilas-1;i>=1;i--) {					
 						tbodyPersona.removeChild(tblPersona.rows[i]);
 					}
+					var tbodyHospedaje = tblHospedaje.tBodies[0];
+					totalFilas = tblHospedaje.rows.length;
+					for (var i=totalFilas-1;i>=1;i--) {
+						tbodyHospedaje.removeChild(tblHospedaje.rows[i]);
+					}
+					var tbodyEncuesta = tblEncuesta.tBodies[0];
+					totalFilas = tblEncuesta.rows.length;
+					for (var i=totalFilas-1;i>=1;i--) {
+						tbodyEncuesta.removeChild(tblEncuesta.rows[i]);
+					}
 					//document.location = 'ingresoTCT.jsp';
 					loadIngresoTCT();
 				}else{
@@ -845,37 +863,14 @@ function loadIngresoTCT(){
 			param.add('inCtreg_categoria', cbxCategoria.dom.value );
 			param.add('inCtreg_tipo_registro', cbxTipoRegistro.dom.value);
 			param.add('inCtreg_vuelo', jQuery("#txtNroVuelo").val());
-
-			/*
-			param.add('inCtreg_tipo_hospedaje', cbxTipoHospedaje.dom.value);
-			if(jQuery("#cbxTipoHospedaje").val()==102){
-        		param.add('inCtreg_nombre_crucero', cbxNombreHospedaje.dom.value);
-        		param.add('inCtreg_nombre_hotel', null);
-        		param.add('inCtreg_isla_hospedaje', null);
-        	}else if(jQuery("#cbxTipoHospedaje").val()==104){
-        		param.add('inCtreg_nombre_hotel', cbxNombreHospedajeIsla.dom.value);
-        		param.add('inCtreg_isla_hospedaje', cbxIslaHospedaje.dom.value);
-        		param.add('inCtreg_nombre_crucero', null);
-        	}else if(jQuery("#cbxTipoHospedaje").val()==103){
-        		param.add('inCtreg_isla_hospedaje', cbxIslaHospedaje.dom.value);
-        		param.add('inCtreg_nombre_crucero', null);
-        		param.add('inCtreg_nombre_hotel', null);
-        	}
-	        param.add('inCtreg_lugar_hospedaje', jQuery("#divLugarHospedaje").val());
-			*/
 			param.add('inCtreg_viaje_acompanante', cbxInformacionViaje1Aux.dom.value);
-
-			// param.add('inCtreg_viaje_motivo', cbxInformacionViaje2Aux.dom.value);
-			// param.add('inCtreg_viaje_actividades', cbxInformacionViaje3Aux.dom.value);
 			param.add('inCtreg_viaje_miembros', jQuery("#txtNumeroMiembros").val());
-			//param.add('inCtreg_viaje_tour', cbxInformacionViaje4Aux.dom.value);
-			// param.add('inCtreg_viaje_cual', jQuery("#txtCual").val());
-			// param.add('inAtractivos_JSON', jsonAtractivos);
 			param.add('inPersona_JSON', jsonPersona);
 			param.add('inHospedaje_JSON', jsonHospedaje);
 			param.add('inEncuesta_JSON',objEncuesta!=null?JSON.stringify(objEncuesta):null);
 			SOAPClient.invoke(URL_WS+"PublicWS/Cgg_tct_registro", "insertLite", param, true, CallBackCgg_tct_registro);
-		}else btnGuardarTTC.disabled=false;
+		}else
+			btnGuardarTTC.disabled=false;
 	};
 
 	/*
@@ -1275,7 +1270,11 @@ function loadIngresoTCT(){
 			}
 		}
 	});
-	
+
+	cbxNombreHospedaje.dom.onchange = function(v){
+		lugarHospedajeId = cbxNombreHospedaje.dom.value;
+		lugarHospedaje = cbxNombreHospedaje.dom.options[cbxNombreHospedaje.dom.selectedIndex].text;
+	};
 
 	
 	var cbxNombreHospedajeIsla = new bsxComboBox({
@@ -1304,7 +1303,7 @@ function loadIngresoTCT(){
 		lugarHospedajeId = cbxNombreHospedajeIsla.dom.value;
 		lugarHospedaje = cbxNombreHospedajeIsla.dom.options[cbxNombreHospedajeIsla.dom.selectedIndex].text;
 	};
-	
+
 	/*
 	*Creacion de un combobox para la informacion del viaje - usted esta viajando con
 	*/
@@ -1418,6 +1417,20 @@ function loadIngresoTCT(){
              
 
             }
+
+			//Limpiamos los campos por consultas previas:
+			txtCodigoPersona.value="";
+			txtNombrePersona.value = "";
+			txtApellidoPersona.value= "";
+			cbxNacionalidad.dom.value = "0";
+			cbxPaisResidencia.dom.value = "0";
+			txtCorreoElectronico.value="";
+			txtConfirCorreoElectronico.value="";
+			txtFechaNacimiento.value="";
+			txtCodigoTramite.value ="";
+			txtCodigoEspecie.value ="";
+			txtCodigoPostal.value="";
+
             var param = new SOAPClientParameters();
 			var arrFecha = dtFechaIngreso.value.split('/');
 			var fechaIngreso = arrFecha[2]+'-'+arrFecha[1]+'-'+arrFecha[0];			

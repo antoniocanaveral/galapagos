@@ -14,6 +14,7 @@ function FrmListadoCgg_tct_registro(inDesktop){
     var especie_kardex= new Especie_Kardex();
 	var myJasperServer = new JasperServer();
 	var tmpPrintMode = false;
+    var isOperational = true;
 	
 	var gsCgg_res_documento_identificacio = new Ext.data.Store({
         proxy:new Ext.ux.bsx.SoapProxy({
@@ -470,6 +471,7 @@ function FrmListadoCgg_tct_registro(inDesktop){
             direction: 'DESC'
         },
         baseParams:{
+            operational:isOperational,
             keyword:"",
             format:TypeFormat.JSON
         },
@@ -503,6 +505,14 @@ function FrmListadoCgg_tct_registro(inDesktop){
             new Ext.ux.bsx.SearchField({
                 store:gsCgg_tct_registro,
                 width:200
+            }), new Ext.form.Checkbox({
+                checked:true,
+                fieldLabel: 'No mostrar impresos',
+                listeners:{
+                    check:function(_this,_checked){
+                        isOperational = _checked;
+                    }
+                }
             })],
         bbar:pgBarCgg_tct_registro,
         listeners:{
@@ -517,6 +527,7 @@ function FrmListadoCgg_tct_registro(inDesktop){
         })
     });
     gsCgg_tct_registro.reload({params:{
+        operational:isOperational,
 		start:0,
 		limit:(RECORD_PAGE - 10)
 	}});

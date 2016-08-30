@@ -10,10 +10,8 @@ import com.bmlaurus.virtual.VirtualCache;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by acanaveral on 6/7/16.
@@ -254,8 +252,10 @@ public class ProcessMail extends Thread{
     //      @T:[campo]@ -> datos del tramite -> puede llamarse a datos relacionados, usando el mismo formato de alfresco (campo_join;tabla.campo_respuesta)
     //      @S:[campo]@ -> datos del seguimiento
     //      @F:[campo]@ -> datos de la fase
-    //      Cualquier otra tabla mediante el formato @[Nombre_Tabla]*[record_id]:[campo]@
+    //      Cualquier otra tabla mediante el formato @[Nombre_Tabla]*[record_id]:[campo de retorno]@
     //AUXILIARES:
+    //      @$HOY@ --> Fecha del sistema en formato dd/mm/yyyy
+    //      @$HOY_LEYENDA@ --> Fecha del sistema en formato dd/mm/yyyy y leyenda de formato (dd/mm/yyyy)
     //      @$AUSPICIANTE@ -> Nombres Completos del Auspiciante
     //      @$AUSPICIANTE_ID@ -> Cédula del Auspiciante
     //      @$BENEFICIARIO@ -> Nombres Completos del Beneficiario
@@ -264,6 +264,7 @@ public class ProcessMail extends Thread{
     //      @$EMPRESA@ -> Nombre de la Empresa Auspiciante
     //      @$EMPRESA_ID@ -> RUC de la Empresa Auspiciante
 
+    //$$@$$
     //Obtener el contenido de las @ y reemplazarlo por la ejecución de la base de datos.
     //Seguir recorriendo el mensaje hasta el final.
 
@@ -272,24 +273,31 @@ public class ProcessMail extends Thread{
 
         int index = 0;
         String analizer = null;
-        while (index < mailBody.length()){
-            analizer = mailBody.substring(index);
-            if(analizer.contains("@")){
-                int addIndex = analizer.indexOf("@");
-                //Agregamos lo que esta antes de las arrobas
-                if(addIndex>0)
-                    buffer.append(analizer.substring(0,addIndex));
+        try {
+            while (index < mailBody.length()) {
+                analizer = mailBody.substring(index);
+                if(analizer.contains("$$@$$")){
+                    buffer.append(analizer.replace("$$@$$","@"));
+                    index = index + analizer.length();
+                }else if (analizer.contains("@")) {
+                    int addIndex = analizer.indexOf("@");
+                    //Agregamos lo que esta antes de las arrobas
+                    if (addIndex > 0)
+                        buffer.append(analizer.substring(0, addIndex));
 
-                //Evaluamos las Arrobas
-                String evaluate = analizer.substring(addIndex);
-                int addLimit = evaluate.replaceFirst("@","?").indexOf("@");
-                String result = dataResolver(objConn, evaluate.substring(1,addLimit));
-                buffer.append(result);
-                index = index + addIndex+addLimit+1;
-            }else{
-                buffer.append(analizer);
-                index = index + analizer.length();
+                    //Evaluamos las Arrobas
+                    String evaluate = analizer.substring(addIndex);
+                    int addLimit = evaluate.replaceFirst("@", "?").indexOf("@");
+                    String result = dataResolver(objConn, evaluate.substring(1, addLimit));
+                    buffer.append(result);
+                    index = index + addIndex + addLimit + 1;
+                } else {
+                    buffer.append(analizer);
+                    index = index + analizer.length();
+                }
             }
+        }catch(Exception e){
+            System.err.println("Bad Formed EMAIL TEMPLATE (Esto ocurre por abrir campos con arrobas y no cerrarlas. para poner el caracter @ en el mensaje. pongalo de la siguiente manera: $$@$$) :"+ e.getMessage());
         }
         return buffer.toString();
     }
@@ -317,6 +325,10 @@ public class ProcessMail extends Thread{
                                 String dinamic[] = comparator.split("\\*");
                                 tableName = dinamic[0];
                                 recordId = dinamic[1];
+                                if(externalAuxData!=null && externalAuxData.size()>0)
+                                    if(externalAuxData.get(dataPath)!=null)
+                                        recordId=externalAuxData.get(dataPath);
+
                             }else
                                 return result;
                     break;
@@ -325,7 +337,16 @@ public class ProcessMail extends Thread{
             path.add("@"+splitter[1]+"@");
         }else if(dataPath.contains("$")){//ES UNA LLAMADA DIRECTA
             tableName = "cgg_res_persona";
+            SimpleDateFormat sdf;
             switch (dataPath){
+                case "$HOY":
+                    sdf = new SimpleDateFormat("dd/MM/yyyy");
+                    path.add(sdf.format(new Date()));
+                    break;
+                case "$HOY_LEYENDA":
+                    sdf = new SimpleDateFormat("dd/MM/yyyy");
+                    path.add(sdf.format(new Date())+" (dd/mm/yyyy)");
+                    break;
                 case "$AUSPICIANTE":
                     recordId = tramite.getCRPER_CODIGO();
                     path.add("@crper_nombres@");

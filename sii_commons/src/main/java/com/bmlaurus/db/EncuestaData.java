@@ -2,11 +2,10 @@ package com.bmlaurus.db;
 
 import com.bmlaurus.objects.ItemEncuesta;
 import com.bmlaurus.objects.PreguntaEncuesta;
+import com.bmlaurus.objects.RespuestaEncuesta;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.math.BigDecimal;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,5 +80,64 @@ public class EncuestaData {
         }
 
         return preguntas;
+    }
+
+    public static boolean save(Connection conn, RespuestaEncuesta respuesta){
+        boolean res = false;
+            if(respuesta!=null){
+                try {
+                    respuesta.setEstado(true);
+                    respuesta.setCodigo(getNewCode(conn));
+                    respuesta.setFechaInsert(new java.sql.Date(System.currentTimeMillis()));
+                    respuesta.setFechaUpdate(new java.sql.Date(System.currentTimeMillis()));
+
+
+                    String strSQL = "INSERT INTO cgg_enc_respuesta(\n" +
+                            "            encres_codigo, encpr_codigo, encit_codigo, ctreg_codigo, encres_numval, \n" +
+                            "            encres_txtval, encres_estado, encres_fecha_insert, encres_usuario_insert, \n" +
+                            "            encres_fecha_update, encres_usuario_update)\n" +
+                            "    VALUES (?, ?, ?, ?, ?, \n" +
+                            "            ?, ?, ?, ?, \n" +
+                            "            ?, ?)";
+
+
+                    PreparedStatement statement;
+                    statement = conn.prepareStatement(strSQL);
+
+                    statement.setString(1,respuesta.getCodigo());
+                    statement.setString(2,respuesta.getCodigoPregunta());
+                    statement.setString(3,respuesta.getCodigoItem());
+                    statement.setString(4,respuesta.getCodigoPreregistro());
+                    statement.setBigDecimal(5,new BigDecimal(respuesta.getValorNumerico()));
+                    statement.setString(6,respuesta.getValorTexto());
+                    statement.setBoolean(7,respuesta.isEstado());
+                    statement.setDate(8, respuesta.getFechaInsert());
+                    statement.setString(9, respuesta.getUsuarioInsert());
+                    statement.setDate(10, respuesta.getFechaUpdate());
+                    statement.setString(11, respuesta.getUsuarioUpdate());
+
+                    statement.execute();
+                    statement.close();
+                    res=true;
+
+                }catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        return res;
+    }
+
+
+    private static String getNewCode(Connection inConnection) throws SQLException {
+        String code=null;
+        CallableStatement stmInsert = inConnection.prepareCall("{ ? = call sii.f_keygen(?,?,?) }");
+        stmInsert.registerOutParameter(1, Types.VARCHAR);
+        stmInsert.setString(2,"Cgg_enc_respuesta");
+        stmInsert.setString(3,"encres_codigo");
+        stmInsert.setString(4,"ENCRES");
+        stmInsert.execute();
+        code = stmInsert.getString(1);
+        stmInsert.close();
+        return code;
     }
 }

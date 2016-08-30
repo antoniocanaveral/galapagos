@@ -172,7 +172,7 @@ INSERT INTO sii.cgg_not_mail (ntml_codigo, ntml_name, ntml_description, ntml_sub
 INSERT INTO sii.cgg_not_mail (ntml_codigo, ntml_name, ntml_description, ntml_subject, ntml_type, ntml_body, ntml_sendheader, ntml_sendfooter, ntml_header_override,
   ntml_footer_override, ntml_estado, ntml_fecha_insert, ntml_usuario_insert, ntml_fecha_update, ntml_usuario_update)
 VALUES ('NTML3', 'Correo Suscripción', 'Correo con información de suscripción del usuario', '[PRUEBA! POR FAVOR DESCARTAR] Cuenta de Acceso', 'html',
-'Bienvenido al SII.<br/> Su cuenta de acceso es <strong>$CUSU_NOMBRE_USUARIO</strong> su password <strong>$CUSU_PASSWORD</strong>.</br> Para disfrutar de los nuevos servicios por favor visite $CUSU_URL.', true, true, null, null, true, '2016-07-04 16:53:14.783784', 'admin', '2016-07-04 16:53:14.783784', 'admin');
+'Bienvenido al SII.<br/> Su cuenta de acceso es <strong>@$CUSU_NOMBRE_USUARIO@</strong> su password <strong>@$CUSU_PASSWORD@</strong>.</br> Para disfrutar de los nuevos servicios por favor visite @$CUSU_URL@.', true, true, null, null, true, '2016-07-04 16:53:14.783784', 'admin', '2016-07-04 16:53:14.783784', 'admin');
 
 INSERT INTO Cgg_configuracion VALUES('CONF200','Cgg_not_correo codigo para Suscripcion de Usuarios','NTML3',0,null,true,current_timestamp,'admin',current_timestamp,'admin');
 
