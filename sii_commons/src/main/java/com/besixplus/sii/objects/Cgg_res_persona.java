@@ -227,6 +227,7 @@ public class Cgg_res_persona implements Serializable{
 	* USUARIO QUE REALIZO LA ACTUALIZACION DE LA INFORMACION
 	*/
 	private String myCrper_usuario_update;
+
 	/**
 	 * CAMPOS ADICIONALES V2
 	 * Matrimonio/Conyuge
@@ -249,6 +250,12 @@ public class Cgg_res_persona implements Serializable{
 	public void setCRPER_FECHA_MATRIMONIO(java.util.Date crper_fecha_matrimonio) {
 		this.crper_fecha_matrimonio = crper_fecha_matrimonio;
 	}
+
+	/**
+	 * ESTADO SEGUIMIENTO PERSONA
+	 */
+	private boolean myCrper_seguimiento;
+
 
 	/**
 	* CONSTRUCTOR DE LA CLASE Cgg_res_persona
@@ -308,6 +315,7 @@ public class Cgg_res_persona implements Serializable{
 	* @param inCrper_estado ESTADO DEL REGISTRO
 	* @param inCrper_usuario_insert USUARIO QUE INGRESO LA INFORMACION EN EL SISTEMA
 	* @param inCrper_usuario_update USUARIO QUE REALIZO LA ACTUALIZACION DE LA INFORMACION
+	* @param inCrper_seguimiento SEGUIMIENTO DE LA PERSONA
 	*/
 	public Cgg_res_persona(
 		String inCrper_codigo,
@@ -352,7 +360,8 @@ public class Cgg_res_persona implements Serializable{
 		boolean inCrper_atencion_cliente,
 		boolean inCrper_estado,
 		String inCrper_usuario_insert,
-		String inCrper_usuario_update
+		String inCrper_usuario_update,
+		boolean inCrper_seguimiento
 	){
 		this.setCRPER_CODIGO(inCrper_codigo);
 		this.setCRECV_CODIGO(inCrecv_codigo);
@@ -397,6 +406,7 @@ public class Cgg_res_persona implements Serializable{
 		this.setCRPER_ESTADO(inCrper_estado);
 		this.setCRPER_USUARIO_INSERT(inCrper_usuario_insert);
 		this.setCRPER_USUARIO_UPDATE(inCrper_usuario_update);
+		this.setCRPER_SEGUIMIENTO(inCrper_seguimiento);
 	}
 
 	/**
@@ -1213,5 +1223,20 @@ public class Cgg_res_persona implements Serializable{
 	 */
 	public String getCCNT_NOMBRE_ORIGEN(){
 		return this.myCrper_canton_origen;
+	}
+
+	/**
+	 * ESTABLECE SI TIENE SEGUIMIENTO
+	 * @param inCrper_seguimiento SI TIENE SEGUIMIENTO
+	 */
+	public void setCRPER_SEGUIMIENTO(boolean inCrper_seguimiento){
+		this.myCrper_seguimiento = inCrper_seguimiento;
+	}
+	/**
+	 * OBTIENE SI TIENE SEGUIMIENTO
+	 * @return boolean SI TIENE SEGUIMIENTO
+	 */
+	public boolean getCRPER_SEGUIMIENTO(){
+		return this.myCrper_seguimiento;
 	}
 }

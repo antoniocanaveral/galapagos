@@ -409,9 +409,13 @@ function FrmListadoCgg_tct_registro(inDesktop){
     var cmCgg_tct_registro = new Ext.grid.ColumnModel([
         {dataIndex:'CRPER_NUM_DOC_IDENTIFIC',header:'No documento',width:90,sortable:true},
         {dataIndex:'CRPER_NOMBRES',header:'Nombres',width:150,sortable:true},
+        {dataIndex:'CRPER_FECHA_NACIMIENTO',header:'Fecha Nacimiento',width:70,sortable:true,renderer:truncDate},
+        {dataIndex:'CGNCN_CODIGO',header:'Nacionalidad',width:150,sortable:true},
+        {dataIndex:'CGG_CPAIS_CODIGO',header:'Residencia',width:150,sortable:true},
         {dataIndex:'AEROPUER_ORIGEN',header:'Aeropuerto Origen',width:150,sortable:true},        
         {dataIndex:'AEROPUER_DESTINO',header:'Aeropuerto Destino',width:150,sortable:true},        
         {dataIndex:'AEROLINEA',header:'Aerol\u00ednea',width:70,sortable:true},
+        {dataIndex:'CTREG_NUMERO_VUELO',header:'Nro. Vuelo',width:70,sortable:true},
         {dataIndex:'CTGTR_NUMERO',header:'Grupo',width:70,sortable:true},
         {dataIndex:'NUMERO',header:'No. Certificado',width:100,sortable:true},
 		{dataIndex:'CTREG_CODIGO_BARRAS',header:'C\u00f3digo barras',width:100,sortable:true},
@@ -444,6 +448,9 @@ function FrmListadoCgg_tct_registro(inDesktop){
             {name:'CARPT_CODIGO'},
 			{name:'CRPER_NUM_DOC_IDENTIFIC'},
 			{name:'CRPER_NOMBRES'},
+            {name:'CRPER_FECHA_NACIMIENTO'},
+            {name:'CGNCN_CODIGO'},
+            {name:'CGG_CPAIS_CODIGO'},
             {name:'AEROPUER_ORIGEN'},
             {name:'CGG_CARPT_CODIGO'},
             {name:'AEROPUER_DESTINO'},
@@ -464,7 +471,8 @@ function FrmListadoCgg_tct_registro(inDesktop){
 			{name:'CTREG_OBSERVACION'},
 			{name:'CTREG_FECHA_INSERT'},
 			{name:'CTREG_USUARIO_INSERT'},
-			{name:'USUARIO_UPDATE'}
+			{name:'USUARIO_UPDATE'},
+            {name:'CTREG_NUMERO_VUELO'}
         ]),
         sortInfo:{
             field: 'CTREG_FECHA_INSERT',

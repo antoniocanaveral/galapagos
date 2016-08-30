@@ -129,6 +129,7 @@ function FrmCgg_res_movilidad(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_CGG_RES_MOV
 				{name:'CRPER_APELLIDO_MATERNO'},
                 {name:'CRPER_GENERO'},
                 {name:'CRPER_FECHA_NACIMIENTO'},
+                {name: 'CRPER_SEGUIMIENTO'},
                 {name:'CGNCN_CODIGO'},
                 {name:'NACIONALIDAD'},
 				{name:'CPAIS_CODIGO'},
@@ -256,7 +257,7 @@ function FrmCgg_res_movilidad(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_CGG_RES_MOV
      */
     var cbxCraln_codigo = new Ext.form.ComboBox({
         id:'cbxCraln_codigo',
-        fieldLabel :'Aerol\u00ednea',
+        fieldLabel :'Aerol\u00ednea /Nav\u00edo',
         displayField:'CRALN_NOMBRE',
         store:gsCgg_res_aerolinea,
         typeAhead: true,
@@ -545,11 +546,11 @@ function FrmCgg_res_movilidad(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_CGG_RES_MOV
         name:'cbxCrdid_codigo',
         fieldLabel :'Tipo de doc.',
         anchor:'98%',
+        editable:false,
         displayField:'CRDID_DESCRIPCION',
         typeAhead: true,
         mode: 'local',
         forceSelection:true,
-		editable:false,
 		readOnly:true,
         allowBlank :false,
         triggerAction:'all',
@@ -566,7 +567,9 @@ function FrmCgg_res_movilidad(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_CGG_RES_MOV
         id:'txtCrper_nombres',
         name:'txtCrper_nombres',
         fieldLabel :'Nombres',
-        anchor:'98%'
+        anchor:'98%',
+        editable:false,
+        readOnly:true
     });
     /**
      * Ext.form.TextField APELLIDO PATERNO
@@ -575,7 +578,8 @@ function FrmCgg_res_movilidad(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_CGG_RES_MOV
         id:'txtCrper_apellido_paterno',
         name:'txtCrper_apellido_paterno',
         fieldLabel :'Apellidos',
-        anchor:'98%'
+        anchor:'98%',
+        readOnly:true
     });
 
     /**
@@ -621,6 +625,7 @@ function FrmCgg_res_movilidad(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_CGG_RES_MOV
         mode: 'local',
         forceSelection:true,
         editable: false,
+        disabled:true,
         allowBlank :false,
         triggerAction:'all',
         emptyText : 'Seleccione el G\u00e9nero'
@@ -634,6 +639,7 @@ function FrmCgg_res_movilidad(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_CGG_RES_MOV
         anchor:'98%',
         displayField:'CPAIS_NOMBRE',		
         typeAhead: true,
+        disabled: true,
         mode: 'local',
         forceSelection:true,
         allowBlank :false,
@@ -649,7 +655,8 @@ function FrmCgg_res_movilidad(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_CGG_RES_MOV
         fieldLabel :'Nacionalidad',
         anchor:'98%',
         displayField:'CGNCN_NACIONALIDAD',
-        typeAhead: true,		
+        typeAhead: true,
+        disabled: true,
         mode: 'local',
         forceSelection:true,
         allowBlank :false,
@@ -687,6 +694,7 @@ function FrmCgg_res_movilidad(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_CGG_RES_MOV
         id:'dtCrper_fecha_nacimiento',
         name:'dtCrper_fecha_nacimiento',
         fieldLabel :'F. nacimiento',
+        disabled: true,
         format:'d/m/Y',
 		maxValue:CURRENT_DATE
     });
@@ -714,7 +722,7 @@ function FrmCgg_res_movilidad(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_CGG_RES_MOV
     var txtCrmov_numero_vuelo = new Ext.form.TextField({
         id:'txtCrmov_numero_vuelo',
         name:'txtCrmov_numero_vuelo',
-        fieldLabel :'Vuelo',
+        fieldLabel :'Vuelo /N.Nav\u00edo',
         anchor:'98%',
         allowBlank :false,
 		maskRe:/[\w\-]+/
@@ -746,6 +754,17 @@ function FrmCgg_res_movilidad(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_CGG_RES_MOV
         id:'chkCrmov_filtro_interno',
         name:'chkCrmov_filtro_interno',
         fieldLabel :'Filtros Nacionales?',
+        allowBlank:false,
+        checked:false
+    });
+
+    /**
+     * Ext.form.Checkbox IDENTIFICAR SI LA PERSONA SE ENCUENTRA EN SEGUIMIENTO O NO
+     */
+    var chkCrmov_seguimiento = new Ext.form.Checkbox({
+        id:'chkCrmov_seguimiento',
+        name:'chkCrmov_seguimiento',
+        fieldLabel :'Seguimiento',
         allowBlank:false,
         checked:false
     });
@@ -861,6 +880,7 @@ function FrmCgg_res_movilidad(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_CGG_RES_MOV
                     param.add('inCrmov_observacion', txtCrmov_observacion.getValue());
                     param.add('inCrmov_tipo_salida', 0);
                     param.add('inCrmov_filtro_interno',chkCrmov_filtro_interno.getValue());
+                    param.add('inCrmov_seguimiento',chkCrmov_seguimiento.getValue());
 					param.add('inPersonaJSON',tmpDatosPersonales);
 					param.add('inActividadesJSON',tmpActividades);
 					param.add('inHospedajesJSON',tmpHospedajes);
@@ -909,38 +929,36 @@ function FrmCgg_res_movilidad(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_CGG_RES_MOV
             {layout:'form',labelWidth:40,columnWidth:.40,items:[txtCrmov_numero_vuelo]}
         ]
     });
+
     /**
      * ExtPanel Panel que contiene los controles de la aerolinea y el numero de vuelo
      */
     var pnlfsAeropuerto = new Ext.form.FieldSet({
         id:'pnlfsAeropuerto',
         title:'Datos de la entrada',
-        region:'center',
-        labelWidth :60,
-        height:190,
+        //region:'center',
+        //labelWidth :120,
+        //height:250,
         anchor:'100%',
         items:[
             txtCtreg_estado_registro,
             pnlCgg_res_Aerolinea,
             cbxCarpt_codigo,
             cbxCgg_carpt_codigo,
-            { xtype:'panel',
-                layout:'column',
+
+            {	id:'pnlMovFechas',
+                columnWidth:.50,
+                layout:'form',
                 anchor:'100%',
-                items:[
-                    {	id:'pnlMovFechas',
-                        columnWidth:.65,
-                        layout:'form',
-                        anchor:'100%',
-                        items:[dtCrmov_fecha_viaje,dtCtreg_fecha_salida]
-                    },
+                labelWidth:110,
+                items:[dtCrmov_fecha_viaje,dtCtreg_fecha_salida],
 
-                    {
-                        columnWidth:.35,
-                        layout:'form',
-                        anchor:'100%',
-                        items:[chkCrmov_filtro_interno]}]}
-
+                columnWidth:.50,
+                layout:'form',
+                anchor:'100%',
+                labelWidth:110,
+                items:[chkCrmov_filtro_interno,chkCrmov_seguimiento]
+            }
         ]
     });
 
@@ -1104,12 +1122,13 @@ function FrmCgg_res_movilidad(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_CGG_RES_MOV
     var pnlCgg_res_persona = new Ext.form.FieldSet({
         id:'pnlCgg_res_persona',
         title:'Datos de persona',
-        collapsible:true,
+        collapsible:false,
+        //disabled:true,
         items:[{
             xtype:'panel',
             layout:'column',
             anchor:'100%',
-			
+
             items:[
                 {
                     columnWidth:.50,
@@ -1144,7 +1163,7 @@ function FrmCgg_res_movilidad(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_CGG_RES_MOV
     /**
      * Ext.form.FormPanel Panel para las Fechas
      */
-    var pnlOrganizacion = new Ext.Panel({
+   /* var pnlOrganizacion = new Ext.Panel({
         collapsible:false,
         labelWidth :60,
         layout:'form',
@@ -1157,15 +1176,15 @@ function FrmCgg_res_movilidad(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_CGG_RES_MOV
                         columnWidth:.40,
                         layout:'form',
                         items:[pnlfsAeropuerto]
-                    },{
+                    }/!*,{
                         columnWidth:.60,
                         layout:'form',
                         items:[pnlCgg_tct_actividad_hospedaje]
-                    }
+                    }*!/
                 ]
             }
         ]
-    });
+    });*/
 
     /**
      * Ext.form.FormPanel Panel que contiene todos los controles de winFrmCgg_res_movilidad
@@ -1179,7 +1198,8 @@ function FrmCgg_res_movilidad(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_CGG_RES_MOV
         layout:'form',
         items:[
             pnlCgg_tct_codigo_barras,
-            pnlOrganizacion,
+            //pnlOrganizacion,
+            pnlfsAeropuerto,
             pnlCgg_res_persona,
 			txtCrmov_observacion
         ]
@@ -1238,6 +1258,7 @@ function FrmCgg_res_movilidad(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_CGG_RES_MOV
             txtCrper_num_doc_identific.setValue(inRecordCgg_res_movilidad.CRPER_NUM_DOC_IDENTIFIC);
             txtCrper_nombres.setValue(inRecordCgg_res_movilidad.CRPER_NOMBRES);
             txtCrper_apellido_paterno.setValue(inRecordCgg_res_movilidad.CRPER_APELLIDO_PATERNO+' '+inRecordCgg_res_movilidad.CRPER_APELLIDO_MATERNO);
+            chkCrmov_seguimiento.setValue(inRecordCgg_res_movilidad.CRPER_SEGUIMIENTO);
             txtCrmov_observacion.setValue(inRecordCgg_res_movilidad.CTREG_OBSERVACION);
 			if(inRecordCgg_res_movilidad.CRPER_GENERO != null && inRecordCgg_res_movilidad.CRPER_GENERO != undefined)
 			cbxCrper_generoMov.setValue(inRecordCgg_res_movilidad.CRPER_GENERO);
