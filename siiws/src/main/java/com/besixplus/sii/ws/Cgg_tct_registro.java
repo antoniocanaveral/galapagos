@@ -1,13 +1,32 @@
 package com.besixplus.sii.ws;
 
-import java.io.Serializable;
-import java.lang.reflect.Type;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import com.besixplus.sii.db.Cgg_tct_grupo_turista;
+import com.besixplus.sii.db.ManagerConnection;
+import com.besixplus.sii.i18n.Messages;
+import com.besixplus.sii.mail.ProcessMail;
+import com.besixplus.sii.misc.CGGEnumerators.TipoAmbitoEspecie;
+import com.besixplus.sii.objects.*;
+import com.besixplus.sii.objects.Cgg_configuracion;
+import com.besixplus.sii.objects.Cgg_not_mail;
+import com.besixplus.sii.objects.Cgg_res_persona_contacto;
+import com.besixplus.sii.objects.Cgg_tct_grupo_actividad;
+import com.besixplus.sii.objects.Cgg_tct_grupo_hospedaje;
+import com.bmlaurus.db.EncuestaData;
+import com.bmlaurus.db.TctHospedajeData;
+import com.bmlaurus.db.TctTransporteData;
+import com.bmlaurus.objects.PreguntaEncuesta;
+import com.bmlaurus.objects.RespuestaEncuesta;
+import com.bmlaurus.objects.TctHospedaje;
+import com.bmlaurus.objects.TctTransporte;
+import com.bmlaurus.util.Characters;
+import com.bmlaurus.ws.dinardap.RegistroCivil;
+import com.bmlaurus.ws.dinardap.Utils;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.internal.LinkedTreeMap;
+import com.google.gson.reflect.TypeToken;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
@@ -22,28 +41,14 @@ import javax.xml.soap.SOAPFactory;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
-
-import com.besixplus.sii.objects.*;
-import com.besixplus.sii.objects.Cgg_res_persona_contacto;
-import com.bmlaurus.db.EncuestaData;
-import com.bmlaurus.db.TctHospedajeData;
-import com.bmlaurus.db.TctTransporteData;
-import com.bmlaurus.objects.PreguntaEncuesta;
-import com.bmlaurus.objects.TctHospedaje;
-import com.bmlaurus.objects.TctTransporte;
-import com.bmlaurus.util.Characters;
-import com.bmlaurus.ws.dinardap.RegistroCivil;
-import com.bmlaurus.ws.dinardap.Utils;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.besixplus.sii.db.Cgg_tct_grupo_turista;
-import com.besixplus.sii.db.ManagerConnection;
-import com.besixplus.sii.i18n.Messages;
-import com.besixplus.sii.misc.CGGEnumerators.TipoAmbitoEspecie;
+import java.io.Serializable;
+import java.lang.reflect.Type;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * CLASE Cgg_tct_registro
@@ -117,6 +122,9 @@ public class Cgg_tct_registro implements Serializable{
 			objGrupTuris.setCTGTR_USUARIO_INSERT(usuarioName);
 			objGrupTuris.setCTGTR_USUARIO_UPDATE(usuarioName);
 			res = new com.besixplus.sii.db.Cgg_tct_grupo_turista(objGrupTuris).insert(con);
+
+			//Almacenamos Grupo Hospedaje y Grupo Actividad por compatibilidad
+			List<com.besixplus.sii.objects.Cgg_tct_grupo_actividad> grupoActividades = new ArrayList<>();
 
 			if(res.equals("true")){
 				//////////////////////////////////////
@@ -224,6 +232,7 @@ public class Cgg_tct_registro implements Serializable{
 								Type listHospedaje = new TypeToken<List<TctHospedaje>>() {}.getType();
 								List<TctHospedaje> hospedajes = gson.fromJson(inHospedaje_JSON, listHospedaje);
 								for (TctHospedaje hospedaje : hospedajes) {
+
 									hospedaje.setCodigoPreregistro(obj.getCTREG_CODIGO());
 									hospedaje.setUsuarioInsert(usuarioName);
 									hospedaje.setUsuarioUpdate(usuarioName);
@@ -239,8 +248,54 @@ public class Cgg_tct_registro implements Serializable{
 						}
 						//Metemos la encuesta
 						if (res.equals("true")) {
-							if (inEncuesta_JSON != null) {
-								//TODO: Implementar inser de encuestas
+							try {
+								if (inEncuesta_JSON != null) {
+									Map preguntasObj = new Gson().fromJson(inEncuesta_JSON, Map.class);
+									LinkedTreeMap<String, Object> preguntas = (LinkedTreeMap) preguntasObj.get("preguntas");
+									for (HashMap.Entry pregunta : preguntas.entrySet()) {
+										String pregunta_code = (String) pregunta.getKey();
+										LinkedTreeMap preguntaVal = (LinkedTreeMap) pregunta.getValue();
+										List<LinkedTreeMap> values = (List) preguntaVal.get("values");
+										for (LinkedTreeMap val : values) {
+											if(pregunta_code.equals("ENCPR1")){
+												com.besixplus.sii.objects.Cgg_tct_grupo_actividad grupoActividad = new Cgg_tct_grupo_actividad();
+												grupoActividad.setCTGTR_CODIGO(objGrupTuris.getCTGTR_CODIGO());
+												grupoActividad.setCTACT_CODIGO(val.get("value").toString());
+												grupoActividad.setCTGAC_CODIGO("KEYGEN");
+												grupoActividad.setCTGAC_ESTADO(true);
+												grupoActividad.setCTGAC_USUARIO_INSERT(usuarioName);
+												grupoActividad.setCTGAC_USUARIO_UPDATE(usuarioName);
+												grupoActividades.add(grupoActividad);
+											}
+											String item_code = (String) val.get("code");
+											Object value = val.get("value");
+											RespuestaEncuesta respuesta = new RespuestaEncuesta();
+											respuesta.setCodigoPregunta(pregunta_code);
+											respuesta.setCodigoItem(item_code);
+											respuesta.setCodigoPreregistro(obj.getCTREG_CODIGO());
+											if(value instanceof Integer || value instanceof Long || value instanceof Double) {
+												respuesta.setValorTexto(null);
+												if(value instanceof Double)
+													respuesta.setValorNumerico(((Double) value).intValue());
+												if(value instanceof Long)
+													respuesta.setValorNumerico(((Long) value).intValue());
+												if(value instanceof Integer)
+													respuesta.setValorNumerico((Integer) value);
+											}else{
+												respuesta.setValorNumerico(0);
+												respuesta.setValorTexto((String) value);
+											}
+											respuesta.setEstado(true);
+											respuesta.setUsuarioInsert(usuarioName);
+											respuesta.setUsuarioUpdate(usuarioName);
+											if(!EncuestaData.save(con,respuesta))
+												break;
+										}
+									}
+								}
+							}catch (Exception e){
+								//Si falla el insert de la encuesta vale barriga
+								e.printStackTrace();
 							}
 						}
 
@@ -255,9 +310,39 @@ public class Cgg_tct_registro implements Serializable{
 							objKdx.setCKVDT_USUARIO_UPDATE(usuarioName);
 							res = new com.besixplus.sii.db.Cgg_kdx_venta_detalle(objKdx).insert(con);
 						}*/
+						//MAIL TCT
+						try {
+							Map<String, String> auxData = new HashMap<>();
+							auxData.put("$PERSONA",objPer.getCRPER_APELLIDO_PATERNO() + " " + objPer.getCRPER_NOMBRES());
+							auxData.put("$REGNUMERO",""+obj.getCTREG_NUMERO());
+							auxData.put("$CATEGORIA",obj.getCTREG_CATEGORIA()!=null && obj.getCTREG_CATEGORIA().equals("2")?"TRANSEUNTE":"TURISTA");
+							auxData.put("Cgg_res_aeropuerto*origen:carpt_nombre",obj.getCARPT_CODIGO());
+							auxData.put("Cgg_res_aerolinea*craln_codigo:craln_nombre",obj.getCRALN_CODIGO());
+							auxData.put("$NUMVUELO",""+obj.getCTREG_NUMERO_VUELO());
+							auxData.put("Cgg_res_aeropuerto*destino:carpt_nombre",obj.getCGG_CARPT_CODIGO());
+							SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+							auxData.put("$FECHAINGRESO",sdf.format(obj.getCTREG_FECHA_INGRESO())+" (dd/mm/yyyy)");
+							auxData.put("$FECHASALIDA",sdf.format(obj.getCTREG_FECHA_SALIDA())+" (dd/mm/yyyy)");
 
+							com.besixplus.sii.objects.Cgg_configuracion tmpConfiguracion = new Cgg_configuracion();
+							tmpConfiguracion.setCGCNF_CODIGO("CONF201");
+							new com.besixplus.sii.db.Cgg_configuracion(tmpConfiguracion).select(con);
+							com.besixplus.sii.objects.Cgg_not_mail correo = new Cgg_not_mail();
+							correo.setNtml_codigo(tmpConfiguracion.getCGCNF_VALOR_CADENA());
+							correo = new com.besixplus.sii.db.Cgg_not_mail(correo).selectByCode(con);
+							if (correo != null) {
+								ProcessMail mail = new ProcessMail(correo, email, auxData);
+								mail.start();
+							}
+						}catch (Exception e){
+							e.printStackTrace();
+						}
 					}
 				}
+
+				for(com.besixplus.sii.objects.Cgg_tct_grupo_actividad grupoActividad : grupoActividades)
+					new com.besixplus.sii.db.Cgg_tct_grupo_actividad(grupoActividad).insert(con);
+
 			}
 			if(res.equals("true")){
 				con.commit();
@@ -705,7 +790,8 @@ public class Cgg_tct_registro implements Serializable{
 			@WebParam(name="sort")String sort,
 			@WebParam(name="dir")String dir,
 			@WebParam(name="keyword")String keyword,
-			@WebParam(name="format")String format
+			@WebParam(name="format")String format,
+			@WebParam(name="operational")boolean operational
 	) throws SOAPException{
 		HttpServletRequest tmpRequest = (HttpServletRequest) wctx.getMessageContext().get(MessageContext.SERVLET_REQUEST);
 		ArrayList<HashMap<String,Object>> obj = null;
@@ -718,9 +804,9 @@ public class Cgg_tct_registro implements Serializable{
 				con.close();
 				throw new SOAPFaultException(SOAPFactory.newInstance().createFault(myInfoMessages.getMessage("sii.seguridad.acceso.negado", null), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
 			}
-			tmpCount = com.besixplus.sii.db.Cgg_tct_registro.selectCount(con, tmpRequest.getUserPrincipal().getName(), keyword);
+			tmpCount = com.besixplus.sii.db.Cgg_tct_registro.selectCount(con, tmpRequest.getUserPrincipal().getName(), keyword,operational);
 			con.setAutoCommit(!ManagerConnection.isDeployed());
-			obj = com.besixplus.sii.db.Cgg_tct_registro.selectAllDirect(con, tmpRequest.getUserPrincipal().getName(), start, limit, sort, dir, keyword);
+			obj = com.besixplus.sii.db.Cgg_tct_registro.selectAllDirect(con, tmpRequest.getUserPrincipal().getName(), start, limit, sort, dir, keyword,operational);
 			tmpFormat = new com.besixplus.sii.misc.Formatter(format, obj);
 			outCadena = tmpFormat.getData();
 			con.close();
