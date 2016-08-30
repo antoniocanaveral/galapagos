@@ -20,15 +20,15 @@ or crtst_descripcion='Temporales Contrato 1era Renovacion' or crtst_descripcion=
 or crtst_descripcion='Temporales Sin Reglas de Validación');
 
 -- Cambio de estado de permanentes, en tipo solicitud trámite para los que no aplican
-update sii.cgg_res_tipo_solicitud_tramite set crtst_estado = false where cgg_crtst_codigo = 'CRTST1'
-and (crtst_descripcion='Art. 26-2B' or crtst_descripcion='Art. 26-1'
+update sii.cgg_res_tipo_solicitud_tramite set crtst_estado = false where cgg_crtst_codigo = 'CRTST1' 
+and (crtst_descripcion='Art. 26-2B' or crtst_descripcion='Art. 26-1' 
 or crtst_descripcion='Art. 26-2A' or crtst_descripcion='Art. 26-3B'
 or crtst_descripcion='Art. 26-3A');
 
 -- Cambio para que solo liste los tipos de trámites: permanente, temporal, traseunte
 update sii.cgg_res_tipo_solicitud_tramite set crtst_estado = false where crtpt_codigo='CRTPT1'
-and (crtst_codigo='CRTST95' or crtst_codigo='CRTST9'
-or crtst_codigo='CRTST83' or crtst_codigo='CRTST82'
+and (crtst_codigo='CRTST95' or crtst_codigo='CRTST9' 
+or crtst_codigo='CRTST83' or crtst_codigo='CRTST82' 
 or crtst_codigo='CRTST81' or crtst_codigo='CRTST80'
 or crtst_codigo='CRTST8' or crtst_codigo='CRTST79'
 or crtst_codigo='CRTST78' or crtst_codigo='CRTST77'
@@ -55,29 +55,32 @@ or crtst_codigo='CRTST15' or crtst_codigo='CRTST142'
 or crtst_codigo='CRTST136' or crtst_codigo='CRTST13'
 or crtst_codigo='CRTST122' or crtst_codigo='CRTST117'
 or crtst_codigo='CRTST10');
+
+
 --CGG_RES_REQUISITOS
--- Requisitos Nuevos
-INSERT INTO sii.cgg_res_requisito (crreq_codigo, crreq_descripcion, crreq_observacion, crreq_estado, crreq_fecha_insert, crreq_usuario_insert, crreq_fecha_update, crreq_usuario_update)
-VALUES (SII.F_KEYGEN('CGG_RES_REQUISITO','CRREQ_CODIGO','CRREQ'), 'Se verificará que conste registrado con cédula en la base de datos del Registro Civil.', '', true, '2016-02-23 10:48:07.649769', 'patricia', '2016-02-23 10:48:07.649769', 'patricia'),
-	(SII.F_KEYGEN('CGG_RES_REQUISITO','CRREQ_CODIGO','CRREQ'), 'Se verificará cumplimiento de haber ejercido el derecho al sufragio o pago de la sanción respectiva', '', true, '2016-02-23 10:48:07.649769', 'patricia', '2016-02-23 10:48:07.649769', 'patricia'),
-	(SII.F_KEYGEN('CGG_RES_REQUISITO','CRREQ_CODIGO','CRREQ'), 'Se verificará que sea residente permanente', '', true, '2016-02-23 10:48:07.649769', 'patricia', '2016-02-23 10:48:07.649769', 'patricia');
 
-INSERT INTO sii.cgg_res_requisito (crreq_codigo, crreq_descripcion, crreq_observacion, crreq_estado, crreq_fecha_insert, crreq_usuario_insert, crreq_fecha_update, crreq_usuario_update)
-VALUES (SII.F_KEYGEN('CGG_RES_REQUISITO','CRREQ_CODIGO','CRREQ'), 'Se verificará el registro del matrimonio en la base de datos del Registro Civil', '', true, '2016-02-23 10:48:07.649769', 'patricia', '2016-02-23 10:48:07.649769', 'patricia');
+﻿-- Requisitos Nuevos
+INSERT INTO sii.cgg_res_requisito (crreq_codigo, crreq_descripcion, crreq_observacion, crreq_estado, crreq_fecha_insert, crreq_usuario_insert, crreq_fecha_update, crreq_usuario_update) 
+VALUES ('CRREQ153', 'Se verificará que conste registrado con cédula en la base de datos del Registro Civil.', '', true, '2016-02-23 10:48:07.649769', 'patricia', '2016-02-23 10:48:07.649769', 'patricia'),
+	('CRREQ154', 'Se verificará cumplimiento de haber ejercido el derecho al sufragio o pago de la sanción respectiva', '', true, '2016-02-23 10:48:07.649769', 'patricia', '2016-02-23 10:48:07.649769', 'patricia'),
+	('CRREQ155', 'Se verificará que sea residente permanente', '', true, '2016-02-23 10:48:07.649769', 'patricia', '2016-02-23 10:48:07.649769', 'patricia');
 
-INSERT INTO sii.cgg_res_requisito (crreq_codigo, crreq_descripcion, crreq_observacion, crreq_estado, crreq_fecha_insert, crreq_usuario_insert, crreq_fecha_update, crreq_usuario_update)
-VALUES (SII.F_KEYGEN('CGG_RES_REQUISITO','CRREQ_CODIGO','CRREQ'), 'Se verificará el registro de la unión de hecho en la base de datos del Registro Civil', '', true, '2016-02-23 10:48:07.649769', 'patricia', '2016-02-23 10:48:07.649769', 'patricia');
+INSERT INTO sii.cgg_res_requisito (crreq_codigo, crreq_descripcion, crreq_observacion, crreq_estado, crreq_fecha_insert, crreq_usuario_insert, crreq_fecha_update, crreq_usuario_update) 
+VALUES ('CRREQ156', 'Se verificará el registro del matrimonio en la base de datos del Registro Civil', '', true, '2016-02-23 10:48:07.649769', 'patricia', '2016-02-23 10:48:07.649769', 'patricia');
 
-INSERT INTO sii.cgg_res_requisito (crreq_codigo, crreq_descripcion, crreq_observacion, crreq_estado, crreq_fecha_insert, crreq_usuario_insert, crreq_fecha_update, crreq_usuario_update)
-VALUES (SII.F_KEYGEN('CGG_RES_REQUISITO','CRREQ_CODIGO','CRREQ'), 'Deberá presentar documentos probatorios que justifiquen su solicitud', '', true, '2016-02-23 10:48:07.649769', 'patricia', '2016-02-23 10:48:07.649769', 'patricia');
+INSERT INTO sii.cgg_res_requisito (crreq_codigo, crreq_descripcion, crreq_observacion, crreq_estado, crreq_fecha_insert, crreq_usuario_insert, crreq_fecha_update, crreq_usuario_update) 
+VALUES ('CRREQ157', 'Se verificará el registro de la unión de hecho en la base de datos del Registro Civil', '', true, '2016-02-23 10:48:07.649769', 'patricia', '2016-02-23 10:48:07.649769', 'patricia');
+
+INSERT INTO sii.cgg_res_requisito (crreq_codigo, crreq_descripcion, crreq_observacion, crreq_estado, crreq_fecha_insert, crreq_usuario_insert, crreq_fecha_update, crreq_usuario_update) 
+VALUES ('CRREQ158', 'Deberá presentar documentos probatorios que justifiquen su solicitud', '', true, '2016-02-23 10:48:07.649769', 'patricia', '2016-02-23 10:48:07.649769', 'patricia');
 
 -- INGRESO DE REQUISITOS PARA TRANSEÚNTES
 
 INSERT INTO sii.cgg_res_requisito (crreq_codigo, crreq_descripcion, crreq_observacion, crreq_estado, crreq_fecha_insert, crreq_usuario_insert, crreq_fecha_update, crreq_usuario_update)
-VALUES (SII.F_KEYGEN('CGG_RES_REQUISITO','CRREQ_CODIGO','CRREQ'), 'Copia del pasaporte vigente para los extranjeros no nacionalizados en Ecuador, con el tipo de visa respectivo', '', TRUE, current_timestamp, 'patricia', current_timestamp, 'patricia'),
-	(SII.F_KEYGEN('CGG_RES_REQUISITO','CRREQ_CODIGO','CRREQ'), 'Copia del documento que acredite la actividad que viene a realizar a Galápagos de acuerdo al Art. 42 numeral 5 de la LOREG', '', TRUE, current_timestamp, 'patricia', current_timestamp, 'patricia'),
-	(SII.F_KEYGEN('CGG_RES_REQUISITO','CRREQ_CODIGO','CRREQ'), 'Realizar el proceso de actualización de los documentos y datos en el sistema de Residencia del representante legal o su delegado, si aplica', '', TRUE, current_timestamp, 'patricia', current_timestamp, 'patricia');
-
+VALUES ('CRREQ159', 'Copia del pasaporte vigente para los extranjeros no nacionalizados en Ecuador, con el tipo de visa respectivo', '', TRUE, current_timestamp, 'patricia', current_timestamp, 'patricia'),
+	('CRREQ160', 'Copia del documento que acredite la actividad que viene a realizar a Galápagos de acuerdo al Art. 42 numeral 5 de la LOREG', '', TRUE, current_timestamp, 'patricia', current_timestamp, 'patricia'),
+	('CRREQ161', 'Realizar el proceso de actualización de los documentos y datos en el sistema de Residencia del representante legal o su delegado, si aplica', '', TRUE, current_timestamp, 'patricia', current_timestamp, 'patricia');
+	
 
 -- AUMENTO DE COLUMNA EN cgg_res_tipo_solicitud_tramite PARA CONTROLAR EL INGRESO DE UNA SOLICITUD VIA WEB
 
@@ -86,49 +89,49 @@ ADD crtst_ingreso_web boolean;
 
 -- INGRESO DE REQUISITOS PARA TEMPORALES
 INSERT INTO sii.cgg_res_requisito (crreq_codigo, crreq_descripcion, crreq_observacion, crreq_estado, crreq_fecha_insert, crreq_usuario_insert, crreq_fecha_update, crreq_usuario_update)
-VALUES (SII.F_KEYGEN('CGG_RES_REQUISITO','CRREQ_CODIGO','CRREQ'), 'Se verificará que el padre/madre tenga residente temporal vigente', '', TRUE, current_timestamp, 'patricia', current_timestamp, 'patricia'),
-	(SII.F_KEYGEN('CGG_RES_REQUISITO','CRREQ_CODIGO','CRREQ'), 'Se verificará que el cónyuge/Conviviente tenga residente temporal vigente', '', TRUE, current_timestamp, 'patricia', current_timestamp, 'patricia'),
-	(SII.F_KEYGEN('CGG_RES_REQUISITO','CRREQ_CODIGO','CRREQ'), 'Se validará que se ha realizado la búsqueda interna mediante el sistema de gestión de empleo y que el beneficiario cumple con el perfil', '', TRUE, current_timestamp, 'patricia', current_timestamp, 'patricia');
+VALUES ('CRREQ162', 'Se verificará que el padre/madre tenga residente temporal vigente', '', TRUE, current_timestamp, 'patricia', current_timestamp, 'patricia'),
+	('CRREQ164', 'Se verificará que el cónyuge/Conviviente tenga residente temporal vigente', '', TRUE, current_timestamp, 'patricia', current_timestamp, 'patricia'),
+	('CRREQ163', 'Se validará que se ha realizado la búsqueda interna mediante el sistema de gestión de empleo y que el beneficiario cumple con el perfil', '', TRUE, current_timestamp, 'patricia', current_timestamp, 'patricia');
 ---
 INSERT INTO sii.cgg_res_requisito (crreq_codigo, crreq_descripcion, crreq_observacion, crreq_estado, crreq_fecha_insert, crreq_usuario_insert, crreq_fecha_update, crreq_usuario_update)
-VALUES (SII.F_KEYGEN('CGG_RES_REQUISITO','CRREQ_CODIGO','CRREQ'), 'Documento que acredite la solicitud de reactivación de la residencia', '', TRUE, current_timestamp, 'patricia', current_timestamp, 'patricia'),
-	(SII.F_KEYGEN('CGG_RES_REQUISITO','CRREQ_CODIGO','CRREQ'), 'Verificar que la persona tenía residencia permanente', '', TRUE, current_timestamp, 'patricia', current_timestamp, 'patricia');
+VALUES ('CRREQ151', 'Documento que acredite la solicitud de reactivación de la residencia', '', TRUE, current_timestamp, 'patricia', current_timestamp, 'patricia'),
+	('CRREQ152', 'Verificar que la persona tenía residencia permanente', '', TRUE, current_timestamp, 'patricia', current_timestamp, 'patricia');
 
 
 --CREACIÓN DE PROCESO PARA SOLICITUD DE TRÁMITE
 
 -- Creación de proceso: Solicitud Residencia 2016
-INSERT INTO sii.cgg_res_proceso (crpro_codigo, crpro_nombre, crpro_estado, crpro_fecha_insert, crpro_usuario_insert, crpro_fecha_update, crpro_usuario_update)
-VALUES (SII.F_KEYGEN('CGG_RES_PROCESO','CRPRO_CODIGO','CRPRO'), 'Solicitud Residencia 2016', true, current_timestamp, 'patricia', '2016-06-02 09:19:17.959675', 'patricia');
+INSERT INTO sii.cgg_res_proceso (crpro_codigo, crpro_nombre, crpro_estado, crpro_fecha_insert, crpro_usuario_insert, crpro_fecha_update, crpro_usuario_update) 
+VALUES ('CRPRO81', 'Solicitud Residencia 2016', true, current_timestamp, 'patricia', '2016-06-02 09:19:17.959675', 'patricia');
 
 -- Creación de fases para el proceso Solicitud Residencia 2016
 
-INSERT INTO sii.cgg_res_fase (crfas_codigo, crpro_codigo, crett_codigo, cgg_crett_codigo, crsec_codigo, cgg_crfas_codigo, cgg_cusu_codigo, crfas_nombre, crfas_orden, crfas_tarea_realiza, crfas_funcion_ejecuta, crfas_sube_adjunto, crfas_sube_adjunto_requisito, crfas_ejecuta_despacho, crfas_atencion_normal, crfas_estado, crfas_fecha_insert, crfas_usuario_insert, crfas_fecha_update, crfas_usuario_update)
-VALUES (SII.F_KEYGEN('CGG_RES_FASE','CRFAS_CODIGO','CRFAS'), (select crpro_codigo from sii.cgg_res_proceso where crpro_nombre = 'Solicitud Residencia 2016'), null, null, 'CRSEC6', null, null, 'Recepción Trámite 2016', 1, 'Se ingresa via web la solicitud de tramite para residencia permanente', '', true, true, false, true, true, '2016-06-02 10:36:09.144272', 'patricia', '2016-06-02 10:36:09.144272', 'patricia');
-INSERT INTO sii.cgg_res_fase (crfas_codigo, crpro_codigo, crett_codigo, cgg_crett_codigo, crsec_codigo, cgg_crfas_codigo, cgg_cusu_codigo, crfas_nombre, crfas_orden, crfas_tarea_realiza, crfas_funcion_ejecuta, crfas_sube_adjunto, crfas_sube_adjunto_requisito, crfas_ejecuta_despacho, crfas_atencion_normal, crfas_estado, crfas_fecha_insert, crfas_usuario_insert, crfas_fecha_update, crfas_usuario_update)
-VALUES (SII.F_KEYGEN('CGG_RES_FASE','CRFAS_CODIGO','CRFAS'), (select crpro_codigo from sii.cgg_res_proceso where crpro_nombre = 'Solicitud Residencia 2016'), null, null, 'CRSEC24', null, null, 'Digitalización 2016', 2, 'Revision de los adjuntos y la informacion ingresada por los solicitantes de residencia permanente', '', true, true, false, true, true, '2016-06-02 10:48:31.817610', 'patricia', '2016-06-02 10:48:31.817610', 'patricia');
-INSERT INTO sii.cgg_res_fase (crfas_codigo, crpro_codigo, crett_codigo, cgg_crett_codigo, crsec_codigo, cgg_crfas_codigo, cgg_cusu_codigo, crfas_nombre, crfas_orden, crfas_tarea_realiza, crfas_funcion_ejecuta, crfas_sube_adjunto, crfas_sube_adjunto_requisito, crfas_ejecuta_despacho, crfas_atencion_normal, crfas_estado, crfas_fecha_insert, crfas_usuario_insert, crfas_fecha_update, crfas_usuario_update)
-VALUES (SII.F_KEYGEN('CGG_RES_FASE','CRFAS_CODIGO','CRFAS'), (select crpro_codigo from sii.cgg_res_proceso where crpro_nombre = 'Solicitud Residencia 2016'), 'CRETT3', 'CRETT4', 'CRSEC4', null, null, 'Calificación 2016', 3, 'Calificación de solicitud de residencia', 'com.bmlaurus.phaserule.GenerarResolucion', true, true, true, true, true, '2016-06-02 10:58:37.713440', 'patricia', '2016-06-02 11:09:05.007827', 'patricia');
+INSERT INTO sii.cgg_res_fase (crfas_codigo, crpro_codigo, crett_codigo, cgg_crett_codigo, crsec_codigo, cgg_crfas_codigo, cgg_cusu_codigo, crfas_nombre, crfas_orden, crfas_tarea_realiza, crfas_funcion_ejecuta, crfas_sube_adjunto, crfas_sube_adjunto_requisito, crfas_ejecuta_despacho, crfas_atencion_normal, crfas_estado, crfas_fecha_insert, crfas_usuario_insert, crfas_fecha_update, crfas_usuario_update) 
+VALUES ('CRFAS288', 'CRPRO81', null, null, 'CRSEC6', null, null, 'Recepción Trámite 2016', 1, 'Se ingresa via web la solicitud de tramite para residencia permanente', '', true, true, false, true, true, '2016-06-02 10:36:09.144272', 'patricia', '2016-06-02 10:36:09.144272', 'patricia');
+INSERT INTO sii.cgg_res_fase (crfas_codigo, crpro_codigo, crett_codigo, cgg_crett_codigo, crsec_codigo, cgg_crfas_codigo, cgg_cusu_codigo, crfas_nombre, crfas_orden, crfas_tarea_realiza, crfas_funcion_ejecuta, crfas_sube_adjunto, crfas_sube_adjunto_requisito, crfas_ejecuta_despacho, crfas_atencion_normal, crfas_estado, crfas_fecha_insert, crfas_usuario_insert, crfas_fecha_update, crfas_usuario_update) 
+VALUES ('CRFAS289', 'CRPRO81', null, null, 'CRSEC24', null, null, 'Digitalizacion 2016', 2, 'Revision de los adjuntos y la informacion ingresada por los solicitantes de residencia permanente', '', true, true, false, true, true, '2016-06-02 10:48:31.817610', 'patricia', '2016-06-02 10:48:31.817610', 'patricia');
+INSERT INTO sii.cgg_res_fase (crfas_codigo, crpro_codigo, crett_codigo, cgg_crett_codigo, crsec_codigo, cgg_crfas_codigo, cgg_cusu_codigo, crfas_nombre, crfas_orden, crfas_tarea_realiza, crfas_funcion_ejecuta, crfas_sube_adjunto, crfas_sube_adjunto_requisito, crfas_ejecuta_despacho, crfas_atencion_normal, crfas_estado, crfas_fecha_insert, crfas_usuario_insert, crfas_fecha_update, crfas_usuario_update) 
+VALUES ('CRFAS290', 'CRPRO81', 'CRETT3', 'CRETT4', 'CRSEC4', null, null, 'Calificacion 2016', 3, 'Calificación de solicitud de residencia', 'com.bmlaurus.phaserule.GenerarResolucion', true, true, true, true, true, '2016-06-02 10:58:37.713440', 'patricia', '2016-06-02 11:09:05.007827', 'patricia');
 
 -- Creación de Requerimientos para cada fase
 
 -- Requerimientos fase Digitalizacion 2016
-INSERT INTO sii.cgg_jur_criterio (cjcri_codigo, crfas_codigo, cjcri_requerimiento, cjcri_requerido, cjcri_estado, cjcri_fecha_insert, cjcri_usuario_insert, cjcri_fecha_update, cjcri_usuario_update)
-VALUES (SII.F_KEYGEN('CGG_JUR_CRITERIO','CJCRI_CODIGO','CJCRI'), (select crfas_codigo from sii.cgg_res_fase where crfas_nombre = 'Digitalización 2016'), 'Revision de datos ingresados', true, true, '2016-06-02 10:48:31.817610', 'patricia', '2016-06-02 10:48:31.817610', 'patricia');
-INSERT INTO sii.cgg_jur_criterio (cjcri_codigo, crfas_codigo, cjcri_requerimiento, cjcri_requerido, cjcri_estado, cjcri_fecha_insert, cjcri_usuario_insert, cjcri_fecha_update, cjcri_usuario_update)
-VALUES (SII.F_KEYGEN('CGG_JUR_CRITERIO','CJCRI_CODIGO','CJCRI'), (select crfas_codigo from sii.cgg_res_fase where crfas_nombre = 'Digitalización 2016'), 'Revision de adjuntos', true, true, '2016-06-02 10:48:31.817610', 'patricia', '2016-06-02 10:48:31.817610', 'patricia');
+INSERT INTO sii.cgg_jur_criterio (cjcri_codigo, crfas_codigo, cjcri_requerimiento, cjcri_requerido, cjcri_estado, cjcri_fecha_insert, cjcri_usuario_insert, cjcri_fecha_update, cjcri_usuario_update) 
+VALUES ('CJCRI354', 'CRFAS289', 'Revision de datos ingresados', true, true, '2016-06-02 10:48:31.817610', 'patricia', '2016-06-02 10:48:31.817610', 'patricia');
+INSERT INTO sii.cgg_jur_criterio (cjcri_codigo, crfas_codigo, cjcri_requerimiento, cjcri_requerido, cjcri_estado, cjcri_fecha_insert, cjcri_usuario_insert, cjcri_fecha_update, cjcri_usuario_update) 
+VALUES ('CJCRI355', 'CRFAS289', 'Revision de adjuntos', true, true, '2016-06-02 10:48:31.817610', 'patricia', '2016-06-02 10:48:31.817610', 'patricia');
 
 
 -- Creación de datos para tipo solicitud trámite
 -- Hijo de padre o madre residentes permanentes (tipo solicitud tramite) --
 
-INSERT INTO sii.cgg_res_tipo_solicitud_tramite (crtst_codigo, cgg_crtst_codigo, crtpt_codigo, crpro_codigo, crres_codigo, ckesp_codigo, crtst_descripcion, crtst_observacion, crtst_aplica_garantia, crtst_aplica_tramite, crtst_aplica_grupo, crtst_atencion_cliente, crtst_restringido, crtst_comunicado_radial, crtst_numero_dias, crtst_vehiculo, crtst_unanimidad, crtst_aplica_otro, crtst_aplica_beneficiario, crtst_indice, crtst_estado, crtst_fecha_insert, crtst_usuario_insert, crtst_fecha_update, crtst_usuario_update, crtst_ingreso_web)
-VALUES (SII.F_KEYGEN('CGG_RES_TIPO_SOLICITUD_TRAMITE','CRTST_CODIGO','CRTST'), 'CRTST1', 'CRTPT1', 'CRPRO81', null, 'CKESP1', 'Art. 40-1 Hijo de residente permanente', 'Los hijos de padre o madre residentes permanentes pueden adquirir el estado de residentes permantes.', false, true, false, true, true, false, 0, false, false, false, true, 0, true, '2016-06-03 10:40:04.360929', 'patricia', '2016-08-18 10:35:50.424186', 'patricia', null);
+INSERT INTO sii.cgg_res_tipo_solicitud_tramite (crtst_codigo, cgg_crtst_codigo, crtpt_codigo, crpro_codigo, crres_codigo, ckesp_codigo, crtst_descripcion, crtst_observacion, crtst_aplica_garantia, crtst_aplica_tramite, crtst_aplica_grupo, crtst_atencion_cliente, crtst_restringido, crtst_comunicado_radial, crtst_numero_dias, crtst_vehiculo, crtst_unanimidad, crtst_aplica_otro, crtst_aplica_beneficiario, crtst_indice, crtst_estado, crtst_fecha_insert, crtst_usuario_insert, crtst_fecha_update, crtst_usuario_update, crtst_ingreso_web) 
+VALUES ('CRTST342', 'CRTST1', 'CRTPT1', 'CRPRO81', null, 'CKESP1', 'Art. 40-1 Hijo de residente permanente', 'Los hijos de padre o madre residentes permanentes pueden adquirir el estado de residentes permantes.', false, true, false, true, true, false, 0, false, false, false, true, 0, true, '2016-06-03 10:40:04.360929', 'patricia', '2016-08-18 10:35:50.424186', 'patricia', null);
 
 
 -- Requisitos de tipo solicitud tramite (hijos padres permanentes)
 
-INSERT INTO sii.cgg_res_solicitud_requisito (crsrq_codigo, crreq_codigo, crtst_codigo, crsrq_descripcion, crsrq_requerido, crsrq_participante, crsrq_estado, crsrq_fecha_insert, crsrq_usuario_insert, crsrq_fecha_update, crsrq_usuario_update)
+INSERT INTO sii.cgg_res_solicitud_requisito (crsrq_codigo, crreq_codigo, crtst_codigo, crsrq_descripcion, crsrq_requerido, crsrq_participante, crsrq_estado, crsrq_fecha_insert, crsrq_usuario_insert, crsrq_fecha_update, crsrq_usuario_update) 
 VALUES ('CRSRQ1949', 'CRREQ154', 'CRTST342', '', false, 0, true, '2016-06-15 18:06:40.554242', 'patricia', '2016-08-18 10:35:50.434239', 'patricia'),
 ('CRSRQ1916', 'CRREQ153', 'CRTST342', '', false, 0, true, '2016-06-15 18:06:40.554242', 'patricia', '2016-08-18 10:35:50.434239', 'patricia'),
 ('CRSRQ1913', 'CRREQ155', 'CRTST342', '', false, 0, true, '2016-06-15 18:06:40.554242', 'patricia', '2016-08-18 10:35:50.434239', 'patricia'),
@@ -137,14 +140,14 @@ VALUES ('CRSRQ1949', 'CRREQ154', 'CRTST342', '', false, 0, true, '2016-06-15 18:
 
 -- Reglas de tipo solicitud trámite (hijos padres permanentes)
 
-INSERT INTO sii.cgg_res_tipo_solicitud_regla (crtse_codigo, crtst_codigo, crval_codigo, crtse_campo_evaluacion, crtse_valor_1, crtse_estado, crtse_fecha_insert, crtse_usuario_insert, crtse_fecha_update, crtse_usuario_update, crtt_codigo)
+INSERT INTO sii.cgg_res_tipo_solicitud_regla (crtse_codigo, crtst_codigo, crval_codigo, crtse_campo_evaluacion, crtse_valor_1, crtse_estado, crtse_fecha_insert, crtse_usuario_insert, crtse_fecha_update, crtse_usuario_update, crtt_codigo) 
 VALUES ('CRTSE1008', 'CRTST342', 'CRVAL52', '[{"com.bmlaurus.rule.HijoDelAuspiciante":""}]', null, true, '2016-08-08 08:52:45.581506', 'patricia', '2016-08-18 10:35:50.434239', 'patricia', ''),
 ('CRTSE1009', 'CRTST342', 'CRVAL5', '[{"IN_CRPER_CODIGO":"cggcrperCodigo"}]', null, true, '2016-08-08 08:52:45.581506', 'patricia', '2016-08-18 10:35:50.434239', 'patricia', ''),
 ('CRTSE827', 'CRTST342', 'CRVAL27', '[{"IN_CRPER_CODIGO":"crperCodigo"}]', null, true, '2016-06-15 14:28:44.010183', 'patricia', '2016-08-18 10:35:50.434239', 'patricia', ''),
 ('CRTSE881', 'CRTST342', 'CRVAL45', '[{"com.bmlaurus.rule.RegisteredIdentification":""}]', null, true, '2016-07-05 17:44:13.345270', 'patricia', '2016-08-18 10:35:50.434239', 'patricia', ''),
-('CRTSE880', 'CRTST342', 'CRVAL46', '[{"com.bmlaurus.rule.VoteCNE":""}]', null, true, '2016-07-05 17:44:13.345270', 'patricia', '2016-08-18 10:35:50.434239', 'patricia', ''),
+('CRTSE880', 'CRTST342', 'CRVAL46', '[{"com.bmlaurus.rule.VoteCNE":""}]', null, true, '2016-07-05 17:44:13.345270', 'patricia', '2016-08-18 10:35:50.434239', 'patricia', '');
 ('CRTSE847', 'CRTST342', 'CRVAL36', '[{"com.bmlaurus.rule.temporal.MinorChild":""}]', null, true, '2016-07-01 14:33:57.065120', 'patricia', '2016-08-18 10:35:50.434239', 'patricia', ''),
-('CRTSE997', 'CRTST342', 'CRVAL49', '[{"com.bmlaurus.rule.KindID":""}]', null, true, '2016-07-14 10:30:36.147490', 'is-admin', '2016-08-18 10:35:50.434239', 'patricia', ''),
+('CRTSE997', 'CRTST342', 'CRVAL49', '[{"com.bmlaurus.rule.KindID":""}]', null, true, '2016-07-14 10:30:36.147490', 'is-admin', '2016-08-18 10:35:50.434239', 'patricia', '');
 ('CRTSE893', 'CRTST342', 'CRVAL48', '[{"com.bmlaurus.rule.VoteCNEBeneficiary":""}]', null, true, '2016-07-06 12:14:59.007136', 'patricia', '2016-08-18 10:35:50.434239', 'patricia', ''),
 ('CRTSE892', 'CRTST342', 'CRVAL47', '[{"com.bmlaurus.rule.RegisteredIdentificationBeneficiary":""}]', null, true, '2016-07-06 12:05:21.320789', 'patricia', '2016-08-18 10:35:50.434239', 'patricia', '');
 
@@ -800,7 +803,7 @@ INSERT INTO sii.cgg_res_tst_aplica (crtao_codigo, crtso_codigo, crtst_codigo, cr
 INSERT INTO sii.cgg_ecm_metadata (code, table_name, filter, files_repository, is_list, estado, usuario_insert, usuario_update) VALUES ('ECM24', 'Cgg_res_tramite', 'crtst_codigo=''CRTST365''', null, true, true, 'patricia', 'patricia');
 -- file
 INSERT INTO sii.cgg_ecm_file (code, cgg_ecm_metadata_code, file_name, file_description, document_type, file_repository, override_name, estado, usuario_insert, usuario_update, insertable, updateable, mandatory, visible_role, editable_role) 
-VALUES ('ECMFL44', 'ECM24', 'copiaConvenio', 'Copia del convenio con la entidad receptora en la provincia de Galápagos', 'D:sii:personales', 'alfpath.auspiciante.path', true, true, 'patricia', 'patricia', true, true, false, null, null),
+VALUES ('ECMFL44', 'ECM24', 'copiaConvenio', 'Copia del convenio con la entidad receptora en la provincia de Galápagos', 'D:sii:personales', 'alfpath.auspiciante.path', true, true, 'patricia', 'patricia', true, true, false, null, null);
 ('ECMFL101', 'ECM24', 'informeResolucion', 'Resolución', 'D:sii:respaldo', 'alfpath.resolucion.path', true, true, 'patricia', 'patricia', false, true, false, null, null),
 ('ECMFL42', 'ECM24', 'documentoAcreditacionBecaVoluntariadoBenef', 'Documento que acredite ser beneficiario de la beca o el voluntariado', 'D:sii:personales', 'alfpath.beneficiario.path', true, true, 'patricia', 'patricia', true, true, false, null, null),
 ('ECMFL41', 'ECM24', 'identificacion', 'Pasaporte Beneficiario', 'D:sii:personales', 'alfpath.beneficiario.path', true, true, 'patricia', 'patricia', true, true, false, null, null),
@@ -1293,24 +1296,24 @@ VALUES ('CRTSE878', 'CRTST379', 'CRVAL10', '[{"IN_CRPER_NUM_DOC_IDENTIFIC":"cggc
 
 --Ingreso del proceso
 INSERT INTO sii.cgg_res_proceso (crpro_codigo, crpro_nombre, crpro_estado, crpro_fecha_insert, crpro_usuario_insert, crpro_fecha_update, crpro_usuario_update) 
-VALUES (SII.F_KEYGEN('CGG_RES_PROCESO','CRPRO_CODIGO','CRPRO'), 'Solicitud Revocatoria 2016', true, '2016-07-25 16:37:48.389191', 'admin', '2016-07-25 16:37:48.389191', 'admin');
+VALUES ('CRPRO92', 'Solicitud Revocatoria 2016', true, '2016-07-25 16:37:48.389191', 'admin', '2016-07-25 16:37:48.389191', 'admin');
 
 -- Creación de fases para el proceso Solicitud Revocatoria 2016
 
 INSERT INTO sii.cgg_res_fase (crfas_codigo, crpro_codigo, crett_codigo, cgg_crett_codigo, crsec_codigo, cgg_crfas_codigo, cgg_cusu_codigo, crfas_nombre, crfas_orden, crfas_tarea_realiza, crfas_funcion_ejecuta, crfas_sube_adjunto, crfas_sube_adjunto_requisito, crfas_ejecuta_despacho, crfas_atencion_normal, crfas_estado, crfas_fecha_insert, crfas_usuario_insert, crfas_fecha_update, crfas_usuario_update) 
-VALUES (SII.F_KEYGEN('CGG_RES_FASE','CRFAS_CODIGO','CRFAS'), (select crpro_codigo from sii.cgg_res_proceso where crpro_nombre = 'Solicitud Revocatoria 2016'), null, null, 'CRSEC6', null, null, 'Recepción Revocatoria 2016', 1, 'Se ingresa vía web la solicitud de revocatoria para residencia', '', true, true, false, true, true, '2016-06-02 10:36:09.144272', 'patricia', '2016-06-02 10:36:09.144272', 'patricia');
+VALUES ('CRFAS292', 'CRPRO92', null, null, 'CRSEC6', null, null, 'Recepción Revocatoria 2016', 1, 'Se ingresa vía web la solicitud de revocatoria para residencia', '', true, true, false, true, true, '2016-06-02 10:36:09.144272', 'patricia', '2016-06-02 10:36:09.144272', 'patricia');
 INSERT INTO sii.cgg_res_fase (crfas_codigo, crpro_codigo, crett_codigo, cgg_crett_codigo, crsec_codigo, cgg_crfas_codigo, cgg_cusu_codigo, crfas_nombre, crfas_orden, crfas_tarea_realiza, crfas_funcion_ejecuta, crfas_sube_adjunto, crfas_sube_adjunto_requisito, crfas_ejecuta_despacho, crfas_atencion_normal, crfas_estado, crfas_fecha_insert, crfas_usuario_insert, crfas_fecha_update, crfas_usuario_update) 
-VALUES (SII.F_KEYGEN('CGG_RES_FASE','CRFAS_CODIGO','CRFAS'), (select crpro_codigo from sii.cgg_res_proceso where crpro_nombre = 'Solicitud Revocatoria 2016'), null, null, 'CRSEC24', null, null, 'Digitalización 2016', 2, 'Resvisión de los adjuntos y la información ingresada ', '', true, true, false, true, true, '2016-06-02 10:48:31.817610', 'patricia', '2016-06-02 10:48:31.817610', 'patricia');
+VALUES ('CRFAS293', 'CRPRO92', null, null, 'CRSEC24', null, null, 'Digitalización 2016', 2, 'Resvisión de los adjuntos y la información ingresada ', '', true, true, false, true, true, '2016-06-02 10:48:31.817610', 'patricia', '2016-06-02 10:48:31.817610', 'patricia');
 INSERT INTO sii.cgg_res_fase (crfas_codigo, crpro_codigo, crett_codigo, cgg_crett_codigo, crsec_codigo, cgg_crfas_codigo, cgg_cusu_codigo, crfas_nombre, crfas_orden, crfas_tarea_realiza, crfas_funcion_ejecuta, crfas_sube_adjunto, crfas_sube_adjunto_requisito, crfas_ejecuta_despacho, crfas_atencion_normal, crfas_estado, crfas_fecha_insert, crfas_usuario_insert, crfas_fecha_update, crfas_usuario_update) 
-VALUES (SII.F_KEYGEN('CGG_RES_FASE','CRFAS_CODIGO','CRFAS'), (select crpro_codigo from sii.cgg_res_proceso where crpro_nombre = 'Solicitud Revocatoria 2016'), 'CRETT3', 'CRETT4', 'CRSEC4', null, null, 'Calificación 2016', 3, 'Calificación de revocatoria de residencia', 'F_CGG_ANULAR_RESIDENCIA_2016', true, true, true, true, true, '2016-06-02 10:58:37.713440', 'patricia', '2016-06-02 11:09:05.007827', 'patricia');
+VALUES ('CRFAS294', 'CRPRO92', 'CRETT3', 'CRETT4', 'CRSEC4', null, null, 'Calificación 2016', 3, 'Calificación de revocatoria de residencia', 'F_CGG_ANULAR_RESIDENCIA_2016', true, true, true, true, true, '2016-06-02 10:58:37.713440', 'patricia', '2016-06-02 11:09:05.007827', 'patricia');
 
 -- Creación de Requerimientos para cada fase
 
 -- Requerimientos fase Digitalizacion 2016
 INSERT INTO sii.cgg_jur_criterio (cjcri_codigo, crfas_codigo, cjcri_requerimiento, cjcri_requerido, cjcri_estado, cjcri_fecha_insert, cjcri_usuario_insert, cjcri_fecha_update, cjcri_usuario_update) 
-VALUES (SII.F_KEYGEN('CGG_JUR_CRITERIO','CJCRI_CODIGO','CJCRI'), (select crfas_codigo from sii.cgg_res_fase where crfas_nombre = 'Digitalización 2016'), 'Revision de datos ingresados', true, true, '2016-06-02 10:48:31.817610', 'patricia', '2016-06-02 10:48:31.817610', 'patricia');
+VALUES ('CJCRI358', 'CRFAS293', 'Revision de datos ingresados', true, true, '2016-06-02 10:48:31.817610', 'patricia', '2016-06-02 10:48:31.817610', 'patricia');
 INSERT INTO sii.cgg_jur_criterio (cjcri_codigo, crfas_codigo, cjcri_requerimiento, cjcri_requerido, cjcri_estado, cjcri_fecha_insert, cjcri_usuario_insert, cjcri_fecha_update, cjcri_usuario_update) 
-VALUES (SII.F_KEYGEN('CGG_JUR_CRITERIO','CJCRI_CODIGO','CJCRI'), (select crfas_codigo from sii.cgg_res_fase where crfas_nombre = 'Digitalización 2016'), 'Revision de adjuntos', true, true, '2016-06-02 10:48:31.817610', 'patricia', '2016-06-02 10:48:31.817610', 'patricia');
+VALUES ('CJCRI359', 'CRFAS293', 'Revision de adjuntos', true, true, '2016-06-02 10:48:31.817610', 'patricia', '2016-06-02 10:48:31.817610', 'patricia');
 
 -- Creación de tipos de solicitud para revocatoria (tipo_solicitud_tramite)
 
@@ -1476,7 +1479,7 @@ ALTER FUNCTION sii.f_tiempo_estadia_turista(character varying, character varying
 
 
 INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
-VALUES (SII.F_KEYGEN('CGG_REGLA_VALIDACION','CRVAL_CODIGO','CRVAL'), null, 'Hijo mayor de edad', 'Verifica que el beneficiario sea mayor de edad', 'com.bmlaurus.rule.temporal.MinorChild', '=', 'TRUE', 'FALSE', 'El beneficiario no es mayor de edad', 1, '2011-03-13 01:00:00.000000', '2011-03-13 01:00:00.000000', null, null, true, '2011-03-18 14:11:12.165745', 'patricia', null, null);
+VALUES ('CRVAL50', null, 'Hijo mayor de edad', 'Verifica que el beneficiario sea mayor de edad', 'com.bmlaurus.rule.temporal.MinorChild', '=', 'TRUE', 'FALSE', 'El beneficiario no es mayor de edad', 1, '2011-03-13 01:00:00.000000', '2011-03-13 01:00:00.000000', null, null, true, '2011-03-18 14:11:12.165745', 'patricia', null, null);
 
 
 -- REGLA PARA VALIDAR SI LA FECHA DE CADUCIDAD DEL BENEFICIARIO ES IGUAL AL DEL REPRESENTANTE
@@ -1513,7 +1516,8 @@ ALTER FUNCTION sii.f_comparacion_caducidad(character varying, character varying,
   OWNER TO postgres;
 
 -- AÑADIR LA REGLA A LA TABLA REGLA_VALIDACION
-INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) VALUES (SII.F_KEYGEN('CGG_REGLA_VALIDACION','CRVAL_CODIGO','CRVAL'), null, 'Tener la misma fecha de caducidad que el representante', 'Verifica que el beneficiario tenga la misma fecha de caducidad que el representante', 'F_COMPARACION_CADUCIDAD', '=', 'TRUE', 'TRUE', 'El beneficiario debe tener la misma fecha de caducidad que el representante', 1, '2016-08-04 00:00:00.000000', '2016-08-04 00:00:00.000000', null, null, true, '2016-08-04 00:00:00.000000', 'patricia', '2016-08-04 00:00:00.000000', 'patricia');
+INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
+VALUES ('CRVAL51', null, 'Tener la misma fecha de caducidad que el representante', 'Verifica que el beneficiario tenga la misma fecha de caducidad que el representante', 'F_COMPARACION_CADUCIDAD', '=', 'TRUE', 'TRUE', 'El beneficiario debe tener la misma fecha de caducidad que el representante', 1, '2016-08-04 00:00:00.000000', '2016-08-04 00:00:00.000000', null, null, true, '2016-08-04 00:00:00.000000', 'patricia', '2016-08-04 00:00:00.000000', 'patricia');
 
 
 --ACTUALIZACIÓN DE LA FUNCION CGG_USUARIO_COUNT
@@ -1543,21 +1547,21 @@ LANGUAGE 'plpgsql' VOLATILE CALLED ON NULL INPUT;
 -- AÑADIR REGLAS DE VALIDACION (HIJO DE AUSPICIANTE Y REPRESENTANTE) A LA TABLA REGLA_VALIDACION
 
 INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
-VALUES (SII.F_KEYGEN('CGG_REGLA_VALIDACION','CRVAL_CODIGO','CRVAL'), null, 'Beneficiario hijo de respresentante', 'Verifica que el beneficiario sea hijo del representante', 'com.bmlaurus.rule.temporal.HijoDelRepresentante', '=', 'TRUE', 'TRUE', 'El beneficiario no es hijo del representante', 1, '2011-04-09 01:00:00.000000', '2011-04-09 02:00:00.000000', null, null, true, '2011-04-09 03:00:00.000000', 'patricia', '2011-04-09 04:00:00.000000', 'patricia');
+VALUES ('CRVAL53', null, 'Beneficiario hijo de respresentante', 'Verifica que el beneficiario sea hijo del representante', 'com.bmlaurus.rule.temporal.HijoDelRepresentante', '=', 'TRUE', 'TRUE', 'El beneficiario no es hijo del representante', 1, '2011-04-09 01:00:00.000000', '2011-04-09 02:00:00.000000', null, null, true, '2011-04-09 03:00:00.000000', 'patricia', '2011-04-09 04:00:00.000000', 'patricia');
 INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
-VALUES (SII.F_KEYGEN('CGG_REGLA_VALIDACION','CRVAL_CODIGO','CRVAL'), null, 'Beneficiario hijo del Auspiciante', 'Verifica que el beneficiario sea hijo del auspiciante', 'com.bmlaurus.rule.HijoDelAuspiciante', '=', 'TRUE', 'TRUE', 'El beneficiario no es hijo del auspiciante', 1, '2011-04-09 00:00:00.000000', '2011-04-09 00:00:00.000000', null, null, true, '2011-04-09 00:00:00.000000', 'patricia', '2011-04-09 00:00:00.000000', 'patricia');
+VALUES ('CRVAL52', null, 'Beneficiario hijo del Auspiciante', 'Verifica que el beneficiario sea hijo del auspiciante', 'com.bmlaurus.rule.HijoDelAuspiciante', '=', 'TRUE', 'TRUE', 'El beneficiario no es hijo del auspiciante', 1, '2011-04-09 00:00:00.000000', '2011-04-09 00:00:00.000000', null, null, true, '2011-04-09 00:00:00.000000', 'patricia', '2011-04-09 00:00:00.000000', 'patricia');
 
 -- AÑADIR REGLA DE BENEFICIARIO CASADO CON REPRESENTANTE EN LA TABLA REGLA_VALIDACION
 INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
-VALUES (SII.F_KEYGEN('CGG_REGLA_VALIDACION','CRVAL_CODIGO','CRVAL'), null, 'Beneficiario casado con representante', 'Verifica que el beneficiario este casado con el representante', 'com.bmlaurus.rule.DinardapMarriedValidatorRep', '=', 'TRUE', 'TRUE', 'El beneficiario no se encuentra casado con el representante', 1, '2011-04-09 06:00:00.000000', '2011-04-09 07:00:00.000000', null, null, true, '2011-04-09 08:00:00.000000', 'patricia', '2011-04-09 10:00:00.000000', 'patricia');
+VALUES ('CRVAL54', null, 'Beneficiario casado con representante', 'Verifica que el beneficiario este casado con el representante', 'com.bmlaurus.rule.DinardapMarriedValidatorRep', '=', 'TRUE', 'TRUE', 'El beneficiario no se encuentra casado con el representante', 1, '2011-04-09 06:00:00.000000', '2011-04-09 07:00:00.000000', null, null, true, '2011-04-09 08:00:00.000000', 'patricia', '2011-04-09 10:00:00.000000', 'patricia');
 
 -- AÑADIR REGLA DE BENEFICIARIO PADRE DEL AUSPICIANTE EN LA TABLA REGLA_VALIDACION
 INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
-VALUES (SII.F_KEYGEN('CGG_REGLA_VALIDACION','CRVAL_CODIGO','CRVAL'), null, 'Beneficiario padre del Auspiciante', 'Verifica que el beneficiario sea padre del auspiciante', 'com.bmlaurus.rule.temporal.PadreDelAuspiciante', '=', 'TRUE', 'TRUE', 'El beneficiario no es padre del auspciante', 1, '2011-04-08 19:00:00.000000', '2011-04-08 19:00:00.000000', null, null, true, '2011-04-08 20:00:00.000000', 'patricia', '2011-04-08 21:00:00.000000', 'patricia');
+VALUES ('CRVAL55', null, 'Beneficiario padre del Auspiciante', 'Verifica que el beneficiario sea padre del auspiciante', 'com.bmlaurus.rule.temporal.PadreDelAuspiciante', '=', 'TRUE', 'TRUE', 'El beneficiario no es padre del auspciante', 1, '2011-04-08 19:00:00.000000', '2011-04-08 19:00:00.000000', null, null, true, '2011-04-08 20:00:00.000000', 'patricia', '2011-04-08 21:00:00.000000', 'patricia');
 
 -- AÑADIR REGLA DE BENEFICIARIO PADRE DEL REPRESENTANTE EN LA TABLA REGLA_VALIDACION
 INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
-VALUES (SII.F_KEYGEN('CGG_REGLA_VALIDACION','CRVAL_CODIGO','CRVAL'), null, 'Beneficiario padre del respresentante', 'Verifica que el beneficiario sea padre del representante', 'com.bmlaurus.rule.temporal.PadreDelRepresentante', '=', 'TRUE', 'TRUE', 'El beneficiario no es padre del representante', 1, '2011-04-09 00:00:00.000000', '2011-04-09 00:00:00.000000', null, null, true, '2011-04-09 00:00:00.000000', 'patricia', '2011-04-09 00:00:00.000000', 'patricia');
+VALUES ('CRVAL56', null, 'Beneficiario padre del respresentante', 'Verifica que el beneficiario sea padre del representante', 'com.bmlaurus.rule.temporal.PadreDelRepresentante', '=', 'TRUE', 'TRUE', 'El beneficiario no es padre del representante', 1, '2011-04-09 00:00:00.000000', '2011-04-09 00:00:00.000000', null, null, true, '2011-04-09 00:00:00.000000', 'patricia', '2011-04-09 00:00:00.000000', 'patricia');
 
 -- REGLA PARA NUMERO DE TRAMITES DE TIPO TRANSEUNTE
 
@@ -1593,7 +1597,7 @@ ALTER FUNCTION sii.f_numero_tramite_transeunte(character varying, character vary
 
 -- AÑADIR REGLA DE NUMERO DE TRAMITES TRANSEUNTE A LA TABLA DE REGLA_VALIDACION
 INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
-VALUES (SII.F_KEYGEN('CGG_REGLA_VALIDACION','CRVAL_CODIGO','CRVAL'), null, 'Numero de tramites de tipo transeunte', 'Verifica que no tenga mas de un tramite ingresado como de tipo transeunte', 'F_NUMERO_TRAMITE_TRANSEUNTE', '=', '0', 'TRUE', 'Ya tiene un tramite pendiente como tipo transeunte', 1, '2011-04-09 00:00:00.000000', '2011-04-09 00:00:00.000000', null, null, true, '2011-04-09 00:00:00.000000', 'patricia', '2011-04-09 00:00:00.000000', 'patricia');
+VALUES ('CRVAL57', null, 'Numero de tramites de tipo transeunte', 'Verifica que no tenga mas de un tramite ingresado como de tipo transeunte', 'F_NUMERO_TRAMITE_TRANSEUNTE', '=', '0', 'TRUE', 'Ya tiene un tramite pendiente como tipo transeunte', 1, '2011-04-09 00:00:00.000000', '2011-04-09 00:00:00.000000', null, null, true, '2011-04-09 00:00:00.000000', 'patricia', '2011-04-09 00:00:00.000000', 'patricia');
 
 -- MODIFICACIÓN REGLA DE NUMERO DE TRAMITES PERMANENTES
 
@@ -1784,7 +1788,7 @@ ALTER FUNCTION sii.f_tiempo_estadia_temporal(character varying, character varyin
 -- INGRESO EL REGISTRO DE VALIDACIÓN DE TIEMPO COMO TEMPORAL EN LA TABLA REGLA_VALIDACION
 
 INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
-VALUES (SII.F_KEYGEN('CGG_REGLA_VALIDACION','CRVAL_CODIGO','CRVAL'), null, 'Tiempo permitido en categoría de temporal', 'Verifica que el beneficiario no exceda el tiempo permitido en la categoría de temporal.', 'F_TIEMPO_ESTADIA_TEMPORAL', '<=', '730', 'TRUE', 'El beneficiario ha excedido el tiempo permitido como residente temporal', 1, '2011-04-09 00:00:00.000000', '2011-04-09 00:00:00.000000', null, null, true, '2011-04-09 23:37:50.901388', 'patricia', '2011-04-09 23:37:50.901388', 'patricia');
+VALUES ('CRVAL58', null, 'Tiempo permitido en categoría de temporal', 'Verifica que el beneficiario no exceda el tiempo permitido en la categoría de temporal.', 'F_TIEMPO_ESTADIA_TEMPORAL', '<=', '730', 'TRUE', 'El beneficiario ha excedido el tiempo permitido como residente temporal', 1, '2011-04-09 00:00:00.000000', '2011-04-09 00:00:00.000000', null, null, true, '2011-04-09 23:37:50.901388', 'patricia', '2011-04-09 23:37:50.901388', 'patricia');
 
 -- FUNCIÓN QUE PARA VALIDAR EN NÚMERO DE DÍAS PERMITIDOS COMO TRANSEUNTE
 
@@ -2168,12 +2172,15 @@ $BODY$
 ALTER FUNCTION sii.f_cgg_res_residencia_generar(character varying, character varying, character varying)
   OWNER TO postgres;
 
+--TIPO TRAMITE COMBO
 
---> MIGRATION SCRIPT CONTROLLER <--
+INSERT INTO sii.cgg_tipo_tramite (crtt_codigo, crtt_nombre, crtt_estado) VALUES ('CRTT5', 'Primera Vez', true);
+INSERT INTO sii.cgg_tipo_tramite (crtt_codigo, crtt_nombre, crtt_estado) VALUES ('CRTT7', 'Revocatoria', true);
+INSERT INTO sii.cgg_tipo_tramite (crtt_codigo, crtt_nombre, crtt_estado) VALUES ('CRTT6', 'Renovación', true);
 
-INSERT INTO sii.cgg_migrationscript (mrgsp_codigo,mrgsp_fecha,mrgsp_usuario_insert,mrgsp_fecha_insert,mrgsp_usuario_update,mrgsp_fecha_update,
-	mrgsp_estado,mrgsp_developer,mrgsp_name,mrgsp_description,
-	mrgsp_releaseno,mrgsp_filename,mrgsp_isapply)
-VALUES(SII.F_KEYGEN('CGG_MIGRATIONSCRIPT','MRGSP_CODIGO','MRGSP'), current_timestamp,'ADMIN', current_timestamp,'ADMIN', current_timestamp,
-	true,'mortiz','CGGSII-30','',
-	'1.0','2016_08_23_scripts tipos tramites.sql',true);
+update sii.cgg_tipo_tramite set crtt_estado = false where crtt_codigo='CRTT1' or crtt_codigo='CRTT2'
+
+-- RES TIPO TRAMITE
+
+INSERT INTO sii.cgg_res_tipo_tramite (crtpt_codigo, crtpt_nombre, crtpt_abreviatura, crtpt_indice, crtpt_observaciones, crtpt_estado, crtpt_fecha_insert, crtpt_usuario_insert, crtpt_fecha_update, crtpt_usuario_update) VALUES ('CRTPT3', 'Revocatoria', 'RVC', 3, 'Tramite para revocacion de residencia', true, null, null, null, null);
+ 
