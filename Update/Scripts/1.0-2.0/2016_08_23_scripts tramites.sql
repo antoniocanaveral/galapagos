@@ -2183,4 +2183,12 @@ update sii.cgg_tipo_tramite set crtt_estado = false where crtt_codigo='CRTT1' or
 -- RES TIPO TRAMITE
 
 INSERT INTO sii.cgg_res_tipo_tramite (crtpt_codigo, crtpt_nombre, crtpt_abreviatura, crtpt_indice, crtpt_observaciones, crtpt_estado, crtpt_fecha_insert, crtpt_usuario_insert, crtpt_fecha_update, crtpt_usuario_update) VALUES ('CRTPT3', 'Revocatoria', 'RVC', 3, 'Tramite para revocacion de residencia', true, null, null, null, null);
+
+--> MIGRATION SCRIPT CONTROLLER <--
+INSERT INTO sii.cgg_migrationscript (mrgsp_codigo,mrgsp_fecha,mrgsp_usuario_insert,mrgsp_fecha_insert,mrgsp_usuario_update,mrgsp_fecha_update,
+	mrgsp_estado,mrgsp_developer,mrgsp_name,mrgsp_description,
+	mrgsp_releaseno,mrgsp_filename,mrgsp_isapply)
+VALUES(SII.F_KEYGEN('CGG_MIGRATIONSCRIPT','MRGSP_CODIGO','MRGSP'), current_timestamp,'ADMIN', current_timestamp,'ADMIN', current_timestamp,
+	true,'mortiz','Tipos de solicitudes','Configuración de todos los tipos de solicitudes',
+	'2.0','2016_08_23_scripts tramites.sql',true);
  
