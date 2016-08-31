@@ -3,8 +3,8 @@
 INSERT INTO sii.cgg_res_seccion (crsec_codigo, crsec_nombre, crsec_estado, crsec_fecha_insert, crsec_usuario_insert, crsec_fecha_update, crsec_usuario_update) VALUES ('CRSEC31', 'COORDINACION DE RESIDENCIA', true, '2016-06-30 17:16:59.341544', 'patricia', '2016-06-30 17:16:59.341544', 'patricia');
 
 -- Eliminación de documentos identificación no requeridos
-Delete from sii.cgg_res_documento_identificacio where crdid_descripcion='NINGUNO' or crdid_descripcion='CREDENCIAL';
-update sii.cgg_res_documento_identificacio set crdid_estado = false where crdid_descripcion='PARTIDA DE NACIMIENTO ' or crdid_descripcion='RUC';
+update sii.cgg_res_documento_identificacio set crdid_estado = false where crdid_descripcion='PARTIDA DE NACIMIENTO ' or crdid_descripcion='RUC'
+or crdid_descripcion='NINGUNO' or crdid_descripcion='CREDENCIAL';
 
 -- Colocar estado civil ninguno en estado false
 update sii.cgg_res_estado_civil set crecv_estado = false where crecv_descrpcion='NINGUNO';
@@ -77,9 +77,9 @@ VALUES ('CRREQ158', 'Deberá presentar documentos probatorios que justifiquen su
 -- INGRESO DE REQUISITOS PARA TRANSEÚNTES
 
 INSERT INTO sii.cgg_res_requisito (crreq_codigo, crreq_descripcion, crreq_observacion, crreq_estado, crreq_fecha_insert, crreq_usuario_insert, crreq_fecha_update, crreq_usuario_update)
-VALUES ('CRREQ159', 'Copia del pasaporte vigente para los extranjeros no nacionalizados en Ecuador, con el tipo de visa respectivo', '', TRUE, current_timestamp, 'patricia', current_timestamp, 'patricia'),
-	('CRREQ160', 'Copia del documento que acredite la actividad que viene a realizar a Galápagos de acuerdo al Art. 42 numeral 5 de la LOREG', '', TRUE, current_timestamp, 'patricia', current_timestamp, 'patricia'),
-	('CRREQ161', 'Realizar el proceso de actualización de los documentos y datos en el sistema de Residencia del representante legal o su delegado, si aplica', '', TRUE, current_timestamp, 'patricia', current_timestamp, 'patricia');
+VALUES ('CRREQ159', 'Copia del pasaporte vigente para los extranjeros no nacionalizados en Ecuador', '', TRUE, current_timestamp, 'patricia', current_timestamp, 'patricia'),
+	('CRREQ160', 'Copia del documento que acredite la actividad que viene a realizar a Galápagos', '', TRUE, current_timestamp, 'patricia', current_timestamp, 'patricia'),
+	('CRREQ161', 'Realizar el proceso de actualización de los datos en el sistema del representante legal/delegado', '', TRUE, current_timestamp, 'patricia', current_timestamp, 'patricia');
 	
 
 -- AUMENTO DE COLUMNA EN cgg_res_tipo_solicitud_tramite PARA CONTROLAR EL INGRESO DE UNA SOLICITUD VIA WEB
@@ -96,6 +96,830 @@ VALUES ('CRREQ162', 'Se verificará que el padre/madre tenga residente temporal 
 INSERT INTO sii.cgg_res_requisito (crreq_codigo, crreq_descripcion, crreq_observacion, crreq_estado, crreq_fecha_insert, crreq_usuario_insert, crreq_fecha_update, crreq_usuario_update)
 VALUES ('CRREQ151', 'Documento que acredite la solicitud de reactivación de la residencia', '', TRUE, current_timestamp, 'patricia', current_timestamp, 'patricia'),
 	('CRREQ152', 'Verificar que la persona tenía residencia permanente', '', TRUE, current_timestamp, 'patricia', current_timestamp, 'patricia');
+
+
+
+
+
+
+-- REGLA ANULAR RESIDENCIA 2016
+-- Function: sii.f_cgg_anular_residencia_2016(character varying, character varying)
+-- DROP FUNCTION sii.f_cgg_anular_residencia_2016(character varying, character varying);
+
+CREATE OR REPLACE FUNCTION sii.f_cgg_anular_residencia_2016(in_crseg_codigo character varying, in_user_name character varying)
+  RETURNS numeric AS
+$BODY$
+DECLARE
+TMP_REF REFCURSOR;
+TMP_ROW RECORD;
+IN_CRPER_NUM_DOC_IDENTIFIC VARCHAR;
+TMP_CRTRA_CODIGO VARCHAR;
+BEGIN
+SELECT TRM.CRTRA_CODIGO INTO TMP_CRTRA_CODIGO
+	FROM SII.CGG_RES_TRAMITE TRM
+	INNER JOIN SII.CGG_RES_SEGUIMIENTO SGM ON SGM.CRTRA_CODIGO = TRM.CRTRA_CODIGO AND SGM.CRSEG_CODIGO = IN_CRSEG_CODIGO;	
+SELECT CRPER_NUM_DOC_IDENTIFIC INTO IN_CRPER_NUM_DOC_IDENTIFIC
+		FROM SII.CGG_RES_PERSONA PRS
+		WHERE PRS.CRPER_CODIGO = (SELECT CGG_CRPER_CODIGO FROM SII.CGG_RES_TRAMITE WHERE CRTRA_CODIGO = TMP_CRTRA_CODIGO);	
+FOR TMP_ROW IN
+SELECT
+R.CRRSD_CODIGO, 
+P.CRPER_CODIGO, 
+R.CRTST_CODIGO, 
+R.CRTRA_CODIGO, 
+R.CGG_CRTRA_CODIGO, 
+R.CRRSD_NUMERO, 
+R.CRRSD_MODALIDAD, 
+R.CRRSD_FECHA_INICIO, 
+R.CRRSD_FECHA_CADUCIDAD, 
+R.CRRSD_REVOCADA, 
+R.CRRSD_FECHA_REVOCATORIA, 
+R.CRRSD_MOTIVO_REVOCATORIA, 
+R.CRRSD_VIGENTE, 
+R.CRRSD_TRAMITE_PENDIENTE, 
+R.CRRSD_ESTADO, 
+R.CRRSD_FECHA_INSERT, 
+R.CRRSD_USUARIO_INSERT, 
+R.CRRSD_FECHA_UPDATE, 
+R.CRRSD_USUARIO_UPDATE
+FROM SII.CGG_RES_RESIDENCIA R 
+INNER JOIN SII.CGG_RES_PERSONA P ON (R.CRPER_CODIGO = P.CRPER_CODIGO)
+WHERE CRRSD_ESTADO AND 
+P.CRPER_NUM_DOC_IDENTIFIC = IN_CRPER_NUM_DOC_IDENTIFIC AND
+R.CRRSD_VIGENTE
+LOOP
+UPDATE SII.CGG_RES_RESIDENCIA SET 
+CRRSD_FECHA_UPDATE = CURRENT_TIMESTAMP,
+CRRSD_USUARIO_UPDATE = IN_USER_NAME,
+CRRSD_VIGENTE = FALSE, 
+CRRSD_FECHA_CADUCIDAD = CURRENT_DATE,
+CRRSD_MOTIVO_REVOCATORIA = NULL
+WHERE R.CRRSD_CODIGO = TMP_ROW.CRRSD_CODIGO;
+END LOOP;
+RETURN 1;
+END
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION sii.f_cgg_anular_residencia_2016(character varying, character varying)
+  OWNER TO postgres;
+
+
+--REGLA TIEMPO ESTADIA TURISTA
+-- Function: sii.f_tiempo_estadia_turista(character varying, character varying, character varying)
+
+-- DROP FUNCTION sii.f_tiempo_estadia_turista(character varying, character varying, character varying);
+
+CREATE OR REPLACE FUNCTION sii.f_tiempo_estadia_turista(in_crper_codigo character varying, in_operador character varying, in_valor_comparacion character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+	TMP_ESTADIA INT;
+        OUT_RESULTADO VARCHAR;
+        FECHA_FINAL TIMESTAMP;
+        CTID_MOV TID;
+        OPERACION SMALLINT;
+        
+        
+BEGIN
+
+        SELECT  MAX (CRMOV_FECHA_VIAJE) INTO FECHA_FINAL FROM SII.CGG_RES_MOVILIDAD M WHERE M.CRPER_CODIGO=IN_CRPER_CODIGO;
+        SELECT MAX (CTID) INTO CTID_MOV FROM SII.CGG_RES_MOVILIDAD M WHERE M.CRPER_CODIGO=IN_CRPER_CODIGO AND M.CRMOV_FECHA_VIAJE=FECHA_FINAL;
+        SELECT M.CRMOV_TIPO_OPERACION INTO OPERACION FROM SII.CGG_RES_MOVILIDAD M WHERE CTID =CTID_MOV;
+
+        IF (OPERACION = 0) THEN 
+
+	SELECT SII.F_CALCULO_DIAS_ESTADIA_TURISTA(CURRENT_TIMESTAMP, IN_CRPER_CODIGO) INTO TMP_ESTADIA;
+	
+	IF (TMP_ESTADIA = 0) THEN
+            OUT_RESULTADO := 'true';
+	ELSE
+	    SELECT SII.F_CGG_REGLA_VALIDACION(TMP_ESTADIA::VARCHAR,IN_OPERADOR,IN_VALOR_COMPARACION) INTO OUT_RESULTADO;
+	END IF;
+
+	ELSE
+		OUT_RESULTADO := 'true';
+	END IF;
+	
+	RETURN OUT_RESULTADO;
+	
+END
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION sii.f_tiempo_estadia_turista(character varying, character varying, character varying)
+  OWNER TO sii;
+
+
+--REGLA DE VALIDACIÓN DE BENEFICIARIO MAYOR DE EDAD (añadir a la tabla regla_validacion)
+
+
+INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
+VALUES ('CRVAL50', null, 'Hijo mayor de edad', 'Verifica que el beneficiario sea mayor de edad', 'com.bmlaurus.rule.temporal.MinorChild', '=', 'TRUE', 'FALSE', 'El beneficiario no es mayor de edad', 1, '2011-03-13 01:00:00.000000', '2011-03-13 01:00:00.000000', null, null, true, '2011-03-18 14:11:12.165745', 'patricia', null, null);
+
+
+-- REGLA PARA VALIDAR SI LA FECHA DE CADUCIDAD DEL BENEFICIARIO ES IGUAL AL DEL REPRESENTANTE
+
+-- Function: sii.f_comparacion_caducidad(character varying, character varying, character varying, character varying)
+
+-- DROP FUNCTION sii.f_comparacion_caducidad(character varying, character varying, character varying, character varying);
+
+CREATE OR REPLACE FUNCTION sii.f_comparacion_caducidad(in_crper_codigo_rep character varying, in_fecha_cad_ben character varying, inoperador character varying, invalorcomparacion character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE	
+	TMP_RESULTADO VARCHAR;
+	TMP_FECHA_CAD_REP TIMESTAMP;
+	TMP_FECHA_INI_REP TIMESTAMP;
+BEGIN 
+
+	SELECT R.CRRSD_FECHA_CADUCIDAD INTO TMP_FECHA_CAD_REP FROM SII.CGG_RES_RESIDENCIA R WHERE R.CRPER_CODIGO=IN_CRPER_CODIGO_REP AND R.CRRSD_VIGENTE=TRUE;
+	SELECT R.CRRSD_FECHA_INICIO INTO TMP_FECHA_INI_REP FROM SII.CGG_RES_RESIDENCIA R WHERE R.CRPER_CODIGO=IN_CRPER_CODIGO_REP AND R.CRRSD_VIGENTE=TRUE;
+	
+	IF (TMP_FECHA_CAD_REP::date)>=TO_DATE(IN_FECHA_CAD_BEN,'DD/MM/YYYY') THEN
+	TMP_RESULTADO ='TRUE';
+	ELSE
+	TMP_RESULTADO ='FALSE,La fecha de entrada y salida del beneficiario debe estar entre el: '||to_char(TMP_FECHA_INI_REP,'DD/MM/YYYY')||' hasta el: '||to_char(TMP_FECHA_CAD_REP,'DD/MM/YYYY');
+	END IF;
+
+	RETURN TMP_RESULTADO;
+			
+END
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION sii.f_comparacion_caducidad(character varying, character varying, character varying, character varying)
+  OWNER TO postgres;
+
+-- AÑADIR LA REGLA A LA TABLA REGLA_VALIDACION
+INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
+VALUES ('CRVAL51', null, 'Tener la misma fecha de caducidad que el representante', 'Verifica que el beneficiario tenga la misma fecha de caducidad que el representante', 'F_COMPARACION_CADUCIDAD', '=', 'TRUE', 'TRUE', 'El beneficiario debe tener la misma fecha de caducidad que el representante', 1, '2016-08-04 00:00:00.000000', '2016-08-04 00:00:00.000000', null, null, true, '2016-08-04 00:00:00.000000', 'patricia', '2016-08-04 00:00:00.000000', 'patricia');
+
+
+--ACTUALIZACIÓN DE LA FUNCION CGG_USUARIO_COUNT
+--DROP FUNCTION sii.f_cgg_usuario_count(text, character varying, character varying);
+
+CREATE OR REPLACE FUNCTION SII.F_CGG_USUARIO_COUNT(
+IN IN_FIND_TEXT TEXT,
+IN IN_CUSU_USUARIO_INTERNO VARCHAR,
+IN IN_CRPER_CODIGO VARCHAR
+)RETURNS NUMERIC AS
+$$
+DECLARE
+TMP_ROWS NUMERIC;
+BEGIN
+	SELECT COUNT(*) INTO TMP_ROWS
+	FROM SII.CGG_USUARIO US
+	LEFT JOIN SII.CGG_RES_PERSONA PRS ON PRS.CRPER_CODIGO = US.CRPER_CODIGO AND PRS.CRPER_ESTADO
+	WHERE CUSU_ESTADO AND 
+		(LENGTH(IN_CRPER_CODIGO) = 0 OR US.CRPER_CODIGO = IN_CRPER_CODIGO ) AND 
+		(IN_CUSU_USUARIO_INTERNO = '-1' OR CUSU_USUARIO_INTERNO = IN_CUSU_USUARIO_INTERNO::BOOLEAN) AND 
+		(LENGTH(IN_FIND_TEXT)=0 OR SII.F_STRING_IN(IN_FIND_TEXT, COALESCE(CUSU_NOMBRE_USUARIO,'')||' '||COALESCE(PRS.CRPER_NOMBRES,'')||' '||COALESCE(PRS.CRPER_APELLIDO_MATERNO,'')||' '||COALESCE(PRS.CRPER_APELLIDO_PATERNO,'') ) = 1);
+	RETURN TMP_ROWS;
+END
+$$
+LANGUAGE 'plpgsql' VOLATILE CALLED ON NULL INPUT;
+
+-- AÑADIR REGLAS DE VALIDACION (HIJO DE AUSPICIANTE Y REPRESENTANTE) A LA TABLA REGLA_VALIDACION
+
+INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
+VALUES ('CRVAL53', null, 'Beneficiario hijo de respresentante', 'Verifica que el beneficiario sea hijo del representante', 'com.bmlaurus.rule.temporal.HijoDelRepresentante', '=', 'TRUE', 'TRUE', 'El beneficiario no es hijo del representante', 1, '2011-04-09 01:00:00.000000', '2011-04-09 02:00:00.000000', null, null, true, '2011-04-09 03:00:00.000000', 'patricia', '2011-04-09 04:00:00.000000', 'patricia');
+INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
+VALUES ('CRVAL52', null, 'Beneficiario hijo del Auspiciante', 'Verifica que el beneficiario sea hijo del auspiciante', 'com.bmlaurus.rule.HijoDelAuspiciante', '=', 'TRUE', 'TRUE', 'El beneficiario no es hijo del auspiciante', 1, '2011-04-09 00:00:00.000000', '2011-04-09 00:00:00.000000', null, null, true, '2011-04-09 00:00:00.000000', 'patricia', '2011-04-09 00:00:00.000000', 'patricia');
+
+-- AÑADIR REGLA DE BENEFICIARIO CASADO CON REPRESENTANTE EN LA TABLA REGLA_VALIDACION
+INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
+VALUES ('CRVAL54', null, 'Beneficiario casado con representante', 'Verifica que el beneficiario este casado con el representante', 'com.bmlaurus.rule.DinardapMarriedValidatorRep', '=', 'TRUE', 'TRUE', 'El beneficiario no se encuentra casado con el representante', 1, '2011-04-09 06:00:00.000000', '2011-04-09 07:00:00.000000', null, null, true, '2011-04-09 08:00:00.000000', 'patricia', '2011-04-09 10:00:00.000000', 'patricia');
+
+-- AÑADIR REGLA DE BENEFICIARIO PADRE DEL AUSPICIANTE EN LA TABLA REGLA_VALIDACION
+INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
+VALUES ('CRVAL55', null, 'Beneficiario padre del Auspiciante', 'Verifica que el beneficiario sea padre del auspiciante', 'com.bmlaurus.rule.temporal.PadreDelAuspiciante', '=', 'TRUE', 'TRUE', 'El beneficiario no es padre del auspciante', 1, '2011-04-08 19:00:00.000000', '2011-04-08 19:00:00.000000', null, null, true, '2011-04-08 20:00:00.000000', 'patricia', '2011-04-08 21:00:00.000000', 'patricia');
+
+-- AÑADIR REGLA DE BENEFICIARIO PADRE DEL REPRESENTANTE EN LA TABLA REGLA_VALIDACION
+INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
+VALUES ('CRVAL56', null, 'Beneficiario padre del respresentante', 'Verifica que el beneficiario sea padre del representante', 'com.bmlaurus.rule.temporal.PadreDelRepresentante', '=', 'TRUE', 'TRUE', 'El beneficiario no es padre del representante', 1, '2011-04-09 00:00:00.000000', '2011-04-09 00:00:00.000000', null, null, true, '2011-04-09 00:00:00.000000', 'patricia', '2011-04-09 00:00:00.000000', 'patricia');
+
+-- REGLA PARA NUMERO DE TRAMITES DE TIPO TRANSEUNTE
+
+-- Function: sii.f_numero_tramite_transeunte(character varying, character varying, character varying, character varying)
+
+-- DROP FUNCTION sii.f_numero_tramite_transeunte(character varying, character varying, character varying, character varying);
+
+CREATE OR REPLACE FUNCTION sii.f_numero_tramite_transeunte(in_crper_codigo character varying, in_crtra_codigo character varying, inoperador character varying, invalorcomparacion character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+CRETTCODIGO VARCHAR(20);
+TMP_CONTADOR NUMERIC;
+CRTSTCODIGO VARCHAR;
+OUT_RESULTADO VARCHAR;
+BEGIN
+select cgcnf_valor_cadena INTO CRTSTCODIGO from sii.cgg_configuracion where cgcnf_codigo='05';
+SELECT COALESCE(COUNT(CRTRA_CODIGO),0) INTO TMP_CONTADOR 
+FROM SII.CGG_RES_TRAMITE 
+WHERE CRETT_CODIGO NOT IN ( SELECT CGCNF_VALOR_CADENA FROM SII.CGG_CONFIGURACION WHERE CGCNF_CODIGO IN ('20','19','29') )
+AND SII.F_TIPO_SOLICITUD_PADRE(CRTST_CODIGO) = CRTSTCODIGO
+AND CGG_CRPER_CODIGO = IN_CRPER_CODIGO
+AND case when in_crtra_codigo = '' then 1=1 else crtra_codigo <> in_crtra_codigo end;
+
+SELECT SII.F_CGG_REGLA_VALIDACION(TMP_CONTADOR::VARCHAR,INOPERADOR,INVALORCOMPARACION) INTO OUT_RESULTADO;
+RETURN OUT_RESULTADO;
+END
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION sii.f_numero_tramite_transeunte(character varying, character varying, character varying, character varying)
+  OWNER TO postgres;
+
+-- AÑADIR REGLA DE NUMERO DE TRAMITES TRANSEUNTE A LA TABLA DE REGLA_VALIDACION
+INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
+VALUES ('CRVAL57', null, 'Numero de tramites de tipo transeunte', 'Verifica que no tenga mas de un tramite ingresado como de tipo transeunte', 'F_NUMERO_TRAMITE_TRANSEUNTE', '=', '0', 'TRUE', 'Ya tiene un tramite pendiente como tipo transeunte', 1, '2011-04-09 00:00:00.000000', '2011-04-09 00:00:00.000000', null, null, true, '2011-04-09 00:00:00.000000', 'patricia', '2011-04-09 00:00:00.000000', 'patricia');
+
+-- MODIFICACIÓN REGLA DE NUMERO DE TRAMITES PERMANENTES
+
+-- Function: sii.f_numero_tramite_permanente(character varying, character varying, character varying, character varying)
+
+-- DROP FUNCTION sii.f_numero_tramite_permanente(character varying, character varying, character varying, character varying);
+
+CREATE OR REPLACE FUNCTION sii.f_numero_tramite_permanente(in_crper_codigo character varying, in_crtra_codigo character varying, inoperador character varying, invalorcomparacion character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+CRETTCODIGO VARCHAR(20);
+TMP_CONTADOR NUMERIC;
+CRTSTCODIGO VARCHAR;
+OUT_RESULTADO VARCHAR;
+BEGIN
+select cgcnf_valor_cadena INTO CRTSTCODIGO from sii.cgg_configuracion where cgcnf_codigo='03';
+SELECT COALESCE(COUNT(CRTRA_CODIGO),0) INTO TMP_CONTADOR 
+FROM SII.CGG_RES_TRAMITE 
+WHERE CRETT_CODIGO NOT IN ( SELECT CGCNF_VALOR_CADENA FROM SII.CGG_CONFIGURACION WHERE CGCNF_CODIGO IN ('20','19','29') )
+AND SII.F_TIPO_SOLICITUD_PADRE(CRTST_CODIGO) = CRTSTCODIGO
+AND CGG_CRPER_CODIGO = IN_CRPER_CODIGO
+AND case when in_crtra_codigo = '' then 1=1 else crtra_codigo <> in_crtra_codigo end;
+
+SELECT SII.F_CGG_REGLA_VALIDACION(TMP_CONTADOR::VARCHAR,INOPERADOR,INVALORCOMPARACION) INTO OUT_RESULTADO;
+RETURN OUT_RESULTADO;
+END
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION sii.f_numero_tramite_permanente(character varying, character varying, character varying, character varying)
+  OWNER TO postgres;
+
+--MODIFICACIÓN REGLA DE NUMERO DE TRÁMITES TEMPORALES
+
+-- Function: sii.f_numero_tramite_temporal(character varying, character varying, character varying, character varying)
+
+-- DROP FUNCTION sii.f_numero_tramite_temporal(character varying, character varying, character varying, character varying);
+
+CREATE OR REPLACE FUNCTION sii.f_numero_tramite_temporal(in_crper_codigo character varying, in_crtra_codigo character varying, inoperador character varying, invalorcomparacion character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+CRETTCODIGO VARCHAR(20);
+TMP_CONTADOR NUMERIC;
+CRTSTCODIGO VARCHAR;
+OUT_RESULTADO VARCHAR;
+BEGIN
+select cgcnf_valor_cadena INTO CRTSTCODIGO from sii.cgg_configuracion where cgcnf_codigo='04';
+SELECT COALESCE(COUNT(CRTRA_CODIGO),0) INTO TMP_CONTADOR 
+FROM SII.CGG_RES_TRAMITE 
+WHERE CRETT_CODIGO NOT IN ( SELECT CGCNF_VALOR_CADENA FROM SII.CGG_CONFIGURACION WHERE CGCNF_CODIGO IN ('20','19','29') )
+AND SII.F_TIPO_SOLICITUD_PADRE(CRTST_CODIGO) = CRTSTCODIGO
+AND CGG_CRPER_CODIGO = IN_CRPER_CODIGO
+AND case when in_crtra_codigo = '' then 1=1 else crtra_codigo <> in_crtra_codigo end ;
+
+SELECT SII.F_CGG_REGLA_VALIDACION(TMP_CONTADOR::VARCHAR,INOPERADOR,INVALORCOMPARACION) INTO OUT_RESULTADO;
+RETURN OUT_RESULTADO;
+END
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION sii.f_numero_tramite_temporal(character varying, character varying, character varying, character varying)
+  OWNER TO postgres;
+
+
+--SCRIPT ISNUMERIC
+CREATE OR REPLACE FUNCTION isnumeric(text)
+  RETURNS boolean AS
+$BODY$
+DECLARE x NUMERIC;
+BEGIN
+    x = $1::NUMERIC;
+    RETURN TRUE;
+EXCEPTION WHEN others THEN
+    RETURN FALSE;
+END;
+$BODY$
+  LANGUAGE plpgsql IMMUTABLE STRICT
+  COST 100;
+
+
+-- REGLA QUE CALCULA LOS DIAS DE ESTADIA COMO TEMPORAL
+
+-- Function: sii.f_calculo_dias_estadia_temporales(timestamp with time zone, character varying)
+
+-- DROP FUNCTION sii.f_calculo_dias_estadia_temporales(timestamp with time zone, character varying);
+
+CREATE OR REPLACE FUNCTION sii.f_calculo_dias_estadia_temporales(in_fecha_ingreso timestamp with time zone, in_crper_codigo character varying)
+  RETURNS integer AS
+$BODY$
+DECLARE
+TMP_RECORD RECORD;
+TMP_VALOR_DIAS_TRANSCURRIDO INT;
+TMP_CRTST_CODIGO VARCHAR;
+TMP_SW BOOLEAN;
+TMP_FECHA_OLD DATE;
+BEGIN
+TMP_VALOR_DIAS_TRANSCURRIDO := 0;
+TMP_SW = FALSE;
+FOR TMP_RECORD IN (SELECT
+PER.CRPER_CODIGO,
+MOV.CRMOV_FECHA_VIAJE,
+MOV.CRMOV_TIPO_OPERACION,
+MOV.CRRSD_CODIGO
+FROM SII.CGG_RES_PERSONA PER 
+INNER JOIN SII.CGG_RES_MOVILIDAD MOV ON MOV.CRPER_CODIGO = PER.CRPER_CODIGO
+WHERE PER.CRPER_CODIGO = IN_CRPER_CODIGO AND MOV.CRMOV_ESTADO
+ORDER BY MOV.CRMOV_FECHA_VIAJE, MOV.CRMOV_TIPO_OPERACION ASC)
+LOOP
+SELECT CRTST_CODIGO INTO TMP_CRTST_CODIGO 
+FROM SII.CGG_RES_RESIDENCIA
+WHERE CRPER_CODIGO = TMP_RECORD.CRPER_CODIGO AND 
+CRRSD_CODIGO = TMP_RECORD.CRRSD_CODIGO AND 
+CRTST_CODIGO IN (WITH RECURSIVE TIPO(CRTST_CODIGO, CGG_CRTST_CODIGO, CRTST_DESCRIPCION)AS(
+SELECT CRTST_CODIGO, CGG_CRTST_CODIGO, CRTST_DESCRIPCION FROM CGG_RES_TIPO_SOLICITUD_TRAMITE WHERE (CRTST_CODIGO = (SELECT CGCNF_VALOR_CADENA
+FROM CGG_CONFIGURACION
+WHERE CGCNF_CODIGO = '04')) 
+UNION SELECT TST.CRTST_CODIGO, TST.CGG_CRTST_CODIGO, TP.CRTST_DESCRIPCION FROM CGG_RES_TIPO_SOLICITUD_TRAMITE TST, TIPO TP
+WHERE TST.CGG_CRTST_CODIGO = TP.CRTST_CODIGO
+) SELECT CRTST_CODIGO  FROM TIPO);
+IF (TMP_CRTST_CODIGO IS NOT NULL) THEN
+TMP_SW = (TMP_RECORD.CRMOV_TIPO_OPERACION = 0);
+IF (TMP_FECHA_OLD IS NOT NULL AND TMP_RECORD.CRMOV_TIPO_OPERACION = 1 ) THEN
+TMP_VALOR_DIAS_TRANSCURRIDO := TMP_VALOR_DIAS_TRANSCURRIDO + (TMP_RECORD.CRMOV_FECHA_VIAJE::DATE - TMP_FECHA_OLD) + 1;
+END IF;
+
+IF (TMP_RECORD.CRMOV_TIPO_OPERACION = 1 AND TMP_FECHA_OLD IS NULL) THEN
+SELECT CRMOV_FECHA_VIAJE INTO TMP_FECHA_OLD FROM SII.CGG_RES_MOVILIDAD 
+WHERE CRPER_CODIGO = TMP_RECORD.CRPER_CODIGO AND CRMOV_FECHA_VIAJE < TMP_RECORD.CRMOV_FECHA_VIAJE
+ORDER BY CRMOV_FECHA_VIAJE DESC LIMIT 1;
+TMP_VALOR_DIAS_TRANSCURRIDO := (TMP_RECORD.CRMOV_FECHA_VIAJE::DATE - TMP_FECHA_OLD) + 1;
+ELSE 
+TMP_FECHA_OLD = TMP_RECORD.CRMOV_FECHA_VIAJE::DATE;
+END IF;
+END IF;
+END LOOP;
+IF (TMP_CRTST_CODIGO IS NOT NULL AND TMP_SW) THEN
+TMP_VALOR_DIAS_TRANSCURRIDO := TMP_VALOR_DIAS_TRANSCURRIDO + (CURRENT_DATE - TMP_FECHA_OLD)+1;
+END IF;
+RETURN TMP_VALOR_DIAS_TRANSCURRIDO;
+END
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION sii.f_calculo_dias_estadia_temporales(timestamp with time zone, character varying)
+  OWNER TO postgres;
+
+-- FUNCIÓN QUE PARA VALIDAR EN NÚMERO DE DÍAS PERMITIDOS COMO TEMPORAL
+
+-- Function: sii.f_tiempo_estadia_temporal(character varying, character varying, character varying, character varying, character varying)
+
+-- DROP FUNCTION sii.f_tiempo_estadia_temporal(character varying, character varying, character varying, character varying, character varying);
+
+CREATE OR REPLACE FUNCTION sii.f_tiempo_estadia_temporal(in_crper_codigo character varying, in_fecha_ingreso character varying, in_fecha_salida character varying, in_operador character varying, in_valor_comparacion character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+	TMP_ESTADIA INT;
+        OUT_RESULTADO VARCHAR;
+        TMP_ESTADIA_TOTAL INT;
+        TMP_TIEMPO_RESTANTE INT;
+BEGIN
+	
+	SELECT SII.F_CALCULO_DIAS_ESTADIA_TEMPORALES(CURRENT_TIMESTAMP, IN_CRPER_CODIGO) INTO TMP_ESTADIA;
+
+	TMP_ESTADIA_TOTAL= (TMP_ESTADIA + (IN_FECHA_SALIDA::DATE - IN_FECHA_INGRESO::DATE));
+	
+	IF (TMP_ESTADIA = 0) THEN
+            OUT_RESULTADO := 'true';
+	ELSE
+	    SELECT SII.F_CGG_REGLA_VALIDACION(TMP_ESTADIA_TOTAL::VARCHAR,IN_OPERADOR,IN_VALOR_COMPARACION) INTO OUT_RESULTADO;
+	END IF;
+
+	  IF (OUT_RESULTADO='false') THEN
+	    TMP_TIEMPO_RESTANTE=730-TMP_ESTADIA;
+	    OUT_RESULTADO='FALSE, Solo cuenta con: ' || TMP_TIEMPO_RESTANTE || ' días como residente temporal';
+	    END IF;
+	
+	RETURN OUT_RESULTADO;
+END
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION sii.f_tiempo_estadia_temporal(character varying, character varying, character varying, character varying, character varying)
+  OWNER TO sii;
+
+-- INGRESO EL REGISTRO DE VALIDACIÓN DE TIEMPO COMO TEMPORAL EN LA TABLA REGLA_VALIDACION
+
+INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
+VALUES ('CRVAL58', null, 'Tiempo permitido en categoría de temporal', 'Verifica que el beneficiario no exceda el tiempo permitido en la categoría de temporal.', 'F_TIEMPO_ESTADIA_TEMPORAL', '<=', '730', 'TRUE', 'El beneficiario ha excedido el tiempo permitido como residente temporal', 1, '2011-04-09 00:00:00.000000', '2011-04-09 00:00:00.000000', null, null, true, '2011-04-09 23:37:50.901388', 'patricia', '2011-04-09 23:37:50.901388', 'patricia');
+
+-- FUNCIÓN QUE PARA VALIDAR EN NÚMERO DE DÍAS PERMITIDOS COMO TRANSEUNTE
+
+-- Function: sii.f_tiempo_estadia_transeunte(character varying, character varying, character varying, character varying, character varying)
+
+-- DROP FUNCTION sii.f_tiempo_estadia_transeunte(character varying, character varying, character varying, character varying, character varying);
+
+CREATE OR REPLACE FUNCTION sii.f_tiempo_estadia_transeunte(in_crper_codigo character varying, in_fecha_ingreso character varying, in_fecha_salida character varying, in_operador character varying, in_valor_comparacion character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+	TMP_ESTADIA INT;
+        OUT_RESULTADO VARCHAR;
+         TMP_ESTADIA_TOTAL INT;
+        TMP_TIEMPO_RESTANTE INT;
+BEGIN
+	
+	SELECT SII.F_CALCULO_DIAS_ESTADIA_TRANSEUNTE(CURRENT_TIMESTAMP, IN_CRPER_CODIGO) INTO TMP_ESTADIA;
+
+	TMP_ESTADIA_TOTAL= (TMP_ESTADIA + (IN_FECHA_SALIDA::DATE - IN_FECHA_INGRESO::DATE));
+	
+	IF (TMP_ESTADIA = 0) THEN
+            OUT_RESULTADO := 'true';
+	ELSE
+	    SELECT SII.F_CGG_REGLA_VALIDACION(TMP_ESTADIA_TOTAL::VARCHAR,IN_OPERADOR,IN_VALOR_COMPARACION) INTO OUT_RESULTADO;
+	END IF;
+
+	 IF (OUT_RESULTADO = 'false') THEN
+	    TMP_TIEMPO_RESTANTE=95-TMP_ESTADIA;
+	    OUT_RESULTADO='FALSE, Solo cuenta con: ' || TMP_TIEMPO_RESTANTE || ' días como transeunte';
+	 END IF;
+	
+	RETURN OUT_RESULTADO;
+END
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION sii.f_tiempo_estadia_transeunte(character varying, character varying, character varying, character varying, character varying)
+  OWNER TO sii;
+
+
+-- CAMBIO EN LA FUNCION f_cgg_res_residencia_generar (CAMBIO DE FECHA DE INICIO PARA TEMPORALES)
+
+-- Function: sii.f_cgg_res_residencia_generar(character varying, character varying, character varying)
+
+-- DROP FUNCTION sii.f_cgg_res_residencia_generar(character varying, character varying, character varying);
+
+CREATE OR REPLACE FUNCTION sii.f_cgg_res_residencia_generar(in_user_name character varying, in_crtra_codigo character varying, in_crseg_codigo character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+TMP_CRTST_CODIGO VARCHAR;
+TMP_PERMANENTE VARCHAR;
+TMP_TEMPORAL VARCHAR;
+TMP_TRANSEUNTE VARCHAR;
+TMP_IS_PERMANENTE BOOLEAN;
+TMP_IS_TEMPORAL BOOLEAN;
+TMP_IS_TRANSEUNTE BOOLEAN;
+--FECHA DE INGRESO
+TMP_CRTRA_FECHA_INGRESO TIMESTAMP WITH TIME ZONE;
+--CODIGO DE RESIDENCIA
+TMP_CRRSD_CODIGO VARCHAR;
+--CODIGO DE LA NUEVA RESIDENCIA
+TMP_NEW_CRRSD_CODIGO VARCHAR;
+--FECHA DE CADUCIDAD DE LA RESIDENCIA
+TMP_CRRSD_FECHA_CADUCIDAD TIMESTAMP WITH TIME ZONE;
+--CODIGO DEL AUSPICIANTE DEL TRAMITE
+TMP_CRPER_CODIGO VARCHAR;
+--MODALIDAD DE LA RESIDENCIA ACTUAL
+TMP_CRRSD_MODALIDAD INT;
+--NUMERO DE RESIDENCIA ACTUAL
+TMP_CRRSD_NUMERO INT;
+--CODIGO DEL BENEFICIARIO DEL TRAMITE
+TMP_CGG_CRPER_CODIGO VARCHAR;
+--DIAS DE AUTORIZACION DE PERMANENCIA DENTRO DE LA PROVINCIA
+TMP_DIAS_AUTORIZADOS INT;
+--FECHA DE CADUCIDAD DE LA AUTORIZACION DE PERMANENCIA DENTRO DE LA PROVINCIA
+TMP_FECHA_CADUCIDAD TIMESTAMP WITH TIME ZONE;
+--CODIGO DE LA RESOLUCION ASOCIADA AL TRAMITE
+TMP_CRRES_CODIGO VARCHAR;
+--ESTADO DE LA RESOLUCION ASOCIADA AL TRAMITE
+TMP_CRRES_ESTADO_RESOLUCION INT;
+--BUFFER PARA ALMANCENAR EL CODIGO ASIGNADO EN LA INSERCION DE UN NUEVO REGISTRO.
+TMP_CODIGO VARCHAR;
+--FECHA DE APROBACION DE LA RESOLUCION
+TMP_CRRES_FECHA_EMISION TIMESTAMP WITH TIME ZONE;
+--NUMERO DE RESIDENCIA MAXIMO
+TMP_MAX_RESIDENCIA INT;
+--INDICE DE LA ISLA DONDE SE PRESENTO EL TRAMITE
+TMP_CISLA_INDICE INT;
+--INDICE PARA TIPO DE SOLICITUD PERMANENTE
+TMP_INDICE_PERM INT;
+--INDICE DEL TIPO DE RESIDENCIA
+TMP_INDICE INT;
+--INDICE PARA TIPO DE SOLICITUD TEMPORAL
+TMP_INDICE_TEMP INT;
+--MODALIDAD DE LA RESIDENCIA PERMANENTE O TEMPORAL
+TMP_MODALIDAD INT;
+--REGISTRO DE TABLA DE SEGUIMIENTO
+TMP_RSGM RECORD;
+--ESTADO DEL TRAMITE
+TMP_CRETT_CODIGO VARCHAR;
+--SI EL TIPO DE SOLICITUD DEBE GENERAR TRANSEUNTE TEMPORAL
+TMP_APLICA_OTRO BOOLEAN;
+--OBTIENE EL ESTADO DE TRAMITE PARA CUANDO ESTA LISTO PARA TRATARSE EN COMITE
+TMP_ESTADO_COMITE VARCHAR;
+--SI LA RESIDENCIA TIENE UN TRAMITE PENDIENTE
+TMP_CRRSD_TRAMITE_PENDIENTE BOOLEAN;
+--REGISTRO DE FASE QUE ESTA CUMPLIENDO EL SEGUIMIENTO
+TMP_RFS RECORD;
+--ISLA DE PRESENTACION
+TMP_CISLA_CODIGO VARCHAR;
+--ISLA DE LA OBTENCION DE LA RESIDENCIA
+TMP_RSD_ISLA VARCHAR;
+--CODIGO DE LA TABLA RESOL_TRAMITE
+TMP_CRRST_CODIGO VARCHAR;
+BEGIN
+TMP_CRRSD_TRAMITE_PENDIENTE := FALSE;
+
+--OBTIENE EL REGISTRO DEL TABLA SEGUIMIENTO
+SELECT * INTO TMP_RSGM
+FROM SII.CGG_RES_SEGUIMIENTO
+WHERE CRSEG_CODIGO = IN_CRSEG_CODIGO AND
+CRTRA_CODIGO = IN_CRTRA_CODIGO;
+
+--OBTIENE LA FASE QUE ESTA CUMPLIENDO EL SEGUIMIENTO
+SELECT * INTO TMP_RFS
+FROM SII.CGG_RES_FASE
+WHERE CRFAS_CODIGO = TMP_RSGM.CRFAS_CODIGO;
+
+--OBTIENE EL TIPO DE SOLICITUD DEL TRAMITE
+SELECT TST.CRRES_CODIGO,
+TST.CRTST_CODIGO,
+TRM.CRPER_CODIGO,
+TRM.CGG_CRPER_CODIGO,
+TRM.CRTRA_DIAS_PERMANENCIA,
+TRM.CRTRA_FECHA_INGRESO,
+TRM.CRTRA_FECHA_SALIDA,
+SL.CISLA_INDICE,
+TRM.CRETT_CODIGO,
+TST.CRTST_APLICA_OTRO,
+TRM.CISLA_CODIGO
+INTO TMP_CRRES_CODIGO,
+TMP_CRTST_CODIGO,
+TMP_CRPER_CODIGO,
+TMP_CGG_CRPER_CODIGO,
+TMP_DIAS_AUTORIZADOS,
+TMP_CRTRA_FECHA_INGRESO,
+TMP_FECHA_CADUCIDAD,
+TMP_CISLA_INDICE,
+TMP_CRETT_CODIGO,
+TMP_APLICA_OTRO,
+TMP_CISLA_CODIGO
+FROM SII.CGG_RES_TRAMITE TRM
+INNER JOIN SII.CGG_ISLA SL ON SL.CISLA_CODIGO = TRM.CISLA_CODIGO AND SL.CISLA_ESTADO
+INNER JOIN SII.CGG_RES_TIPO_SOLICITUD_TRAMITE TST ON TST.CRTST_CODIGO = case when TRM.CHANGE_CRTST_CODIGO is null then TRM.CRTST_CODIGO else TRM.CHANGE_CRTST_CODIGO end AND TST.CRTST_ESTADO
+WHERE TRM.CRTRA_CODIGO = IN_CRTRA_CODIGO;
+
+SELECT CRRST_CODIGO INTO TMP_CRRST_CODIGO
+FROM SII.CGG_RES_RESOL_TRAMITE
+WHERE CRTRA_CODIGO = IN_CRTRA_CODIGO AND
+CRRST_ESTADO;
+
+IF (TMP_CRRES_CODIGO IS NOT NULL AND TMP_CRRST_CODIGO IS NULL) THEN
+SELECT SII.F_CGG_RES_RESOL_TRAMITE_INSERT(
+'KEYGEN'::VARCHAR,
+TMP_CRRES_CODIGO,
+IN_CRTRA_CODIGO,
+TRUE,
+IN_USER_NAME
+) INTO TMP_CODIGO;
+END IF;
+
+--OBTIENE INFORMACION DE LA RESOLUCION ASOCIADA AL TRAMITE
+SELECT RSL.CRRES_CODIGO,
+RSL.CRRES_ESTADO_RESOLUCION,
+RSL.CRRES_FECHA_EMISION
+INTO TMP_CRRES_CODIGO,
+TMP_CRRES_ESTADO_RESOLUCION,
+TMP_CRRES_FECHA_EMISION
+FROM SII.CGG_RES_RESOL_TRAMITE RST
+INNER JOIN SII.CGG_RES_RESOLUCION RSL ON RSL.CRRES_CODIGO = RST.CRRES_CODIGO AND RSL.CRRES_ESTADO
+WHERE RST.CRTRA_CODIGO = IN_CRTRA_CODIGO AND
+RST.CRRST_ESTADO;
+
+--SI LA RESIDENCIA SE APRUEBA CON RESOLUCION ANTERIOR, SE ESCOGE LA FECHA DE APROBACION DEL SEGUIMIENTO
+IF (TMP_CODIGO IS NOT NULL OR TMP_CRRES_CODIGO IS NULL) THEN
+SELECT CRSEG_FECHA_DESPACHO INTO TMP_CRRES_FECHA_EMISION
+FROM SII.CGG_RES_SEGUIMIENTO SGM
+WHERE SGM.CRTRA_CODIGO = IN_CRTRA_CODIGO AND
+SGM.CRSEG_ESTADO
+ORDER BY CRSEG_FECHA_DESPACHO DESC
+LIMIT 1;
+END IF;
+
+--OBTIENE EL TIPO DE SOLICITUD PADRE PARA RESIDENCIA PERMANENTE
+SELECT CGCNF_VALOR_CADENA INTO TMP_PERMANENTE
+FROM SII.CGG_CONFIGURACION
+WHERE CGCNF_CODIGO = '03';
+--OBTIENE EL INDICE DEL TIPO DE SOLICITUD DE TRAMITE PARA PERMANENTES
+SELECT CRTST_INDICE INTO TMP_INDICE_PERM
+FROM SII.CGG_RES_TIPO_SOLICITUD_TRAMITE
+WHERE CRTST_CODIGO = TMP_PERMANENTE;
+
+--OBTIENE EL TIPO DE SOLICITUD PADRE PARA RESIDENCIA TEMPORAL
+SELECT CGCNF_VALOR_CADENA INTO TMP_TEMPORAL
+FROM SII.CGG_CONFIGURACION
+WHERE CGCNF_CODIGO = '04';
+--OBTIENE EL INDICE DEL TIPO DE SOLICITUD DE TRAMITE PARA TEMPORALES
+SELECT CRTST_INDICE INTO TMP_INDICE_TEMP
+FROM SII.CGG_RES_TIPO_SOLICITUD_TRAMITE
+WHERE CRTST_CODIGO = TMP_TEMPORAL;
+
+--OBTIENE EL TIPO DE SOLICITUD PADRE PARA TRANSEUNTES
+SELECT CGCNF_VALOR_CADENA INTO TMP_TRANSEUNTE
+FROM SII.CGG_CONFIGURACION
+WHERE CGCNF_CODIGO = '05';
+
+--VERIFICA SI EL TIPO DE SOLICITUD DEL TRAMITE ES PARA RESIDENCIA PERMANENTE O TEMPORAL
+TMP_IS_PERMANENTE := SII.F_PARENT_OF(TMP_PERMANENTE, TMP_CRTST_CODIGO);
+TMP_IS_TEMPORAL := SII.F_PARENT_OF(TMP_TEMPORAL, TMP_CRTST_CODIGO);
+TMP_IS_TRANSEUNTE := SII.F_PARENT_OF(TMP_TRANSEUNTE, TMP_CRTST_CODIGO);
+
+--OBTIENE EL ESTADO DE TRAMITE QUE INDICA QUE EL TRAMITE ESTA LISTO PARA TRATARSE EN COMITE
+SELECT CGCNF_VALOR_CADENA INTO TMP_ESTADO_COMITE
+FROM SII.CGG_CONFIGURACION
+WHERE CGCNF_CODIGO = '01';
+
+IF (TMP_IS_TEMPORAL AND TMP_APLICA_OTRO AND (TMP_RFS.CRETT_CODIGO = TMP_ESTADO_COMITE OR TMP_RFS.CGG_CRETT_CODIGO = TMP_ESTADO_COMITE)) THEN
+TMP_IS_TEMPORAL = FALSE;
+TMP_IS_TRANSEUNTE = TRUE;
+TMP_CRTST_CODIGO := TMP_TRANSEUNTE;
+TMP_CRRSD_TRAMITE_PENDIENTE := TRUE;
+END IF;
+
+IF(NOT TMP_IS_PERMANENTE AND NOT TMP_IS_TEMPORAL AND NOT TMP_IS_TRANSEUNTE) THEN
+RETURN 'El tramite indicado no genera residencia para el beneficiario.';
+END IF;
+
+IF(TMP_IS_PERMANENTE)THEN
+TMP_MODALIDAD := 0;
+TMP_CRRSD_FECHA_CADUCIDAD := NULL;
+TMP_INDICE := TMP_INDICE_PERM;
+ELSIF(TMP_IS_TEMPORAL OR TMP_IS_TRANSEUNTE)THEN
+TMP_MODALIDAD := 1;
+TMP_INDICE := TMP_INDICE_TEMP;
+IF(TMP_DIAS_AUTORIZADOS <= 0 )THEN
+TMP_CRRSD_FECHA_CADUCIDAD := TMP_FECHA_CADUCIDAD::DATE;
+ELSE
+TMP_CRRSD_FECHA_CADUCIDAD := TMP_CRRES_FECHA_EMISION::DATE + TMP_DIAS_AUTORIZADOS;
+END IF;
+TMP_CRRSD_FECHA_CADUCIDAD := TMP_CRRSD_FECHA_CADUCIDAD + interval '23:59:00';
+END IF;
+
+--OBTIENE EL NUMERO DE RESIDENCIA MAXIMO DE ENTRE TODAS LAS RESIDENCIAS DE ACUERDO A LA MODALIDAD
+SELECT MAX(CRRSD_NUMERO) INTO TMP_MAX_RESIDENCIA
+FROM SII.CGG_RES_RESIDENCIA RSD
+WHERE CRRSD_MODALIDAD = TMP_MODALIDAD AND
+CISLA_CODIGO = TMP_CISLA_CODIGO AND
+CRRSD_ESTADO;
+
+IF (TMP_MAX_RESIDENCIA IS NULL) THEN
+TMP_MAX_RESIDENCIA := 0;
+END IF;
+
+IF (NOT TMP_IS_TRANSEUNTE) THEN
+TMP_MAX_RESIDENCIA := (TMP_MAX_RESIDENCIA + 1);
+ELSE
+TMP_CRRES_FECHA_EMISION := TMP_CRTRA_FECHA_INGRESO::DATE;
+TMP_MAX_RESIDENCIA := NULL;
+END IF;
+
+--SELECCIONA LA RESIDENCIA DE LA PERSONA QUE HAYA SIDO DE LA MISMA MODALIDAD DE LA NUEVA RESIDENCIA
+SELECT CRRSD_CODIGO, CRRSD_MODALIDAD
+INTO TMP_CRRSD_CODIGO, TMP_CRRSD_MODALIDAD
+FROM SII.CGG_RES_RESIDENCIA
+WHERE CRPER_CODIGO = TMP_CGG_CRPER_CODIGO AND
+CRTST_CODIGO IN (WITH RECURSIVE TIPO(CRTST_CODIGO, CGG_CRTST_CODIGO, CRTST_DESCRIPCION)AS(
+SELECT CRTST_CODIGO, CGG_CRTST_CODIGO, CRTST_DESCRIPCION FROM CGG_RES_TIPO_SOLICITUD_TRAMITE WHERE (CRTST_CODIGO = (SELECT CGCNF_VALOR_CADENA
+FROM CGG_CONFIGURACION
+WHERE CGCNF_CODIGO = '03') OR CRTST_CODIGO = (SELECT CGCNF_VALOR_CADENA
+FROM CGG_CONFIGURACION
+WHERE CGCNF_CODIGO = '04'))
+UNION SELECT TST.CRTST_CODIGO, TST.CGG_CRTST_CODIGO, TP.CRTST_DESCRIPCION FROM CGG_RES_TIPO_SOLICITUD_TRAMITE TST, TIPO TP
+WHERE TST.CGG_CRTST_CODIGO = TP.CRTST_CODIGO
+) SELECT CRTST_CODIGO  FROM TIPO) AND
+CRRSD_ESTADO
+ORDER BY CRRSD_FECHA_INICIO DESC LIMIT 1;
+IF (TMP_CRRSD_CODIGO IS NOT NULL AND NOT TMP_IS_TRANSEUNTE) THEN
+IF(TMP_CRRSD_MODALIDAD = TMP_MODALIDAD)THEN
+SELECT CRRSD_NUMERO, CISLA_CODIGO INTO TMP_CRRSD_NUMERO, TMP_RSD_ISLA
+FROM SII.CGG_RES_RESIDENCIA
+WHERE CRRSD_CODIGO = TMP_CRRSD_CODIGO;
+IF(TMP_CRRSD_NUMERO IS NOT NULL)THEN
+TMP_MAX_RESIDENCIA := TMP_CRRSD_NUMERO;
+TMP_CISLA_CODIGO := TMP_RSD_ISLA;
+SELECT CISLA_INDICE INTO TMP_CISLA_INDICE FROM SII.CGG_ISLA WHERE CISLA_CODIGO = TMP_CISLA_CODIGO;
+END IF;
+END IF;
+END IF;
+
+--SELECCIONA LA RESIDENCIA VIGENTE DEL BENEFICIARIO PARA CERRAR
+SELECT CRRSD_CODIGO INTO TMP_CRRSD_CODIGO
+FROM SII.CGG_RES_RESIDENCIA
+WHERE CRPER_CODIGO = TMP_CGG_CRPER_CODIGO AND
+CRRSD_VIGENTE AND
+CRRSD_ESTADO;
+IF (TMP_CRRSD_CODIGO IS NOT NULL AND CURRENT_DATE::DATE >= TMP_CRRES_FECHA_EMISION::DATE) THEN
+UPDATE SII.CGG_RES_RESIDENCIA SET CRRSD_VIGENTE = FALSE,
+--CRRSD_FECHA_CADUCIDAD = TMP_CRRES_FECHA_EMISION - interval '00:01:00',
+CRRSD_USUARIO_UPDATE = IN_USER_NAME,
+CRRSD_FECHA_UPDATE = CURRENT_TIMESTAMP
+WHERE CRRSD_CODIGO = TMP_CRRSD_CODIGO;
+END IF;
+
+--MO: ASIGNACIÓN DE LA FECHA DE INICIO INGRESADA POR USUARIO EXTERNO PARA TEMPORALES
+
+IF (TMP_IS_TEMPORAL) THEN
+TMP_CRRES_FECHA_EMISION := TMP_CRTRA_FECHA_INGRESO;
+END IF;
+
+--CREACION DE LA RESIDENCIA
+SELECT SII.F_CGG_RES_RESIDENCIA_INSERT(
+'KEYGEN'::VARCHAR,
+TMP_CGG_CRPER_CODIGO,
+TMP_CRTST_CODIGO,
+IN_CRTRA_CODIGO,
+NULL::VARCHAR,
+TMP_MAX_RESIDENCIA::INTEGER,
+TMP_MODALIDAD::SMALLINT,
+TMP_CRRES_FECHA_EMISION::TIMESTAMP WITH TIME ZONE,
+TMP_CRRSD_FECHA_CADUCIDAD::TIMESTAMP WITH TIME ZONE,
+FALSE,
+NULL::TIMESTAMP WITH TIME ZONE,
+NULL::VARCHAR,
+(TMP_CRRSD_CODIGO IS NULL OR CURRENT_DATE::DATE >= COALESCE(TMP_CRRES_FECHA_EMISION::DATE, CURRENT_DATE + 1) ), --VIGENTE
+TMP_CRRSD_TRAMITE_PENDIENTE,
+TRUE,
+IN_USER_NAME
+)INTO TMP_NEW_CRRSD_CODIGO;
+
+--ACTUALIZACION DE LA ISLA DE LA RESIDENCIA
+UPDATE SII.CGG_RES_RESIDENCIA SET CISLA_CODIGO = TMP_CISLA_CODIGO
+WHERE CRRSD_CODIGO = TMP_NEW_CRRSD_CODIGO;
+
+--ACTUALIZACION DEL NUMERO DE RESIDENCIA DE LA PERSONA
+IF (NOT TMP_IS_TRANSEUNTE) THEN
+UPDATE SII.CGG_RES_PERSONA SET
+CRPER_NUMERO_RESIDENCIA = TMP_CISLA_INDICE::VARCHAR||TMP_INDICE::VARCHAR||LPAD(TMP_MAX_RESIDENCIA::VARCHAR,5,'0'),
+CRPER_USUARIO_UPDATE = IN_USER_NAME,
+CRPER_FECHA_UPDATE = CURRENT_TIMESTAMP
+WHERE CRPER_CODIGO = TMP_CGG_CRPER_CODIGO;
+UPDATE SII.CGG_RES_RESIDENCIA SET
+CRRSD_NUMERO_RESIDENCIA = TMP_CISLA_INDICE::VARCHAR||TMP_INDICE::VARCHAR||LPAD(TMP_MAX_RESIDENCIA::VARCHAR,5,'0'),
+CRRSD_USUARIO_UPDATE = IN_USER_NAME,
+CRRSD_FECHA_UPDATE = CURRENT_TIMESTAMP
+WHERE CRPER_CODIGO = TMP_CGG_CRPER_CODIGO AND CRRSD_CODIGO = TMP_NEW_CRRSD_CODIGO;
+END IF;
+
+--CREA UN NUEVO USUARIO PARA EL RESIDENTE PERMANENTE
+IF (TMP_IS_PERMANENTE) THEN
+SELECT SII.F_CGG_RES_RESIDENCIA_USUARIO(IN_USER_NAME,TMP_CGG_CRPER_CODIGO,IN_CRTRA_CODIGO) INTO TMP_CODIGO;
+END IF;
+
+
+--CREA LOS REGISTRO DE SOPORTE SI LA PERSONA ESTA DENTRO DE LA PROVINCIA Y CAMBIA DE RESIDENCIA
+IF (CURRENT_DATE::DATE >= TMP_CRRES_FECHA_EMISION::DATE) THEN
+SELECT SII.F_CREAR_REGISTROS_SOPORTE(IN_USER_NAME,
+TMP_CGG_CRPER_CODIGO,
+TMP_NEW_CRRSD_CODIGO,
+TMP_CRRES_FECHA_EMISION,
+TMP_CRRSD_FECHA_CADUCIDAD,
+IN_CRTRA_CODIGO
+) INTO TMP_CODIGO;
+END IF;
+RETURN 'TRUE';
+END
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION sii.f_cgg_res_residencia_generar(character varying, character varying, character varying)
+  OWNER TO postgres;
+
+--TIPO TRAMITE COMBO
+
+INSERT INTO sii.cgg_tipo_tramite (crtt_codigo, crtt_nombre, crtt_estado) VALUES ('CRTT5', 'Primera Vez', true);
+INSERT INTO sii.cgg_tipo_tramite (crtt_codigo, crtt_nombre, crtt_estado) VALUES ('CRTT7', 'Revocatoria', true);
+INSERT INTO sii.cgg_tipo_tramite (crtt_codigo, crtt_nombre, crtt_estado) VALUES ('CRTT6', 'Renovación', true);
+
+update sii.cgg_tipo_tramite set crtt_estado = false where crtt_codigo='CRTT1' or crtt_codigo='CRTT2'
+
+-- RES TIPO TRAMITE
+
+INSERT INTO sii.cgg_res_tipo_tramite (crtpt_codigo, crtpt_nombre, crtpt_abreviatura, crtpt_indice, crtpt_observaciones, crtpt_estado, crtpt_fecha_insert, crtpt_usuario_insert, crtpt_fecha_update, crtpt_usuario_update) VALUES ('CRTPT3', 'Revocatoria', 'RVC', 3, 'Tramite para revocacion de residencia', true, null, null, null, null);
+ 
 
 
 --CREACIÓN DE PROCESO PARA SOLICITUD DE TRÁMITE
@@ -138,6 +962,7 @@ VALUES ('CRSRQ1949', 'CRREQ154', 'CRTST342', '', false, 0, true, '2016-06-15 18:
 ('CRSRQ1914', 'CRREQ153', 'CRTST342', '', false, 1, true, '2016-06-15 18:06:40.554242', 'patricia', '2016-08-18 10:35:50.434239', 'patricia'),
 ('CRSRQ1915', 'CRREQ154', 'CRTST342', '', false, 1, true, '2016-06-15 18:06:40.554242', 'patricia', '2016-08-18 10:35:50.434239', 'patricia');
 
+
 -- Reglas de tipo solicitud trámite (hijos padres permanentes)
 
 INSERT INTO sii.cgg_res_tipo_solicitud_regla (crtse_codigo, crtst_codigo, crval_codigo, crtse_campo_evaluacion, crtse_valor_1, crtse_estado, crtse_fecha_insert, crtse_usuario_insert, crtse_fecha_update, crtse_usuario_update, crtt_codigo) 
@@ -145,9 +970,8 @@ VALUES ('CRTSE1008', 'CRTST342', 'CRVAL52', '[{"com.bmlaurus.rule.HijoDelAuspici
 ('CRTSE1009', 'CRTST342', 'CRVAL5', '[{"IN_CRPER_CODIGO":"cggcrperCodigo"}]', null, true, '2016-08-08 08:52:45.581506', 'patricia', '2016-08-18 10:35:50.434239', 'patricia', ''),
 ('CRTSE827', 'CRTST342', 'CRVAL27', '[{"IN_CRPER_CODIGO":"crperCodigo"}]', null, true, '2016-06-15 14:28:44.010183', 'patricia', '2016-08-18 10:35:50.434239', 'patricia', ''),
 ('CRTSE881', 'CRTST342', 'CRVAL45', '[{"com.bmlaurus.rule.RegisteredIdentification":""}]', null, true, '2016-07-05 17:44:13.345270', 'patricia', '2016-08-18 10:35:50.434239', 'patricia', ''),
-('CRTSE880', 'CRTST342', 'CRVAL46', '[{"com.bmlaurus.rule.VoteCNE":""}]', null, true, '2016-07-05 17:44:13.345270', 'patricia', '2016-08-18 10:35:50.434239', 'patricia', '');
+('CRTSE880', 'CRTST342', 'CRVAL46', '[{"com.bmlaurus.rule.VoteCNE":""}]', null, true, '2016-07-05 17:44:13.345270', 'patricia', '2016-08-18 10:35:50.434239', 'patricia', ''),
 ('CRTSE847', 'CRTST342', 'CRVAL36', '[{"com.bmlaurus.rule.temporal.MinorChild":""}]', null, true, '2016-07-01 14:33:57.065120', 'patricia', '2016-08-18 10:35:50.434239', 'patricia', ''),
-('CRTSE997', 'CRTST342', 'CRVAL49', '[{"com.bmlaurus.rule.KindID":""}]', null, true, '2016-07-14 10:30:36.147490', 'is-admin', '2016-08-18 10:35:50.434239', 'patricia', '');
 ('CRTSE893', 'CRTST342', 'CRVAL48', '[{"com.bmlaurus.rule.VoteCNEBeneficiary":""}]', null, true, '2016-07-06 12:14:59.007136', 'patricia', '2016-08-18 10:35:50.434239', 'patricia', ''),
 ('CRTSE892', 'CRTST342', 'CRVAL47', '[{"com.bmlaurus.rule.RegisteredIdentificationBeneficiary":""}]', null, true, '2016-07-06 12:05:21.320789', 'patricia', '2016-08-18 10:35:50.434239', 'patricia', '');
 
@@ -184,6 +1008,11 @@ VALUES ('CRSRQ1951', 'CRREQ154', 'CRTST343', '', false, 0, true, '2016-06-16 09:
 ('CRSRQ1917', 'CRREQ156', 'CRTST343', '', false, 4, true, '2016-06-16 09:52:59.254548', 'patricia', '2016-08-18 10:36:35.342036', 'patricia');
 
 -- Reglas de tipo solicitud trámite (cónyuge residente permanente)
+
+INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) VALUES ('CRVAL30', null, 'Beneficiario casado con Auspiciante', 'Verifica si un beneficiario esta casado legalmente con el Auspiciante', 'com.bmlaurus.rule.DinardapMarriedValidator', '=', 'TRUE', 'TRUE', 'El beneficiario debe estar casado con el auspiciante para solicitar este trámite', 1, '2011-03-13 01:00:00.000000', '2011-03-13 01:00:00.000000', null, null, true, '2011-03-18 14:11:12.165745', 'patricia', '2011-05-26 10:44:52.184323', 'patricia');
+
+INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) VALUES ('CRVAL49', null, 'Tipo de Identificación', 'Verifica que el tipo de identificación sea cédula o pasaporte', 'com.bmlaurus.rule.KindID', '=', 'TRUE', 'TRUE', 'El tipo de identificación debe ser cédula o pasaporte', 1, '2011-03-13 01:00:00.000000', '2011-03-13 01:00:00.000000', null, null, true, '2011-03-18 14:11:12.165745', 'patricia', null, null);
+
 
 INSERT INTO sii.cgg_res_tipo_solicitud_regla (crtse_codigo, crtst_codigo, crval_codigo, crtse_campo_evaluacion, crtse_valor_1, crtse_estado, crtse_fecha_insert, crtse_usuario_insert, crtse_fecha_update, crtse_usuario_update, crtt_codigo) 
 VALUES ('CRTSE1011', 'CRTST343', 'CRVAL5', '[{"IN_CRPER_CODIGO":"cggcrperCodigo"}]', null, true, '2016-08-08 09:20:52.761730', 'patricia', '2016-08-18 10:36:35.342036', 'patricia', ''),
@@ -1317,9 +2146,16 @@ VALUES ('CJCRI359', 'CRFAS293', 'Revision de adjuntos', true, true, '2016-06-02 
 
 -- Creación de tipos de solicitud para revocatoria (tipo_solicitud_tramite)
 
+update sii.cgg_res_tipo_solicitud_tramite set cgg_crtst_codigo=null, crtpt_codigo='CRTPT1', crpro_codigo=null, crres_codigo=null, ckesp_codigo= null, 
+crtst_descripcion='Revocatoria Permanente/Temporal/Transeunte', crtst_observacion='Revocatoria de residencias', crtst_aplica_garantia=false, crtst_aplica_tramite=false,
+crtst_aplica_grupo=false, crtst_atencion_cliente=false, crtst_restringido=false, crtst_comunicado_radial=false, crtst_numero_dias= 0, crtst_vehiculo=false,
+crtst_unanimidad=false, crtst_aplica_otro=false, crtst_aplica_beneficiario=false, crtst_indice=1, crtst_estado=true, crtst_fecha_insert='2011-04-19 19:56:27.271017',
+crtst_usuario_insert='patricia', crtst_fecha_update='2016-07-25 19:31:28.980524', crtst_usuario_update='patricia', crtst_ingreso_web=null
+ where crtst_codigo='CRTST65';
+
 INSERT INTO sii.cgg_res_tipo_solicitud_tramite (crtst_codigo, cgg_crtst_codigo, crtpt_codigo, crpro_codigo, crres_codigo, ckesp_codigo, crtst_descripcion, crtst_observacion, crtst_aplica_garantia, crtst_aplica_tramite, crtst_aplica_grupo, crtst_atencion_cliente, crtst_restringido, crtst_comunicado_radial, crtst_numero_dias, crtst_vehiculo, crtst_unanimidad, crtst_aplica_otro, crtst_aplica_beneficiario, crtst_indice, crtst_estado, crtst_fecha_insert, crtst_usuario_insert, crtst_fecha_update, crtst_usuario_update, crtst_ingreso_web) 
-VALUES ('CRTST65', null, 'CRTPT1', null, null, null, 'Revocatoria Permanente/Temporal/Transeunte', 'Revocatoria de residencias', false, false, false, false, false, false, 0, false, false, false, false, 1, true, '2011-04-19 19:56:27.271017', 'patricia', '2016-07-25 19:31:28.980524', 'patricia', null),
-('CRTST351', 'CRTST65', 'CRTPT1', 'CRPRO92', null, null, 'Revocatoria Residencia 2016', 'Revocatoria de cualquier tipo de residencia que este vigente', false, true, false, true, true, false, 0, false, false, false, true, 0, true, '2016-07-26 09:59:59.526676', 'patricia', '2016-08-08 10:07:27.058129', 'patricia', null);
+VALUES ('CRTST351', 'CRTST65', 'CRTPT1', 'CRPRO92', null, null, 'Revocatoria Residencia 2016', 'Revocatoria de cualquier tipo de residencia que este vigente', false, true, false, true, true, false, 0, false, false, false, true, 0, true, '2016-07-26 09:59:59.526676', 'patricia', '2016-08-08 10:07:27.058129', 'patricia', null);
+
 
 -- Adjuntos (Revocatoria Residencia 2016)
 
@@ -1365,822 +2201,10 @@ VALUES ('ECMFL121', 'ECM42', 'identificacion', 'Identificación del beneficiario
 
 
 
-
--- REGLA ANULAR RESIDENCIA 2016
--- Function: sii.f_cgg_anular_residencia_2016(character varying, character varying)
--- DROP FUNCTION sii.f_cgg_anular_residencia_2016(character varying, character varying);
-
-CREATE OR REPLACE FUNCTION sii.f_cgg_anular_residencia_2016(in_crseg_codigo character varying, in_user_name character varying)
-  RETURNS numeric AS
-$BODY$
-DECLARE
-TMP_REF REFCURSOR;
-TMP_ROW RECORD;
-IN_CRPER_NUM_DOC_IDENTIFIC VARCHAR;
-TMP_CRTRA_CODIGO VARCHAR;
-BEGIN
-SELECT TRM.CRTRA_CODIGO INTO TMP_CRTRA_CODIGO
-	FROM SII.CGG_RES_TRAMITE TRM
-	INNER JOIN SII.CGG_RES_SEGUIMIENTO SGM ON SGM.CRTRA_CODIGO = TRM.CRTRA_CODIGO AND SGM.CRSEG_CODIGO = IN_CRSEG_CODIGO;	
-SELECT CRPER_NUM_DOC_IDENTIFIC INTO IN_CRPER_NUM_DOC_IDENTIFIC
-		FROM SII.CGG_RES_PERSONA PRS
-		WHERE PRS.CRPER_CODIGO = (SELECT CGG_CRPER_CODIGO FROM SII.CGG_RES_TRAMITE WHERE CRTRA_CODIGO = TMP_CRTRA_CODIGO);	
-FOR TMP_ROW IN
-SELECT
-R.CRRSD_CODIGO, 
-P.CRPER_CODIGO, 
-R.CRTST_CODIGO, 
-R.CRTRA_CODIGO, 
-R.CGG_CRTRA_CODIGO, 
-R.CRRSD_NUMERO, 
-R.CRRSD_MODALIDAD, 
-R.CRRSD_FECHA_INICIO, 
-R.CRRSD_FECHA_CADUCIDAD, 
-R.CRRSD_REVOCADA, 
-R.CRRSD_FECHA_REVOCATORIA, 
-R.CRRSD_MOTIVO_REVOCATORIA, 
-R.CRRSD_VIGENTE, 
-R.CRRSD_TRAMITE_PENDIENTE, 
-R.CRRSD_ESTADO, 
-R.CRRSD_FECHA_INSERT, 
-R.CRRSD_USUARIO_INSERT, 
-R.CRRSD_FECHA_UPDATE, 
-R.CRRSD_USUARIO_UPDATE
-FROM SII.CGG_RES_RESIDENCIA R 
-INNER JOIN SII.CGG_RES_PERSONA P ON (R.CRPER_CODIGO = P.CRPER_CODIGO)
-WHERE CRRSD_ESTADO AND 
-P.CRPER_NUM_DOC_IDENTIFIC = IN_CRPER_NUM_DOC_IDENTIFIC AND
-R.CRRSD_VIGENTE
-LOOP
-UPDATE SII.CGG_RES_RESIDENCIA SET 
-CRRSD_FECHA_UPDATE = CURRENT_TIMESTAMP,
-CRRSD_USUARIO_UPDATE = IN_USER_NAME,
-CRRSD_VIGENTE = FALSE, 
-CRRSD_FECHA_CADUCIDAD = CURRENT_DATE,
-CRRSD_MOTIVO_REVOCATORIA = NULL
-WHERE R.CRRSD_CODIGO = TMP_ROW.CRRSD_CODIGO;
-END LOOP;
-RETURN 1;
-END
-$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION sii.f_cgg_anular_residencia_2016(character varying, character varying)
-  OWNER TO postgres;
-
-
---REGLA TIEMPO ESTADIA TURISTA
--- Function: sii.f_tiempo_estadia_turista(character varying, character varying, character varying)
-
--- DROP FUNCTION sii.f_tiempo_estadia_turista(character varying, character varying, character varying);
-
-CREATE OR REPLACE FUNCTION sii.f_tiempo_estadia_turista(in_crper_codigo character varying, in_operador character varying, in_valor_comparacion character varying)
-  RETURNS character varying AS
-$BODY$
-DECLARE
-	TMP_ESTADIA INT;
-        OUT_RESULTADO VARCHAR;
-        FECHA_FINAL TIMESTAMP;
-        CTID_MOV TID;
-        OPERACION SMALLINT;
-        
-        
-BEGIN
-
-        SELECT  MAX (CRMOV_FECHA_VIAJE) INTO FECHA_FINAL FROM SII.CGG_RES_MOVILIDAD M WHERE M.CRPER_CODIGO=IN_CRPER_CODIGO;
-        SELECT MAX (CTID) INTO CTID_MOV FROM SII.CGG_RES_MOVILIDAD M WHERE M.CRPER_CODIGO=IN_CRPER_CODIGO AND M.CRMOV_FECHA_VIAJE=FECHA_FINAL;
-        SELECT M.CRMOV_TIPO_OPERACION INTO OPERACION FROM SII.CGG_RES_MOVILIDAD M WHERE CTID =CTID_MOV;
-
-        IF (OPERACION = 0) THEN 
-
-	SELECT SII.F_CALCULO_DIAS_ESTADIA_TURISTA(CURRENT_TIMESTAMP, IN_CRPER_CODIGO) INTO TMP_ESTADIA;
-	
-	IF (TMP_ESTADIA = 0) THEN
-            OUT_RESULTADO := 'true';
-	ELSE
-	    SELECT SII.F_CGG_REGLA_VALIDACION(TMP_ESTADIA::VARCHAR,IN_OPERADOR,IN_VALOR_COMPARACION) INTO OUT_RESULTADO;
-	END IF;
-
-	ELSE
-		OUT_RESULTADO := 'true';
-	END IF;
-	
-	RETURN OUT_RESULTADO;
-	
-END
-$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION sii.f_tiempo_estadia_turista(character varying, character varying, character varying)
-  OWNER TO sii;
-
-
---REGLA DE VALIDACIÓN DE BENEFICIARIO MAYOR DE EDAD (añadir a la tabla regla_validacion)
-
-
-INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
-VALUES ('CRVAL50', null, 'Hijo mayor de edad', 'Verifica que el beneficiario sea mayor de edad', 'com.bmlaurus.rule.temporal.MinorChild', '=', 'TRUE', 'FALSE', 'El beneficiario no es mayor de edad', 1, '2011-03-13 01:00:00.000000', '2011-03-13 01:00:00.000000', null, null, true, '2011-03-18 14:11:12.165745', 'patricia', null, null);
-
-
--- REGLA PARA VALIDAR SI LA FECHA DE CADUCIDAD DEL BENEFICIARIO ES IGUAL AL DEL REPRESENTANTE
-
--- Function: sii.f_comparacion_caducidad(character varying, character varying, character varying, character varying)
-
--- DROP FUNCTION sii.f_comparacion_caducidad(character varying, character varying, character varying, character varying);
-
-CREATE OR REPLACE FUNCTION sii.f_comparacion_caducidad(in_crper_codigo_rep character varying, in_fecha_cad_ben character varying, inoperador character varying, invalorcomparacion character varying)
-  RETURNS character varying AS
-$BODY$
-DECLARE	
-	TMP_RESULTADO VARCHAR;
-	TMP_FECHA_CAD_REP TIMESTAMP;
-	TMP_FECHA_INI_REP TIMESTAMP;
-BEGIN 
-
-	SELECT R.CRRSD_FECHA_CADUCIDAD INTO TMP_FECHA_CAD_REP FROM SII.CGG_RES_RESIDENCIA R WHERE R.CRPER_CODIGO=IN_CRPER_CODIGO_REP AND R.CRRSD_VIGENTE=TRUE;
-	SELECT R.CRRSD_FECHA_INICIO INTO TMP_FECHA_INI_REP FROM SII.CGG_RES_RESIDENCIA R WHERE R.CRPER_CODIGO=IN_CRPER_CODIGO_REP AND R.CRRSD_VIGENTE=TRUE;
-	
-	IF (TMP_FECHA_CAD_REP::date)>=TO_DATE(IN_FECHA_CAD_BEN,'DD/MM/YYYY') THEN
-	TMP_RESULTADO ='TRUE';
-	ELSE
-	TMP_RESULTADO ='FALSE,La fecha de entrada y salida del beneficiario debe estar entre el: '||to_char(TMP_FECHA_INI_REP,'DD/MM/YYYY')||' hasta el: '||to_char(TMP_FECHA_CAD_REP,'DD/MM/YYYY');
-	END IF;
-
-	RETURN TMP_RESULTADO;
-			
-END
-$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION sii.f_comparacion_caducidad(character varying, character varying, character varying, character varying)
-  OWNER TO postgres;
-
--- AÑADIR LA REGLA A LA TABLA REGLA_VALIDACION
-INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
-VALUES ('CRVAL51', null, 'Tener la misma fecha de caducidad que el representante', 'Verifica que el beneficiario tenga la misma fecha de caducidad que el representante', 'F_COMPARACION_CADUCIDAD', '=', 'TRUE', 'TRUE', 'El beneficiario debe tener la misma fecha de caducidad que el representante', 1, '2016-08-04 00:00:00.000000', '2016-08-04 00:00:00.000000', null, null, true, '2016-08-04 00:00:00.000000', 'patricia', '2016-08-04 00:00:00.000000', 'patricia');
-
-
---ACTUALIZACIÓN DE LA FUNCION CGG_USUARIO_COUNT
---DROP FUNCTION sii.f_cgg_usuario_count(text, character varying, character varying);
-
-CREATE OR REPLACE FUNCTION SII.F_CGG_USUARIO_COUNT(
-IN IN_FIND_TEXT TEXT,
-IN IN_CUSU_USUARIO_INTERNO VARCHAR,
-IN IN_CRPER_CODIGO VARCHAR
-)RETURNS NUMERIC AS
-$$
-DECLARE
-TMP_ROWS NUMERIC;
-BEGIN
-	SELECT COUNT(*) INTO TMP_ROWS
-	FROM SII.CGG_USUARIO US
-	LEFT JOIN SII.CGG_RES_PERSONA PRS ON PRS.CRPER_CODIGO = US.CRPER_CODIGO AND PRS.CRPER_ESTADO
-	WHERE CUSU_ESTADO AND 
-		(LENGTH(IN_CRPER_CODIGO) = 0 OR US.CRPER_CODIGO = IN_CRPER_CODIGO ) AND 
-		(IN_CUSU_USUARIO_INTERNO = '-1' OR CUSU_USUARIO_INTERNO = IN_CUSU_USUARIO_INTERNO::BOOLEAN) AND 
-		(LENGTH(IN_FIND_TEXT)=0 OR SII.F_STRING_IN(IN_FIND_TEXT, COALESCE(CUSU_NOMBRE_USUARIO,'')||' '||COALESCE(PRS.CRPER_NOMBRES,'')||' '||COALESCE(PRS.CRPER_APELLIDO_MATERNO,'')||' '||COALESCE(PRS.CRPER_APELLIDO_PATERNO,'') ) = 1);
-	RETURN TMP_ROWS;
-END
-$$
-LANGUAGE 'plpgsql' VOLATILE CALLED ON NULL INPUT;
-
--- AÑADIR REGLAS DE VALIDACION (HIJO DE AUSPICIANTE Y REPRESENTANTE) A LA TABLA REGLA_VALIDACION
-
-INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
-VALUES ('CRVAL53', null, 'Beneficiario hijo de respresentante', 'Verifica que el beneficiario sea hijo del representante', 'com.bmlaurus.rule.temporal.HijoDelRepresentante', '=', 'TRUE', 'TRUE', 'El beneficiario no es hijo del representante', 1, '2011-04-09 01:00:00.000000', '2011-04-09 02:00:00.000000', null, null, true, '2011-04-09 03:00:00.000000', 'patricia', '2011-04-09 04:00:00.000000', 'patricia');
-INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
-VALUES ('CRVAL52', null, 'Beneficiario hijo del Auspiciante', 'Verifica que el beneficiario sea hijo del auspiciante', 'com.bmlaurus.rule.HijoDelAuspiciante', '=', 'TRUE', 'TRUE', 'El beneficiario no es hijo del auspiciante', 1, '2011-04-09 00:00:00.000000', '2011-04-09 00:00:00.000000', null, null, true, '2011-04-09 00:00:00.000000', 'patricia', '2011-04-09 00:00:00.000000', 'patricia');
-
--- AÑADIR REGLA DE BENEFICIARIO CASADO CON REPRESENTANTE EN LA TABLA REGLA_VALIDACION
-INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
-VALUES ('CRVAL54', null, 'Beneficiario casado con representante', 'Verifica que el beneficiario este casado con el representante', 'com.bmlaurus.rule.DinardapMarriedValidatorRep', '=', 'TRUE', 'TRUE', 'El beneficiario no se encuentra casado con el representante', 1, '2011-04-09 06:00:00.000000', '2011-04-09 07:00:00.000000', null, null, true, '2011-04-09 08:00:00.000000', 'patricia', '2011-04-09 10:00:00.000000', 'patricia');
-
--- AÑADIR REGLA DE BENEFICIARIO PADRE DEL AUSPICIANTE EN LA TABLA REGLA_VALIDACION
-INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
-VALUES ('CRVAL55', null, 'Beneficiario padre del Auspiciante', 'Verifica que el beneficiario sea padre del auspiciante', 'com.bmlaurus.rule.temporal.PadreDelAuspiciante', '=', 'TRUE', 'TRUE', 'El beneficiario no es padre del auspciante', 1, '2011-04-08 19:00:00.000000', '2011-04-08 19:00:00.000000', null, null, true, '2011-04-08 20:00:00.000000', 'patricia', '2011-04-08 21:00:00.000000', 'patricia');
-
--- AÑADIR REGLA DE BENEFICIARIO PADRE DEL REPRESENTANTE EN LA TABLA REGLA_VALIDACION
-INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
-VALUES ('CRVAL56', null, 'Beneficiario padre del respresentante', 'Verifica que el beneficiario sea padre del representante', 'com.bmlaurus.rule.temporal.PadreDelRepresentante', '=', 'TRUE', 'TRUE', 'El beneficiario no es padre del representante', 1, '2011-04-09 00:00:00.000000', '2011-04-09 00:00:00.000000', null, null, true, '2011-04-09 00:00:00.000000', 'patricia', '2011-04-09 00:00:00.000000', 'patricia');
-
--- REGLA PARA NUMERO DE TRAMITES DE TIPO TRANSEUNTE
-
--- Function: sii.f_numero_tramite_transeunte(character varying, character varying, character varying, character varying)
-
--- DROP FUNCTION sii.f_numero_tramite_transeunte(character varying, character varying, character varying, character varying);
-
-CREATE OR REPLACE FUNCTION sii.f_numero_tramite_transeunte(in_crper_codigo character varying, in_crtra_codigo character varying, inoperador character varying, invalorcomparacion character varying)
-  RETURNS character varying AS
-$BODY$
-DECLARE
-CRETTCODIGO VARCHAR(20);
-TMP_CONTADOR NUMERIC;
-CRTSTCODIGO VARCHAR;
-OUT_RESULTADO VARCHAR;
-BEGIN
-select cgcnf_valor_cadena INTO CRTSTCODIGO from sii.cgg_configuracion where cgcnf_codigo='05';
-SELECT COALESCE(COUNT(CRTRA_CODIGO),0) INTO TMP_CONTADOR 
-FROM SII.CGG_RES_TRAMITE 
-WHERE CRETT_CODIGO NOT IN ( SELECT CGCNF_VALOR_CADENA FROM SII.CGG_CONFIGURACION WHERE CGCNF_CODIGO IN ('20','19','29') )
-AND SII.F_TIPO_SOLICITUD_PADRE(CRTST_CODIGO) = CRTSTCODIGO
-AND CGG_CRPER_CODIGO = IN_CRPER_CODIGO
-AND case when in_crtra_codigo = '' then 1=1 else crtra_codigo <> in_crtra_codigo end;
-
-SELECT SII.F_CGG_REGLA_VALIDACION(TMP_CONTADOR::VARCHAR,INOPERADOR,INVALORCOMPARACION) INTO OUT_RESULTADO;
-RETURN OUT_RESULTADO;
-END
-$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION sii.f_numero_tramite_transeunte(character varying, character varying, character varying, character varying)
-  OWNER TO postgres;
-
--- AÑADIR REGLA DE NUMERO DE TRAMITES TRANSEUNTE A LA TABLA DE REGLA_VALIDACION
-INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
-VALUES ('CRVAL57', null, 'Numero de tramites de tipo transeunte', 'Verifica que no tenga mas de un tramite ingresado como de tipo transeunte', 'F_NUMERO_TRAMITE_TRANSEUNTE', '=', '0', 'TRUE', 'Ya tiene un tramite pendiente como tipo transeunte', 1, '2011-04-09 00:00:00.000000', '2011-04-09 00:00:00.000000', null, null, true, '2011-04-09 00:00:00.000000', 'patricia', '2011-04-09 00:00:00.000000', 'patricia');
-
--- MODIFICACIÓN REGLA DE NUMERO DE TRAMITES PERMANENTES
-
--- Function: sii.f_numero_tramite_permanente(character varying, character varying, character varying, character varying)
-
--- DROP FUNCTION sii.f_numero_tramite_permanente(character varying, character varying, character varying, character varying);
-
-CREATE OR REPLACE FUNCTION sii.f_numero_tramite_permanente(in_crper_codigo character varying, in_crtra_codigo character varying, inoperador character varying, invalorcomparacion character varying)
-  RETURNS character varying AS
-$BODY$
-DECLARE
-CRETTCODIGO VARCHAR(20);
-TMP_CONTADOR NUMERIC;
-CRTSTCODIGO VARCHAR;
-OUT_RESULTADO VARCHAR;
-BEGIN
-select cgcnf_valor_cadena INTO CRTSTCODIGO from sii.cgg_configuracion where cgcnf_codigo='03';
-SELECT COALESCE(COUNT(CRTRA_CODIGO),0) INTO TMP_CONTADOR 
-FROM SII.CGG_RES_TRAMITE 
-WHERE CRETT_CODIGO NOT IN ( SELECT CGCNF_VALOR_CADENA FROM SII.CGG_CONFIGURACION WHERE CGCNF_CODIGO IN ('20','19','29') )
-AND SII.F_TIPO_SOLICITUD_PADRE(CRTST_CODIGO) = CRTSTCODIGO
-AND CGG_CRPER_CODIGO = IN_CRPER_CODIGO
-AND case when in_crtra_codigo = '' then 1=1 else crtra_codigo <> in_crtra_codigo end;
-
-SELECT SII.F_CGG_REGLA_VALIDACION(TMP_CONTADOR::VARCHAR,INOPERADOR,INVALORCOMPARACION) INTO OUT_RESULTADO;
-RETURN OUT_RESULTADO;
-END
-$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION sii.f_numero_tramite_permanente(character varying, character varying, character varying, character varying)
-  OWNER TO postgres;
-
---MODIFICACIÓN REGLA DE NUMERO DE TRÁMITES TEMPORALES
-
--- Function: sii.f_numero_tramite_temporal(character varying, character varying, character varying, character varying)
-
--- DROP FUNCTION sii.f_numero_tramite_temporal(character varying, character varying, character varying, character varying);
-
-CREATE OR REPLACE FUNCTION sii.f_numero_tramite_temporal(in_crper_codigo character varying, in_crtra_codigo character varying, inoperador character varying, invalorcomparacion character varying)
-  RETURNS character varying AS
-$BODY$
-DECLARE
-CRETTCODIGO VARCHAR(20);
-TMP_CONTADOR NUMERIC;
-CRTSTCODIGO VARCHAR;
-OUT_RESULTADO VARCHAR;
-BEGIN
-select cgcnf_valor_cadena INTO CRTSTCODIGO from sii.cgg_configuracion where cgcnf_codigo='04';
-SELECT COALESCE(COUNT(CRTRA_CODIGO),0) INTO TMP_CONTADOR 
-FROM SII.CGG_RES_TRAMITE 
-WHERE CRETT_CODIGO NOT IN ( SELECT CGCNF_VALOR_CADENA FROM SII.CGG_CONFIGURACION WHERE CGCNF_CODIGO IN ('20','19','29') )
-AND SII.F_TIPO_SOLICITUD_PADRE(CRTST_CODIGO) = CRTSTCODIGO
-AND CGG_CRPER_CODIGO = IN_CRPER_CODIGO
-AND case when in_crtra_codigo = '' then 1=1 else crtra_codigo <> in_crtra_codigo end ;
-
-SELECT SII.F_CGG_REGLA_VALIDACION(TMP_CONTADOR::VARCHAR,INOPERADOR,INVALORCOMPARACION) INTO OUT_RESULTADO;
-RETURN OUT_RESULTADO;
-END
-$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION sii.f_numero_tramite_temporal(character varying, character varying, character varying, character varying)
-  OWNER TO postgres;
-
-
---SCRIPT ISNUMERIC
-CREATE OR REPLACE FUNCTION isnumeric(text)
-  RETURNS boolean AS
-$BODY$
-DECLARE x NUMERIC;
-BEGIN
-    x = $1::NUMERIC;
-    RETURN TRUE;
-EXCEPTION WHEN others THEN
-    RETURN FALSE;
-END;
-$BODY$
-  LANGUAGE plpgsql IMMUTABLE STRICT
-  COST 100;
-
-
--- REGLA QUE CALCULA LOS DIAS DE ESTADIA COMO TEMPORAL
-
--- Function: sii.f_calculo_dias_estadia_temporales(timestamp with time zone, character varying)
-
--- DROP FUNCTION sii.f_calculo_dias_estadia_temporales(timestamp with time zone, character varying);
-
-CREATE OR REPLACE FUNCTION sii.f_calculo_dias_estadia_temporales(in_fecha_ingreso timestamp with time zone, in_crper_codigo character varying)
-  RETURNS integer AS
-$BODY$
-DECLARE
-TMP_RECORD RECORD;
-TMP_VALOR_DIAS_TRANSCURRIDO INT;
-TMP_CRTST_CODIGO VARCHAR;
-TMP_SW BOOLEAN;
-TMP_FECHA_OLD DATE;
-BEGIN
-TMP_VALOR_DIAS_TRANSCURRIDO := 0;
-TMP_SW = FALSE;
-FOR TMP_RECORD IN (SELECT
-PER.CRPER_CODIGO,
-MOV.CRMOV_FECHA_VIAJE,
-MOV.CRMOV_TIPO_OPERACION,
-MOV.CRRSD_CODIGO
-FROM SII.CGG_RES_PERSONA PER 
-INNER JOIN SII.CGG_RES_MOVILIDAD MOV ON MOV.CRPER_CODIGO = PER.CRPER_CODIGO
-WHERE PER.CRPER_CODIGO = IN_CRPER_CODIGO AND MOV.CRMOV_ESTADO
-ORDER BY MOV.CRMOV_FECHA_VIAJE, MOV.CRMOV_TIPO_OPERACION ASC)
-LOOP
-SELECT CRTST_CODIGO INTO TMP_CRTST_CODIGO 
-FROM SII.CGG_RES_RESIDENCIA
-WHERE CRPER_CODIGO = TMP_RECORD.CRPER_CODIGO AND 
-CRRSD_CODIGO = TMP_RECORD.CRRSD_CODIGO AND 
-CRTST_CODIGO IN (WITH RECURSIVE TIPO(CRTST_CODIGO, CGG_CRTST_CODIGO, CRTST_DESCRIPCION)AS(
-SELECT CRTST_CODIGO, CGG_CRTST_CODIGO, CRTST_DESCRIPCION FROM CGG_RES_TIPO_SOLICITUD_TRAMITE WHERE (CRTST_CODIGO = (SELECT CGCNF_VALOR_CADENA
-FROM CGG_CONFIGURACION
-WHERE CGCNF_CODIGO = '04')) 
-UNION SELECT TST.CRTST_CODIGO, TST.CGG_CRTST_CODIGO, TP.CRTST_DESCRIPCION FROM CGG_RES_TIPO_SOLICITUD_TRAMITE TST, TIPO TP
-WHERE TST.CGG_CRTST_CODIGO = TP.CRTST_CODIGO
-) SELECT CRTST_CODIGO  FROM TIPO);
-IF (TMP_CRTST_CODIGO IS NOT NULL) THEN
-TMP_SW = (TMP_RECORD.CRMOV_TIPO_OPERACION = 0);
-IF (TMP_FECHA_OLD IS NOT NULL AND TMP_RECORD.CRMOV_TIPO_OPERACION = 1 ) THEN
-TMP_VALOR_DIAS_TRANSCURRIDO := TMP_VALOR_DIAS_TRANSCURRIDO + (TMP_RECORD.CRMOV_FECHA_VIAJE::DATE - TMP_FECHA_OLD) + 1;
-END IF;
-
-IF (TMP_RECORD.CRMOV_TIPO_OPERACION = 1 AND TMP_FECHA_OLD IS NULL) THEN
-SELECT CRMOV_FECHA_VIAJE INTO TMP_FECHA_OLD FROM SII.CGG_RES_MOVILIDAD 
-WHERE CRPER_CODIGO = TMP_RECORD.CRPER_CODIGO AND CRMOV_FECHA_VIAJE < TMP_RECORD.CRMOV_FECHA_VIAJE
-ORDER BY CRMOV_FECHA_VIAJE DESC LIMIT 1;
-TMP_VALOR_DIAS_TRANSCURRIDO := (TMP_RECORD.CRMOV_FECHA_VIAJE::DATE - TMP_FECHA_OLD) + 1;
-ELSE 
-TMP_FECHA_OLD = TMP_RECORD.CRMOV_FECHA_VIAJE::DATE;
-END IF;
-END IF;
-END LOOP;
-IF (TMP_CRTST_CODIGO IS NOT NULL AND TMP_SW) THEN
-TMP_VALOR_DIAS_TRANSCURRIDO := TMP_VALOR_DIAS_TRANSCURRIDO + (CURRENT_DATE - TMP_FECHA_OLD)+1;
-END IF;
-RETURN TMP_VALOR_DIAS_TRANSCURRIDO;
-END
-$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION sii.f_calculo_dias_estadia_temporales(timestamp with time zone, character varying)
-  OWNER TO postgres;
-
--- FUNCIÓN QUE PARA VALIDAR EN NÚMERO DE DÍAS PERMITIDOS COMO TEMPORAL
-
--- Function: sii.f_tiempo_estadia_temporal(character varying, character varying, character varying, character varying, character varying)
-
--- DROP FUNCTION sii.f_tiempo_estadia_temporal(character varying, character varying, character varying, character varying, character varying);
-
-CREATE OR REPLACE FUNCTION sii.f_tiempo_estadia_temporal(in_crper_codigo character varying, in_fecha_ingreso character varying, in_fecha_salida character varying, in_operador character varying, in_valor_comparacion character varying)
-  RETURNS character varying AS
-$BODY$
-DECLARE
-	TMP_ESTADIA INT;
-        OUT_RESULTADO VARCHAR;
-        TMP_ESTADIA_TOTAL INT;
-        TMP_TIEMPO_RESTANTE INT;
-BEGIN
-	
-	SELECT SII.F_CALCULO_DIAS_ESTADIA_TEMPORALES(CURRENT_TIMESTAMP, IN_CRPER_CODIGO) INTO TMP_ESTADIA;
-
-	TMP_ESTADIA_TOTAL= (TMP_ESTADIA + (IN_FECHA_SALIDA::DATE - IN_FECHA_INGRESO::DATE));
-	
-	IF (TMP_ESTADIA = 0) THEN
-            OUT_RESULTADO := 'true';
-	ELSE
-	    SELECT SII.F_CGG_REGLA_VALIDACION(TMP_ESTADIA_TOTAL::VARCHAR,IN_OPERADOR,IN_VALOR_COMPARACION) INTO OUT_RESULTADO;
-	END IF;
-
-	  IF (OUT_RESULTADO='false') THEN
-	    TMP_TIEMPO_RESTANTE=730-TMP_ESTADIA;
-	    OUT_RESULTADO='FALSE, Solo cuenta con: ' || TMP_TIEMPO_RESTANTE || ' días como residente temporal';
-	    END IF;
-	
-	RETURN OUT_RESULTADO;
-END
-$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION sii.f_tiempo_estadia_temporal(character varying, character varying, character varying, character varying, character varying)
-  OWNER TO sii;
-
--- INGRESO EL REGISTRO DE VALIDACIÓN DE TIEMPO COMO TEMPORAL EN LA TABLA REGLA_VALIDACION
-
-INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
-VALUES ('CRVAL58', null, 'Tiempo permitido en categoría de temporal', 'Verifica que el beneficiario no exceda el tiempo permitido en la categoría de temporal.', 'F_TIEMPO_ESTADIA_TEMPORAL', '<=', '730', 'TRUE', 'El beneficiario ha excedido el tiempo permitido como residente temporal', 1, '2011-04-09 00:00:00.000000', '2011-04-09 00:00:00.000000', null, null, true, '2011-04-09 23:37:50.901388', 'patricia', '2011-04-09 23:37:50.901388', 'patricia');
-
--- FUNCIÓN QUE PARA VALIDAR EN NÚMERO DE DÍAS PERMITIDOS COMO TRANSEUNTE
-
--- Function: sii.f_tiempo_estadia_transeunte(character varying, character varying, character varying, character varying, character varying)
-
--- DROP FUNCTION sii.f_tiempo_estadia_transeunte(character varying, character varying, character varying, character varying, character varying);
-
-CREATE OR REPLACE FUNCTION sii.f_tiempo_estadia_transeunte(in_crper_codigo character varying, in_fecha_ingreso character varying, in_fecha_salida character varying, in_operador character varying, in_valor_comparacion character varying)
-  RETURNS character varying AS
-$BODY$
-DECLARE
-	TMP_ESTADIA INT;
-        OUT_RESULTADO VARCHAR;
-         TMP_ESTADIA_TOTAL INT;
-        TMP_TIEMPO_RESTANTE INT;
-BEGIN
-	
-	SELECT SII.F_CALCULO_DIAS_ESTADIA_TRANSEUNTE(CURRENT_TIMESTAMP, IN_CRPER_CODIGO) INTO TMP_ESTADIA;
-
-	TMP_ESTADIA_TOTAL= (TMP_ESTADIA + (IN_FECHA_SALIDA::DATE - IN_FECHA_INGRESO::DATE));
-	
-	IF (TMP_ESTADIA = 0) THEN
-            OUT_RESULTADO := 'true';
-	ELSE
-	    SELECT SII.F_CGG_REGLA_VALIDACION(TMP_ESTADIA_TOTAL::VARCHAR,IN_OPERADOR,IN_VALOR_COMPARACION) INTO OUT_RESULTADO;
-	END IF;
-
-	 IF (OUT_RESULTADO = 'false') THEN
-	    TMP_TIEMPO_RESTANTE=95-TMP_ESTADIA;
-	    OUT_RESULTADO='FALSE, Solo cuenta con: ' || TMP_TIEMPO_RESTANTE || ' días como transeunte';
-	 END IF;
-	
-	RETURN OUT_RESULTADO;
-END
-$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION sii.f_tiempo_estadia_transeunte(character varying, character varying, character varying, character varying, character varying)
-  OWNER TO sii;
-
-
--- CAMBIO EN LA FUNCION f_cgg_res_residencia_generar (CAMBIO DE FECHA DE INICIO PARA TEMPORALES)
-
--- Function: sii.f_cgg_res_residencia_generar(character varying, character varying, character varying)
-
--- DROP FUNCTION sii.f_cgg_res_residencia_generar(character varying, character varying, character varying);
-
-CREATE OR REPLACE FUNCTION sii.f_cgg_res_residencia_generar(in_user_name character varying, in_crtra_codigo character varying, in_crseg_codigo character varying)
-  RETURNS character varying AS
-$BODY$
-DECLARE
-TMP_CRTST_CODIGO VARCHAR;
-TMP_PERMANENTE VARCHAR;
-TMP_TEMPORAL VARCHAR;
-TMP_TRANSEUNTE VARCHAR;
-TMP_IS_PERMANENTE BOOLEAN;
-TMP_IS_TEMPORAL BOOLEAN;
-TMP_IS_TRANSEUNTE BOOLEAN;
---FECHA DE INGRESO
-TMP_CRTRA_FECHA_INGRESO TIMESTAMP WITH TIME ZONE;
---CODIGO DE RESIDENCIA
-TMP_CRRSD_CODIGO VARCHAR;
---CODIGO DE LA NUEVA RESIDENCIA
-TMP_NEW_CRRSD_CODIGO VARCHAR;
---FECHA DE CADUCIDAD DE LA RESIDENCIA
-TMP_CRRSD_FECHA_CADUCIDAD TIMESTAMP WITH TIME ZONE;
---CODIGO DEL AUSPICIANTE DEL TRAMITE
-TMP_CRPER_CODIGO VARCHAR;
---MODALIDAD DE LA RESIDENCIA ACTUAL
-TMP_CRRSD_MODALIDAD INT;
---NUMERO DE RESIDENCIA ACTUAL
-TMP_CRRSD_NUMERO INT;
---CODIGO DEL BENEFICIARIO DEL TRAMITE
-TMP_CGG_CRPER_CODIGO VARCHAR;
---DIAS DE AUTORIZACION DE PERMANENCIA DENTRO DE LA PROVINCIA
-TMP_DIAS_AUTORIZADOS INT;
---FECHA DE CADUCIDAD DE LA AUTORIZACION DE PERMANENCIA DENTRO DE LA PROVINCIA
-TMP_FECHA_CADUCIDAD TIMESTAMP WITH TIME ZONE;
---CODIGO DE LA RESOLUCION ASOCIADA AL TRAMITE
-TMP_CRRES_CODIGO VARCHAR;
---ESTADO DE LA RESOLUCION ASOCIADA AL TRAMITE
-TMP_CRRES_ESTADO_RESOLUCION INT;
---BUFFER PARA ALMANCENAR EL CODIGO ASIGNADO EN LA INSERCION DE UN NUEVO REGISTRO.
-TMP_CODIGO VARCHAR;
---FECHA DE APROBACION DE LA RESOLUCION
-TMP_CRRES_FECHA_EMISION TIMESTAMP WITH TIME ZONE;
---NUMERO DE RESIDENCIA MAXIMO
-TMP_MAX_RESIDENCIA INT;
---INDICE DE LA ISLA DONDE SE PRESENTO EL TRAMITE
-TMP_CISLA_INDICE INT;
---INDICE PARA TIPO DE SOLICITUD PERMANENTE
-TMP_INDICE_PERM INT;
---INDICE DEL TIPO DE RESIDENCIA
-TMP_INDICE INT;
---INDICE PARA TIPO DE SOLICITUD TEMPORAL
-TMP_INDICE_TEMP INT;
---MODALIDAD DE LA RESIDENCIA PERMANENTE O TEMPORAL
-TMP_MODALIDAD INT;
---REGISTRO DE TABLA DE SEGUIMIENTO
-TMP_RSGM RECORD;
---ESTADO DEL TRAMITE
-TMP_CRETT_CODIGO VARCHAR;
---SI EL TIPO DE SOLICITUD DEBE GENERAR TRANSEUNTE TEMPORAL
-TMP_APLICA_OTRO BOOLEAN;
---OBTIENE EL ESTADO DE TRAMITE PARA CUANDO ESTA LISTO PARA TRATARSE EN COMITE
-TMP_ESTADO_COMITE VARCHAR;
---SI LA RESIDENCIA TIENE UN TRAMITE PENDIENTE
-TMP_CRRSD_TRAMITE_PENDIENTE BOOLEAN;
---REGISTRO DE FASE QUE ESTA CUMPLIENDO EL SEGUIMIENTO
-TMP_RFS RECORD;
---ISLA DE PRESENTACION
-TMP_CISLA_CODIGO VARCHAR;
---ISLA DE LA OBTENCION DE LA RESIDENCIA
-TMP_RSD_ISLA VARCHAR;
---CODIGO DE LA TABLA RESOL_TRAMITE
-TMP_CRRST_CODIGO VARCHAR;
-BEGIN
-TMP_CRRSD_TRAMITE_PENDIENTE := FALSE;
-
---OBTIENE EL REGISTRO DEL TABLA SEGUIMIENTO
-SELECT * INTO TMP_RSGM
-FROM SII.CGG_RES_SEGUIMIENTO
-WHERE CRSEG_CODIGO = IN_CRSEG_CODIGO AND
-CRTRA_CODIGO = IN_CRTRA_CODIGO;
-
---OBTIENE LA FASE QUE ESTA CUMPLIENDO EL SEGUIMIENTO
-SELECT * INTO TMP_RFS
-FROM SII.CGG_RES_FASE
-WHERE CRFAS_CODIGO = TMP_RSGM.CRFAS_CODIGO;
-
---OBTIENE EL TIPO DE SOLICITUD DEL TRAMITE
-SELECT TST.CRRES_CODIGO,
-TST.CRTST_CODIGO,
-TRM.CRPER_CODIGO,
-TRM.CGG_CRPER_CODIGO,
-TRM.CRTRA_DIAS_PERMANENCIA,
-TRM.CRTRA_FECHA_INGRESO,
-TRM.CRTRA_FECHA_SALIDA,
-SL.CISLA_INDICE,
-TRM.CRETT_CODIGO,
-TST.CRTST_APLICA_OTRO,
-TRM.CISLA_CODIGO
-INTO TMP_CRRES_CODIGO,
-TMP_CRTST_CODIGO,
-TMP_CRPER_CODIGO,
-TMP_CGG_CRPER_CODIGO,
-TMP_DIAS_AUTORIZADOS,
-TMP_CRTRA_FECHA_INGRESO,
-TMP_FECHA_CADUCIDAD,
-TMP_CISLA_INDICE,
-TMP_CRETT_CODIGO,
-TMP_APLICA_OTRO,
-TMP_CISLA_CODIGO
-FROM SII.CGG_RES_TRAMITE TRM
-INNER JOIN SII.CGG_ISLA SL ON SL.CISLA_CODIGO = TRM.CISLA_CODIGO AND SL.CISLA_ESTADO
-INNER JOIN SII.CGG_RES_TIPO_SOLICITUD_TRAMITE TST ON TST.CRTST_CODIGO = case when TRM.CHANGE_CRTST_CODIGO is null then TRM.CRTST_CODIGO else TRM.CHANGE_CRTST_CODIGO end AND TST.CRTST_ESTADO
-WHERE TRM.CRTRA_CODIGO = IN_CRTRA_CODIGO;
-
-SELECT CRRST_CODIGO INTO TMP_CRRST_CODIGO
-FROM SII.CGG_RES_RESOL_TRAMITE
-WHERE CRTRA_CODIGO = IN_CRTRA_CODIGO AND
-CRRST_ESTADO;
-
-IF (TMP_CRRES_CODIGO IS NOT NULL AND TMP_CRRST_CODIGO IS NULL) THEN
-SELECT SII.F_CGG_RES_RESOL_TRAMITE_INSERT(
-'KEYGEN'::VARCHAR,
-TMP_CRRES_CODIGO,
-IN_CRTRA_CODIGO,
-TRUE,
-IN_USER_NAME
-) INTO TMP_CODIGO;
-END IF;
-
---OBTIENE INFORMACION DE LA RESOLUCION ASOCIADA AL TRAMITE
-SELECT RSL.CRRES_CODIGO,
-RSL.CRRES_ESTADO_RESOLUCION,
-RSL.CRRES_FECHA_EMISION
-INTO TMP_CRRES_CODIGO,
-TMP_CRRES_ESTADO_RESOLUCION,
-TMP_CRRES_FECHA_EMISION
-FROM SII.CGG_RES_RESOL_TRAMITE RST
-INNER JOIN SII.CGG_RES_RESOLUCION RSL ON RSL.CRRES_CODIGO = RST.CRRES_CODIGO AND RSL.CRRES_ESTADO
-WHERE RST.CRTRA_CODIGO = IN_CRTRA_CODIGO AND
-RST.CRRST_ESTADO;
-
---SI LA RESIDENCIA SE APRUEBA CON RESOLUCION ANTERIOR, SE ESCOGE LA FECHA DE APROBACION DEL SEGUIMIENTO
-IF (TMP_CODIGO IS NOT NULL OR TMP_CRRES_CODIGO IS NULL) THEN
-SELECT CRSEG_FECHA_DESPACHO INTO TMP_CRRES_FECHA_EMISION
-FROM SII.CGG_RES_SEGUIMIENTO SGM
-WHERE SGM.CRTRA_CODIGO = IN_CRTRA_CODIGO AND
-SGM.CRSEG_ESTADO
-ORDER BY CRSEG_FECHA_DESPACHO DESC
-LIMIT 1;
-END IF;
-
---OBTIENE EL TIPO DE SOLICITUD PADRE PARA RESIDENCIA PERMANENTE
-SELECT CGCNF_VALOR_CADENA INTO TMP_PERMANENTE
-FROM SII.CGG_CONFIGURACION
-WHERE CGCNF_CODIGO = '03';
---OBTIENE EL INDICE DEL TIPO DE SOLICITUD DE TRAMITE PARA PERMANENTES
-SELECT CRTST_INDICE INTO TMP_INDICE_PERM
-FROM SII.CGG_RES_TIPO_SOLICITUD_TRAMITE
-WHERE CRTST_CODIGO = TMP_PERMANENTE;
-
---OBTIENE EL TIPO DE SOLICITUD PADRE PARA RESIDENCIA TEMPORAL
-SELECT CGCNF_VALOR_CADENA INTO TMP_TEMPORAL
-FROM SII.CGG_CONFIGURACION
-WHERE CGCNF_CODIGO = '04';
---OBTIENE EL INDICE DEL TIPO DE SOLICITUD DE TRAMITE PARA TEMPORALES
-SELECT CRTST_INDICE INTO TMP_INDICE_TEMP
-FROM SII.CGG_RES_TIPO_SOLICITUD_TRAMITE
-WHERE CRTST_CODIGO = TMP_TEMPORAL;
-
---OBTIENE EL TIPO DE SOLICITUD PADRE PARA TRANSEUNTES
-SELECT CGCNF_VALOR_CADENA INTO TMP_TRANSEUNTE
-FROM SII.CGG_CONFIGURACION
-WHERE CGCNF_CODIGO = '05';
-
---VERIFICA SI EL TIPO DE SOLICITUD DEL TRAMITE ES PARA RESIDENCIA PERMANENTE O TEMPORAL
-TMP_IS_PERMANENTE := SII.F_PARENT_OF(TMP_PERMANENTE, TMP_CRTST_CODIGO);
-TMP_IS_TEMPORAL := SII.F_PARENT_OF(TMP_TEMPORAL, TMP_CRTST_CODIGO);
-TMP_IS_TRANSEUNTE := SII.F_PARENT_OF(TMP_TRANSEUNTE, TMP_CRTST_CODIGO);
-
---OBTIENE EL ESTADO DE TRAMITE QUE INDICA QUE EL TRAMITE ESTA LISTO PARA TRATARSE EN COMITE
-SELECT CGCNF_VALOR_CADENA INTO TMP_ESTADO_COMITE
-FROM SII.CGG_CONFIGURACION
-WHERE CGCNF_CODIGO = '01';
-
-IF (TMP_IS_TEMPORAL AND TMP_APLICA_OTRO AND (TMP_RFS.CRETT_CODIGO = TMP_ESTADO_COMITE OR TMP_RFS.CGG_CRETT_CODIGO = TMP_ESTADO_COMITE)) THEN
-TMP_IS_TEMPORAL = FALSE;
-TMP_IS_TRANSEUNTE = TRUE;
-TMP_CRTST_CODIGO := TMP_TRANSEUNTE;
-TMP_CRRSD_TRAMITE_PENDIENTE := TRUE;
-END IF;
-
-IF(NOT TMP_IS_PERMANENTE AND NOT TMP_IS_TEMPORAL AND NOT TMP_IS_TRANSEUNTE) THEN
-RETURN 'El tramite indicado no genera residencia para el beneficiario.';
-END IF;
-
-IF(TMP_IS_PERMANENTE)THEN
-TMP_MODALIDAD := 0;
-TMP_CRRSD_FECHA_CADUCIDAD := NULL;
-TMP_INDICE := TMP_INDICE_PERM;
-ELSIF(TMP_IS_TEMPORAL OR TMP_IS_TRANSEUNTE)THEN
-TMP_MODALIDAD := 1;
-TMP_INDICE := TMP_INDICE_TEMP;
-IF(TMP_DIAS_AUTORIZADOS <= 0 )THEN
-TMP_CRRSD_FECHA_CADUCIDAD := TMP_FECHA_CADUCIDAD::DATE;
-ELSE
-TMP_CRRSD_FECHA_CADUCIDAD := TMP_CRRES_FECHA_EMISION::DATE + TMP_DIAS_AUTORIZADOS;
-END IF;
-TMP_CRRSD_FECHA_CADUCIDAD := TMP_CRRSD_FECHA_CADUCIDAD + interval '23:59:00';
-END IF;
-
---OBTIENE EL NUMERO DE RESIDENCIA MAXIMO DE ENTRE TODAS LAS RESIDENCIAS DE ACUERDO A LA MODALIDAD
-SELECT MAX(CRRSD_NUMERO) INTO TMP_MAX_RESIDENCIA
-FROM SII.CGG_RES_RESIDENCIA RSD
-WHERE CRRSD_MODALIDAD = TMP_MODALIDAD AND
-CISLA_CODIGO = TMP_CISLA_CODIGO AND
-CRRSD_ESTADO;
-
-IF (TMP_MAX_RESIDENCIA IS NULL) THEN
-TMP_MAX_RESIDENCIA := 0;
-END IF;
-
-IF (NOT TMP_IS_TRANSEUNTE) THEN
-TMP_MAX_RESIDENCIA := (TMP_MAX_RESIDENCIA + 1);
-ELSE
-TMP_CRRES_FECHA_EMISION := TMP_CRTRA_FECHA_INGRESO::DATE;
-TMP_MAX_RESIDENCIA := NULL;
-END IF;
-
---SELECCIONA LA RESIDENCIA DE LA PERSONA QUE HAYA SIDO DE LA MISMA MODALIDAD DE LA NUEVA RESIDENCIA
-SELECT CRRSD_CODIGO, CRRSD_MODALIDAD
-INTO TMP_CRRSD_CODIGO, TMP_CRRSD_MODALIDAD
-FROM SII.CGG_RES_RESIDENCIA
-WHERE CRPER_CODIGO = TMP_CGG_CRPER_CODIGO AND
-CRTST_CODIGO IN (WITH RECURSIVE TIPO(CRTST_CODIGO, CGG_CRTST_CODIGO, CRTST_DESCRIPCION)AS(
-SELECT CRTST_CODIGO, CGG_CRTST_CODIGO, CRTST_DESCRIPCION FROM CGG_RES_TIPO_SOLICITUD_TRAMITE WHERE (CRTST_CODIGO = (SELECT CGCNF_VALOR_CADENA
-FROM CGG_CONFIGURACION
-WHERE CGCNF_CODIGO = '03') OR CRTST_CODIGO = (SELECT CGCNF_VALOR_CADENA
-FROM CGG_CONFIGURACION
-WHERE CGCNF_CODIGO = '04'))
-UNION SELECT TST.CRTST_CODIGO, TST.CGG_CRTST_CODIGO, TP.CRTST_DESCRIPCION FROM CGG_RES_TIPO_SOLICITUD_TRAMITE TST, TIPO TP
-WHERE TST.CGG_CRTST_CODIGO = TP.CRTST_CODIGO
-) SELECT CRTST_CODIGO  FROM TIPO) AND
-CRRSD_ESTADO
-ORDER BY CRRSD_FECHA_INICIO DESC LIMIT 1;
-IF (TMP_CRRSD_CODIGO IS NOT NULL AND NOT TMP_IS_TRANSEUNTE) THEN
-IF(TMP_CRRSD_MODALIDAD = TMP_MODALIDAD)THEN
-SELECT CRRSD_NUMERO, CISLA_CODIGO INTO TMP_CRRSD_NUMERO, TMP_RSD_ISLA
-FROM SII.CGG_RES_RESIDENCIA
-WHERE CRRSD_CODIGO = TMP_CRRSD_CODIGO;
-IF(TMP_CRRSD_NUMERO IS NOT NULL)THEN
-TMP_MAX_RESIDENCIA := TMP_CRRSD_NUMERO;
-TMP_CISLA_CODIGO := TMP_RSD_ISLA;
-SELECT CISLA_INDICE INTO TMP_CISLA_INDICE FROM SII.CGG_ISLA WHERE CISLA_CODIGO = TMP_CISLA_CODIGO;
-END IF;
-END IF;
-END IF;
-
---SELECCIONA LA RESIDENCIA VIGENTE DEL BENEFICIARIO PARA CERRAR
-SELECT CRRSD_CODIGO INTO TMP_CRRSD_CODIGO
-FROM SII.CGG_RES_RESIDENCIA
-WHERE CRPER_CODIGO = TMP_CGG_CRPER_CODIGO AND
-CRRSD_VIGENTE AND
-CRRSD_ESTADO;
-IF (TMP_CRRSD_CODIGO IS NOT NULL AND CURRENT_DATE::DATE >= TMP_CRRES_FECHA_EMISION::DATE) THEN
-UPDATE SII.CGG_RES_RESIDENCIA SET CRRSD_VIGENTE = FALSE,
---CRRSD_FECHA_CADUCIDAD = TMP_CRRES_FECHA_EMISION - interval '00:01:00',
-CRRSD_USUARIO_UPDATE = IN_USER_NAME,
-CRRSD_FECHA_UPDATE = CURRENT_TIMESTAMP
-WHERE CRRSD_CODIGO = TMP_CRRSD_CODIGO;
-END IF;
-
---MO: ASIGNACIÓN DE LA FECHA DE INICIO INGRESADA POR USUARIO EXTERNO PARA TEMPORALES
-
-IF (TMP_IS_TEMPORAL) THEN
-TMP_CRRES_FECHA_EMISION := TMP_CRTRA_FECHA_INGRESO;
-END IF;
-
---CREACION DE LA RESIDENCIA
-SELECT SII.F_CGG_RES_RESIDENCIA_INSERT(
-'KEYGEN'::VARCHAR,
-TMP_CGG_CRPER_CODIGO,
-TMP_CRTST_CODIGO,
-IN_CRTRA_CODIGO,
-NULL::VARCHAR,
-TMP_MAX_RESIDENCIA::INTEGER,
-TMP_MODALIDAD::SMALLINT,
-TMP_CRRES_FECHA_EMISION::TIMESTAMP WITH TIME ZONE,
-TMP_CRRSD_FECHA_CADUCIDAD::TIMESTAMP WITH TIME ZONE,
-FALSE,
-NULL::TIMESTAMP WITH TIME ZONE,
-NULL::VARCHAR,
-(TMP_CRRSD_CODIGO IS NULL OR CURRENT_DATE::DATE >= COALESCE(TMP_CRRES_FECHA_EMISION::DATE, CURRENT_DATE + 1) ), --VIGENTE
-TMP_CRRSD_TRAMITE_PENDIENTE,
-TRUE,
-IN_USER_NAME
-)INTO TMP_NEW_CRRSD_CODIGO;
-
---ACTUALIZACION DE LA ISLA DE LA RESIDENCIA
-UPDATE SII.CGG_RES_RESIDENCIA SET CISLA_CODIGO = TMP_CISLA_CODIGO
-WHERE CRRSD_CODIGO = TMP_NEW_CRRSD_CODIGO;
-
---ACTUALIZACION DEL NUMERO DE RESIDENCIA DE LA PERSONA
-IF (NOT TMP_IS_TRANSEUNTE) THEN
-UPDATE SII.CGG_RES_PERSONA SET
-CRPER_NUMERO_RESIDENCIA = TMP_CISLA_INDICE::VARCHAR||TMP_INDICE::VARCHAR||LPAD(TMP_MAX_RESIDENCIA::VARCHAR,5,'0'),
-CRPER_USUARIO_UPDATE = IN_USER_NAME,
-CRPER_FECHA_UPDATE = CURRENT_TIMESTAMP
-WHERE CRPER_CODIGO = TMP_CGG_CRPER_CODIGO;
-UPDATE SII.CGG_RES_RESIDENCIA SET
-CRRSD_NUMERO_RESIDENCIA = TMP_CISLA_INDICE::VARCHAR||TMP_INDICE::VARCHAR||LPAD(TMP_MAX_RESIDENCIA::VARCHAR,5,'0'),
-CRRSD_USUARIO_UPDATE = IN_USER_NAME,
-CRRSD_FECHA_UPDATE = CURRENT_TIMESTAMP
-WHERE CRPER_CODIGO = TMP_CGG_CRPER_CODIGO AND CRRSD_CODIGO = TMP_NEW_CRRSD_CODIGO;
-END IF;
-
---CREA UN NUEVO USUARIO PARA EL RESIDENTE PERMANENTE
-IF (TMP_IS_PERMANENTE) THEN
-SELECT SII.F_CGG_RES_RESIDENCIA_USUARIO(IN_USER_NAME,TMP_CGG_CRPER_CODIGO,IN_CRTRA_CODIGO) INTO TMP_CODIGO;
-END IF;
-
-
---CREA LOS REGISTRO DE SOPORTE SI LA PERSONA ESTA DENTRO DE LA PROVINCIA Y CAMBIA DE RESIDENCIA
-IF (CURRENT_DATE::DATE >= TMP_CRRES_FECHA_EMISION::DATE) THEN
-SELECT SII.F_CREAR_REGISTROS_SOPORTE(IN_USER_NAME,
-TMP_CGG_CRPER_CODIGO,
-TMP_NEW_CRRSD_CODIGO,
-TMP_CRRES_FECHA_EMISION,
-TMP_CRRSD_FECHA_CADUCIDAD,
-IN_CRTRA_CODIGO
-) INTO TMP_CODIGO;
-END IF;
-RETURN 'TRUE';
-END
-$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION sii.f_cgg_res_residencia_generar(character varying, character varying, character varying)
-  OWNER TO postgres;
-
---TIPO TRAMITE COMBO
-
-INSERT INTO sii.cgg_tipo_tramite (crtt_codigo, crtt_nombre, crtt_estado) VALUES ('CRTT5', 'Primera Vez', true);
-INSERT INTO sii.cgg_tipo_tramite (crtt_codigo, crtt_nombre, crtt_estado) VALUES ('CRTT7', 'Revocatoria', true);
-INSERT INTO sii.cgg_tipo_tramite (crtt_codigo, crtt_nombre, crtt_estado) VALUES ('CRTT6', 'Renovación', true);
-
-update sii.cgg_tipo_tramite set crtt_estado = false where crtt_codigo='CRTT1' or crtt_codigo='CRTT2'
-
--- RES TIPO TRAMITE
-
-INSERT INTO sii.cgg_res_tipo_tramite (crtpt_codigo, crtpt_nombre, crtpt_abreviatura, crtpt_indice, crtpt_observaciones, crtpt_estado, crtpt_fecha_insert, crtpt_usuario_insert, crtpt_fecha_update, crtpt_usuario_update) VALUES ('CRTPT3', 'Revocatoria', 'RVC', 3, 'Tramite para revocacion de residencia', true, null, null, null, null);
- 
+--> MIGRATION SCRIPT CONTROLLER <--
+INSERT INTO sii.cgg_migrationscript (mrgsp_codigo,mrgsp_fecha,mrgsp_usuario_insert,mrgsp_fecha_insert,mrgsp_usuario_update,mrgsp_fecha_update,
+	mrgsp_estado,mrgsp_developer,mrgsp_name,mrgsp_description,
+	mrgsp_releaseno,mrgsp_filename,mrgsp_isapply)
+VALUES(SII.F_KEYGEN('CGG_MIGRATIONSCRIPT','MRGSP_CODIGO','MRGSP'), current_timestamp,'ADMIN', current_timestamp,'ADMIN', current_timestamp,
+	true,'mortiz','Tipos de solicitudes','Configuración de todos los tipos de solicitudes',
+	'2.0','2016_08_23_scripts tramites.sql',true);
