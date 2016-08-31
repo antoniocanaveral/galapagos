@@ -975,6 +975,10 @@ VALUES ('CRTSE1008', 'CRTST342', 'CRVAL52', '[{"com.bmlaurus.rule.HijoDelAuspici
 ('CRTSE893', 'CRTST342', 'CRVAL48', '[{"com.bmlaurus.rule.VoteCNEBeneficiary":""}]', null, true, '2016-07-06 12:14:59.007136', 'patricia', '2016-08-18 10:35:50.434239', 'patricia', ''),
 ('CRTSE892', 'CRTST342', 'CRVAL47', '[{"com.bmlaurus.rule.RegisteredIdentificationBeneficiary":""}]', null, true, '2016-07-06 12:05:21.320789', 'patricia', '2016-08-18 10:35:50.434239', 'patricia', '');
 
+INSERT INTO sii.cgg_res_tipo_solicitud_regla (crtse_codigo, crtst_codigo, crval_codigo, crtse_campo_evaluacion, crtse_valor_1, crtse_estado, crtse_fecha_insert, crtse_usuario_insert, crtse_fecha_update, crtse_usuario_update, crtt_codigo)
+VALUES ('CRTSE1150', 'CRTST343', 'CRVAL11', '[{"IN_CRTRA_CODIGO":"valCrtraCodigo","IN_CRPER_CODIGO":"cggcrperCodigo"}]', null, true, '2016-08-18 10:36:35.342036', 'patricia', '2016-08-18 10:36:35.342036', 'patricia', '');
+
+
 -- Opciones (hijos de padres permanentes)
 INSERT INTO sii.cgg_res_tst_aplica (crtao_codigo, crtso_codigo, crtst_codigo, crtao_estado, crtao_fecha_insert, crtao_usuario_insert, crtao_fecha_update, crtao_usuario_update) 
 VALUES ('CRTAO890', 'CRTSO2', 'CRTST342', true, '2016-08-18 10:35:50.434239', 'patricia', '2016-08-18 10:35:50.434239', 'patricia'),
@@ -2199,7 +2203,33 @@ VALUES ('ECMFL121', 'ECM42', 'identificacion', 'Identificación del beneficiario
 ('ECMFL125', 'ECM42', 'respaldo', 'Documentación de Respaldo', 'D:sii:respaldo', 'alfpath.resolucion.path', true, true, 'patricia', 'patricia', true, true, false, null, null),
 ('ECMFL120', 'ECM42', 'informeResolucion', 'Resolucion', 'D:sii:respaldo', 'alfpath.resolucion.path', true, true, 'patricia', 'patricia', false, true, false, null, null);
 
+--TRUNCATE
+TRUNCATE cgg_buzon_correo;
+TRUNCATE cgg_sec_log
 
+--ISLA
+update cgg_isla set cisla_estado=false where cisla_nombre='Baltra' or cisla_nombre='Floreana'
+
+--DESHABILITAR TRIGGERS
+CREATE OR REPLACE FUNCTION fn_triggerall(DoEnable boolean) RETURNS integer AS
+$BODY$
+DECLARE
+mytables RECORD;
+BEGIN
+  FOR mytables IN SELECT relname FROM pg_class WHERE relhastriggers AND relname LIKE 'cgg%' AND NOT relname LIKE 'pg_%'
+  LOOP
+    IF DoEnable THEN
+      EXECUTE 'ALTER TABLE ' || mytables.relname || ' ENABLE TRIGGER ALL';
+    ELSE
+      EXECUTE 'ALTER TABLE ' || mytables.relname || ' DISABLE TRIGGER ALL';
+    END IF;
+  END LOOP;
+
+  RETURN 1;
+
+END;
+$BODY$
+LANGUAGE 'plpgsql' VOLATILE;
 
 --> MIGRATION SCRIPT CONTROLLER <--
 INSERT INTO sii.cgg_migrationscript (mrgsp_codigo,mrgsp_fecha,mrgsp_usuario_insert,mrgsp_fecha_insert,mrgsp_usuario_update,mrgsp_fecha_update,
