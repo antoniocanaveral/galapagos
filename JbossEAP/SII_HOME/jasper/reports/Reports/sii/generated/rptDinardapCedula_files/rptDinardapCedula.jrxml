@@ -69,11 +69,6 @@ net.sf.jasperreports.engine.util.JRImageLoader.getInstance(new SimpleJasperRepor
 				<textFieldExpression><![CDATA[$P{CEDULA_DATOS}!=null?(new org.json.JSONObject($P{CEDULA_DATOS})).getString("cedula"):""]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="285" y="229" width="130" height="20" forecolor="#006699" uuid="a81a700e-3ab8-4d41-8c6d-e8c42ba808bd"/>
-				<textElement verticalAlignment="Middle"/>
-				<text><![CDATA[SEXO]]></text>
-			</staticText>
-			<staticText>
 				<reportElement x="17" y="229" width="130" height="20" forecolor="#006699" uuid="7afdcbd6-a5d0-41ec-a24b-64f65cc63c19"/>
 				<textElement verticalAlignment="Middle"/>
 				<text><![CDATA[ESTADO CIVIL]]></text>
@@ -94,7 +89,7 @@ net.sf.jasperreports.engine.util.JRImageLoader.getInstance(new SimpleJasperRepor
 				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("fechaNacimiento")]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="147" y="229" width="125" height="20" uuid="a2210909-747e-4695-b20d-4d44d69d50ac"/>
+				<reportElement x="147" y="229" width="393" height="20" uuid="a2210909-747e-4695-b20d-4d44d69d50ac"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("estadoCivil")]]></textFieldExpression>
 			</textField>
@@ -102,11 +97,6 @@ net.sf.jasperreports.engine.util.JRImageLoader.getInstance(new SimpleJasperRepor
 				<reportElement x="415" y="199" width="125" height="20" uuid="12760fe1-68e0-4e8d-b733-294d429c3561"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("nacionalidad")]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="415" y="229" width="125" height="20" uuid="21c5aaac-0ba9-457c-950f-668fe049d00d"/>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[(new org.json.JSONObject($P{CEDULA_DATOS})).getString("genero")]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="17" y="279" width="255" height="20" uuid="0809a09a-0606-45a5-8502-1816474a37ac"/>
