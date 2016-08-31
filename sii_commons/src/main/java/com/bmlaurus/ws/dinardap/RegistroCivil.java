@@ -8,6 +8,7 @@ public class RegistroCivil extends DinardapService {
     private String cedula;
     private String nombre;
     private String genero;
+    private String sexo;
     private String fechaNacimiento;
     private String lugarNacimiento;
     private String nacionalidad;
@@ -47,9 +48,24 @@ public class RegistroCivil extends DinardapService {
         this.nombre = nombre;
     }
 
+    public String getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
+    }
+
     public String getGenero() {
-        return "UNDEFINED";
-        //return genero;
+        String _genero=null;
+        if(genero!=null)
+            _genero = genero;
+        else if(sexo!=null)
+            _genero = sexo;
+        else
+            _genero = "UNDEFINED";
+
+        return _genero;
     }
 
     public void setGenero(String genero) {
