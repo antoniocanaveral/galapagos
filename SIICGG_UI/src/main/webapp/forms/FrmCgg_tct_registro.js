@@ -273,6 +273,15 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
         width:240,
         value:0
     });
+
+    var numCtreg_numero_vuelo = new Ext.form.NumberField({
+        id:'numCtreg_numero_vuelo',
+        name:'numCtreg_numero_vuelo',
+        fieldLabel :'Vuelo',
+        editable:true,
+        allowBlank :false,
+        anchor:'98%'
+    });
     /**
      * Ext.form.DateField FECHA DE RESERVA DEL TCT
      */
@@ -446,7 +455,7 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
     var gsCgg_tct_tipo_hospedaje_reg = new Ext.data.Store({
         proxy:new Ext.ux.bsx.SoapProxy({
             url:URL_WS + "Cgg_tct_registro",
-            method:"selectHospedajeTct",
+            method:"selectMultipleHospedajeTct",
             pagin:false
         }),
         remoteSort:false,
@@ -1137,7 +1146,8 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
             {name:'CKESP_CODIGO'},
             {name:'CGG_CPAIS_CODIGO'},
             {name:'CRTRA_CODIGO'},
-            {name:'CRTRA_NUMERO'}
+            {name:'CRTRA_NUMERO'},
+            {name:'CRTRA_NUMERO_VUELO'}
         ]),
         baseParams:{
             inCtgtr_numero:"",
@@ -1275,6 +1285,7 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
                     param.add('inCgg_carpt_codigo', cbxCgg_carpt_codigo.getValue());
                     param.add('inCraln_codigo', cbxCraln_codigo.getValue());
                     param.add('inCtreg_numero', numCtreg_numero.getValue());
+                    param.add('inCtreg_numero_vuelo', numCtreg_numero_vuelo.getValue());
                     param.add('inCtreg_fecha_preregistro', dtCtreg_fecha_preregistro.getValue().format(TypeDateFormat.Custom));
                     param.add('inCtreg_fecha_ingreso', dtCtreg_fecha_ingreso.getValue().format(TypeDateFormat.Custom));
                     param.add('inCtreg_codigo_barras', numCtreg_codigo_barras.getValue());
@@ -1438,10 +1449,16 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
         height:180,
         items:[
             cbxCraln_codigo,
+            numCtreg_numero_vuelo,
             cbxCarpt_codigo,
             cbxCgg_carpt_codigo,
-            dtCtreg_fecha_ingreso,
-            dtCtreg_fecha_salida
+            {
+                xtype:'panel',
+                layout:'hbox',
+                //bodyStyle:'padding-right:5',
+                items:[{xtype:'label',text:'Estadia: ',  width:65, cls:'x-form-item'}, 
+                    dtCtreg_fecha_ingreso,{xtype:'label', style:{width: '60px',textAlign: 'center'}, text:' - ', cls:'x-form-item'},dtCtreg_fecha_salida]
+            }
         ],
         listeners:{
             collapse:function(inPanel) {
@@ -1488,13 +1505,13 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
         labelWidth :60,
         layout:'column',
         items:[{
-            columnWidth:.40,
+            columnWidth:.60,
             layout:'form',
             anchor:'100%',
             bodyStyle:'padding-right:5',
             items:[pnlfsAeropuerto]
         },{
-            columnWidth:.60,
+            columnWidth:.40,
             items:[pnlCgg_tct_actividad_hospedaje]
         }]
     });
@@ -1564,9 +1581,9 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
         winFrmCgg_tct_registro = new Ext.Window({
             id:'winFrmCgg_tct_registro',
             title:tituloCgg_tct_registro,
-            width:800,
+            width:1155,
             height:550,
-            minWidth:500,
+            minWidth:850,
             minimizable:true,
             maximizable:true,
             constrain:true,
@@ -1597,6 +1614,7 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
             cbxCraln_codigo.setValue(inRecordCgg_tct_registro.get('AEROLINEA'));
             txtCtgtr_codigo.setValue(inRecordCgg_tct_registro.get('CTGTR_CODIGO'));
             numCtreg_numero.setValue(inRecordCgg_tct_registro.get('CTREG_NUMERO'));
+            numCtreg_numero_vuelo.setValue(inRecordCgg_tct_registro.get('CTREG_NUMERO_VUELO'));
             dtCtreg_fecha_preregistro.setValue(truncDate(inRecordCgg_tct_registro.get('CTREG_FECHA_PREREGISTRO')));
             dtCtreg_fecha_ingreso.setValue(truncDate(inRecordCgg_tct_registro.get('CTREG_FECHA_INGRESO')));
             numCtreg_codigo_barras.setValue(inRecordCgg_tct_registro.get('CTGTR_NUMERO'));

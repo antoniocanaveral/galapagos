@@ -1006,6 +1006,34 @@ public class Cgg_tct_registro implements Serializable{
 		}
 		return outCgg_tct_persona;
 	}
+
+	public static ArrayList<HashMap<String,Object>> selectMultiHospedaje(
+			java.sql.Connection inConnection,
+			String inCtgtr_codigo
+
+	){
+		ArrayList<HashMap<String,Object>> outCgg_tct_persona = new ArrayList<HashMap<String,Object>>();
+		try{
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_TCT_REGISTRO_GRUPO_MULTI_HOSPEDAJE(?) }");
+			stmSelect.registerOutParameter(1, Types.OTHER);
+			stmSelect.setString(2, inCtgtr_codigo);
+			stmSelect.execute();
+			ResultSet results = (ResultSet) stmSelect.getObject(1);
+			int tmpColumnCount = results.getMetaData().getColumnCount();
+			while (results.next()) {
+				HashMap<String,Object> tmpObj = new HashMap<String,Object>();
+				for (int i = 1 ; i <= tmpColumnCount; i++)
+					if(results.getObject(i) != null)
+						tmpObj.put(results.getMetaData().getColumnName(i).toUpperCase(), results.getObject(i));
+				outCgg_tct_persona.add(tmpObj);
+			}
+			results.close();
+			stmSelect.close();
+		}catch(SQLException e){
+			com.besixplus.sii.db.SQLErrorHandler.errorHandler(e);
+		}
+		return outCgg_tct_persona;
+	}
 	/**
 	 * OBTIENE TODOS LOS REGISTROS DE LA TABLA Cgg_res_persona QUE CUMPLEN CON EL CRITERIO DE BUSQUEDA.
 	 * @param inConnection CONEXION A LA BASE DE DATOS.

@@ -2376,7 +2376,7 @@ public class Cgg_res_persona implements Serializable{
 		String outResult = "true";
 
 		try{
-			CallableStatement stmInsert = inConnection.prepareCall("{ ? = call sii.F_CGG_TCT_REGISTRO_PERSONA_INSERT(?, ?, ?, ?, ?, ?, ?,?::smallint,?,  ?, ?, ?) }");
+			CallableStatement stmInsert = inConnection.prepareCall("{ ? = call sii.F_CGG_TCT_REGISTRO_PERSONA_INSERT(?, ?, ?, ?, ?, ?, ?,?::smallint,?,  ?, ?, ?, ?) }");
 			stmInsert.registerOutParameter(1, java.sql.Types.VARCHAR);
 			stmInsert.setString(2, this.getCgg_res_persona().getCRPER_CODIGO());
 			stmInsert.setString(3, this.getCgg_res_persona().getCRDID_CODIGO());
@@ -2390,6 +2390,7 @@ public class Cgg_res_persona implements Serializable{
 			stmInsert.setBoolean(11, this.getCgg_res_persona().getCRPER_ESTADO());
 			stmInsert.setString(12, this.getCgg_res_persona().getCRPER_USUARIO_INSERT());
 			stmInsert.setString(13,this.getCgg_res_persona().getCRPER_USUARIO_UPDATE());
+			stmInsert.setBoolean(14,this.getCgg_res_persona().getCRPER_SEGUIMIENTO());
 			stmInsert.execute();
 			this.getCgg_res_persona().setCRPER_CODIGO(stmInsert.getString(1));
 			stmInsert.close();
@@ -2410,7 +2411,7 @@ public class Cgg_res_persona implements Serializable{
 	){
 		String outResult = "true";
 		try{
-			CallableStatement stmUpdate = inConnection.prepareCall("{ call sii.F_CGG_TCT_REGISTRO_PERSONA_UPDATE(?, ?, ?, ?, ?, ?, ?,?::smallint, ?, ?, ?) }");
+			CallableStatement stmUpdate = inConnection.prepareCall("{ call sii.F_CGG_TCT_REGISTRO_PERSONA_UPDATE(?, ?, ?, ?, ?, ?, ?,?::smallint, ?, ?, ?, ?) }");
 			stmUpdate.setString(1, this.getCgg_res_persona().getCRPER_CODIGO());
 			stmUpdate.setString(2, this.getCgg_res_persona().getCRDID_CODIGO());
 			stmUpdate.setString(3, this.getCgg_res_persona().getCGNCN_CODIGO());
@@ -2422,6 +2423,7 @@ public class Cgg_res_persona implements Serializable{
 			stmUpdate.setString(9, this.getCgg_res_persona().getCGG_CPAIS_CODIGO());
 			stmUpdate.setBoolean(10, this.getCgg_res_persona().getCRPER_ESTADO());
 			stmUpdate.setString(11,this.getCgg_res_persona().getCRPER_USUARIO_UPDATE());
+			stmUpdate.setBoolean(12,this.getCgg_res_persona().getCRPER_SEGUIMIENTO());
 			stmUpdate.executeUpdate();
 			stmUpdate.close();
 		}catch(SQLException e){

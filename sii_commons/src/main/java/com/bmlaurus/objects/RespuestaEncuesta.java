@@ -27,6 +27,7 @@ encres_codigo character varying PRIMARY KEY,
     private String codigoPregunta;
     private String codigoItem;
     private String codigoPreregistro;
+    private String codigoGrupo;
     private int valorNumerico;
     private String valorTexto;
     private boolean estado;
@@ -65,6 +66,14 @@ encres_codigo character varying PRIMARY KEY,
 
     public void setCodigoPreregistro(String codigoPreregistro) {
         this.codigoPreregistro = codigoPreregistro;
+    }
+
+    public String getCodigoGrupo() {
+        return codigoGrupo;
+    }
+
+    public void setCodigoGrupo(String codigoGrupo) {
+        this.codigoGrupo = codigoGrupo;
     }
 
     public int getValorNumerico() {

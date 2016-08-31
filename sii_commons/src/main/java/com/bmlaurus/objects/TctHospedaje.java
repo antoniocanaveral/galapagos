@@ -12,6 +12,7 @@ public class TctHospedaje implements Serializable {
 
     private String codigo;
     private String codigoPreregistro;
+    private String codigoGrupo;
     private String tipoHospedaje;
     private String codigoIsla;
     private String lugarHospedaje;
@@ -38,6 +39,14 @@ public class TctHospedaje implements Serializable {
 
     public void setCodigoPreregistro(String codigoPreregistro) {
         this.codigoPreregistro = codigoPreregistro;
+    }
+
+    public String getCodigoGrupo() {
+        return codigoGrupo;
+    }
+
+    public void setCodigoGrupo(String codigoGrupo) {
+        this.codigoGrupo = codigoGrupo;
     }
 
     public String getTipoHospedaje() {

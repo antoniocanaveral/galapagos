@@ -10,6 +10,7 @@ function FrmListadoCgg_res_movilidad(inDesktop){
     var descListadoCgg_res_movilidad='El formulario permite administrar la informaci\u00f3n del registro de ingreso de personas a la provincia';
 	var tmpUserSession = new UserSession();
 	var tmpNacionalidad= new Nacionalidad();
+    var isOperational = true;
 	
 	var gsCgg_tct_actividad = new Ext.data.Store({
         proxy:new Ext.ux.bsx.SoapProxy({
@@ -370,7 +371,8 @@ function FrmListadoCgg_res_movilidad(inDesktop){
             keyword:"",
             format:"JSON",
             start:0,
-            limit:RECORD_PAGE
+            limit:RECORD_PAGE,
+            operational:isOperational
         },
         groupField:'CRMOV_FECHA_VIAJE'
     });
@@ -402,6 +404,21 @@ function FrmListadoCgg_res_movilidad(inDesktop){
             new Ext.ux.bsx.SearchField({
                 store:gsCgg_res_movilidad,
                 width:200
+            }),'-', 'Solo Actuales : ',new Ext.form.Checkbox({
+                checked:true,
+                fieldLabel: 'Solo Registros Actuales',
+                listeners:{
+                    check:function(_this,_checked){
+                        isOperational = _checked;
+                        gsCgg_res_movilidad.reload({params:{
+                            keyword:"",
+                            format:"JSON",
+                            start:0,
+                            limit:RECORD_PAGE,
+                            operational:isOperational
+                        }});
+                    }
+                }
             })
         ],
         bbar:pgBarCgg_res_movilidad,

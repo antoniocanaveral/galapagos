@@ -95,10 +95,10 @@ public class EncuestaData {
                     String strSQL = "INSERT INTO cgg_enc_respuesta(\n" +
                             "            encres_codigo, encpr_codigo, encit_codigo, ctreg_codigo, encres_numval, \n" +
                             "            encres_txtval, encres_estado, encres_fecha_insert, encres_usuario_insert, \n" +
-                            "            encres_fecha_update, encres_usuario_update)\n" +
+                            "            encres_fecha_update, encres_usuario_update, ctgtr_codigo)\n" +
                             "    VALUES (?, ?, ?, ?, ?, \n" +
                             "            ?, ?, ?, ?, \n" +
-                            "            ?, ?)";
+                            "            ?, ?, ?)";
 
 
                     PreparedStatement statement;
@@ -115,6 +115,7 @@ public class EncuestaData {
                     statement.setString(9, respuesta.getUsuarioInsert());
                     statement.setDate(10, respuesta.getFechaUpdate());
                     statement.setString(11, respuesta.getUsuarioUpdate());
+                    statement.setString(12, respuesta.getCodigoGrupo());
 
                     statement.execute();
                     statement.close();

@@ -37,11 +37,11 @@ public class TctHospedajeData {
                     "            cthos_codigo, ctreg_codigo, cthos_tipo, cisla_codigo, cthos_lugar, \n" +
                     "            cthos_fechaingreso, cthos_fechasalida, cthos_reserva, cthos_estado, \n" +
                     "            cthos_fecha_insert, cthos_usuario_insert, cthos_fecha_update, \n" +
-                    "            cthos_usuario_update)\n" +
+                    "            cthos_usuario_update, ctgtr_codigo)\n" +
                     "    VALUES (?, ?, ?, ?, ?, \n" +
                     "            ?, ?, ?, ?, \n" +
                     "            ?, ?, ?, \n" +
-                    "            ?)";
+                    "            ?, ?)";
 
 
             PreparedStatement statement;
@@ -60,6 +60,7 @@ public class TctHospedajeData {
             statement.setString(11, hospedaje.getUsuarioInsert());
             statement.setDate(12, hospedaje.getFechaUpdate());
             statement.setString(13, hospedaje.getUsuarioUpdate());
+            statement.setString(14, hospedaje.getCodigoGrupo());
 
             statement.execute();
             statement.close();

@@ -1,12 +1,14 @@
 package com.besixplus.sii.ws;
 
-import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
+import com.besixplus.sii.db.ManagerConnection;
+import com.besixplus.sii.i18n.Messages;
+import com.besixplus.sii.objects.Cgg_res_persona;
+import com.besixplus.sii.objects.Cgg_tct_movilidad_actividad;
+import com.besixplus.sii.objects.Cgg_tct_movilidad_hospedaje;
+import com.besixplus.sii.objects.ServerResponse;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
@@ -21,17 +23,13 @@ import javax.xml.soap.SOAPFactory;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.besixplus.sii.db.ManagerConnection;
-import com.besixplus.sii.i18n.Messages;
-import com.besixplus.sii.objects.Cgg_res_persona;
-import com.besixplus.sii.objects.Cgg_tct_movilidad_actividad;
-import com.besixplus.sii.objects.Cgg_tct_movilidad_hospedaje;
-import com.besixplus.sii.objects.ServerResponse;
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 
 /**
  * CLASE Cgg_res_movilidad
@@ -437,7 +435,8 @@ public class Cgg_res_movilidad implements Serializable{
 			@WebParam(name="sort")String sort,
 			@WebParam(name="dir")String dir,
 			@WebParam(name="keyword")String keyword,
-			@WebParam(name="format")String format
+			@WebParam(name="format")String format,
+			@WebParam(name="operational") boolean inOperational
 	) throws SOAPException{
 		HttpServletRequest tmpRequest = (HttpServletRequest) wctx.getMessageContext().get(MessageContext.SERVLET_REQUEST);
 		ArrayList<HashMap<String,Object>> obj = null;
@@ -450,9 +449,9 @@ public class Cgg_res_movilidad implements Serializable{
 				con.close();
 				throw new SOAPFaultException(SOAPFactory.newInstance().createFault(myInfoMessages.getMessage("sii.seguridad.acceso.negado", null), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
 			}
-			tmpCount = com.besixplus.sii.db.Cgg_res_movilidad.selectIngresoCount(con, keyword);
+			tmpCount = com.besixplus.sii.db.Cgg_res_movilidad.selectIngresoCount(con, keyword, inOperational);
 			con.setAutoCommit(!ManagerConnection.isDeployed());
-			obj = com.besixplus.sii.db.Cgg_res_movilidad.selectAllIngreso(con, tmpRequest.getUserPrincipal().getName(), start, limit, sort, dir, keyword);
+			obj = com.besixplus.sii.db.Cgg_res_movilidad.selectAllIngreso(con, tmpRequest.getUserPrincipal().getName(), start, limit, sort, dir, keyword, inOperational);
 			tmpFormat = new com.besixplus.sii.misc.Formatter(format, obj);
 			outCadena = tmpFormat.getData();
 			con.close();
