@@ -150,7 +150,7 @@ function loadIngresoTCT(){
 					for (var j = 0; j < pregunta.items.length; j++) {
 						var cellItem = fila.insertCell();
 						cellItem.id = "itemEncuesta_" + i + "_" + j;
-						cellItem.itemId = ""+pregunta.items[j].codigo;
+						cellItem.itemId = ""+pregunta.items[j].codigo.toString()+"";
 						cellItem.rateYo = "rateYo_" + i + "_" + pregunta.items[j].codigo;
 						cellItem.innerHTML = "<div class='itemContainer'> <div class='itemRateYo' id='rateYo_" + i + "_" + pregunta.items[j].codigo + "'></div> <div class='itemTitle'>" + pregunta.items[j].descripcion + " </div></div>";
 						if ((j + 1) % colSize == 0) {//Es multiplo de colSize. Creamos otra fila debajo.
@@ -172,7 +172,7 @@ function loadIngresoTCT(){
 					for (var j = 0; j < pregunta.items.length; j++) {
 						var cellItem = fila.insertCell();
 						cellItem.id = "itemEncuesta_" + i + "_" + j;
-						cellItem.itemId = ""+pregunta.items[j].codigo;
+						cellItem.itemId = ""+pregunta.items[j].codigo.toString()+"";
 						cellItem.checkId = "check_" + i + "_" + j;
 						cellItem.innerHTML = "<div class='checkContainer'> <input type='checkbox' class='checkItem' id='check_" + i + "_" + j + "' value='"+pregunta.items[j].codigo+"'/> <div class='checkTitle'>" + pregunta.items[j].descripcion + " </div></div>";
 						if ((j + 1) % colSize == 0) {//Es multiplo de colSize. Creamos otra fila debajo.
@@ -242,14 +242,14 @@ function loadIngresoTCT(){
 								var col = fila.cells[j];
 								var check = document.getElementById(col.checkId);
 								if(check && check.checked)
-									objEncuesta.preguntas[pregunta].values.push({"code":col.itemId, "value":"true"});
+									objEncuesta.preguntas[pregunta].values.push({"code":""+check.value, "value":"true"});
 							}
 							break;
 						case "SCORE":
 							for(var j=0;j<fila.cells.length;j++){
 								var col = fila.cells[j];
 								if(jQuery("#"+col.rateYo).raty('score') &&  jQuery("#"+col.rateYo).raty('score') > 0){
-									objEncuesta.preguntas[pregunta].values.push({"code":col.itemId, "value":jQuery("#"+col.rateYo).raty('score')});
+									objEncuesta.preguntas[pregunta].values.push({"code":""+col.rateYo.toString().substring(col.rateYo.lastIndexOf("_")+1), "value":jQuery("#"+col.rateYo).raty('score')});
 								}
 							}
 							break;
@@ -824,7 +824,7 @@ function loadIngresoTCT(){
 					}
 					var tbodyEncuesta = tblEncuesta.tBodies[0];
 					totalFilas = tblEncuesta.rows.length;
-					for (var i=totalFilas-1;i>=1;i--) {
+					for (var i=totalFilas-1;i>=0;i--) {
 						tbodyEncuesta.removeChild(tblEncuesta.rows[i]);
 					}
 					//document.location = 'ingresoTCT.jsp';

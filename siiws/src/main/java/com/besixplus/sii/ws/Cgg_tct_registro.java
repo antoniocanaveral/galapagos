@@ -147,6 +147,7 @@ public class Cgg_tct_registro implements Serializable{
 					objPer.setCGG_CPAIS_CODIGO(personaJson.getJSONObject(i).getString("CGG_CPAIS_CODIGO"));
 					objPer.setCRPER_ESTADO(true);
 					objPer.setCRPER_USUARIO_UPDATE(usuarioName);
+					objPer.setCRPER_SEGUIMIENTO(false);
 					if(((org.json.JSONObject)personaJson.get(i)).getString("CRPER_CODIGO").trim().isEmpty()){
 						objPer.setCRPER_CODIGO("KEYGEN");
 						objPer.setCRPER_USUARIO_INSERT(usuarioName);
@@ -234,6 +235,7 @@ public class Cgg_tct_registro implements Serializable{
 								for (TctHospedaje hospedaje : hospedajes) {
 
 									hospedaje.setCodigoPreregistro(obj.getCTREG_CODIGO());
+									hospedaje.setCodigoGrupo(objGrupTuris.getCTGTR_CODIGO());
 									hospedaje.setUsuarioInsert(usuarioName);
 									hospedaje.setUsuarioUpdate(usuarioName);
 
@@ -260,7 +262,7 @@ public class Cgg_tct_registro implements Serializable{
 											if(pregunta_code.equals("ENCPR1")){
 												com.besixplus.sii.objects.Cgg_tct_grupo_actividad grupoActividad = new Cgg_tct_grupo_actividad();
 												grupoActividad.setCTGTR_CODIGO(objGrupTuris.getCTGTR_CODIGO());
-												grupoActividad.setCTACT_CODIGO(val.get("value").toString());
+												grupoActividad.setCTACT_CODIGO(val.get("code").toString());
 												grupoActividad.setCTGAC_CODIGO("KEYGEN");
 												grupoActividad.setCTGAC_ESTADO(true);
 												grupoActividad.setCTGAC_USUARIO_INSERT(usuarioName);
@@ -273,6 +275,7 @@ public class Cgg_tct_registro implements Serializable{
 											respuesta.setCodigoPregunta(pregunta_code);
 											respuesta.setCodigoItem(item_code);
 											respuesta.setCodigoPreregistro(obj.getCTREG_CODIGO());
+											respuesta.setCodigoGrupo(objGrupTuris.getCTGTR_CODIGO());
 											if(value instanceof Integer || value instanceof Long || value instanceof Double) {
 												respuesta.setValorTexto(null);
 												if(value instanceof Double)
@@ -387,13 +390,13 @@ public class Cgg_tct_registro implements Serializable{
 			@WebParam(name="inCgg_carpt_codigo")String inCgg_carpt_codigo,
 			@WebParam(name="inCraln_codigo")String inCraln_codigo,
 			@WebParam(name="inCtreg_numero")String inCtreg_numero,
+			@WebParam(name="inCtreg_numero_vuelo")String inCtreg_numero_vuelo,
 			@WebParam(name="inCtreg_fecha_preregistro")java.util.Date inCtreg_fecha_preregistro,
 			@WebParam(name="inCtreg_fecha_ingreso")java.util.Date inCtreg_fecha_ingreso,		
 			@WebParam(name="inCtreg_codigo_barras")String inCtreg_codigo_barras,
 			@WebParam(name="inCtreg_fecha_salida")java.util.Date inCtreg_fecha_salida,
 			@WebParam(name="inCtreg_categoria")String inCtreg_categoria,
 			@WebParam(name="inCtreg_tipo_registro")String inCtreg_tipo_registro,
-			@WebParam(name="inCtreg_vuelo")String inCtreg_vuelo,
 			@WebParam(name="inCtreg_tipo_hospedaje")String inCtreg_tipo_hospedaje,
 			@WebParam(name="inCtreg_isla_hospedaje")String inCtreg_isla_hospedaje,
 			@WebParam(name="inCtreg_nombre_crucero")String inCtreg_nombre_crucero,
@@ -466,7 +469,8 @@ public class Cgg_tct_registro implements Serializable{
 					objPer.setCRPER_GENERO(personaJson.getJSONObject(i).getInt("CRPER_GENERO"));
 					objPer.setCGG_CPAIS_CODIGO(personaJson.getJSONObject(i).getString("CGG_CPAIS_CODIGO"));
 					objPer.setCRPER_ESTADO(true);					
-					objPer.setCRPER_USUARIO_UPDATE(usuarioName);					
+					objPer.setCRPER_USUARIO_UPDATE(usuarioName);
+					objPer.setCRPER_SEGUIMIENTO(false);
 					if(((org.json.JSONObject)personaJson.get(i)).getString("CRPER_CODIGO").trim().isEmpty()){
 						objPer.setCRPER_CODIGO("KEYGEN");
 						objPer.setCRPER_USUARIO_INSERT(usuarioName);
@@ -497,7 +501,7 @@ public class Cgg_tct_registro implements Serializable{
 						obj.setCTREG_USUARIO_UPDATE(usuarioName);
 						obj.setCTREG_CATEGORIA(inCtreg_categoria); 
 						obj.setCTREG_TIPO_REGISTRO(inCtreg_tipo_registro);
-						obj.setCTREG_NUMERO_VUELO(inCtreg_vuelo);
+						obj.setCTREG_NUMERO_VUELO(inCtreg_numero_vuelo);
 						obj.setCTREG_TIPO_HOSPEDAJE(inCtreg_tipo_hospedaje);
 						obj.setCTREG_ISLA_HOSPEDAJE(inCtreg_isla_hospedaje);
 						obj.setCTREG_NOMBRE_HOSPEDAJE_CRUCERO(inCtreg_nombre_crucero); 
@@ -848,6 +852,7 @@ public class Cgg_tct_registro implements Serializable{
 			@WebParam(name="inCgg_carpt_codigo")String inCgg_carpt_codigo,
 			@WebParam(name="inCraln_codigo")String inCraln_codigo,
 			@WebParam(name="inCtreg_numero")String inCtreg_numero,
+			@WebParam(name="inCtreg_numero_vuelo")String inCtreg_numero_vuelo,
 			@WebParam(name="inCtreg_fecha_preregistro")java.util.Date inCtreg_fecha_preregistro,
 			@WebParam(name="inCtreg_fecha_ingreso")java.util.Date inCtreg_fecha_ingreso,		
 			@WebParam(name="inCtreg_codigo_barras")String inCtreg_codigo_barras,
@@ -924,6 +929,7 @@ public class Cgg_tct_registro implements Serializable{
 					objPer.setCRPER_APELLIDO_PATERNO(personaJson.getJSONObject(i).getString("CRPER_APELLIDO_PATERNO"));
 					objPer.setCRPER_GENERO(personaJson.getJSONObject(i).getInt("CRPER_GENERO"));
 					objPer.setCGNCN_CODIGO(personaJson.getJSONObject(i).getString("CGNCN_CODIGO"));
+					objPer.setCRPER_SEGUIMIENTO(personaJson.getJSONObject(i).getBoolean("CRPER_SEGUIMIENTO"));
 					objPer.setCRPER_FECHA_NACIMIENTO(Timestamp.valueOf(personaJson.getJSONObject(i).getString("CRPER_FECHA_NACIMIENTO").replace("T", " ")));
 					objPer.setCGG_CPAIS_CODIGO(personaJson.getJSONObject(i).getString("CGG_CPAIS_CODIGO"));
 					objPer.setCRPER_ESTADO(true);					
@@ -954,6 +960,7 @@ public class Cgg_tct_registro implements Serializable{
 						obj.setCTREG_CODIGO_BARRAS(numeroGrupo+numRegistro);			
 						obj.setCTREG_FECHA_SALIDA(inCtreg_fecha_salida);
 						obj.setCTREG_ESTADO_REGISTRO(0);
+						obj.setCTREG_NUMERO_VUELO(inCtreg_numero_vuelo);
 						obj.setCTREG_OBSERVACION(personaJson.getJSONObject(i).getString("CTREG_OBSERVACION"));
 						obj.setCTREG_ESTADO(true);
 						obj.setCTREG_USUARIO_INSERT(tmpRequest.getUserPrincipal().getName());
@@ -1266,6 +1273,37 @@ public class Cgg_tct_registro implements Serializable{
 			return tmpFormat.getData().toString();
 		return null;
 	}
+
+
+	@WebMethod
+	public String selectMultipleHospedajeTct(
+			@WebParam(name="inCtgtr_codigo")String inCtgtr_codigo,
+			@WebParam(name="format")String format
+	) throws SOAPException{
+		HttpServletRequest tmpRequest = (HttpServletRequest) wctx.getMessageContext().get(MessageContext.SERVLET_REQUEST);
+		ArrayList<HashMap<String,Object>> obj = null;
+		com.besixplus.sii.misc.Formatter tmpFormat = null;
+		try{
+			Connection con = ManagerConnection.getConnection();
+			if(!com.besixplus.sii.db.Cgg_sec_objeto.isGrant(con, Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getClassName(), tmpRequest.getUserPrincipal().getName(), 1)){
+				con.close();
+				throw new SOAPFaultException(SOAPFactory.newInstance().createFault(myInfoMessages.getMessage("sii.seguridad.acceso.negado", null), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
+			}
+
+			con.setAutoCommit(!ManagerConnection.isDeployed());
+			obj = com.besixplus.sii.db.Cgg_tct_registro.selectMultiHospedaje(con, inCtgtr_codigo);
+			tmpFormat = new com.besixplus.sii.misc.Formatter(format, obj);
+			con.close();
+		}catch(SQLException inException){
+			com.besixplus.sii.db.SQLErrorHandler.errorHandler(inException);
+			throw new SOAPFaultException(SOAPFactory.newInstance().createFault(inException.getMessage(), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
+		}
+		if (obj != null)
+			return tmpFormat.getData().toString();
+		return null;
+	}
+
+
 	/**
 	 * OBTIENE LOS REGISTROS DE LA TABLA Cgg_tct_actividad EN UNA ESTRUCTRA JSON o XML QUE CUMPLEN CON EL CRITERIO DE BUSQUEDA. 
 	 * @param inCtgtr_codigo IDENTIFICATIVO UNICO DE REGISTRO

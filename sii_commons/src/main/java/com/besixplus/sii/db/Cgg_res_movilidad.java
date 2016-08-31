@@ -798,13 +798,15 @@ public class Cgg_res_movilidad implements Serializable{
 	 */
 	public static int selectIngresoCount(
 			java.sql.Connection inConnection,
-			String inKeyword
+			String inKeyword,
+			boolean inOperational
 	){
 		int outCount = 0;
 		try{
-			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_MOVILIDAD_INGRESO_COUNT(?) }");
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_MOVILIDAD_INGRESO_COUNT(?,?) }");
 			stmSelect.registerOutParameter(1, Types.INTEGER);
 			stmSelect.setString(2, inKeyword);
+			stmSelect.setBoolean(3, inOperational);
 			stmSelect.execute();
 			outCount = stmSelect.getInt(1);
 			stmSelect.close();
@@ -831,11 +833,12 @@ public class Cgg_res_movilidad implements Serializable{
 			int inLimit,
 			String inSortFieldName,
 			String inDirection,
-			String inKeyword
+			String inKeyword,
+			boolean inOperational
 	){
 		ArrayList<HashMap<String,Object>> outCgg_res_movilidad = new ArrayList<HashMap<String,Object>>();
 		try{
-			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_MOVILIDAD_INGRESO_SELECT(?,?,?,?,?,?) }");
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_MOVILIDAD_INGRESO_SELECT(?,?,?,?,?,?,?) }");
 			stmSelect.registerOutParameter(1, Types.OTHER);
 			stmSelect.setString(2, inUserName);
 			stmSelect.setInt(3, inStart);
@@ -843,6 +846,7 @@ public class Cgg_res_movilidad implements Serializable{
 			stmSelect.setString(5, inSortFieldName);
 			stmSelect.setString(6, inDirection);
 			stmSelect.setString(7, inKeyword);
+			stmSelect.setBoolean(8, inOperational);
 			stmSelect.execute();
 			ResultSet results = (ResultSet) stmSelect.getObject(1);
 			int tmpColumnCount = results.getMetaData().getColumnCount();

@@ -140,7 +140,8 @@ function FrmCgg_res_movilidad(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_CGG_RES_MOV
 				{name:'CRRSD_CODIGO'},
                 {name:'CTREG_ESTADO_REGISTRO'},
 				{name:'CRMOV_FILTRO_INTERNO'},
-				{name:'CTREG_OBSERVACION'}
+				{name:'CTREG_OBSERVACION'},
+                {name:'CTREG_NUMERO_VUELO'}
             ]),
             sortInfo:{
                 field: 'CRALN_CODIGO',
@@ -781,9 +782,9 @@ function FrmCgg_res_movilidad(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_CGG_RES_MOV
 		}}],
         listeners:{
             click:function() {
-				if (smTipo_Hospedaje.length == 0){
+				/*if (smTipo_Hospedaje.length == 0){
 					Ext.Msg.show({
-						title:tituloCgg_tct_registro,
+						title:tituloCgg_res_movilidad,
 						msg: 'Seleccione al menos un hospedaje.',
 						buttons: Ext.Msg.OK,
 						icon: Ext.MessageBox.WARNING
@@ -792,13 +793,13 @@ function FrmCgg_res_movilidad(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_CGG_RES_MOV
 				}
 				if (smActividad.getSelections().length == 0){
 					Ext.Msg.show({
-						title:tituloCgg_tct_registro,
+						title:tituloCgg_res_movilidad,
 						msg: 'Seleccione al menos una actividad.',
 						buttons: Ext.Msg.OK,
 						icon: Ext.MessageBox.WARNING
 					});
 					return;
-				}
+				}*/
                 if (pnlCgg_res_movilidad.getForm().isValid() == false) {
                     return;
                 }
@@ -1248,6 +1249,7 @@ function FrmCgg_res_movilidad(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_CGG_RES_MOV
             tmpCtreg_codigo=inRecordCgg_res_movilidad.CTREG_CODIGO;
             tmpCrper_codigo= inRecordCgg_res_movilidad.CRPER_CODIGO;
             txtCtgtr_codigo.setValue(inRecordCgg_res_movilidad.CTGTR_CODIGO);
+            txtCrmov_numero_vuelo.setValue(inRecordCgg_res_movilidad.CTREG_NUMERO_VUELO);
             tmpCraln_codigo= inRecordCgg_res_movilidad.CRALN_CODIGO;
             cbxCraln_codigo.setValue(inRecordCgg_res_movilidad.CRALN_CODIGO);
             tmpCarpt_codigo=inRecordCgg_res_movilidad.CARPT_CODIGO;

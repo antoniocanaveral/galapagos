@@ -479,7 +479,6 @@ function FrmListadoCgg_tct_registro(inDesktop){
             direction: 'DESC'
         },
         baseParams:{
-            operational:isOperational,
             keyword:"",
             format:TypeFormat.JSON
         },
@@ -513,12 +512,17 @@ function FrmListadoCgg_tct_registro(inDesktop){
             new Ext.ux.bsx.SearchField({
                 store:gsCgg_tct_registro,
                 width:200
-            }), new Ext.form.Checkbox({
+            }),'-', 'No impresos: ',new Ext.form.Checkbox({
                 checked:true,
                 fieldLabel: 'No mostrar impresos',
                 listeners:{
                     check:function(_this,_checked){
                         isOperational = _checked;
+                        gsCgg_tct_registro.reload({params:{
+                            operational:isOperational,
+                            start:0,
+                            limit:(RECORD_PAGE - 10)
+                        }});
                     }
                 }
             })],

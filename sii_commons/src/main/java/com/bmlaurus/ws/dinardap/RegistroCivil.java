@@ -48,7 +48,8 @@ public class RegistroCivil extends DinardapService {
     }
 
     public String getGenero() {
-        return genero;
+        return "UNDEFINED";
+        //return genero;
     }
 
     public void setGenero(String genero) {
