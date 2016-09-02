@@ -44,7 +44,9 @@ public class CamelSingleton {
     @PostConstruct
     void init() {
         Properties config = VirtualCache.getConfig(VirtualCache.PROP_INTEGRATION_CONF);
-        if(config!=null && Boolean.valueOf(config.getProperty("ENABLE_INTEGRATION"))) {
+
+        camelContext = new DefaultCamelContext();
+
             ACTIVE_MQ_PORT = MensajeriaPropertiesManager.getActiveMqPort();
             maximumRedeliveries = MensajeriaPropertiesManager.getMaximumDeliveries(maximumRedeliveries);
             redeliveryDelay = MensajeriaPropertiesManager.getRedeliveryDelay(redeliveryDelay);
@@ -54,22 +56,23 @@ public class CamelSingleton {
             mapClassMethod = MensajeriaPropertiesManager.getClasesMetodosIntegrados();
 
             try {
-                camelContext = new DefaultCamelContext();
                 ConsumeProcessor consumeProcessor = new ConsumeProcessor();
                 ErrorProcessor errorProcessor = new ErrorProcessor(MensajeriaPropertiesManager.getHomePath());
                 template = camelContext.createProducerTemplate();
-                camelContext.addComponent(Constantes.ACTIVEMQ_ORIGEN, ActiveMQComponent.activeMQComponent(generateMqDestination(ipOrigen, ACTIVE_MQ_PORT)));
-                camelContext.addComponent(Constantes.ACTIVEMQ_DESTINO, ActiveMQComponent.activeMQComponent(generateMqDestination(ipDestino, ACTIVE_MQ_PORT)));
-                camelContext.addRoutes(createErrorRoute(errorProcessor));
-                camelContext.addRoutes(createRoute());
-                camelContext.addRoutes(createConsumerRoute(consumeProcessor));
-                camelContext.start();
+                if(config!=null && Boolean.valueOf(config.getProperty("ENABLE_INTEGRATION"))) {
+                    camelContext.addComponent(Constantes.ACTIVEMQ_ORIGEN, ActiveMQComponent.activeMQComponent(generateMqDestination(ipOrigen, ACTIVE_MQ_PORT)));
+                    camelContext.addComponent(Constantes.ACTIVEMQ_DESTINO, ActiveMQComponent.activeMQComponent(generateMqDestination(ipDestino, ACTIVE_MQ_PORT)));
+                    camelContext.addRoutes(createErrorRoute(errorProcessor));
+                    camelContext.addRoutes(createRoute());
+                    camelContext.addRoutes(createConsumerRoute(consumeProcessor));
+                    camelContext.start();
+                }
 
             } catch (Exception e) {
                 logger.log(Level.SEVERE, "Error al inicializar el camel", e);
                 throw new RuntimeException("FAVOR INICIALIZAR LOS VALORES DE CAMEL CORRECTAMENTE,");
             }
-        }
+
     }
 
 

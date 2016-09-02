@@ -1180,6 +1180,11 @@
         <servlet-class>com.besixplus.sii.servlets.ReportToAlfresco</servlet-class>
     </servlet>
     <servlet>
+        <display-name>MasBuscadosImporterSVR</display-name>
+        <servlet-name>MasBuscadosImporterSVR</servlet-name>
+        <servlet-class>com.besixplus.sii.servlets.MasBuscadosImporter</servlet-class>
+    </servlet>
+    <servlet>
         <display-name>Cgg_res_comunicadoSRV</display-name>
         <servlet-name>Cgg_res_comunicadoSRV</servlet-name>
         <servlet-class>com.besixplus.sii.servlets.Cgg_res_comunicado</servlet-class>
@@ -2291,6 +2296,10 @@
     <servlet-mapping>
         <servlet-name>ReportToAlfrescoSVR</servlet-name>
         <url-pattern>/ReportToAlfrescoSVR</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MasBuscadosImporterSVR</servlet-name>
+        <url-pattern>/MasBuscadosImporterSVR</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Cgg_res_comunicadoSRV</servlet-name>
