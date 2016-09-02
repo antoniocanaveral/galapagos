@@ -2231,6 +2231,54 @@ END;
 $BODY$
 LANGUAGE 'plpgsql' VOLATILE;
 
+
+--F_IS_GRANT
+-- Function: sii.f_is_grant(character varying, character varying, character varying, integer)
+
+-- DROP FUNCTION sii.f_is_grant(character varying, character varying, character varying, integer);
+
+CREATE OR REPLACE FUNCTION sii.f_is_grant(in_object character varying, in_path character varying, in_user character varying, in_sw integer)
+  RETURNS boolean AS
+$BODY$
+DECLARE
+TMP_SW INT;
+TMP_CSOBJ_CODIGO VARCHAR;
+BEGIN
+	RETURN TRUE;
+	SELECT COUNT(U.CUSU_CODIGO) INTO TMP_SW FROM SII.CGG_USUARIO U
+	INNER JOIN SII.CGG_SEC_USUARIO_ROL SRL ON SRL.CUSU_CODIGO = U.CUSU_CODIGO AND SRL.CSPER_ESTADO AND SRL.CSROL_CODIGO = '1'
+	WHERE U.CUSU_NOMBRE_USUARIO = IN_USER;
+	IF (TMP_SW > 0) THEN
+		RETURN TRUE;
+	END IF;
+
+	IF(IN_SW = 0) THEN
+		SELECT OBJ.CSOBJ_CODIGO INTO TMP_CSOBJ_CODIGO
+		FROM SII.CGG_SEC_OBJETO OBJ
+		WHERE OBJ.CSOBJ_NOMBRE = IN_OBJECT;
+		IF (TMP_CSOBJ_CODIGO IS NULL) THEN
+			RETURN TRUE;
+		END IF;
+	END IF;
+
+	SELECT COUNT(OBJ.CSOBJ_CODIGO) INTO TMP_SW
+	FROM SII.CGG_SEC_OBJETO OBJ
+	INNER JOIN SII.CGG_SEC_OBJETO_ROL BJR ON BJR.CSOBJ_CODIGO = OBJ.CSOBJ_CODIGO AND BJR.CSBJR_ESTADO
+	INNER JOIN SII.CGG_SEC_USUARIO_ROL SRL ON SRL.CSROL_CODIGO = BJR.CSROL_CODIGO AND SRL.CSPER_ESTADO
+	INNER JOIN SII.CGG_USUARIO U ON U.CUSU_CODIGO = SRL.CUSU_CODIGO AND U.CUSU_NOMBRE_USUARIO = IN_USER AND U.CUSU_ESTADO
+	WHERE OBJ.CSOBJ_NOMBRE = IN_OBJECT AND
+		CSOBJ_RUTA = IN_PATH AND IN_SW = 1 OR OBJ.CSOBJ_NOMBRE = IN_OBJECT AND IN_SW = 0;
+
+	RETURN (TMP_SW > 0);
+END
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION sii.f_is_grant(character varying, character varying, character varying, integer)
+  OWNER TO postgres;
+
+
+
 --> MIGRATION SCRIPT CONTROLLER <--
 INSERT INTO sii.cgg_migrationscript (mrgsp_codigo,mrgsp_fecha,mrgsp_usuario_insert,mrgsp_fecha_insert,mrgsp_usuario_update,mrgsp_fecha_update,
 	mrgsp_estado,mrgsp_developer,mrgsp_name,mrgsp_description,
