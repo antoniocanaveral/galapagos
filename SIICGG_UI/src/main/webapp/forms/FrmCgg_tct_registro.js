@@ -1041,11 +1041,33 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
     /**
      * Ext.grid.GridPanel Representacion de los datos de la tabla Cgg_res_persona_contacto en un formato tabular de filas y columnas.
      */
+    //Estilos
+    var css =[];
+    css.push(".seguimiento-row .x-grid-cell { background-color: #ffe2e2; color: #900; } ");
+    css.push(".regular-row .x-grid-cell { background-color: #fff; color: #000; } ");
+    for(var k=0;k<css.length;k++){
+        var head = document.head || document.getElementsByTagName('head')[0];
+        var style = document.createElement('style');
+        style.type = 'text/css';
+        if (style.styleSheet){
+            style.styleSheet.cssText = css[k];
+        } else {
+            style.appendChild(document.createTextNode(css[k]));
+        }
+        head.appendChild(style);
+    }
+
     var grdCgg_res_persona = new Ext.grid.EditorGridPanel({
         cm:cmCgg_res_persona,
         store:gsCgg_res_persona,
         region:'center',
         sm:tmpSelectionModel,
+        viewConfig:{
+            stripeRows:false,
+            getRowClass:function (record) {
+                return record.get('CRPER_SEGUIMIENTO')?'regular-row':'seguimiento-row';
+            }
+        },
         loadMask:{
             msg:"Cargando..."
         },
@@ -1274,26 +1296,60 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
                     winFrmCgg_tct_registro.getEl().mask('Guardando...', 'x-mask-loading');
 
                     btnGuardarCgg_tct_registro.disable();
-                    var param = new SOAPClientParameters();
-                    if (isEdit){
-                        param.add('inCtgtr_codigo', txtCtgtr_codigo.getValue());
-                        cbxCarpt_codigo.setValue(tmpCarpt_codigo_origen);
-                        cbxCgg_carpt_codigo.setValue(tmpCarpt_codigo_destino);
-                        cbxCraln_codigo.setValue(tmpCraln_codigo);
+
+                    //ANTES DE MANDAR A GUARDAR
+                    //CONSULTAMOS SI LAS PERSONAS ESTAN ENTRE LOS MAS BUSCADOS
+                    var hayBuscados = false;
+                    for(var j=0;j<grdCgg_res_persona.getStore().data.length;j++){
+                        param = new SOAPClientParameters();
+                        param.add('inIdentificacion', grdCgg_res_persona.getStore().data.items[j].data.CRPER_NUM_DOC_IDENTIFIC);
+                        var masBuscado = SOAPClient.invoke(URL_WS+'MasBuscados', 'consultarMB', param, false, null);
+                        if(masBuscado=="{true}"){
+                            grdCgg_res_persona.getStore().data.items[j].data.CRPER_SEGUIMIENTO=true;
+                            grdCgg_res_persona.getStore().data.items[j].data.CTREG_OBSERVACION="EN LISTA DE MAS BUSCADOS; "+grdCgg_res_persona.getStore().data.items[j].data.CTREG_OBSERVACION;
+                            hayBuscados = true;
+                            console.log(grdCgg_res_persona.getStore().getJsonData());//.backgroundColor('#336699');
+                        }
                     }
-                    param.add('inCarpt_codigo', cbxCarpt_codigo.getValue());
-                    param.add('inCgg_carpt_codigo', cbxCgg_carpt_codigo.getValue());
-                    param.add('inCraln_codigo', cbxCraln_codigo.getValue());
-                    param.add('inCtreg_numero', numCtreg_numero.getValue());
-                    param.add('inCtreg_numero_vuelo', numCtreg_numero_vuelo.getValue());
-                    param.add('inCtreg_fecha_preregistro', dtCtreg_fecha_preregistro.getValue().format(TypeDateFormat.Custom));
-                    param.add('inCtreg_fecha_ingreso', dtCtreg_fecha_ingreso.getValue().format(TypeDateFormat.Custom));
-                    param.add('inCtreg_codigo_barras', numCtreg_codigo_barras.getValue());
-                    param.add('inCtreg_fecha_salida', dtCtreg_fecha_salida.getValue().format(TypeDateFormat.Custom));
-                    param.add('inHospedaje_JSON', createJSONObject(smTipo_Hospedaje.getSelections()));
-                    param.add('inActividad_JSON', createJSONObject(smActividad.getSelections()));
-                    param.add('inPersona_JSON', grdCgg_res_persona.getStore().getJsonData());
-                    SOAPClient.invoke(urlCgg_tct_registro, IN_SENTENCIA_CGG_TCT_REGISTRO, param, true, CallBackCgg_tct_registro);
+
+                    var breakSave = false;
+                    if(hayBuscados){
+                        Ext.Msg.show({
+                            title:'Atenci\u00f3n!!',
+                            msg: 'Las personas marcadas tienen problemas juridicos. \nSe pondra una marca de seguimiento, por favor comunique a las autoridades. Desea Continuar?',
+                            buttons: Ext.Msg.YESNO,
+                            icon: Ext.MessageBox.ERROR,
+                            fn: function(btn, text){
+                                if (btn == 'ok')
+                                    breakSave=false;
+                                else
+                                    breakSave=true;
+                            }
+                        });
+                    }
+
+                    if(!breakSave){
+                        var param = new SOAPClientParameters();
+                        if (isEdit){
+                            param.add('inCtgtr_codigo', txtCtgtr_codigo.getValue());
+                            cbxCarpt_codigo.setValue(tmpCarpt_codigo_origen);
+                            cbxCgg_carpt_codigo.setValue(tmpCarpt_codigo_destino);
+                            cbxCraln_codigo.setValue(tmpCraln_codigo);
+                        }
+                        param.add('inCarpt_codigo', cbxCarpt_codigo.getValue());
+                        param.add('inCgg_carpt_codigo', cbxCgg_carpt_codigo.getValue());
+                        param.add('inCraln_codigo', cbxCraln_codigo.getValue());
+                        param.add('inCtreg_numero', numCtreg_numero.getValue());
+                        param.add('inCtreg_numero_vuelo', numCtreg_numero_vuelo.getValue());
+                        param.add('inCtreg_fecha_preregistro', dtCtreg_fecha_preregistro.getValue().format(TypeDateFormat.Custom));
+                        param.add('inCtreg_fecha_ingreso', dtCtreg_fecha_ingreso.getValue().format(TypeDateFormat.Custom));
+                        param.add('inCtreg_codigo_barras', numCtreg_codigo_barras.getValue());
+                        param.add('inCtreg_fecha_salida', dtCtreg_fecha_salida.getValue().format(TypeDateFormat.Custom));
+                        param.add('inHospedaje_JSON', createJSONObject(smTipo_Hospedaje.getSelections()));
+                        param.add('inActividad_JSON', createJSONObject(smActividad.getSelections()));
+                        param.add('inPersona_JSON', grdCgg_res_persona.getStore().getJsonData());
+                        SOAPClient.invoke(urlCgg_tct_registro, IN_SENTENCIA_CGG_TCT_REGISTRO, param, true, CallBackCgg_tct_registro);
+                    }
                 } catch(inErr) {
                     alert(inErr.message);
                     winFrmCgg_tct_registro.getEl().unmask();

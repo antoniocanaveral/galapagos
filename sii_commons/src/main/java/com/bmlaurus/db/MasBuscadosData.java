@@ -1,9 +1,6 @@
 package com.bmlaurus.db;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Map;
@@ -45,5 +42,27 @@ public class MasBuscadosData {
             e.printStackTrace();
         }
         return res;
+    }
+
+    public static boolean exists(Connection conn, String identificacion){
+        boolean exist = false;
+        String strSql = "SELECT identificacion FROM SII.cgg_srv_mas_buscados WHERE identificacion=?";
+
+        PreparedStatement stmt=null;
+        ResultSet results=null;
+        try {
+            stmt = conn.prepareStatement(strSql);
+            stmt.setString(1,identificacion);
+            results = stmt.executeQuery();
+            if(results!=null && results.next()){
+                exist = true;
+            }
+            results.close();
+            stmt.close();
+        }catch (SQLException e) {
+            com.besixplus.sii.db.SQLErrorHandler.errorHandler(e);
+        }
+
+        return exist;
     }
 }
