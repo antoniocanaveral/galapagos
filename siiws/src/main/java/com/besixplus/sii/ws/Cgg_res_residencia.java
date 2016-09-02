@@ -1,13 +1,9 @@
 package com.besixplus.sii.ws;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
+import com.besixplus.sii.db.ManagerConnection;
+import com.bmlaurus.db.ResidenciaBeneficiarioData;
+import com.bmlaurus.objects.ResidenciaBeneficiario;
+import com.google.gson.Gson;
 
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
@@ -22,11 +18,13 @@ import javax.xml.soap.SOAPFactory;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
-
-import com.besixplus.sii.db.ManagerConnection;
-import com.bmlaurus.db.ResidenciaBeneficiarioData;
-import com.bmlaurus.objects.ResidenciaBeneficiario;
-import com.google.gson.Gson;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
 * CLASE Cgg_res_residencia
