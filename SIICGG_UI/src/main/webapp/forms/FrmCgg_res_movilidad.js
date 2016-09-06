@@ -901,7 +901,7 @@ function FrmCgg_res_movilidad(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_CGG_RES_MOV
                     param.add('inCrmov_observacion', txtCrmov_observacion.getValue());
                     param.add('inCrmov_tipo_salida', 0);
                     param.add('inCrmov_filtro_interno',chkCrmov_filtro_interno.getValue());
-                    param.add('inCrmov_seguimiento',chkCrmov_seguimiento.getValue());
+                    //param.add('inCrmov_seguimiento',chkCrmov_seguimiento.getValue());
 					param.add('inPersonaJSON',tmpDatosPersonales);
 					param.add('inActividadesJSON',tmpActividades);
 					param.add('inHospedajesJSON',tmpHospedajes);
