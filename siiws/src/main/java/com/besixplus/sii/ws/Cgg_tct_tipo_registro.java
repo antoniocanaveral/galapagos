@@ -50,12 +50,12 @@ public class Cgg_tct_tipo_registro implements Serializable{
 		com.besixplus.sii.misc.Formatter tmpFormat = null;
 		try{
 			Connection con = ManagerConnection.getConnection();
-			if(!com.besixplus.sii.db.Cgg_sec_objeto.isGrant(con, Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getClassName(), tmpRequest.getUserPrincipal().getName(), 1)){
+			/*if(!com.besixplus.sii.db.Cgg_sec_objeto.isGrant(con, Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getClassName(), tmpRequest.getUserPrincipal().getName(), 1)){
 				con.close();
 				throw new SOAPFaultException(SOAPFactory.newInstance().createFault("Acceso no autorizado.", new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
-			}
+			}*/
 			con.setAutoCommit(!ManagerConnection.isDeployed());
-			obj = com.besixplus.sii.db.Cgg_tct_tipo_registro.selectAll(con, tmpRequest.getUserPrincipal().getName());
+			obj = com.besixplus.sii.db.Cgg_tct_tipo_registro.selectAll(con, tmpRequest.getUserPrincipal()!=null?tmpRequest.getUserPrincipal().getName():null);
 			tmpFormat = new com.besixplus.sii.misc.Formatter(format, obj);
 			outCadena = tmpFormat.getData();
 			con.close();

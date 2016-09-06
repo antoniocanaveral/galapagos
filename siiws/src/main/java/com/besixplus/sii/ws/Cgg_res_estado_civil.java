@@ -1,21 +1,22 @@
 package com.besixplus.sii.ws;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.SQLException;
+import com.besixplus.sii.db.ManagerConnection;
+
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
+import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
-import javax.jws.WebParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
-import com.besixplus.sii.db.ManagerConnection;
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
 * CLASE Cgg_res_estado_civil
@@ -85,15 +86,15 @@ public class Cgg_res_estado_civil implements Serializable{
 		com.besixplus.sii.misc.Formatter tmpFormat = null;
 		try{
 			Connection con = ManagerConnection.getConnection();
-			if(!com.besixplus.sii.db.Cgg_sec_objeto.isGrant(con, Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getClassName(), tmpRequest.getUserPrincipal().getName(), 1)){
+			/*if(!com.besixplus.sii.db.Cgg_sec_objeto.isGrant(con, Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getClassName(), tmpRequest.getUserPrincipal().getName(), 1)){
 				con.close();
 				tmpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName());
 				return null;
-			}
+			}*/
 			con.setAutoCommit(!ManagerConnection.isDeployed());
-			obj = com.besixplus.sii.db.Cgg_res_estado_civil.selectAll(con, tmpRequest.getUserPrincipal().getName());
-tmpFormat = new com.besixplus.sii.misc.Formatter(format, obj);
-outCadena = tmpFormat.getData();
+			obj = com.besixplus.sii.db.Cgg_res_estado_civil.selectAll(con, tmpRequest.getUserPrincipal()!=null?tmpRequest.getUserPrincipal().getName():null);
+			tmpFormat = new com.besixplus.sii.misc.Formatter(format, obj);
+			outCadena = tmpFormat.getData();
 			con.close();
 		}catch(SQLException inException){
 			com.besixplus.sii.db.SQLErrorHandler.errorHandler(inException);

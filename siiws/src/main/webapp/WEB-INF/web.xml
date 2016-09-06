@@ -294,6 +294,11 @@
         <servlet-class>com.besixplus.sii.ws.Cgg_isla</servlet-class>
     </servlet>
     <servlet>
+        <display-name>Cgg_isla</display-name>
+        <servlet-name>PublicWS_Cgg_isla</servlet-name>
+        <servlet-class>com.besixplus.sii.ws.Cgg_isla</servlet-class>
+    </servlet>
+    <servlet>
         <display-name>Cgg_jur_acuerdo</display-name>
         <servlet-name>Cgg_jur_acuerdo</servlet-name>
         <servlet-class>com.besixplus.sii.ws.Cgg_jur_acuerdo</servlet-class>
@@ -864,6 +869,16 @@
         <display-name>Cgg_tct_actividad</display-name>
         <servlet-name>PublicWS_Cgg_tct_actividad</servlet-name>
         <servlet-class>com.besixplus.sii.ws.Cgg_tct_actividad</servlet-class>
+    </servlet>
+    <servlet>
+        <display-name>Cgg_tct_categoria</display-name>
+        <servlet-name>PublicWS_Cgg_tct_categoria</servlet-name>
+        <servlet-class>com.besixplus.sii.ws.Cgg_tct_categoria</servlet-class>
+    </servlet>
+    <servlet>
+        <display-name>Cgg_tct_tipo_registro</display-name>
+        <servlet-name>PublicWS_Cgg_tct_tipo_registro</servlet-name>
+        <servlet-class>com.besixplus.sii.ws.Cgg_tct_tipo_registro</servlet-class>
     </servlet>
     <servlet>
         <display-name>Cgg_tct_adjunto_csv</display-name>
@@ -1845,6 +1860,11 @@
         <servlet-name>Cgg_res_estado_civil</servlet-name>
         <url-pattern>/Cgg_res_estado_civil</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <display-name>Cgg_res_estado_civil</display-name>
+        <servlet-name>PublicWS_Cgg_res_estado_civil</servlet-name>
+        <servlet-class>com.besixplus.sii.ws.Cgg_res_estado_civil</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Cgg_res_estado_tramite</servlet-name>
         <url-pattern>/Cgg_res_estado_tramite</url-pattern>
@@ -2465,9 +2485,13 @@
         <servlet-name>PublicWS_Cgg_catalogo</servlet-name>
         <url-pattern>/PublicWS/Cgg_catalogo</url-pattern>
     </servlet-mapping>
-     <servlet-mapping>
+    <servlet-mapping>
         <servlet-name>PublicWS_Cgg_isla_hotel</servlet-name>
         <url-pattern>/PublicWS/Cgg_isla_hotel</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PublicWS_Cgg_isla</servlet-name>
+        <url-pattern>/PublicWS/Cgg_isla</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>PublicWS_Cgg_res_documento_identificacio</servlet-name>
@@ -2500,6 +2524,10 @@
     <servlet-mapping>
         <servlet-name>PublicWS_Cgg_web_preguntas</servlet-name>
         <url-pattern>/PublicWS/Cgg_web_preguntas</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PublicWS_Cgg_tct_categoria</servlet-name>
+        <url-pattern>/PublicWS/Cgg_tct_categoria</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Cgg_web_preguntas</servlet-name>
@@ -2536,6 +2564,14 @@
     <servlet-mapping>
         <servlet-name>PublicWS_Cgg_res_tipo_solicitud_tramite</servlet-name>
         <url-pattern>/PublicWS/Cgg_res_tipo_solicitud_tramite</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PublicWS_Cgg_res_estado_civil</servlet-name>
+        <url-pattern>/PublicWS/Cgg_res_estado_civil</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PublicWS_Cgg_tct_tipo_registro</servlet-name>
+        <url-pattern>/PublicWS/Cgg_tct_tipo_registro</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Cgg_web_pagina</servlet-name>

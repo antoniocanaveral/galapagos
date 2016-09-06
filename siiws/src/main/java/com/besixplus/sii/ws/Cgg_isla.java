@@ -1,26 +1,27 @@
 package com.besixplus.sii.ws;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.besixplus.sii.db.ManagerConnection;
+import com.besixplus.sii.i18n.Messages;
+
+import javax.annotation.Resource;
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
+import javax.jws.soap.SOAPBinding.Style;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.namespace.QName;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPFactory;
+import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.handler.MessageContext;
+import javax.xml.ws.soap.SOAPFaultException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
-import javax.annotation.Resource;
-import javax.jws.WebMethod;
-import javax.jws.WebService;
-import javax.xml.namespace.QName;
-import javax.jws.soap.SOAPBinding;
-import javax.jws.soap.SOAPBinding.Style;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPFactory;
-import javax.xml.ws.soap.SOAPFaultException;
-import javax.jws.WebParam;
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.ws.WebServiceContext;
-import javax.xml.ws.handler.MessageContext;
-import com.besixplus.sii.db.ManagerConnection;
-import com.besixplus.sii.i18n.Messages;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
 * CLASE Cgg_isla
@@ -313,12 +314,12 @@ public class Cgg_isla implements Serializable{
 		com.besixplus.sii.misc.Formatter tmpFormat = null;
 		try{
 			Connection con = ManagerConnection.getConnection();
-			if(!com.besixplus.sii.db.Cgg_sec_objeto.isGrant(con, Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getClassName(), tmpRequest.getUserPrincipal().getName(), 1)){
+			/*if(!com.besixplus.sii.db.Cgg_sec_objeto.isGrant(con, Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getClassName(), tmpRequest.getUserPrincipal().getName(), 1)){
 				con.close();
 				throw new SOAPFaultException(SOAPFactory.newInstance().createFault(myInfoMessages.getMessage("sii.seguridad.acceso.negado", null), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
-			}
+			}*/
 			con.setAutoCommit(!ManagerConnection.isDeployed());
-			obj = com.besixplus.sii.db.Cgg_isla.selectAllAtencionCliente(con, tmpRequest.getUserPrincipal().getName());
+			obj = com.besixplus.sii.db.Cgg_isla.selectAllAtencionCliente(con, tmpRequest.getUserPrincipal()!=null?tmpRequest.getUserPrincipal().getName():null);
 			tmpFormat = new com.besixplus.sii.misc.Formatter(format, obj);
 			outCadena = tmpFormat.getData();
 			con.close();

@@ -882,7 +882,7 @@ function loadIngresoTCT(){
 		displayField:"CRECV_DESCRPCION",
 		valueField:"CRECV_CODIGO",
 		webService:{
-			url:URL_WS+"Cgg_res_estado_civil",
+			url:URL_WS+"PublicWS/Cgg_res_estado_civil",
 			method:"selectAll",
 			params:[
 				{name:"format",value:"JSON"}
@@ -909,7 +909,7 @@ function loadIngresoTCT(){
 		displayField:"TCTCAT_NOMBRE",
 		valueField:"TCTCAT_CODIGO",
 		webService:{
-			url:URL_WS+"Cgg_tct_categoria",
+			url:URL_WS+"PublicWS/Cgg_tct_categoria",
 			method:"selectAll",
 			params:[
 				{name:"format",value:"JSON"}
@@ -934,7 +934,7 @@ function loadIngresoTCT(){
 		displayField:"TCTTR_NOMBRE",
 		valueField:"TCTTR_CODIGO",
 		webService:{
-			url:URL_WS+"Cgg_tct_tipo_registro",
+			url:URL_WS+"PublicWS/Cgg_tct_tipo_registro",
 			method:"selectAll",
 			params:[
 				{name:"format",value:"JSON"}
@@ -1202,7 +1202,7 @@ function loadIngresoTCT(){
 		displayField:"CISLA_NOMBRE",
 		valueField:"CISLA_CODIGO",
 		webService:{
-			url:URL_WS+"Cgg_isla",
+			url:URL_WS+"PublicWS/Cgg_isla",
 			method:"selectAllAtencionCliente",
 			params:[
 				{name:"format",value:"JSON"}
