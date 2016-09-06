@@ -58,11 +58,31 @@ function FrmCgg_res_movilidad(INSENTENCIA_CGG_RES_MOVILIDAD,INRECORD_CGG_RES_MOV
         listeners:{
             specialkey :function(inField, e){
                 if (e.getKey() == e.ENTER) {
-					gsCgg_res_buscar_persona_TCT.baseParams.inIdentificacion = txtCtreg_codigo_barras.getValue();
-					gsCgg_res_buscar_persona_TCT.baseParams.start = 0;
-					gsCgg_res_buscar_persona_TCT.baseParams.limit = 100;
-					gsCgg_res_buscar_persona_TCT.reload();
-					tmpLocal = true;
+                    var isQR=false;
+                    if(txtCtreg_codigo_barras.getValue()!=null && txtCtreg_codigo_barras.getValue().toString().length>20){
+                       if(txtCtreg_codigo_barras.getValue().toString().substr(0,1)=="{" &&
+                           txtCtreg_codigo_barras.getValue().toString().substr(txtCtreg_codigo_barras.getValue().toString().length-1,txtCtreg_codigo_barras.getValue().toString().length)=="}"){
+                           try {
+                               var objQR = eval("("+txtCtreg_codigo_barras.getValue().toString()+")");
+                               gsCgg_res_buscar_persona_TCT.baseParams.inIdentificacion = objQR.CTREG_CODIGO_BARRAS;
+                               gsCgg_res_buscar_persona_TCT.baseParams.start = 0;
+                               gsCgg_res_buscar_persona_TCT.baseParams.limit = 100;
+                               gsCgg_res_buscar_persona_TCT.reload();
+                               //FIXME: Aqui es donde hay que ver si existe o no el registro y crearlo cuando no encuentre nada en galapagos.
+                               tmpLocal = true;
+                               isQR=true;
+                           }catch(e){
+                               console.log(e.message);
+                           }
+                       }
+                    }
+                    if(!isQR) {
+                        gsCgg_res_buscar_persona_TCT.baseParams.inIdentificacion = txtCtreg_codigo_barras.getValue();
+                        gsCgg_res_buscar_persona_TCT.baseParams.start = 0;
+                        gsCgg_res_buscar_persona_TCT.baseParams.limit = 100;
+                        gsCgg_res_buscar_persona_TCT.reload();
+                        tmpLocal = true;
+                    }
                 }
             }
         }

@@ -3,6 +3,8 @@ package com.bmlaurus.virtual;
 import com.besixplus.sii.util.Env;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -69,11 +71,14 @@ public class VirtualCache {
     }
 
     public static String toPrettyJSON(){
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
         String json = null;
-        if(cachedProperties!=null)
-            json = gson.toJson(cachedProperties);
-        else
+        if(cachedProperties!=null) {
+            JsonParser jp = new JsonParser();
+            JsonElement je = jp.parse(new Gson().toJson(cachedProperties));
+            json = gson.toJson(je);
+            json = json.replace("\n","<br/>").replace("    ","&nbsp;&nbsp;&nbsp;&nbsp;");
+        }else
             json = "Cache is NULL";
         gson = null;
         return json;

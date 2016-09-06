@@ -54,8 +54,10 @@ public class CacheController extends HttpServlet implements Serializable {
                             out.println("<p>Not implemented yet</p>");
                             break;
                     }
-                }
-            }
+                }else
+                    out.println("<p>Usage: CacheControllerSVR?operation=view, CacheControllerSVR?operation=reset</p>");
+            }else
+                out.println("<p>Usage: CacheControllerSVR?operation=view, CacheControllerSVR?operation=reset</p>");
 
         }catch (Exception ex){
             out.println("<p>ERROR: " + ex.getMessage() + "</p>");
