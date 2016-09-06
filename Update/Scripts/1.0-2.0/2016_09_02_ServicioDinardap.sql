@@ -1,0 +1,41 @@
+CREATE OR REPLACE FUNCTION f_cgg_res_residencia_select_dinardap(IN_NUMERO_IDENTIFICACION character varying)
+  RETURNS SETOF refcursor AS
+$BODY$
+DECLARE
+	TMP_REF REFCURSOR;
+BEGIN
+	OPEN TMP_REF FOR
+	SELECT
+	PER.CRPER_NUM_DOC_IDENTIFIC,
+	PER.CRPER_NOMBRES,
+	PER.CRPER_APELLIDO_PATERNO,
+	PER.CRPER_APELLIDO_MATERNO,
+	PTST.CRTST_DESCRIPCION,
+	TST.CRTST_DESCRIPCION,
+	RES.CRRSD_FECHA_INICIO,
+	RES.CRRSD_FECHA_CADUCIDAD,
+	CRRSD_VIGENTE
+	FROM SII.CGG_RES_RESIDENCIA RES
+	JOIN SII.CGG_RES_PERSONA PER ON RES.CRPER_CODIGO=PER.CRPER_CODIGO
+	JOIN SII.CGG_RES_TIPO_SOLICITUD_TRAMITE TST ON RES.CRTST_CODIGO = TST.CRTST_CODIGO
+	JOIN SII.CGG_RES_TIPO_SOLICITUD_TRAMITE PTST ON TST.CGG_CRTST_CODIGO = PTST.CRTST_CODIGO
+	WHERE RES.CRRSD_ESTADO = TRUE
+	AND PER.CRPER_NUM_DOC_IDENTIFIC=IN_NUMERO_IDENTIFICACION
+	ORDER BY CRRSD_VIGENTE DESC, CRRSD_FECHA_INICIO DESC
+	LIMIT 1;
+	RETURN NEXT TMP_REF;
+END
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100
+  ROWS 1000;
+
+
+
+--> MIGRATION SCRIPT CONTROLLER <--
+INSERT INTO sii.cgg_migrationscript (mrgsp_codigo,mrgsp_fecha,mrgsp_usuario_insert,mrgsp_fecha_insert,mrgsp_usuario_update,mrgsp_fecha_update,
+	mrgsp_estado,mrgsp_developer,mrgsp_name,mrgsp_description,
+	mrgsp_releaseno,mrgsp_filename,mrgsp_isapply)
+VALUES(SII.F_KEYGEN('CGG_MIGRATIONSCRIPT','MRGSP_CODIGO','MRGSP'), current_timestamp,'ADMIN', current_timestamp,'ADMIN', current_timestamp,
+	true,'acanaveral','Exposicion de servicios para la Dinardap','Exposicion de servicios para la Dinardap',
+	'2.0','2016_09_02_ServicioDinardap.sql',true);

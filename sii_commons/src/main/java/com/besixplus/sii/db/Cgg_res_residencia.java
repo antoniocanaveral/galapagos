@@ -1,15 +1,12 @@
 package com.besixplus.sii.db;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import com.bmlaurus.objects.DinardapResidencia;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.CallableStatement;
-import java.sql.ResultSet;
-import java.sql.Savepoint;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
 * CLASE Cgg_res_residencia
@@ -132,6 +129,38 @@ public class Cgg_res_residencia implements Serializable{
 		}catch(SQLException e){
 			com.besixplus.sii.db.SQLErrorHandler.errorHandler(e);
 		}
+		return outCgg_res_residencia;
+	}
+
+
+	public static ArrayList<DinardapResidencia> selectConsultaDinardap(Connection inConnection, String numeroIdentificacion){
+		ArrayList<DinardapResidencia> outCgg_res_residencia = new ArrayList<>();
+
+		try{
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.F_CGG_RES_RESIDENCIA_SELECT_DINARDAP(?) }");
+			stmSelect.registerOutParameter(1, Types.OTHER);
+			stmSelect.setString(2, numeroIdentificacion);
+			stmSelect.execute();
+			ResultSet results = (ResultSet) stmSelect.getObject(1);
+			while (results.next()) {
+				DinardapResidencia tmpCgg_res_residencia = new DinardapResidencia();
+				tmpCgg_res_residencia.setNumeroIdentificacion(results.getString(1));
+				tmpCgg_res_residencia.setNombres(results.getString(2));
+				tmpCgg_res_residencia.setPrimerApellido(results.getString(3));
+				tmpCgg_res_residencia.setSegundoApellido(results.getString(4));
+				tmpCgg_res_residencia.setTipoResidencia(results.getString(5));
+				tmpCgg_res_residencia.setMotivoResidencia(results.getString(6));
+				tmpCgg_res_residencia.setFechaInicioResidencia(results.getDate(7));
+				tmpCgg_res_residencia.setFechaFinResidencia(results.getDate(8));
+				tmpCgg_res_residencia.setVigente(results.getBoolean(9));
+				outCgg_res_residencia.add(tmpCgg_res_residencia);
+			}
+			results.close();
+			stmSelect.close();
+		}catch(SQLException e){
+			com.besixplus.sii.db.SQLErrorHandler.errorHandler(e);
+		}
+
 		return outCgg_res_residencia;
 	}
 
