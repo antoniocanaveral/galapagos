@@ -1401,10 +1401,10 @@ function loadIngresoTCT(){
 					if(tmpselect[0].CRPRC_CONTACTO) {
 						txtCorreoElectronico.value = tmpselect[0].CRPRC_CONTACTO;
 						txtConfirCorreoElectronico.value = tmpselect[0].CRPRC_CONTACTO;
-						txtCorreoElectronico.readOnly=true;
-						txtConfirCorreoElectronico.readOnly=true;
-						txtCorreoElectronico.disabled=true;
-						txtConfirCorreoElectronico.disabled=true;
+						//txtCorreoElectronico.readOnly=true;
+						//txtConfirCorreoElectronico.readOnly=true;
+						//txtCorreoElectronico.disabled=true;
+						//txtConfirCorreoElectronico.disabled=true;
 					}else{
 						txtCorreoElectronico.readOnly=false;
 						txtConfirCorreoElectronico.readOnly=false;
