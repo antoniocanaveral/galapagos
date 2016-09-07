@@ -143,8 +143,8 @@ public class Cgg_res_estado_civil implements Serializable{
 			tmpCount = com.besixplus.sii.db.Cgg_res_estado_civil.selectCount(con, keyword);
 			con.setAutoCommit(!ManagerConnection.isDeployed());
 			obj = com.besixplus.sii.db.Cgg_res_estado_civil.selectAll(con, tmpRequest.getUserPrincipal().getName(), start, limit, sort, dir, keyword);
-tmpFormat = new com.besixplus.sii.misc.Formatter(format, obj);
-outCadena = tmpFormat.getData();
+			tmpFormat = new com.besixplus.sii.misc.Formatter(format, obj);
+			outCadena = tmpFormat.getData();
 			con.close();
 		}catch(SQLException inException){
 			com.besixplus.sii.db.SQLErrorHandler.errorHandler(inException);
