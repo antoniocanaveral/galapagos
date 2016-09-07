@@ -125,14 +125,14 @@ function FrmListadoCgg_res_movilidad(inDesktop){
                     params[0]={
                         label:'Fecha inicio',
                         paramName:'P_FECHA_INICIAL',
-                        paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                        paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                         type:'date'
                     };
 
                     params[1]={
                         label:'Fecha fin',
                         paramName:'P_FECHA_FINAL',
-                        paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                        paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                         type:'date'
                     };
 
