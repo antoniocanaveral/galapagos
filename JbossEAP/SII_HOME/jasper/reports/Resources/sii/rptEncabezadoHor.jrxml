@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rpEncabezadoGeneral" pageWidth="842" pageHeight="85" orientation="Landscape" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rpEncabezadoGeneral" pageWidth="842" pageHeight="85" orientation="Landscape" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="d291061c-9207-44d6-9c7e-4d8b63bf0a59">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
@@ -34,29 +34,29 @@ WHERE CGCNF_CONFIGURACION = 'TEXTO ENCABEZADO REPORTES']]>
 	<detail>
 		<band height="80" splitType="Stretch">
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField" x="358" y="44" width="378" height="18" isRemoveLineWhenBlank="true"/>
+				<reportElement key="textField" x="358" y="44" width="378" height="18" isRemoveLineWhenBlank="true" uuid="6cceeb66-86ac-4644-8229-0eebc43cb899"/>
 				<textElement textAlignment="Right">
 					<font size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{P_SUBTITULO_1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{P_SUBTITULO_1}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField" x="359" y="62" width="377" height="18" isRemoveLineWhenBlank="true"/>
+				<reportElement key="textField" x="359" y="62" width="377" height="18" isRemoveLineWhenBlank="true" uuid="4a45eaf5-dd52-4ce2-be07-4a6744d531f3"/>
 				<textElement textAlignment="Right">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{P_SUBTITULO_2}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{P_SUBTITULO_2}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="80" y="0" width="656" height="44" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="80" y="0" width="656" height="44" isPrintWhenDetailOverflows="true" uuid="9cd64357-83ee-4431-aa7f-b615e7f3b3ec"/>
 				<textElement verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{cgcnf_valor_cadena}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cgcnf_valor_cadena}]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="10" y="0" width="70" height="80"/>
-				<imageExpression class="java.lang.String"><![CDATA["/home/klascano/BESIX/DEV/SII/REPORTS/cgg3"]]></imageExpression>
+				<reportElement x="10" y="0" width="70" height="80" uuid="d2bb7e21-f232-4f80-b3b5-2cedce261ec6"/>
+				<imageExpression><![CDATA["repo:/Resources/sii/cgg3"]]></imageExpression>
 			</image>
 		</band>
 	</detail>
