@@ -1,3 +1,7 @@
+--ACTIVACION DE PG_CRYPTO
+create extension pgcrypto; -->>>PARA PROBAR: SELECT encode(digest('12345' ,'md5'),'base64');
+
+
 --TABLA PARA ADMINISTRAR LA APLICACION DE PARCHES EN LA BASE DE DATOS.
 CREATE TABLE sii.cgg_migrationscript
 (

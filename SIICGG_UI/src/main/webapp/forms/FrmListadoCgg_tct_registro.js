@@ -163,6 +163,63 @@ function FrmListadoCgg_tct_registro(inDesktop){
             }
         }
     });
+
+    
+    function CallBackCgg_tct_registroAnular(r){
+        winFrmListadoCgg_tct_registro.getEl().unmask();
+        if (r == 'true') {
+            Ext.Msg.show({
+                title:tituloListadoCgg_tct_registro,
+                msg: 'La informaci\u00f3n ha sido anulada.',
+                buttons: Ext.Msg.OK,
+                icon: Ext.MessageBox.INFO
+            });
+            gsCgg_tct_registro.reload(
+                {
+                    params:{
+                        operational:isOperational,
+                        start:0,
+                        limit:(RECORD_PAGE - 10)
+                    }
+                }
+            );
+        } else
+            Ext.Msg.show({
+                title:tituloListadoCgg_tct_registro,
+                msg: 'La informaci\u00f3n no ha podido ser anulada. ' + (r.message?r.message:r),
+                buttons: Ext.Msg.OK,
+                icon: Ext.MessageBox.ERROR
+            });
+    }
+    
+
+    var btnAnularCgg_tct_registro = new Ext.Button({
+        id:'btnAnularCgg_tct_registro',
+        text:'Anular',
+        iconCls:'iconAnularTramite',
+        listeners:{
+            click:function(){
+                var r=grdCgg_tct_registro.getSelectionModel().getSelected();
+                if(r){
+                    if (r.get('CTREG_ESTADO_REGISTRO')==3){
+                        Ext.MessageBox.alert('Registro de Ingreso de Personas a la Provincia', 'Registro anulado, Imposible anular');
+                        return;
+                    }else{
+                        if  (r.get('CTREG_ESTADO_REGISTRO')<3 && !tmpPrintMode){
+                            winFrmListadoCgg_tct_registro.getEl().mask('Anulando...', 'x-mask-loading');
+                            var param = new SOAPClientParameters();
+                            param.add('inCtreg_codigo', grdCgg_tct_registro.getSelectionModel().getSelected().get('CTREG_CODIGO'));
+                            param.add('inCtreg_estado_registro',3);
+                            SOAPClient.invoke(urlCgg_tct_registro, "updateEstadoAnulada", param, true, CallBackCgg_tct_registroAnular);
+                        }
+                    }
+                }else{
+                    Ext.MessageBox.alert(tituloListadoCgg_tct_registro, 'Seleccione un registro para continuar');
+                }
+            }
+        }
+    });
+
     /**
      * Ext.Button Boton que permite salir de la ventana winFrmListadoCgg_tct_registro.
      */
@@ -567,7 +624,7 @@ function FrmListadoCgg_tct_registro(inDesktop){
             layout:'border',
             tbar:getPanelTitulo('Listado '+tituloListadoCgg_tct_registro,descListadoCgg_tct_registro),
             items:[grdCgg_tct_registro],
-            bbar:[btnNuevoCgg_tct_registro,btnNuevoCSVCgg_tct_registro,btnEditarCgg_tct_registro,'-',btnTctPrintLst,btnReporteCgg_tct_registro,btnEspecieCgg_tct_registro,'->',btnSalirCgg_tct_registro]
+            bbar:[btnNuevoCgg_tct_registro,btnNuevoCSVCgg_tct_registro,btnEditarCgg_tct_registro,'-',btnTctPrintLst,btnReporteCgg_tct_registro,btnEspecieCgg_tct_registro,'->',btnAnularCgg_tct_registro,'-',btnSalirCgg_tct_registro]
         });
         /**
          * Funcion que aplica los privilegios del usuario.

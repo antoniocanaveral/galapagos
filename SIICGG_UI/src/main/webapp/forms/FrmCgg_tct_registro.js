@@ -957,7 +957,7 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
                                 icon: Ext.MessageBox.ERROR
                             });
                     }
-                    winFrmCgg_tct_registro.getEl().mask('Imprimiendo...', 'x-mask-loading');
+                    winFrmCgg_tct_registro.getEl().mask('Anulando...', 'x-mask-loading');
                     var param = new SOAPClientParameters();
                     param.add('inCtreg_codigo', grdCgg_res_persona.getSelectionModel().getSelected().get('CTREG_CODIGO'));
                     param.add('inCtreg_estado_registro',3);
