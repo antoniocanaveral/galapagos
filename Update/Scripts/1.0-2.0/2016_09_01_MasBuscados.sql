@@ -13,10 +13,11 @@ WITH (
 )
 ;
 
-ALTER TABLE cgg_srv_mas_buscados
+ALTER TABLE sii.cgg_srv_mas_buscados
   ADD CONSTRAINT unq_mas_buscados UNIQUE (tipoidentificacion, identificacion);
 
-
+CREATE INDEX idx_cgg_srv_mas_buscados
+   ON sii.cgg_srv_mas_buscados (identificacion ASC NULLS LAST);
 
 
 --> MIGRATION SCRIPT CONTROLLER <--
