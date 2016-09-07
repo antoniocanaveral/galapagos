@@ -143,6 +143,13 @@ ALTER FUNCTION sii.f_cgg_res_persona_notificado_ingreso2(character varying, char
   OWNER TO postgres;
 
 
+
+
+--DESACTIVAMOS LAS ANTERIORES REGLAS
+update sii.cgg_regla_validacion set crval_estado=false where crval_codigo = 'CRVAL6' or crval_codigo = 'CRVAL1';
+
+
+
 -- Ingreso de la regla anterior a la lista de reglas_validación
 INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) 
 VALUES ('CRVAL60', null, 'Persona notificada', 'Verifica que la persona no esta notificada.', 'F_CGG_RES_PERSONA_NOTIFICADO_INGRESO2', '<=', '', 'TRUE', 'La persona esta Notificada no puede ingresar a la Provincia', 1, '2011-03-18 01:00:00.000000', '2011-03-18 01:00:00.000000', null, null, true, '2011-03-18 14:23:10.730641', 'admin', '2011-03-18 14:23:10.730641', 'admin');
@@ -162,8 +169,11 @@ CREATE OR REPLACE FUNCTION sii.f_cgg_eliminar_tct_caducado()
  RETURNS void AS
 $BODY$
 BEGIN
-    DELETE SII.CGG_TCT_REGISTRO TR
-    WHERE TR.CTREG_FECHA_INGRESO < CURRENT_DATE AND TR.CTREG_ESTADO_REGISTRO=0 AND ctreg_impresion_especie is null;
+    DELETE FROM sii.CGG_TCT_REGISTRO TR
+      WHERE TR.CTREG_FECHA_INGRESO < CURRENT_DATE
+      AND TR.CTREG_ESTADO_REGISTRO=0
+      AND ctreg_impresion_especie IS NULL;
+END
 $BODY$
  LANGUAGE plpgsql VOLATILE
  COST 100;
