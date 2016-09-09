@@ -1,3 +1,4 @@
+<%@ page import="com.besixplus.sii.util.Env" %>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
 <head>
 <script type="text/javascript" src="lib/jquery/jquery.js"></script>
@@ -9,7 +10,7 @@
 <script type="text/javascript" src="js/SoapClient.js"></script>
 <script type="text/javascript" src="js/bsxComboBox.js"></script>
 <script type="text/javascript" src="js/tramiteResidencia.js"></script>
-<script type="text/javascript" src="js/config.js"></script>
+	<%out.println(Env.loadExternalScripts("siicgg_web/javascripts.properties"));%>
 
 
 <link rel="stylesheet" type="text/css" href="css/jquery/ui.all.css" />

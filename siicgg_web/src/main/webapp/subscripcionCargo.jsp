@@ -1,10 +1,11 @@
+<%@ page import="com.besixplus.sii.util.Env" %>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
 <head>
 <title>Subscripci&oacute;n</title>
 <link rel="stylesheet" type="text/css" href="css/bsxTablaGE.css" />
 <link rel="stylesheet" type="text/css" href="css/modulo.css" />
 <script type="text/javascript" src="js/prototype.js"></script>
-<script type="text/javascript" src="js/config.js"></script>
+	<%out.println(Env.loadExternalScripts("siicgg_web/javascripts.properties"));%>
 <script type="text/javascript" src="js/SoapClient.js"></script>
 <script type="text/javascript" src="js/bsxTable.js"></script>
 <script type="text/javascript" src="js/bsxComboBox.js"></script>

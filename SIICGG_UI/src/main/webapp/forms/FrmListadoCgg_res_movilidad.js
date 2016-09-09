@@ -284,6 +284,71 @@ function FrmListadoCgg_res_movilidad(inDesktop){
                 objCgg_tct_ingreso_salida.show();
             }}
     });
+    
+	/**
+     * Ext.Button Boton que permite sacar el reporte general del total de personas que han ingresado o salido.
+     */
+    var btnReporteGeneral_res_movilidad= new Ext.Button({
+        id:'btnReporteGeneral_res_movilidad',
+        text:'Reporte Total Entrada/Salida',
+        iconCls:'iconImprimir',
+        handler:function(){
+            var params = [];
+
+            var tmpCurrentDate = new Date();
+    					tmpCurrentDate.setDate(tmpCurrentDate.getDate()-365);
+                        
+			params[0]={
+                    label:'Fecha inicio',
+                    paramName:'P_FECHA_INICIAL',
+                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
+                    type:'date'
+            };
+
+            params[1]={
+                    label:'Fecha fin',
+                    paramName:'P_FECHA_FINAL',
+                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
+                    type:'date'
+            };
+            
+            params[2]=
+            {
+                objectName:'FrmListadoCgg_res_aeropuerto',
+                label:'Aeropuerto',
+                valueField:'CARPT_CODIGO',
+                displayField:'CARPT_NOMBRE',
+                paramName:'P_CARPT_CODIGO',
+                paramValue:'',
+                type:'searchable'
+            };
+            params[3]=
+            {
+                objectName:'FrmListadoCgg_res_aerolinea',
+                label:'Aerolinea',
+                valueField:'CRALN_CODIGO',
+                displayField:'CRALN_NOMBRE',
+                paramName:'P_CRALN_CODIGO',
+                paramValue:'',
+                type:'searchable'
+            };
+            
+    		params[4] = {
+					type:'input',
+					label:'Vuelo',
+					value:'',
+					paramValue:'',
+					required:false,
+					paramName:'P_CRMOV_NUMERO_VUELO'
+            };
+				
+				
+			var reporte = new FrmCriterioReporte('rptReporteGeneralEntradaSalida', '/Reports/sii/tct', null);
+            reporte.addParams(params);
+            reporte.show();
+        } 
+    });
+    
     /**
      * Ext.grid.ColumnModel Define el modelo de columnas para el objeto cgg_res_movilidad.
      */
@@ -449,7 +514,7 @@ function FrmListadoCgg_res_movilidad(inDesktop){
             minimizable:true,
             constrain:true,
             layout:'border',
-            bbar:[btnNuevoCgg_res_movilidad,btnNuevoCgg_res_movilidad2,'-',btnReporteCgg_res_movilidad,btnNuevoCgg_tct_ingreso_salida,'->',btnSalirCgg_res_movilidad]
+            bbar:[btnNuevoCgg_res_movilidad,btnNuevoCgg_res_movilidad2,'-',btnReporteCgg_res_movilidad,btnNuevoCgg_tct_ingreso_salida,btnReporteGeneral_res_movilidad,'->',btnSalirCgg_res_movilidad]
         });
         /**
          * Funcion que aplica los privilegios del usuario.

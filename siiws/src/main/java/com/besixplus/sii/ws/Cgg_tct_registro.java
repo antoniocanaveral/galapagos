@@ -5,12 +5,11 @@ import com.besixplus.sii.db.ManagerConnection;
 import com.besixplus.sii.i18n.Messages;
 import com.besixplus.sii.mail.ProcessMail;
 import com.besixplus.sii.misc.CGGEnumerators.TipoAmbitoEspecie;
-import com.besixplus.sii.objects.*;
 import com.besixplus.sii.objects.Cgg_configuracion;
 import com.besixplus.sii.objects.Cgg_not_mail;
 import com.besixplus.sii.objects.Cgg_res_persona_contacto;
 import com.besixplus.sii.objects.Cgg_tct_grupo_actividad;
-import com.besixplus.sii.objects.Cgg_tct_grupo_hospedaje;
+import com.besixplus.sii.objects.*;
 import com.bmlaurus.db.EncuestaData;
 import com.bmlaurus.db.TctHospedajeData;
 import com.bmlaurus.db.TctTransporteData;
@@ -1285,10 +1284,10 @@ public class Cgg_tct_registro implements Serializable{
 		com.besixplus.sii.misc.Formatter tmpFormat = null;
 		try{
 			Connection con = ManagerConnection.getConnection();
-			if(!com.besixplus.sii.db.Cgg_sec_objeto.isGrant(con, Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getClassName(), tmpRequest.getUserPrincipal().getName(), 1)){
+			/*if(!com.besixplus.sii.db.Cgg_sec_objeto.isGrant(con, Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getClassName(), tmpRequest.getUserPrincipal().getName(), 1)){
 				con.close();
 				throw new SOAPFaultException(SOAPFactory.newInstance().createFault(myInfoMessages.getMessage("sii.seguridad.acceso.negado", null), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
-			}
+			}*/
 
 			con.setAutoCommit(!ManagerConnection.isDeployed());
 			obj = com.besixplus.sii.db.Cgg_tct_registro.selectMultiHospedaje(con, inCtgtr_codigo);
@@ -1303,6 +1302,31 @@ public class Cgg_tct_registro implements Serializable{
 		return null;
 	}
 
+
+
+	@WebMethod
+	public String selectAuspicianteByResidencia(
+			@WebParam(name="inCrrsd_numero_residencia")String inCrrsd_numero_residencia,
+			@WebParam(name="format")String format
+	) throws SOAPException{
+		HttpServletRequest tmpRequest = (HttpServletRequest) wctx.getMessageContext().get(MessageContext.SERVLET_REQUEST);
+		com.besixplus.sii.objects.Cgg_res_persona tmpObj = new com.besixplus.sii.objects.Cgg_res_persona();
+		ArrayList<HashMap<String,Object>> obj = null;
+		com.besixplus.sii.misc.Formatter tmpFormat = null;
+		try{
+			Connection con = ManagerConnection.getConnection();
+			con.setAutoCommit(!ManagerConnection.isDeployed());
+			obj = com.besixplus.sii.db.Cgg_res_persona.selectDatosPersonalesByResidencia(con,inCrrsd_numero_residencia);
+			tmpFormat = new com.besixplus.sii.misc.Formatter(format, obj);
+			con.close();
+		}catch(SQLException inException){
+			com.besixplus.sii.db.SQLErrorHandler.errorHandler(inException);
+			throw new SOAPFaultException(SOAPFactory.newInstance().createFault(inException.getMessage(), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
+		}
+		if (tmpObj != null)
+			return tmpFormat.getData().toString();
+		return null;
+	}
 
 	/**
 	 * OBTIENE LOS REGISTROS DE LA TABLA Cgg_tct_actividad EN UNA ESTRUCTRA JSON o XML QUE CUMPLEN CON EL CRITERIO DE BUSQUEDA. 

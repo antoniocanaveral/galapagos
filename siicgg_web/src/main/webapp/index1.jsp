@@ -1,8 +1,9 @@
+<%@ page import="com.besixplus.sii.util.Env" %>
 <html>
 <head>
 <title>SIICGG Atenci&oacute;n al cliente</title>
 <link rel="stylesheet" type="text/css" href="css/style1.css" />
-<script type="text/javascript" src="js/config.js"></script>
+	<%out.println(Env.loadExternalScripts("siicgg_web/javascripts.properties"));%>
 <script type="text/javascript" src="js/SoapClient.js"></script>
 <script type="text/javascript" src="js/index.js"></script>
 <script type="text/javascript" src="js/prototype.js"></script>

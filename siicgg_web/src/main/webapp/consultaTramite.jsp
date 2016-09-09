@@ -1,6 +1,7 @@
+<%@ page import="com.besixplus.sii.util.Env" %>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
 <head>
-    <script type="text/javascript" src="js/config.js"></script>
+    <%out.println(Env.loadExternalScripts("siicgg_web/javascripts.properties"));%>
     <script type="text/javascript" src="lib/jquery/jquery.js"></script>
     <script type="text/javascript" src="lib/jquery/jquery.validate.js"></script>
     <script type="text/javascript" src="lib/jquery/jquery.tmpl.min.js"></script>
