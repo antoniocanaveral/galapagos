@@ -1,19 +1,15 @@
 package com.besixplus.sii.db;
 
+import com.besixplus.sii.objects.Cgg_res_carnet;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.math.BigDecimal;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.*;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-
-import com.besixplus.sii.objects.Cgg_res_carnet;
 
 /**
  * CONTIENE VARIOS METODOS DE ACCESO A LA BASE DE DATOS.
@@ -60,6 +56,33 @@ public class Cgg_extras {
 		String outResult = "true";
 		try {
 			CallableStatement stmSelect = inConnection.prepareCall("{call SII.F_RESIDENCIA_MONITOR() }");
+			stmSelect.execute();
+			stmSelect.close();
+		} catch (SQLException e) {
+			StringWriter tmpWriter = new StringWriter();
+			PrintWriter tmpPW = new PrintWriter(tmpWriter);
+			e.printStackTrace();
+			e.printStackTrace(tmpPW);
+			outResult = tmpWriter.toString();
+			tmpPW.close();
+			try {
+				tmpWriter.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+		return outResult;
+	}
+
+	/**
+	 * EJECUTA LA FUNCION QUE SE ENCARGA DE LIMPIAR TCTs NO UTILIZADOS.
+	 * @param inConnection CONEXION A LA BASE DE DATOS.
+	 * @return
+	 */
+	public String limpiarTCT(Connection inConnection){
+		String outResult = "true";
+		try {
+			CallableStatement stmSelect = inConnection.prepareCall("{call SII.F_CGG_ELIMINAR_TCT_CADUCADO() }");
 			stmSelect.execute();
 			stmSelect.close();
 		} catch (SQLException e) {

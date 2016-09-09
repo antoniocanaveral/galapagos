@@ -2,8 +2,6 @@ package com.besixplus.sii.job;
 
 import com.besixplus.sii.db.Cgg_extras;
 import com.besixplus.sii.db.ManagerConnection;
-import com.besixplus.sii.objects.Cgg_buzon_correo;
-import com.besixplus.sii.objects.Cgg_configuracion;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -19,7 +17,7 @@ public class ResidentMonitorJob implements Job {
 			String tmpRes = new Cgg_extras().residenciaMonitor(tmpConnection);
 			
 			if(!tmpRes.equalsIgnoreCase("true")){
-				Cgg_configuracion tmpConf = new Cgg_configuracion();
+				/**Cgg_configuracion tmpConf = new Cgg_configuracion();
 				tmpConf.setCGCNF_CODIGO("CONF53");
 				new com.besixplus.sii.db.Cgg_configuracion(tmpConf).select(tmpConnection);
 				if(tmpConf.getCGCNF_VALOR_CADENA()!= null && !tmpConf.getCGCNF_VALOR_CADENA().trim().isEmpty()){
@@ -33,7 +31,8 @@ public class ResidentMonitorJob implements Job {
 					tmpBuzon.setCBZC_USUARIO_UPDATE("monitor");
 					tmpBuzon.setCBZC_MENSAJE(tmpRes);
 					new com.besixplus.sii.db.Cgg_buzon_correo(tmpBuzon).insert(tmpConnection);
-				}
+				}**/
+				System.err.println("MONITOR DE RESIDENCIA != true: "+ tmpRes);
 			}
 			tmpConnection.close();
 		} catch (SQLException e) {
