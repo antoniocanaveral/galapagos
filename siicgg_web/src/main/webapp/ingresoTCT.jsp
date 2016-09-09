@@ -1,3 +1,4 @@
+<%@ page import="com.besixplus.sii.util.Env" %>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
 <head>
 	<link rel="stylesheet" type="text/css" href="css/modulo.css" />
@@ -9,7 +10,7 @@
 	<link rel="stylesheet" type="text/css" href="css/jquery/ui.all.css"/>
 
 
-	<script type="text/javascript" src="js/config.js"></script>
+	<%out.println(Env.loadExternalScripts("siicgg_web/javascripts.properties"));%>
 	<script type="text/javascript" src="js/Reporte.js"></script>
 	<script type="text/javascript" src="js/bsxMessageBox.js"></script>
 	<script type="text/javascript" src="lib/jquery/jquery.js"></script>
@@ -493,7 +494,7 @@ Gal&aacute;pagos</div>
 	</tbody>
 </table>
 <!--class="componetHide"-->
-<div id="FrmIngresoHospedaje" class="componetHide" style="position: fixed; left: 180px; top: 200px; background-color: #fff;">
+<div id="FrmIngresoHospedaje" class="componetHide" style="position: fixed; left: 10px; top: 200px; background-color: #fff;">
 	<div class="cssFormularioBorde">
 		<span class="cssFormularioTitulo"><b>Datos de Hospedaje</b></span>
 		<form action="" id="frmHospedaje" method="get">

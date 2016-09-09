@@ -1,3 +1,4 @@
+<%@ page import="com.besixplus.sii.util.Env" %>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -9,7 +10,7 @@
     <title>SIICGG Atenci&oacute;n al cliente</title>
     <link href='https://fonts.googleapis.com/css?family=Work+Sans:400,500,800,600' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="css/style.css"/>
-    <script type="text/javascript" src="js/config.js"></script>
+    <%out.println(Env.loadExternalScripts("siicgg_web/javascripts.properties"));%>
     <script type="text/javascript" src="js/SoapClient.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript" src="js/prototype.js"></script>

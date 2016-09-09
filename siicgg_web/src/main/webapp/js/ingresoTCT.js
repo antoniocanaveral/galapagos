@@ -476,7 +476,7 @@ function loadIngresoTCT(){
 				prevText: 'Anterior',
 				beforeShow: function(input, inst)
 				{
-					inst.dpDiv.css({marginLeft: (input.offsetWidth+50) + 'px'});
+					inst.dpDiv.css({marginLeft: (input.offsetWidth-207) + 'px'});
 				}
 			});
 			document.getElementById("dtFechaSalidaHospedaje").disabled = false;
@@ -591,6 +591,40 @@ function loadIngresoTCT(){
 		var entrada = jQuery("#dtFechaIngresoHospedaje").val();
 		var salida = v.target.value;//jQuery("#dtFechaSalidaHospedaje").val();
 		numeroDiasHospedaje = Math.round(Math.abs((Date.parseExact(salida,"dd/MM/yyyy").getTime() - Date.parseExact(entrada,"dd/MM/yyyy").getTime())/(oneDay)));
+	});
+
+	function consultarAupicianteHospedaje(){
+
+		function CallBackCgg_tct_auspicianteHospedaje(r){
+			if(r!=null){
+				r = eval ("("+r+")");
+				if(r.length>0 && r[0].CRRSD_NUMERO_RESIDENCIA) {
+					lugarHospedaje = "[ " + r[0].CRRSD_NUMERO_RESIDENCIA + " ] - " + r[0].CRPER_APELLIDO_PATERNO + " " + r[0].CRPER_APELLIDO_MATERNO + " " + r[0].CRPER_NOMBRES;
+					lugarHospedajeId = r[0].CRRSD_NUMERO_RESIDENCIA;
+					jQuery("#divLugarHospedaje").val(lugarHospedaje);
+				}
+			}
+		}
+
+		var residenciaNo = jQuery("#divLugarHospedaje").val();
+		jQuery("#divLugarHospedaje").val('');
+		console.log("Auspiciante: "+residenciaNo);
+		var param = new SOAPClientParameters();
+		param.add('inCrrsd_numero_residencia',residenciaNo);
+		param.add('format','JSON');
+		SOAPClient.invoke(URL_WS+"PublicWS/Cgg_tct_registro",'selectAuspicianteByResidencia',param, true, CallBackCgg_tct_auspicianteHospedaje);
+	}
+
+	jQuery("#divLugarHospedaje").keypress(function(event){
+		if (event.which == '13') {
+			consultarAupicianteHospedaje();
+		}
+	});
+
+	jQuery("#divLugarHospedaje").blur(function(event){
+		if(jQuery("#divLugarHospedaje").val().length>0){
+			consultarAupicianteHospedaje();
+		}
 	});
 
 	var hospCont = 0;
@@ -1712,7 +1746,7 @@ function loadIngresoTCT(){
 		  }else{//DOMICILIO AMIGO/FAMILIAR
 			  jQuery("#cbxIslaHospedaje").attr('disabled', false); 
 			  jQuery("#cbxIslaHospedaje").val(0);
-			  jQuery("#labelHospedaje").html("* Lugar de hospedaje");
+			  jQuery("#labelHospedaje").html("* N&deg; Residencia del Anfitri&oacute;n");
 			  jQuery("#divNombreHospedaje").hide();
 			  jQuery("#divNombreHospedajeIsla").hide();
 			  jQuery("#divLugarHospedaje").show();

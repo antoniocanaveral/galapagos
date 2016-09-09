@@ -1,3 +1,4 @@
+<%@ page import="com.besixplus.sii.util.Env" %>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
 <head>
 <link rel="stylesheet" type="text/css" href="css/jquery/jquery-ui.css" />
@@ -9,7 +10,7 @@
 <link rel="stylesheet" type="text/css" href="css/bsxTabPanel.css" />
 <link rel="stylesheet" type="text/css"
 	href="css/jquery/jstree/style.css" />
-<script type="text/javascript" src="js/config.js"></script>
+	<%out.println(Env.loadExternalScripts("siicgg_web/javascripts.properties"));%>
 <script type="text/javascript" src="js/Reporte.js"></script>
 <script type="text/javascript" src="js/bsxMessageBox.js"></script>
 <script type="text/javascript" src="lib/jquery/jquery.js"></script>
