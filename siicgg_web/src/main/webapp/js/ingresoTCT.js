@@ -1692,9 +1692,12 @@ function loadIngresoTCT(){
 			tmpCrper_codigo = codigoPersona?codigoPersona:'';
 			tmpCusu_nombre = null;
 			var arrFecha = dtFechaIngreso.value.split('/');
-			var fechaIngreso = arrFecha[2]+'-'+arrFecha[1]+'-'+arrFecha[0];		
+			var fechaIngreso = arrFecha[2]+'-'+arrFecha[1]+'-'+arrFecha[0];
+			arrFecha = dtFechaSalida.value.split('/');
+			var fechaSalida = arrFecha[2]+'-'+arrFecha[1]+'-'+arrFecha[0];
 
 			tmpFechaIngreso = fechaIngreso+'T00:00:00';
+			tmpFechaSalida = fechaSalida+'T00:00:00';
 //dtFechaIngreso.value.format(TypeDateFormat.ISO8601Long);
 
             objReglasValidacion  = eval('('+tmpObjReglasValidacion+')');/*Ext.decode(tmpObjReglasValidacion);*/
