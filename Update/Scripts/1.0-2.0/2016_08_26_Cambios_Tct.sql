@@ -989,7 +989,7 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
-
+INSERT INTO sii.Cgg_configuracion VALUES('CONF202','TCT_INFO','<p><strong>ART. 43.- Turista</strong> <br/> Se considera turista a toda persona... lata... lata</p>',0,null,true,current_timestamp,'admin',current_timestamp,'admin');
 
 
 --> MIGRATION SCRIPT CONTROLLER <--
