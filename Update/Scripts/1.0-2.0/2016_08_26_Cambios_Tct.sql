@@ -991,6 +991,94 @@ $BODY$
 
 
 
+--
+
+INSERT INTO sii.cgg_tct_tipo_registro (tcttr_codigo, tcttr_nombre, tcttr_estado) VALUES ('1', 'Individual', true);
+INSERT INTO sii.cgg_tct_tipo_registro (tcttr_codigo, tcttr_nombre, tcttr_estado) VALUES ('2', 'Grupal', true);
+
+INSERT INTO sii.cgg_tct_categoria (tctcat_codigo, tctcat_nombre, tctcat_estado) VALUES ('1', 'Turista', true);
+INSERT INTO sii.cgg_tct_categoria (tctcat_codigo, tctcat_nombre, tctcat_estado) VALUES ('2', 'Transeunte', true);
+
+
+---
+
+update sii.cgg_regla_validacion set crval_estado=false where crval_codigo = 'CRVAL6' or crval_codigo = 'CRVAL1'
+
+
+--VERSIÓN 2 (VIERNES 09 DE SEPTIEMBRE)
+
+--NUEVA FUNCION
+
+-- Function: sii.f_residente_transeunte_TCT(character varying, timestamp with time zone, timestamp with time zone, character varying, character varying, character varying);
+
+-- DROP FUNCTION sii.f_residente_transeunte_TCT(character varying, timestamp with time zone, timestamp with time zone, character varying, character varying, character varying);
+
+CREATE OR REPLACE FUNCTION sii.f_residente_transeunte_TCT(in_crper_codigo character varying, in_fecha_ingreso timestamp with time zone, in_fecha_salida timestamp with time zone, in_tipo_registro character varying, inoperador character varying, invalorcomparacion character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+	TMP_CODIGO VARCHAR;
+	TMP_RESULTADO VARCHAR;
+	TMP_FECHA_INGRESO DATE;
+	TMP_FECHA_SALIDA DATE;
+
+BEGIN
+	TMP_RESULTADO = 'TRUE';
+
+	IF (IN_TIPO_REGISTRO=='2') THEN
+
+	SELECT PRS.CRPER_CODIGO INTO TMP_CODIGO
+	FROM SII.CGG_RES_PERSONA PRS
+	INNER JOIN SII.CGG_RES_RESIDENCIA RSD ON RSD.CRPER_CODIGO = PRS.CRPER_CODIGO AND RSD.CRRSD_MODALIDAD = 1 AND RSD.CRRSD_VIGENTE
+	WHERE PRS.CRPER_CODIGO = IN_CRPER_CODIGO AND RSD.CRTST_CODIGO IN (WITH RECURSIVE TIPO(CRTST_CODIGO, CGG_CRTST_CODIGO, CRTST_DESCRIPCION)AS(
+		SELECT CRTST_CODIGO, CGG_CRTST_CODIGO, CRTST_DESCRIPCION FROM CGG_RES_TIPO_SOLICITUD_TRAMITE WHERE  CRTST_CODIGO = (SELECT CGCNF_VALOR_CADENA
+		FROM CGG_CONFIGURACION
+		WHERE CGCNF_CODIGO = '05')
+		UNION SELECT TST.CRTST_CODIGO, TST.CGG_CRTST_CODIGO, TP.CRTST_DESCRIPCION FROM CGG_RES_TIPO_SOLICITUD_TRAMITE TST, TIPO TP
+		WHERE TST.CGG_CRTST_CODIGO = TP.CRTST_CODIGO
+	) SELECT CRTST_CODIGO  FROM TIPO);
+
+	IF (TMP_CODIGO IS NULL) THEN
+	TMP_RESULTADO = 'FALSE, La persona no cuenta con una residencia transeunte vigente, ';
+	END IF;
+
+	SELECT CRRSD_FECHA_INICIO::DATE INTO IN_FECHA_INGRESO
+	FROM SII.CGG_RES_RESIDENCIA WHERE CRPER_CODIGO = TMP_CODIGO;
+
+	SELECT CRRSD_FECHA_CADUCIDAD::DATE INTO IN_FECHA_SALIDA
+	FROM SII.CGG_RES_RESIDENCIA WHERE CRPER_CODIGO = TMP_CODIGO;
+
+	IF (IN_FECHA_INGRESO<>TMP_FECHA_INGRESO OR IN_FECHA_SALIDA<>TMP_FECHA_SALIDA) THEN
+	TMP_RESULTADO='FALSE' || TMP_RESULTADO || 'no coinciden las fechas ingresadas con las fechas de vigencia como traseúnte';
+	END IF;
+
+	END IF;
+
+	RETURN TMP_RESULTADO;
+END
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION sii.f_residente_transeunte_TCT(character varying, timestamp with time zone, timestamp with time zone, character varying, character varying, character varying)
+  OWNER TO postgres;
+
+-- AÑADIENDO LA NUEVA REGLA DE TRASEUNTE TCT EN LA TABLA REGLA VALIDACION
+
+INSERT INTO sii.cgg_regla_validacion (crval_codigo, cgcnf_codigo, crval_nombre, crval_descripcion, crval_funcion_validacion, crval_operador_comparador, crval_valor_libre, crval_resultado_aceptacion, crval_sugerencia, crval_tipo, crvar_fecha_inicio, crvar_fecha_fin, crval_valor_1, crval_valor_2, crval_estado, crval_fecha_insert, crval_usuario_insert, crval_fecha_update, crval_usuario_update) VALUES ('CRVAL61', null, 'Transeúte vigente y fechas ingreso-salida', 'Verifica si la persona que solita un tct tipo transeunte posee residencia transeunte y las fechas de ingreso salida son las mismas', 'F_RESIDENTE_TRANSEUNTE_TCT', '=', 'TRUE', 'TRUE', 'La persona no es residente traseúnte o no coincide las fechas', 1, '2011-04-09 00:00:00.000000', '2011-04-09 00:00:00.000000', null, null, true, '2011-04-09 00:00:00.000000', 'patricia', '2011-04-09 00:00:00.000000', 'patricia');
+
+-- AÑADIENDO LA NUEVA REGLA DE TRANSEUNTE TCT A LA TABLA DE OPERACION REGLA VALIDACION
+
+INSERT INTO sii.cgg_operacion_regla_validacion (corv_codigo, crval_codigo, copvl_codigo, corv_campo_evaluacion, corv_valor_1, corv_estado, corv_fecha_insert, corv_usuario_insert, corv_fecha_update, corv_usuario_update) VALUES ('CORV14', 'CRVAL61', 'COPVL1', '[{"IN_CRPER_CODIGO":"tmpCrper_codigo","IN_FECHA_INGRESO":"tmpFechaIngreso","IN_FECHA_SALIDA":"tmpFechaSalida","IN_TIPO_REGISTRO":"cbxTipoRegistro.dom.value"}]', null, true, '2011-05-17 19:22:06.458445', null, '2011-05-17 19:22:06.458445', null);
+
+-- ACTUALIZACIÓN DE DÍAS COMO TURISTA EN LA TABLA REGLA VALIDACION
+
+update sii.cgg_regla_validacion set crval_valor_libre='60' where crval_codigo='CRVAL59'
+
+
+
+
+
+
 
 --> MIGRATION SCRIPT CONTROLLER <--
 INSERT INTO sii.cgg_migrationscript (mrgsp_codigo,mrgsp_fecha,mrgsp_usuario_insert,mrgsp_fecha_insert,mrgsp_usuario_update,mrgsp_fecha_update,
