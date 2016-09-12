@@ -391,7 +391,7 @@ $(function() {
 
 
         var frame = document.getElementById("frameAttachment");
-        frame.src = "alfrescoMng.html?tableName=" + encodeURIComponent(_tableName) + "&recordId=" + encodeURIComponent(_recordId) + "&filter=" + encodeURIComponent(_filter);
+        frame.src = "alfrescoMng.jsp?tableName=" + encodeURIComponent(_tableName) + "&recordId=" + encodeURIComponent(_recordId) + "&filter=" + encodeURIComponent(_filter);
         showForm($("attachView"));
     }
 
