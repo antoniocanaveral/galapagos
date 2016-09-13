@@ -917,6 +917,12 @@ MyDesktop.StartMenuTct = Ext.extend(MyDesktop.StartMenuItem, {
                     handler:this.createWindow,
                     scope: this,
                     windowId:'FrmListadoCgg_tct_ingreso_fallido'
+                },{
+            	    text: 'Reporte Financiero',
+                    iconCls:'bogus',
+                    handler:this.createWindow,
+                    scope: this,
+                    windowId:'FrmCgg_tct_reporte_finaniero'
                 }
                 ]
             }
