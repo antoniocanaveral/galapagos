@@ -221,6 +221,7 @@ var script=document.createElement('script');script.type="text/javascript";script
 var script=document.createElement('script');script.type="text/javascript";script.src="forms/FrmCgg_tct_forma_salida.js";head.appendChild(script);
 var script=document.createElement('script');script.type="text/javascript";script.src="forms/FrmCgg_tct_grupo_turista.js";head.appendChild(script);
 var script=document.createElement('script');script.type="text/javascript";script.src="forms/FrmListadoCgg_tct_ingreso_fallido.js";head.appendChild(script);
+var script=document.createElement('script');script.type="text/javascript";script.src="forms/FrmCgg_tct_reporte_finaniero.js";head.appendChild(script);
 var script=document.createElement('script');script.type="text/javascript";script.src="forms/FrmListadoCgg_tct_grupo_turista.js";head.appendChild(script);
 var script=document.createElement('script');script.type="text/javascript";script.src="forms/FrmListadoCgg_tct_registro.js";head.appendChild(script);
 var script=document.createElement('script');script.type="text/javascript";script.src="forms/FrmListadoCgg_tct_forma_salida.js";head.appendChild(script);
