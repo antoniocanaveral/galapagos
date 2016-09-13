@@ -83,7 +83,7 @@ $(function() {
     });
 
     function consultarRepresentante(){
-        var documentoValido = validarCedula($('#txtRepresentante').val());
+        var documentoValido = true;//validarCedula($('#txtRepresentante').val());
         objRepresentante=null;
         if(!documentoValido){
             new bsxMessageBox({
@@ -1536,6 +1536,18 @@ $(function() {
                             if(objRepresentante!=null){
                                 $('#txtRepresentanteData').val(objRepresentante.CRPER_APELLIDO_PATERNO + " " + objRepresentante.CRPER_APELLIDO_MATERNO +" "+ objRepresentante.CRPER_NOMBRES);
                                 repCrperCodigo=objRepresentante!=null?objRepresentante.CRPER_CODIGO:null;
+                            }else{
+                                repCrperCodigo = null;
+                                $('#txtRepresentanteData').val('');
+                                objRepresentante = null;
+                                new bsxMessageBox({
+                                    title:'Alerta',
+                                    msg: 'El documento del representante debe ser una c&eacute;dula o pasaporte validos.',
+                                    icon: "iconInfo",
+                                    close:function(){
+                                        $('#txtRepresentante').val('');
+                                    }
+                                });
                             }
                         }
                         else if(inTipoPersona == 'AUSPICIANTE')

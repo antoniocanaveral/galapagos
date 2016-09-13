@@ -34,7 +34,12 @@ function AlfrescoMng(_tableName, _recordID, _filter, isReadOnly){
 
     freeUpload = function(_this, e){
         if(readOnly){
-            Ext.Msg.alert('Alfresco', 'No se permite actualizar ni cargar archivos');
+            //Ext.Msg.alert('Alfresco', 'No se permite actualizar ni cargar archivos');
+            new bsxMessageBox({
+                title:'Alfresco',
+                msg: 'No se permite actualizar ni cargar archivos',
+                icon: "iconInfo"
+            });
             return;
         }
         var btnUpload = _this;
@@ -139,7 +144,11 @@ function AlfrescoMng(_tableName, _recordID, _filter, isReadOnly){
             //Timer para que no se quede eternamente pensando
             setTimeout(function(){
                 if(activityIndicator){
-                    Ext.MsgPopup.msg(tituloAlfrescoMng, "Tiempo de espera agotado. Puede que no exista el documento.",MsgPopup.INFO);
+                    new bsxMessageBox({
+                        title:'Alfresco',
+                        msg: 'Tiempo de espera agotado. Puede que no exista el documento o el visor no se ha instalado',
+                        icon: "iconInfo"
+                    });
                     activityIndicator.hide();
                     activityIndicator=null;
                 }
