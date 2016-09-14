@@ -34,9 +34,11 @@ echo "Iniciando Deploy Front-End"
 echo ""
 echo "Usuario: "$USUARIO
 echo "1/2"
-scp $ROOT_PATH/SIICGG_UI/target/SIICGG_UI.war $USUARIO@$REMOTE_SERVER:$PATH_DESTINO
+cp $ROOT_PATH/SIICGG_UI/target/SIICGG_UI.war $JBOSS_HOME/standalone/deployments
+#scp $ROOT_PATH/SIICGG_UI/target/SIICGG_UI.war $USUARIO@$REMOTE_SERVER:$PATH_DESTINO
 echo "2/2"
-scp $ROOT_PATH/siicgg_web/target/siicgg_web.war $USUARIO@$REMOTE_SERVER:$PATH_DESTINO
+cp $ROOT_PATH/siicgg_web/target/siicgg_web.war $JBOSS_HOME/standalone/deployments
+#scp $ROOT_PATH/siicgg_web/target/siicgg_web.war $USUARIO@$REMOTE_SERVER:$PATH_DESTINO
 echo ""
 echo "Copiando Global SII_HOME"
 echo ""
