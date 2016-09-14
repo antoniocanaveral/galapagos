@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="095ec3a7-17ea-4427-bc98-4b2d14379020">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="40"/>
 	<parameter name="P_FECHA_INICIAL" class="java.lang.String"/>
 	<parameter name="P_FECHA_FINAL" class="java.lang.String"/>
 	<parameter name="P_CKPVT_CODIGO" class="java.lang.String">
@@ -14,6 +14,7 @@
 	<queryString>
 		<![CDATA[SELECT DISTINCT
 PVE.CKPVT_NOMBRE,
+USU.CUSU_NOMBRE_USUARIO,
 ESP.CKESP_NOMBRE,
 VDT.CKVDT_FECHA_UPDATE::DATE,
 SUM(VDT.CKVDT_CANTIDAD) CANTIDAD,
@@ -25,15 +26,17 @@ INNER JOIN SII.CGG_KDX_VENTA VEN ON(VEN.CKVNT_CODIGO=VDT.CKVNT_CODIGO)
 INNER JOIN SII.CGG_KDX_ASIGNACION ASI ON(VEN.CKASG_CODIGO=ASI.CKASG_CODIGO)
 INNER JOIN SII.CGG_KDX_USUARIO_PV UPV ON(UPV.CKUPV_CODIGO=ASI.CGG_CKUPV_CODIGO)
 INNER JOIN SII.CGG_KDX_PUNTO_VENTA PVE ON(PVE.CKPVT_CODIGO=UPV.CKPVT_CODIGO)
+INNER JOIN SII.CGG_USUARIO USU ON(USU.CUSU_NOMBRE_USUARIO=VDT.CKVDT_USUARIO_UPDATE)
 WHERE REG.CTREG_ESTADO
 AND REG.CTREG_ESTADO_REGISTRO = 1 --IMPRESAS
 AND VDT.CKVDT_FECHA_UPDATE::DATE BETWEEN $P{P_FECHA_INICIAL}::DATE AND $P{P_FECHA_FINAL}::DATE
 AND (LENGTH($P{P_CKPVT_CODIGO})=0 OR PVE.CKPVT_CODIGO=$P{P_CKPVT_CODIGO})
 AND (LENGTH($P{P_CKESP_CODIGO})=0 OR ESP.CKESP_CODIGO=$P{P_CKESP_CODIGO})
-GROUP BY PVE.CKPVT_NOMBRE, ESP.CKESP_NOMBRE,  VDT.CKVDT_FECHA_UPDATE::DATE
-ORDER BY PVE.CKPVT_NOMBRE,  ESP.CKESP_NOMBRE, VDT.CKVDT_FECHA_UPDATE::DATE DESC]]>
+GROUP BY PVE.CKPVT_NOMBRE, USU.CUSU_NOMBRE_USUARIO, ESP.CKESP_NOMBRE,  VDT.CKVDT_FECHA_UPDATE::DATE
+ORDER BY PVE.CKPVT_NOMBRE, USU.CUSU_NOMBRE_USUARIO, ESP.CKESP_NOMBRE, VDT.CKVDT_FECHA_UPDATE::DATE DESC]]>
 	</queryString>
 	<field name="ckpvt_nombre" class="java.lang.String"/>
+	<field name="cusu_nombre_usuario" class="java.lang.String"/>
 	<field name="ckesp_nombre" class="java.lang.String"/>
 	<field name="ckvdt_fecha_update" class="java.sql.Date"/>
 	<field name="cantidad" class="java.lang.Long"/>
@@ -73,6 +76,26 @@ ORDER BY PVE.CKPVT_NOMBRE,  ESP.CKESP_NOMBRE, VDT.CKVDT_FECHA_UPDATE::DATE DESC]
 						<font isBold="true"/>
 					</textElement>
 					<text><![CDATA[Punto de venta:]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="gUsuario">
+		<groupExpression><![CDATA[$F{cusu_nombre_usuario}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<textField>
+					<reportElement x="94" y="0" width="431" height="20" uuid="7c024d7c-4b9e-446b-acff-9bc8dfa31e81"/>
+					<box leftPadding="5"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{cusu_nombre_usuario}.toUpperCase()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="14" y="0" width="80" height="20" uuid="dc7295cd-00c4-43d5-82ff-d065c64fa56b"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Usuario:]]></text>
 				</staticText>
 			</band>
 		</groupHeader>
