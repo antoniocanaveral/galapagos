@@ -131,15 +131,15 @@ function AlfrescoUploader(jsonFile,_tableName,_recordId,filesRepository){
                             console.log(JSON.stringify(inAction.result.objData));
                             resultObj = inAction.result.objData;
                             if(inAction.result.success == true){
-                                Ext.MsgPopup.msg(tituloAlfrescoMng, "Su archivo adjunto ha sido guardado.",MsgPopup.INFO);
+                                //Ext.MsgPopup.msg(tituloAlfrescoMng, "Su archivo adjunto ha sido guardado.",MsgPopup.INFO);
                                 winAttach.close();
                             }else{
-                                Ext.MsgPopup.msg(tituloAlfrescoMng, "Su archivo adjunto no ha sido guardado.\nError:"+inAction.result.msg,MsgPopup.WARNING);
+                                //Ext.MsgPopup.msg(tituloAlfrescoMng, "Su archivo adjunto no ha sido guardado.\nError:"+inAction.result.msg,MsgPopup.WARNING);
                             }
                         },
                         failure:function(inForm,inAction){
                             fp.getEl().unmask();
-                            Ext.MsgPopup.msg(tituloAlfrescoMng, "Su archivo adjunto no ha sido guardado.\nError:"+inAction.result.msg,MsgPopup.WARNING);
+                            //Ext.MsgPopup.msg(tituloAlfrescoMng, "Su archivo adjunto no ha sido guardado.\nError:"+inAction.result.msg,MsgPopup.WARNING);
                         },
                         params:{
                             recordReference:{tableName:_tableName, recordId:_recordId}
@@ -147,7 +147,7 @@ function AlfrescoUploader(jsonFile,_tableName,_recordId,filesRepository){
                     });
                 }catch(e){
                     fp.getEl().unmask();
-                    Ext.MsgPopup.msg(tituloAlfrescoMng, "Existe un problema al guardar su archivo",MsgPopup.INFO);
+                    //Ext.MsgPopup.msg(tituloAlfrescoMng, "Existe un problema al guardar su archivo",MsgPopup.INFO);
                     console.log(e.message);
                 }
             }

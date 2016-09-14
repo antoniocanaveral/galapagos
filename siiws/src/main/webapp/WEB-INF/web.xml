@@ -2643,6 +2643,15 @@
         </user-data-constraint>
     </security-constraint>
     <security-constraint>
+        <display-name>SessionManager</display-name>
+        <web-resource-collection>
+            <web-resource-name>SessionManager</web-resource-name>
+            <url-pattern>/SessionManager</url-pattern>
+            <http-method>POST</http-method>
+            <http-method>GET</http-method>
+        </web-resource-collection>
+    </security-constraint>
+    <security-constraint>
         <display-name>PublicWS</display-name>
         <web-resource-collection>
             <web-resource-name>WEB</web-resource-name>

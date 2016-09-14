@@ -223,7 +223,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr style="display:none">
                                             <td valign="center">
                                                 <div id="divDesarrollo">
                                                     <div class="icon iconDH"></div>
@@ -270,10 +270,10 @@
 								anticipaci&oacute;n si deseas ingresar a Gal&aacute;pagos</span></div>
                                                 <div id="divPreRegistroTCT-Items" class="clsItems"
                                                      style="display: none">
-                                                    <div style="max-width: 175px">
+                                                    <div style="max-width: 175px" style="display:none">
                                                         <ul>
                                                             <li id="linkAtencionTCT"
-                                                                style="list-style-image: url(css/icon/msn.png);">Atenci&oacute;n
+                                                                style="display:none; list-style-image: url(css/icon/msn.png);">Atenci&oacute;n
                                                                 en l&iacute;nea
                                                             </li>
                                                         </ul>
@@ -281,7 +281,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr style="display:none">
                                             <td valign="center">
                                                 <div id="divTramitesVehiculo">
                                                     <div class="icon iconVehiculo"></div>
@@ -309,7 +309,7 @@
                                                                 Frecuentes
                                                             </li>
                                                             <li id="linkAtencionV"
-                                                                style="list-style-image: url(css/icon/msn.png);">Atenci&oacute;n
+                                                                style="display:none; list-style-image: url(css/icon/msn.png);">Atenci&oacute;n
                                                                 en l&iacute;nea
                                                             </li>
                                                         </ul>
@@ -342,11 +342,11 @@
                                                                 Requisitos
                                                             </li>
                                                             <li id="btnImpresionSolicitud"
-                                                                style="list-style-image: url(css/icon/printer.png);">
+                                                                style="display:none; list-style-image: url(css/icon/printer.png);">
                                                                 Certificados
                                                             </li>
                                                             <li id="btnComite"
-                                                                style="list-style-image: url(css/icon/group.png);">Inf.
+                                                                style="display:none; list-style-image: url(css/icon/group.png);">Inf.
                                                                 Comit&eacute;</li>
                                                             <li
                                                                     style="margin-bottom: 0px 5px 10px 0px; width: 120px; cursor: default; list-style-type: none; border-bottom: 1px dotted #EE8E41">
@@ -361,7 +361,7 @@
                                                                 Frecuentes
                                                             </li>
                                                             <li id="linkAtencionR"
-                                                                style="list-style-image: url(css/icon/msn.png);">Atenci&oacute;n
+                                                                style="display:none; list-style-image: url(css/icon/msn.png);">Atenci&oacute;n
                                                                 en l&iacute;nea
                                                             </li>
                                                         </ul>

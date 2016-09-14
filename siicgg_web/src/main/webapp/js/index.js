@@ -6,6 +6,7 @@ function loadInit(){
 	if (txtUsuario.value!="false"){
 		function CallBackRolUsuario(r){
 			RolUsuario = r;
+
 		}	
 		SOAPClient.invoke(URL_WS+"Cgg_gem_vacante", "getRolUsuario", null, false, CallBackRolUsuario);	
 	}
@@ -22,8 +23,9 @@ function loadInit(){
 	var btnAcceso = document.getElementById("btnAcceso");	
 	var btnCambiarClave = document.getElementById("btnCambiarClave");	
 	document.getElementById("btnAcceso").onclick=function(){
+		ManagerCookies.erase();
 		window.location="PrivateWS/SessionWeb?request=logout";
-	}
+	};
 	if (txtUsuario.value=="false"){
 		lnkAccesoLogin.style.display = "block";
 		lnkAccesoLogin.innerHTML="Click aqu\u00ED para ingresar al sistema";
@@ -168,49 +170,53 @@ function loadSeleccionModulo(){
 	arrDivs.push({idComponent:"linkEmpresas",page:"gestionEmpleo.jsp",toolTip:"Si deseas ingresar ofertas laborales"});
 	arrDivs.push({idComponent:"linkContacto",page:"contactanos.jsp?CWMOD_CODIGO=CWMOD1",toolTip:"Ver los datos de contactos de gesti&oacute;n de empleo"});
 	arrDivs.push({idComponent:"linkPreguntas",page:"preguntasFrecuentes.jsp?CWMOD_CODIGO=CWMOD1",toolTip:'Mira o registra preguntas sobre gesti&oacute;n de empleo'});
-	arrDivs.push({idComponent:"linkAtencionGEM",page:"http://settings.messenger.live.com/Conversation/IMMe.aspx?invitee=db659de65b08e7f3@apps.messenger.live.com&mkt=es-ES&useTheme=true&themeName=blue&foreColor=333333&backColor=E8F1F8&linkColor=333333&borderColor=AFD3EB&buttonForeColor=333333&buttonBackColor=EEF7FE&buttonBorderColor=AFD3EB&buttonDisabledColor=EEF7FE&headerForeColor=0066A7&headerBackColor=8EBBD8&menuForeColor=333333&menuBackColor=FFFFFF&chatForeColor=333333&chatBackColor=FFFFFF&chatDisabledColor=F6F6F6&chatErrorColor=760502&chatLabelColor=6E6C6C&buttonhost=www.gobiernogalapagos.gob.ec"});
-	document.getElementById("linkAdministrador").onclick = function (){	window.open('/sii/','_blank');	}
+	//arrDivs.push({idComponent:"linkAtencionGEM",page:"http://settings.messenger.live.com/Conversation/IMMe.aspx?invitee=db659de65b08e7f3@apps.messenger.live.com&mkt=es-ES&useTheme=true&themeName=blue&foreColor=333333&backColor=E8F1F8&linkColor=333333&borderColor=AFD3EB&buttonForeColor=333333&buttonBackColor=EEF7FE&buttonBorderColor=AFD3EB&buttonDisabledColor=EEF7FE&headerForeColor=0066A7&headerBackColor=8EBBD8&menuForeColor=333333&menuBackColor=FFFFFF&chatForeColor=333333&chatBackColor=FFFFFF&chatDisabledColor=F6F6F6&chatErrorColor=760502&chatLabelColor=6E6C6C&buttonhost=www.gobiernogalapagos.gob.ec"});
+	document.getElementById("linkAdministrador").onclick = function (){	window.open('/sii/','_blank');	};
 
 	/*Menu de Pre-registro de TCT*/
 	arrDivs.push({parent:true,items:true,idComponent:"divPreRegistroTCT",page:"ingresoTCT.jsp"});
-	arrDivs.push({idComponent:"linkPreguntas",page:"preguntasFrecuentes.jsp?CWMOD_CODIGO=CWMOD1",toolTip:'Mira o registra preguntas sobre gesti&oacute;n de empleo'});
-	arrDivs.push({idComponent:"linkAtencionTCT",page:"http://settings.messenger.live.com/Conversation/IMMe.aspx?invitee=db659de65b08e7f3@apps.messenger.live.com&mkt=es-ES&useTheme=true&themeName=blue&foreColor=333333&backColor=E8F1F8&linkColor=333333&borderColor=AFD3EB&buttonForeColor=333333&buttonBackColor=EEF7FE&buttonBorderColor=AFD3EB&buttonDisabledColor=EEF7FE&headerForeColor=0066A7&headerBackColor=8EBBD8&menuForeColor=333333&menuBackColor=FFFFFF&chatForeColor=333333&chatBackColor=FFFFFF&chatDisabledColor=F6F6F6&chatErrorColor=760502&chatLabelColor=6E6C6C&buttonhost=www.gobiernogalapagos.gob.ec"});
+	//arrDivs.push({idComponent:"linkPreguntas",page:"preguntasFrecuentes.jsp?CWMOD_CODIGO=CWMOD1",toolTip:'Mira o registra preguntas sobre gesti&oacute;n de empleo'});
+	//arrDivs.push({idComponent:"linkAtencionTCT",page:"http://settings.messenger.live.com/Conversation/IMMe.aspx?invitee=db659de65b08e7f3@apps.messenger.live.com&mkt=es-ES&useTheme=true&themeName=blue&foreColor=333333&backColor=E8F1F8&linkColor=333333&borderColor=AFD3EB&buttonForeColor=333333&buttonBackColor=EEF7FE&buttonBorderColor=AFD3EB&buttonDisabledColor=EEF7FE&headerForeColor=0066A7&headerBackColor=8EBBD8&menuForeColor=333333&menuBackColor=FFFFFF&chatForeColor=333333&chatBackColor=FFFFFF&chatDisabledColor=F6F6F6&chatErrorColor=760502&chatLabelColor=6E6C6C&buttonhost=www.gobiernogalapagos.gob.ec"});
 	
 	/*Menu de Desarrollo Humano*/
-	arrDivs.push({parent:true,items:true,idComponent:"divDesarrollo"});	
+	/*arrDivs.push({parent:true,items:true,idComponent:"divDesarrollo"});
 	arrDivs.push({idComponent:"linkBecaBeneficiario",page:"beca.jsp",toolTip:"Listado de beneficiarios de becas"});
 	arrDivs.push({idComponent:"linkPreregistrocurso",page:"listadoCurso.jsp",toolTip:"Ver los datos de contactos de desarrollo humano"});
 	arrDivs.push({idComponent:"linkContactoDH",page:"contactanos.jsp?CWMOD_CODIGO=CWMOD4",toolTip:"Ver los datos de contactos de desarrollo humano"});
 	arrDivs.push({idComponent:"linkPreguntasDH",page:"preguntasFrecuentes.jsp?CWMOD_CODIGO=CWMOD4",toolTip:'Mira o registra preguntas sobre desarrollo humano'});
-
+	*/
 	/*Menu de Tramites de Residencia*/
 	arrDivs.push({parent:true,items:true,idComponent:"divTramitesResidencia"});	
 	arrDivs.push({idComponent:"btnIngresoTramites",page:"tramiteResidencia.jsp"});	
 	arrDivs.push({idComponent:"btnConsultaTramites",page:"consultaTramite.jsp"});	
 	arrDivs.push({idComponent:"btnRequisitosTramites",page:"requisitosTipoSolicitud.jsp"});
-    arrDivs.push({idComponent:"btnImpresionSolicitud",page:"impresionSolicitud.jsp"});
-    arrDivs.push({idComponent:"btnComite",page:"comite.jsp"});
+    //arrDivs.push({idComponent:"btnImpresionSolicitud",page:"impresionSolicitud.jsp"});
+    //arrDivs.push({idComponent:"btnComite",page:"comite.jsp"});
 	arrDivs.push({idComponent:"linkContactoR",page:"contactanos.jsp?CWMOD_CODIGO=CWMOD3"});
 	arrDivs.push({idComponent:"linkPreguntasR",page:"preguntasFrecuentes.jsp?CWMOD_CODIGO=CWMOD3"});
-	arrDivs.push({idComponent:"linkAtencionR",page:"http://settings.messenger.live.com/Conversation/IMMe.aspx?invitee=db659de65b08e7f3@apps.messenger.live.com&mkt=es-ES&useTheme=true&themeName=blue&foreColor=333333&backColor=E8F1F8&linkColor=333333&borderColor=AFD3EB&buttonForeColor=333333&buttonBackColor=EEF7FE&buttonBorderColor=AFD3EB&buttonDisabledColor=EEF7FE&headerForeColor=0066A7&headerBackColor=8EBBD8&menuForeColor=333333&menuBackColor=FFFFFF&chatForeColor=333333&chatBackColor=FFFFFF&chatDisabledColor=F6F6F6&chatErrorColor=760502&chatLabelColor=6E6C6C&buttonhost=www.gobiernogalapagos.gob.ec"});
+	//arrDivs.push({idComponent:"linkAtencionR",page:"http://settings.messenger.live.com/Conversation/IMMe.aspx?invitee=db659de65b08e7f3@apps.messenger.live.com&mkt=es-ES&useTheme=true&themeName=blue&foreColor=333333&backColor=E8F1F8&linkColor=333333&borderColor=AFD3EB&buttonForeColor=333333&buttonBackColor=EEF7FE&buttonBorderColor=AFD3EB&buttonDisabledColor=EEF7FE&headerForeColor=0066A7&headerBackColor=8EBBD8&menuForeColor=333333&menuBackColor=FFFFFF&chatForeColor=333333&chatBackColor=FFFFFF&chatDisabledColor=F6F6F6&chatErrorColor=760502&chatLabelColor=6E6C6C&buttonhost=www.gobiernogalapagos.gob.ec"});
 
 	/*Menu de Tramites vehiculos*/
-	arrDivs.push({parent:true,items:true,idComponent:"divTramitesVehiculo"});	
+	/*arrDivs.push({parent:true,items:true,idComponent:"divTramitesVehiculo"});
 	arrDivs.push({idComponent:"btnIngresoTramitesV",page:"tramiteVehiculo.jsp"});	
 	arrDivs.push({idComponent:"linkContactoV",page:"contactanos.jsp?CWMOD_CODIGO=CWMOD5"});
 	arrDivs.push({idComponent:"linkPreguntasV",page:"preguntasFrecuentes.jsp?CWMOD_CODIGO=CWMOD5"});
 	arrDivs.push({idComponent:"linkAtencionV",page:"http://settings.messenger.live.com/Conversation/IMMe.aspx?invitee=db659de65b08e7f3@apps.messenger.live.com&mkt=es-ES&useTheme=true&themeName=blue&foreColor=333333&backColor=E8F1F8&linkColor=333333&borderColor=AFD3EB&buttonForeColor=333333&buttonBackColor=EEF7FE&buttonBorderColor=AFD3EB&buttonDisabledColor=EEF7FE&headerForeColor=0066A7&headerBackColor=8EBBD8&menuForeColor=333333&menuBackColor=FFFFFF&chatForeColor=333333&chatBackColor=FFFFFF&chatDisabledColor=F6F6F6&chatErrorColor=760502&chatLabelColor=6E6C6C&buttonhost=www.gobiernogalapagos.gob.ec"});
-	
-	for (k=0; k<arrDivs.length;k++){		
-		var tmpComp = document.getElementById(arrDivs[k].idComponent);
-		if (arrDivs[k].items){
-/*			tmpComp.onmouseover = function(){this.style.backgroundColor = "#E6E6E6";}
-			tmpComp.onmouseout = function(){this.style.backgroundColor = "#F5F5F5";}*/
+	*/
+	for (k=0; k<arrDivs.length;k++){
+		try {
+			var tmpComp = document.getElementById(arrDivs[k].idComponent);
+			//if (arrDivs[k].items){
+			/*			tmpComp.onmouseover = function(){this.style.backgroundColor = "#E6E6E6";}
+			 tmpComp.onmouseout = function(){this.style.backgroundColor = "#F5F5F5";}*/
 			//document.getElementById(tmpComp.id+"-Items").style.display = 'none';
+			//}
+			tmpComp.onclick = moduloOnClick;
+			if (arrDivs[k].toolTip)
+				tmpComp.title = arrDivs[k].toolTip;
+		}catch(e){
+			console.log(e.message);
 		}
-		tmpComp.onclick=moduloOnClick;
-		if (arrDivs[k].toolTip)	
-			tmpComp.title=arrDivs[k].toolTip;
 	}
 	
 	document.getElementById("linkAdministrador").onclick=function(){

@@ -28,6 +28,7 @@ rm -rf $JBOSS_HOME/standalone/deployments/*.war.*
 
 echo "Copiando Deploy Back-End"
 echo ""
+cp $ROOT_PATH/default/target/default.war $JBOSS_HOME/standalone/deployments
 cp $ROOT_PATH/siiws/target/siiws.war $JBOSS_HOME/standalone/deployments
 echo ""
 echo "Iniciando Deploy Front-End"

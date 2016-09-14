@@ -1978,7 +1978,7 @@ $(function() {
         {
             urlReport = new Reporte('rptSolicitudResidenciaTranseunte','/Reports/sii/atencionalcliente',{P_CRTRA_CODIGO:inCrtraCodigo});
         }
-        urlReport.show();
+        //urlReport.show();
 
     }
 
