@@ -21,6 +21,7 @@ export JBOSS_HOME=$(pwd)
 export SII_HOME=$JBOSS_HOME/SII_HOME
 
 JAVA_OPTS="-Xms2048m -Xmx2048m -XX:MaxPermSize=512m -Djava.net.preferIPv4Stack=true"
+JAVA_OPTS="$JAVA_OPTS -Duser.country=EC -Duser.language=es -Dsun.jnu.encoding=UTF-8 -Dfile.encoding=UTF-8"
 JAVA_OPTS="$JAVA_OPTS -Djboss.modules.policy-permissions=true -Djava.util.Arrays.useLegacyMergeSort=true"
 JAVA_OPTS="$JAVA_OPTS -Dsii.home=$SII_HOME"
 JAVA_OPTS="$JAVA_OPTS -DSII_HOME=$SII_HOME"

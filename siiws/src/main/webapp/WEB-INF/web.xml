@@ -2607,7 +2607,7 @@
 
 
 
-    <filter>
+    <!--filter>
        <filter-name>SoapInterceptFilter</filter-name>
        <filter-class>com.besixplus.sii.filters.SoapInterceptFilter</filter-class>
    </filter>
@@ -2615,7 +2615,7 @@
        <filter-name>SoapInterceptFilter</filter-name>
        <url-pattern>/*</url-pattern>
        <dispatcher>REQUEST</dispatcher>
-   </filter-mapping>
+   </filter-mapping-->
     <!--filter>
         <filter-name>CrossDomainControl</filter-name>
         <filter-class>com.besixplus.sii.filters.CrossDomainControl</filter-class>

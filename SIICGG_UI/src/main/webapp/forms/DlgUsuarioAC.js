@@ -107,7 +107,11 @@ function DlgUsuarioAC(inUser, inOP){
 					var cmContactosEmails = new Ext.grid.ColumnModel([
 						{dataIndex:'email',header:'E-mail',width:200,sortable:true}
 					]);
-					strContactosEmails.baseParams.inCrper_codigo = tmpCrper_codigo;
+					strContactosEmails.reload({params:{
+						format:"JSON",
+						inSW:0,
+						inCrper_codigo : tmpCrper_codigo
+					}});
 					var tmpDlgBusqueda = new DlgBusquedaNoPaginado(strContactosEmails, cmContactosEmails, true);
 					tmpDlgBusqueda.setTitle('Notificar a ...');
 					tmpDlgBusqueda.closeHandler(function(){

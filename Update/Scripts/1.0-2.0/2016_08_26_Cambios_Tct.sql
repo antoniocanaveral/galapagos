@@ -212,11 +212,23 @@ CREATE TABLE sii.cgg_tct_transporte(
 INSERT INTO SII.CGG_TCT_TRANSPORTE VALUES(SII.F_KEYGEN('CGG_TCT_TRANSPORTE','TCTTR_CODIGO','TCTTR'),'1','5','191',true,current_timestamp,'admin',current_timestamp,'admin');
 INSERT INTO SII.CGG_TCT_TRANSPORTE VALUES(SII.F_KEYGEN('CGG_TCT_TRANSPORTE','TCTTR_CODIGO','TCTTR'),'1','5','193',true,current_timestamp,'admin',current_timestamp,'admin');
 INSERT INTO SII.CGG_TCT_TRANSPORTE VALUES(SII.F_KEYGEN('CGG_TCT_TRANSPORTE','TCTTR_CODIGO','TCTTR'),'1','3','195',true,current_timestamp,'admin',current_timestamp,'admin');
+
 INSERT INTO SII.CGG_TCT_TRANSPORTE VALUES(SII.F_KEYGEN('CGG_TCT_TRANSPORTE','TCTTR_CODIGO','TCTTR'),'7','5','XL1551',true,current_timestamp,'admin',current_timestamp,'admin');
 INSERT INTO SII.CGG_TCT_TRANSPORTE VALUES(SII.F_KEYGEN('CGG_TCT_TRANSPORTE','TCTTR_CODIGO','TCTTR'),'7','5','XL1553',true,current_timestamp,'admin',current_timestamp,'admin');
 INSERT INTO SII.CGG_TCT_TRANSPORTE VALUES(SII.F_KEYGEN('CGG_TCT_TRANSPORTE','TCTTR_CODIGO','TCTTR'),'7','5','XL1557',true,current_timestamp,'admin',current_timestamp,'admin');
 INSERT INTO SII.CGG_TCT_TRANSPORTE VALUES(SII.F_KEYGEN('CGG_TCT_TRANSPORTE','TCTTR_CODIGO','TCTTR'),'7','3','XL1561',true,current_timestamp,'admin',current_timestamp,'admin');
 
+INSERT INTO SII.CGG_TCT_TRANSPORTE VALUES(SII.F_KEYGEN('CGG_TCT_TRANSPORTE','TCTTR_CODIGO','TCTTR'),'2','5','AV1632',true,current_timestamp,'admin',current_timestamp,'admin');
+INSERT INTO SII.CGG_TCT_TRANSPORTE VALUES(SII.F_KEYGEN('CGG_TCT_TRANSPORTE','TCTTR_CODIGO','TCTTR'),'2','5','AV1634',true,current_timestamp,'admin',current_timestamp,'admin');
+INSERT INTO SII.CGG_TCT_TRANSPORTE VALUES(SII.F_KEYGEN('CGG_TCT_TRANSPORTE','TCTTR_CODIGO','TCTTR'),'2','5','AV1638',true,current_timestamp,'admin',current_timestamp,'admin');
+INSERT INTO SII.CGG_TCT_TRANSPORTE VALUES(SII.F_KEYGEN('CGG_TCT_TRANSPORTE','TCTTR_CODIGO','TCTTR'),'2','5','AV1680',true,current_timestamp,'admin',current_timestamp,'admin');
+INSERT INTO SII.CGG_TCT_TRANSPORTE VALUES(SII.F_KEYGEN('CGG_TCT_TRANSPORTE','TCTTR_CODIGO','TCTTR'),'2','5','AV1684',true,current_timestamp,'admin',current_timestamp,'admin');
+INSERT INTO SII.CGG_TCT_TRANSPORTE VALUES(SII.F_KEYGEN('CGG_TCT_TRANSPORTE','TCTTR_CODIGO','TCTTR'),'2','5','AV1686',true,current_timestamp,'admin',current_timestamp,'admin');
+INSERT INTO SII.CGG_TCT_TRANSPORTE VALUES(SII.F_KEYGEN('CGG_TCT_TRANSPORTE','TCTTR_CODIGO','TCTTR'),'2','5','AV1688',true,current_timestamp,'admin',current_timestamp,'admin');
+
+INSERT INTO SII.CGG_TCT_TRANSPORTE VALUES(SII.F_KEYGEN('CGG_TCT_TRANSPORTE','TCTTR_CODIGO','TCTTR'),'2','3','AV1630',true,current_timestamp,'admin',current_timestamp,'admin');
+INSERT INTO SII.CGG_TCT_TRANSPORTE VALUES(SII.F_KEYGEN('CGG_TCT_TRANSPORTE','TCTTR_CODIGO','TCTTR'),'2','3','AV1636',true,current_timestamp,'admin',current_timestamp,'admin');
+INSERT INTO SII.CGG_TCT_TRANSPORTE VALUES(SII.F_KEYGEN('CGG_TCT_TRANSPORTE','TCTTR_CODIGO','TCTTR'),'2','3','AV1682',true,current_timestamp,'admin',current_timestamp,'admin');
 --ACTUALIZAMOS LA TABLA CGG_TCT_TIPO_HOSPEDAJE POR COMPATIBILIDAD
 UPDATE sii.cgg_tct_tipo_hospedaje SET ctthj_estado = false;
 INSERT INTO sii.cgg_tct_tipo_hospedaje VALUES ('102','Abordo De Crucero',true,current_timestamp,'admin',current_timestamp,'admin');

@@ -274,7 +274,7 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
         value:0
     });
 
-    var numCtreg_numero_vuelo = new Ext.form.NumberField({
+    var numCtreg_numero_vuelo = new Ext.form.TextField({
         id:'numCtreg_numero_vuelo',
         name:'numCtreg_numero_vuelo',
         fieldLabel :'Vuelo',

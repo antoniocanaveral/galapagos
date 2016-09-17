@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptTarjetaControlTransito" pageWidth="354" pageHeight="842" columnWidth="354" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cd565d1a-d1af-4efb-afd3-38c935d74159">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptTarjetaControlTransito" pageWidth="421" pageHeight="595" columnWidth="365" leftMargin="28" rightMargin="28" topMargin="28" bottomMargin="28" uuid="cd565d1a-d1af-4efb-afd3-38c935d74159">
 	<property name="ireport.zoom" value="1.4641000000000155"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -56,7 +56,7 @@ FROM CGG_CONFIGURACION
 WHERE CGCNF_CONFIGURACION = 'TEXTO ENCABEZADO REPORTES') as HEADER
 FROM SII.CGG_TCT_REGISTRO TREG
 JOIN SII.CGG_RES_PERSONA PER ON PER.CRPER_CODIGO=TREG.CRPER_CODIGO
-JOIN SII.cgg_tct_hospedaje HOS ON TREG.CTREG_CODIGO = HOS.CTREG_CODIGO
+LEFT JOIN SII.cgg_tct_hospedaje HOS ON TREG.CTREG_CODIGO = HOS.CTREG_CODIGO
 LEFT JOIN SII.CGG_TCT_CATEGORIA TCTCAT ON TCTCAT.TCTCAT_CODIGO = TREG.CTREG_CATEGORIA
 LEFT JOIN SII.CGG_PAIS PAIS ON PER.CGG_CPAIS_CODIGO = PAIS.CPAIS_CODIGO
 LEFT JOIN SII.CGG_KDX_VENTA_DETALLE VD ON VD.CTREG_CODIGO = TREG.CTREG_CODIGO
@@ -92,7 +92,9 @@ AND TREG.CTREG_CODIGO=$P{P_CTREG_CODIGO}]]>
 	<field name="ctreg_numero_vuelo" class="java.lang.String">
 		<fieldDescription><![CDATA[NUMERO DE VUELO DEL REGISTRO]]></fieldDescription>
 	</field>
-	<field name="crper_codigo" class="java.lang.String"/>
+	<field name="crper_codigo" class="java.lang.String">
+		<fieldDescription><![CDATA[CODIGO IDENTIFICATIVO DE REGISTRO DE PERSONA]]></fieldDescription>
+	</field>
 	<field name="crdid_codigo" class="java.lang.String">
 		<fieldDescription><![CDATA[CODIGO DLE IDENTIFICACION DEL TIPO DE DOCUMENTO]]></fieldDescription>
 	</field>
@@ -146,30 +148,26 @@ AND TREG.CTREG_CODIGO=$P{P_CTREG_CODIGO}]]>
 		<band/>
 	</pageHeader>
 	<columnHeader>
-		<band height="302">
+		<band height="274">
 			<image>
-				<reportElement x="49" y="47" width="243" height="237" uuid="499eea6b-8bda-405e-84cd-8e8fd3d021e1">
+				<reportElement x="49" y="37" width="243" height="237" uuid="499eea6b-8bda-405e-84cd-8e8fd3d021e1">
 					<printWhenExpression><![CDATA[$P{P_PREVIEW} == 1]]></printWhenExpression>
 				</reportElement>
 				<imageExpression><![CDATA["repo:/Resources/sii/images/VistaPreliminar"]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement mode="Opaque" x="0" y="0" width="354" height="50" forecolor="#FFFFFF" backcolor="#0066CC" uuid="f1684916-abb0-4da4-b4bc-0d661f12b617"/>
+				<reportElement mode="Transparent" x="0" y="0" width="354" height="50" forecolor="#000000" backcolor="#0066CC" uuid="f1684916-abb0-4da4-b4bc-0d661f12b617"/>
 				<box leftPadding="55"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{header}+"\n"+"TARJETA DE CONTROL DE TRANSITO"]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement mode="Opaque" x="4" y="273" width="220" height="16" forecolor="#FFFFFF" backcolor="#0099FF" uuid="3cec8675-caae-4d6d-8aaa-ec5307491009"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Datos de Hospedaje]]></text>
-			</staticText>
 			<rectangle>
-				<reportElement x="168" y="51" width="186" height="164" forecolor="#FFFFFF" backcolor="#CCCCCC" uuid="a7e3ba6d-ad1b-4607-97f0-0e2d50ced919"/>
+				<reportElement mode="Transparent" x="168" y="51" width="186" height="164" forecolor="#FFFFFF" backcolor="#CCCCCC" uuid="a7e3ba6d-ad1b-4607-97f0-0e2d50ced919"/>
+				<graphicElement>
+					<pen lineColor="#000000"/>
+				</graphicElement>
 			</rectangle>
 			<componentElement>
 				<reportElement x="0" y="51" width="182" height="164" uuid="fa5d7b6d-8ec8-4d43-be05-f653da692dfb"/>
@@ -213,21 +211,21 @@ AND TREG.CTREG_CODIGO=$P{P_CTREG_CODIGO}]]>
 				<text><![CDATA[No de Identificación]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="178" y="97" width="75" height="11" uuid="1469dfac-8772-472d-bb51-84e4ae499137"/>
+				<reportElement x="178" y="97" width="41" height="11" uuid="1469dfac-8772-472d-bb51-84e4ae499137"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Nombre]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="178" y="124" width="51" height="11" uuid="5b5b87cf-3f36-4272-a7c8-a55b1d6ff8f6"/>
+				<reportElement x="178" y="124" width="41" height="11" uuid="5b5b87cf-3f36-4272-a7c8-a55b1d6ff8f6"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Apellidos]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="178" y="151" width="94" height="11" uuid="778d0707-35b4-44b4-bccc-6e715fe63e1c"/>
+				<reportElement x="178" y="151" width="91" height="11" uuid="778d0707-35b4-44b4-bccc-6e715fe63e1c"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
@@ -255,12 +253,12 @@ AND TREG.CTREG_CODIGO=$P{P_CTREG_CODIGO}]]>
 				<box leftPadding="5"/>
 				<textFieldExpression><![CDATA[$F{cgg_carpt_codigo}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="168" y="238" width="186" height="18" uuid="649ca6dc-d764-419c-aef2-15c39231b5ce"/>
 				<box leftPadding="3"/>
 				<textFieldExpression><![CDATA[$F{ctreg_numero_vuelo}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="0" y="238" width="168" height="18" uuid="b2e9d3dd-2510-4b69-9ef4-1ae500928c8d"/>
 				<box rightPadding="3"/>
 				<textElement textAlignment="Right"/>
@@ -273,62 +271,6 @@ AND TREG.CTREG_CODIGO=$P{P_CTREG_CODIGO}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ctreg_numero}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="5" y="289" width="56" height="13" uuid="128ce467-2558-4206-9795-03b00cba0558"/>
-				<box>
-					<pen lineWidth="1.0"/>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Isla / Island]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="61" y="289" width="138" height="13" uuid="505e0dfe-cd81-4525-b202-a3cb1cee288f"/>
-				<box>
-					<pen lineWidth="1.0"/>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Lugar / Place]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="199" y="289" width="70" height="13" uuid="fec15e9e-7c34-46e0-ae33-8a8d44c68678"/>
-				<box>
-					<pen lineWidth="1.0"/>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Ingreso/Entry]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="269" y="289" width="80" height="13" uuid="91a0610f-6e4d-41ed-a002-f6fe2aaa8105"/>
-				<box>
-					<pen lineWidth="1.0"/>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Salida/Departure]]></text>
-			</staticText>
 			<textField pattern="">
 				<reportElement x="178" y="188" width="171" height="16" uuid="c021c38d-7367-488b-b1dd-accc8af63c75"/>
 				<textElement>
@@ -358,144 +300,96 @@ AND TREG.CTREG_CODIGO=$P{P_CTREG_CODIGO}]]>
 				<textFieldExpression><![CDATA[$F{ctreg_fecha_salida}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="272" y="70" width="72" height="11" uuid="aed8dd9c-d734-493c-8df8-5ee1821b4057"/>
+				<reportElement x="266" y="70" width="72" height="11" uuid="aed8dd9c-d734-493c-8df8-5ee1821b4057"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[/ (Passport No)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="219" y="97" width="127" height="11" uuid="37d9b326-36d7-4c86-bb74-7628cdcaf5f7"/>
+				<reportElement x="216" y="97" width="127" height="11" uuid="37d9b326-36d7-4c86-bb74-7628cdcaf5f7"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[/ (First Name)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="224" y="123" width="115" height="11" uuid="d491810a-c165-43d5-9a8a-e2a5a872e83c"/>
+				<reportElement x="221" y="123" width="115" height="11" uuid="d491810a-c165-43d5-9a8a-e2a5a872e83c"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[/ (Surname)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="272" y="150" width="77" height="11" uuid="001447f8-b2af-475c-a5c6-6842f3b26971"/>
+				<reportElement x="270" y="150" width="77" height="11" uuid="001447f8-b2af-475c-a5c6-6842f3b26971"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[/ (Birth Date)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="240" y="177" width="110" height="11" uuid="c7d758e0-66ae-4250-b78b-c3a321dd2ce2"/>
+				<reportElement x="236" y="177" width="110" height="11" uuid="c7d758e0-66ae-4250-b78b-c3a321dd2ce2"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[/ (Nationality)]]></text>
 			</staticText>
-			<staticText>
-				<reportElement mode="Opaque" x="173" y="273" width="177" height="16" forecolor="#FFFFFF" backcolor="#0099FF" uuid="57602e48-f7ec-450f-82f8-afdb6fc3a96f"/>
-				<textElement verticalAlignment="Middle">
-					<font size="10" isBold="false"/>
-				</textElement>
-				<text><![CDATA[/ (Lodge Itinerary)]]></text>
-			</staticText>
 			<image>
-				<reportElement x="5" y="0" width="61" height="50" uuid="43d7e5f8-46a9-44f8-a7da-6ad3523de1eb"/>
-				<imageExpression><![CDATA["repo:/Resources/sii/cgg3"]]></imageExpression>
+				<reportElement x="5" y="0" width="61" height="50" uuid="43d7e5f8-46a9-44f8-a7da-6ad3523de1eb">
+					<printWhenExpression><![CDATA[$P{P_PREVIEW} == 1]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA["repo:/Resources/sii/cgg3bg"]]></imageExpression>
 			</image>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="16" splitType="Stretch">
-			<textField>
-				<reportElement x="61" y="0" width="138" height="16" uuid="b2b80956-d3a4-48a7-aea2-99fee5ab993a"/>
-				<box leftPadding="2" rightPadding="2">
-					<pen lineWidth="1.0"/>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{cthos_lugar}]]></textFieldExpression>
-			</textField>
-			<textField pattern="MMMMM dd">
-				<reportElement x="199" y="0" width="70" height="16" uuid="49d869cd-ab26-4536-b610-5a8cf2c9b96a"/>
-				<box leftPadding="2" rightPadding="2">
-					<pen lineWidth="1.0"/>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{cthos_fechaingreso}]]></textFieldExpression>
-			</textField>
-			<textField pattern="MMMMM dd">
-				<reportElement x="269" y="0" width="80" height="16" uuid="57d5bc4a-6258-49d6-90a9-532ce70ada9b"/>
-				<box leftPadding="2" rightPadding="2">
-					<pen lineWidth="1.0"/>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{cthos_fechasalida}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="5" y="0" width="56" height="16" uuid="64f1aa24-d132-491f-9260-43778b539928"/>
-				<box leftPadding="2" rightPadding="2">
-					<pen lineWidth="1.0"/>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{cisla_codigo}]]></textFieldExpression>
-			</textField>
-		</band>
+		<band splitType="Stretch"/>
 	</detail>
 	<columnFooter>
 		<band/>
 	</columnFooter>
 	<summary>
-		<band height="66">
+		<band height="69" splitType="Stretch">
 			<componentElement>
-				<reportElement positionType="FixRelativeToBottom" x="228" y="25" width="125" height="25" forecolor="#000000" uuid="36ad4575-d4b2-4cd2-92f5-f71598ca8196"/>
+				<reportElement positionType="FixRelativeToBottom" x="228" y="28" width="125" height="25" forecolor="#000000" uuid="36ad4575-d4b2-4cd2-92f5-f71598ca8196"/>
 				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barHeight="54">
 					<jr:codeExpression><![CDATA[$F{ctreg_codigo_barras}]]></jr:codeExpression>
 				</jr:barbecue>
 			</componentElement>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="FixRelativeToBottom" x="228" y="50" width="125" height="15" uuid="2ed23b2c-ea07-481a-b890-1b20b316e38c"/>
+				<reportElement positionType="FixRelativeToBottom" x="228" y="53" width="125" height="15" uuid="2ed23b2c-ea07-481a-b890-1b20b316e38c"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ctreg_codigo_barras}]]></textFieldExpression>
 			</textField>
-			<textField pattern="¤ #,##0.00">
-				<reportElement positionType="FixRelativeToBottom" x="4" y="25" width="100" height="20" forecolor="#660000" uuid="a2f00e37-4be4-4fe4-9e63-269fe22382fb"/>
+			<textField pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement positionType="FixRelativeToBottom" x="19" y="26" width="100" height="20" forecolor="#000000" uuid="a2f00e37-4be4-4fe4-9e63-269fe22382fb"/>
 				<textElement verticalAlignment="Middle">
-					<font size="12" isBold="true"/>
+					<font size="13" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ckvdt_total}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" x="4" y="3" width="344" height="20" uuid="c40f843b-4f80-47d0-8c5f-c55c43473db0"/>
-				<textElement markup="html">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="4" y="2" width="344" height="20" uuid="c40f843b-4f80-47d0-8c5f-c55c43473db0"/>
+				<textElement textAlignment="Justified" markup="html">
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{info}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="FixRelativeToBottom" x="4" y="46" width="220" height="11" uuid="6c9cc3f0-0be0-4fad-9fd2-4b29ea7aa4fd"/>
+				<textElement markup="none">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( $F{ckvdt_total}!=null ? "Verifique que el valor pagado no exeda de "+ $F{ckvdt_total} + " USD" : "" )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="FixRelativeToBottom" x="4" y="58" width="220" height="11" uuid="071a9b09-d8ac-48df-b1a4-5e4eaa4a3b31"/>
+				<textElement markup="none">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( $F{ckvdt_total}!=null ? "Verify that the amount paid does not exceed "+$F{ckvdt_total}+ " USD" : "" )]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>
