@@ -1,101 +1,394 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptTarjetaControlTransito" language="groovy" pageWidth="354" pageHeight="986" columnWidth="354" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
-	<property name="ireport.zoom" value="1.3310000000000142"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptTarjetaControlTransito" pageWidth="421" pageHeight="595" columnWidth="365" leftMargin="28" rightMargin="28" topMargin="28" bottomMargin="28" uuid="cd565d1a-d1af-4efb-afd3-38c935d74159">
+	<property name="ireport.zoom" value="1.4641000000000155"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="net.sf.jasperreports.export.html.size.unit" value="cm"/>
-	<parameter name="P_CTIGF_CODIGO" class="java.lang.String">
+	<import value="org.apache.commons.codec.binary.*"/>
+	<parameter name="P_CTREG_CODIGO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CTGTR_CODIGO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_PREVIEW" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CKESP_CODIGO" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT COALESCE(PER.CRPER_NOMBRES,'') AS CRPER_NOMBRES,
-COALESCE(PER.CRPER_APELLIDO_PATERNO,'')||' '||COALESCE(PER.CRPER_APELLIDO_MATERNO,'') AS CRPER_APELLIDOS,
-	PER.CRPER_NUM_DOC_IDENTIFIC AS CRPER_NUM_DOC_IDENTIFIC,
-	NAC.CGNCN_NACIONALIDAD AS CGNCN_NACIONALIDAD,
-	PAI.CPAIS_NOMBRE  AS CPAIS_NOMBRE,
-	PER.CRPER_GENERO AS CRPER_SEXO,
-	PER.CRPER_FECHA_NACIMIENTO AS CRPER_FECHA_NACIMIENTO,
-	INGF.CTIGF_DESCRIPCION AS CTIGF_DESCRIPCION
-FROM SII.CGG_TCT_INGRESO_FALLIDO INGF
-INNER JOIN SII.CGG_RES_PERSONA PER ON PER.CRPER_CODIGO = INGF.CRPER_CODIGO
-LEFT JOIN SII.CGG_NACIONALIDAD NAC ON NAC.CGNCN_CODIGO = PER.CGNCN_CODIGO
-LEFT JOIN SII.CGG_PAIS PAI ON PAI.CPAIS_CODIGO = PER.CGG_CPAIS_CODIGO
-WHERE INGF.CTIGF_CODIGO = $P{P_CTIGF_CODIGO}]]>
+		<![CDATA[SELECT TREG.CTREG_CODIGO,
+sii.getcolumnvalue(TREG.CARPT_CODIGO,'cgg_res_aeropuerto','carpt_codigo','carpt_nombre') as CARPT_CODIGO,
+sii.getcolumnvalue(TREG.CGG_CARPT_CODIGO,'cgg_res_aeropuerto','carpt_codigo','carpt_nombre') as CGG_CARPT_CODIGO,
+sii.getcolumnvalue(TREG.CRALN_CODIGO,'cgg_res_aerolinea','craln_codigo','craln_nombre') as CRALN_CODIGO,
+TREG.CTREG_NUMERO,TREG.CTREG_FECHA_PREREGISTRO,TREG.CTREG_FECHA_INGRESO, TREG.CTREG_CODIGO_BARRAS,TREG.CTREG_FECHA_SALIDA, TREG.CTREG_NUMERO_VUELO,
+PER.CRPER_CODIGO, PER.CRDID_CODIGO, PER.CGNCN_CODIGO, PER.CPAIS_CODIGO, PER.CGG_CPAIS_CODIGO, PER.CRPER_NOMBRES,
+PER.CRPER_APELLIDO_PATERNO, PER.CRPER_APELLIDO_MATERNO, PER.CRPER_FECHA_NACIMIENTO, PER.CRPER_GENERO,PER.CRPER_NUM_DOC_IDENTIFIC,
+PAIS.CPAIS_NOMBRE,
+HOS.CTHOS_TIPO,TCTCAT.TCTCAT_NOMBRE,
+sii.getcolumnvalue(HOS.CISLA_CODIGO,'cgg_isla','cisla_codigo','cisla_nombre') as CISLA_CODIGO
+, HOS.CTHOS_LUGAR, HOS.CTHOS_FECHAINGRESO, HOS.CTHOS_FECHASALIDA,VD.CKVDT_TOTAL,
+'{"CTREG_CODIGO":"'||TREG.CTREG_CODIGO||'",'||
+'"CARPT_CODIGO":"'||TREG.CARPT_CODIGO||'",'||
+'"CGG_CARPT_CODIGO":"'||TREG.CGG_CARPT_CODIGO||'",'||
+'"CRALN_CODIGO":"'||TREG.CRALN_CODIGO||'",'||
+'"CTREG_NUMERO":"'||TREG.CTREG_NUMERO||'",'||
+'"CTREG_FECHA_PREREGISTRO":"'||TREG.CTREG_FECHA_PREREGISTRO||'",'||
+'"CTREG_FECHA_INGRESO":"'||TREG.CTREG_FECHA_INGRESO||'",'||
+'"CTREG_CODIGO_BARRAS":"'||TREG.CTREG_CODIGO_BARRAS||'",'||
+'"CTREG_FECHA_SALIDA":"'||TREG.CTREG_FECHA_SALIDA||'",'||
+'"CTREG_NUMERO_VUELO":"'||COALESCE(TREG.CTREG_NUMERO_VUELO,'')||'",'||
+'"CRPER_CODIGO":"'||PER.CRPER_CODIGO||'",'||
+'"CRDID_CODIGO":"'||COALESCE(PER.CRDID_CODIGO,'')||'",'||
+'"CGNCN_CODIGO":"'||COALESCE(PER.CGNCN_CODIGO,'')||'",'||
+'"CPAIS_CODIGO":"'||COALESCE(PER.CPAIS_CODIGO,'')||'",'||
+'"CGG_CPAIS_CODIGO":"'||COALESCE(PER.CGG_CPAIS_CODIGO,'')||'",'||
+'"CRPER_NOMBRES":"'||PER.CRPER_NOMBRES||'",'||
+'"CRPER_NUM_DOC_IDENTIFIC":"'||PER.CRPER_NUM_DOC_IDENTIFIC||'",'||
+'"CRPER_APELLIDO_PATERNO":"'||PER.CRPER_APELLIDO_PATERNO||'",'||
+'"CRPER_APELLIDO_MATERNO":"'||COALESCE(PER.CRPER_APELLIDO_MATERNO,'')||'",'||
+'"CRPER_FECHA_NACIMIENTO":"'||COALESCE(PER.CRPER_FECHA_NACIMIENTO,null)||'",'||
+'"CRPER_GENERO":"'||COALESCE(PER.CRPER_GENERO,0)||'"}' as qrcode,
+(SELECT CGCNF_VALOR_CADENA FROM SII.CGG_CONFIGURACION WHERE CGCNF_CODIGO = 'CONF202') as INFO,
+(SELECT CGCNF_VALOR_CADENA
+FROM CGG_CONFIGURACION
+WHERE CGCNF_CONFIGURACION = 'TEXTO ENCABEZADO REPORTES') as HEADER
+FROM SII.CGG_TCT_REGISTRO TREG
+JOIN SII.CGG_RES_PERSONA PER ON PER.CRPER_CODIGO=TREG.CRPER_CODIGO
+LEFT JOIN SII.cgg_tct_hospedaje HOS ON TREG.CTREG_CODIGO = HOS.CTREG_CODIGO
+LEFT JOIN SII.CGG_TCT_CATEGORIA TCTCAT ON TCTCAT.TCTCAT_CODIGO = TREG.CTREG_CATEGORIA
+LEFT JOIN SII.CGG_PAIS PAIS ON PER.CGG_CPAIS_CODIGO = PAIS.CPAIS_CODIGO
+LEFT JOIN SII.CGG_KDX_VENTA_DETALLE VD ON VD.CTREG_CODIGO = TREG.CTREG_CODIGO
+WHERE TREG.CTREG_ESTADO=TRUE
+AND TREG.CTREG_ESTADO_REGISTRO IN (0,1)
+AND TREG.CTREG_CODIGO=$P{P_CTREG_CODIGO}]]>
 	</queryString>
-	<field name="crper_nombres" class="java.lang.String"/>
-	<field name="crper_apellidos" class="java.lang.String"/>
-	<field name="crper_num_doc_identific" class="java.lang.String"/>
-	<field name="cgncn_nacionalidad" class="java.lang.String"/>
-	<field name="cpais_nombre" class="java.lang.String"/>
-	<field name="crper_sexo" class="java.lang.Integer"/>
-	<field name="crper_fecha_nacimiento" class="java.sql.Timestamp"/>
-	<field name="ctigf_descripcion" class="java.lang.String"/>
-	<detail>
-		<band height="822" splitType="Stretch">
+	<field name="ctreg_codigo" class="java.lang.String"/>
+	<field name="carpt_codigo" class="java.lang.String">
+		<fieldDescription><![CDATA[IDENTIFICATIVO UNICO DE REGISTRO]]></fieldDescription>
+	</field>
+	<field name="cgg_carpt_codigo" class="java.lang.String">
+		<fieldDescription><![CDATA[IDENTIFICATIVO AEROPUERTO DE ARRIVO]]></fieldDescription>
+	</field>
+	<field name="craln_codigo" class="java.lang.String">
+		<fieldDescription><![CDATA[IDENTIFICATIVO UNICO DE REGISTRO AEROLINEA]]></fieldDescription>
+	</field>
+	<field name="ctreg_numero" class="java.lang.Long">
+		<fieldDescription><![CDATA[NUMERO SECUENCIAL UNICO DEL REGISTRO DE TCT]]></fieldDescription>
+	</field>
+	<field name="ctreg_fecha_preregistro" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[FECHA DE RESERVA DEL TCT O PREREGISTRO]]></fieldDescription>
+	</field>
+	<field name="ctreg_fecha_ingreso" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[FECHA DE INGRESO  A LA PROVINCIA POR TCT]]></fieldDescription>
+	</field>
+	<field name="ctreg_codigo_barras" class="java.lang.String">
+		<fieldDescription><![CDATA[CODIGO DE BARRAS GENERADO PARA EL REGISTRO DE TCT]]></fieldDescription>
+	</field>
+	<field name="ctreg_fecha_salida" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[FECHA DE SALIDA DE LA PROVINCIA]]></fieldDescription>
+	</field>
+	<field name="ctreg_numero_vuelo" class="java.lang.String">
+		<fieldDescription><![CDATA[NUMERO DE VUELO DEL REGISTRO]]></fieldDescription>
+	</field>
+	<field name="crper_codigo" class="java.lang.String">
+		<fieldDescription><![CDATA[CODIGO IDENTIFICATIVO DE REGISTRO DE PERSONA]]></fieldDescription>
+	</field>
+	<field name="crdid_codigo" class="java.lang.String">
+		<fieldDescription><![CDATA[CODIGO DLE IDENTIFICACION DEL TIPO DE DOCUMENTO]]></fieldDescription>
+	</field>
+	<field name="cgncn_codigo" class="java.lang.String">
+		<fieldDescription><![CDATA[IDENTIFICATIVO UNICO DE REGISTRO DE NACIONALIDAD]]></fieldDescription>
+	</field>
+	<field name="cpais_codigo" class="java.lang.String">
+		<fieldDescription><![CDATA[IDENTIFICATIVO UNICO DE REGISTRO DE PAIS]]></fieldDescription>
+	</field>
+	<field name="cgg_cpais_codigo" class="java.lang.String">
+		<fieldDescription><![CDATA[IDENTIFICATIVO UNICO DE REGISTRO DE PAIS DE RESIDENCIA]]></fieldDescription>
+	</field>
+	<field name="crper_nombres" class="java.lang.String">
+		<fieldDescription><![CDATA[NOMBRES DE LA PERSONA]]></fieldDescription>
+	</field>
+	<field name="crper_apellido_paterno" class="java.lang.String">
+		<fieldDescription><![CDATA[APELLIDO PATERNO]]></fieldDescription>
+	</field>
+	<field name="crper_apellido_materno" class="java.lang.String">
+		<fieldDescription><![CDATA[APELLIDO MATERNO]]></fieldDescription>
+	</field>
+	<field name="crper_fecha_nacimiento" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[FECHA DE NACIMIENTO]]></fieldDescription>
+	</field>
+	<field name="crper_genero" class="java.lang.Integer">
+		<fieldDescription><![CDATA[GENERO DE LA PERSONA
+0 - MASCULINO
+1 - FEMENINO]]></fieldDescription>
+	</field>
+	<field name="crper_num_doc_identific" class="java.lang.String">
+		<fieldDescription><![CDATA[NUMERO DE DOCUMENTO DE IDENTIFICACION DE LA PERSONA]]></fieldDescription>
+	</field>
+	<field name="cpais_nombre" class="java.lang.String">
+		<fieldDescription><![CDATA[NOMBRE DEL PAIS]]></fieldDescription>
+	</field>
+	<field name="cthos_tipo" class="java.lang.String"/>
+	<field name="tctcat_nombre" class="java.lang.String"/>
+	<field name="cisla_codigo" class="java.lang.String">
+		<fieldDescription><![CDATA[IDENTIFICATIVO UNICO DE REGISTRO]]></fieldDescription>
+	</field>
+	<field name="cthos_lugar" class="java.lang.String"/>
+	<field name="cthos_fechaingreso" class="java.sql.Timestamp"/>
+	<field name="cthos_fechasalida" class="java.sql.Timestamp"/>
+	<field name="ckvdt_total" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[TOTAL DE LA COMPRA]]></fieldDescription>
+	</field>
+	<field name="qrcode" class="java.lang.String"/>
+	<field name="info" class="java.lang.String"/>
+	<field name="header" class="java.lang.String"/>
+	<pageHeader>
+		<band/>
+	</pageHeader>
+	<columnHeader>
+		<band height="274">
 			<image>
-				<reportElement x="11" y="91" width="343" height="268"/>
-				<imageExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/images/NoAutorizado"]]></imageExpression>
+				<reportElement x="49" y="37" width="243" height="237" uuid="499eea6b-8bda-405e-84cd-8e8fd3d021e1">
+					<printWhenExpression><![CDATA[$P{P_PREVIEW} == 1]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA["repo:/Resources/sii/images/VistaPreliminar"]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement x="207" y="122" width="111" height="20" forecolor="#000000"/>
-				<textElement verticalAlignment="Top">
-					<font size="8"/>
+				<reportElement mode="Transparent" x="0" y="0" width="354" height="50" forecolor="#000000" backcolor="#0066CC" uuid="f1684916-abb0-4da4-b4bc-0d661f12b617"/>
+				<box leftPadding="55"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{cgncn_nacionalidad}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{header}+"\n"+"TARJETA DE CONTROL DE TRANSITO"]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="168" y="51" width="186" height="164" forecolor="#FFFFFF" backcolor="#CCCCCC" uuid="a7e3ba6d-ad1b-4607-97f0-0e2d50ced919"/>
+				<graphicElement>
+					<pen lineColor="#000000"/>
+				</graphicElement>
+			</rectangle>
+			<componentElement>
+				<reportElement x="0" y="51" width="182" height="164" uuid="fa5d7b6d-8ec8-4d43-be05-f653da692dfb"/>
+				<jr:DataMatrix xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" textPosition="none" shape="force-square">
+					<jr:codeExpression><![CDATA[$F{qrcode}]]></jr:codeExpression>
+				</jr:DataMatrix>
+			</componentElement>
+			<textField>
+				<reportElement x="178" y="108" width="171" height="16" uuid="f5ad7291-cb0d-4c2d-b6df-f517032e04ae"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{crper_nombres}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="21" y="230" width="16" height="20" forecolor="#000000">
-					<printWhenExpression><![CDATA[$F{crper_sexo}.intValue()==0 ? true : false]]></printWhenExpression>
-				</reportElement>
+				<reportElement x="178" y="134" width="171" height="16" uuid="4b853455-d3eb-405d-8da7-8e8c383d6f27"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{crper_apellido_paterno}+( $F{crper_apellido_materno} != null ? " "+$F{crper_apellido_materno} : "" )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="178" y="81" width="171" height="16" uuid="9411aa3c-6b42-42a6-b4ef-90047846eec8"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{crper_num_doc_identific}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MMM-yyyy">
+				<reportElement x="178" y="161" width="171" height="16" uuid="897a1dc0-aad2-4daf-857a-8bd08929cd61"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{crper_fecha_nacimiento}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="178" y="70" width="94" height="11" uuid="0e7cd526-3173-4bbb-ae33-57fce2ff0130"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["X"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="44" y="230" width="16" height="20" forecolor="#000000">
-					<printWhenExpression><![CDATA[$F{crper_sexo}.intValue()==1 ? true : false]]></printWhenExpression>
-				</reportElement>
+				<text><![CDATA[No de Identificación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="178" y="97" width="41" height="11" uuid="1469dfac-8772-472d-bb51-84e4ae499137"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["X"]]></textFieldExpression>
+				<text><![CDATA[Nombre]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="178" y="124" width="41" height="11" uuid="5b5b87cf-3f36-4272-a7c8-a55b1d6ff8f6"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Apellidos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="178" y="151" width="91" height="11" uuid="778d0707-35b4-44b4-bccc-6e715fe63e1c"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha de Nacimiento]]></text>
+			</staticText>
+			<image>
+				<reportElement x="162" y="217" width="20" height="20" uuid="3e719bf5-2795-4c21-8063-e7598a97df88"/>
+				<imageExpression><![CDATA[net.sf.jasperreports.engine.util.JRImageLoader.getInstance(new SimpleJasperReportsContext()).loadAwtImageFromBytes(javax.xml.bind.DatatypeConverter.parseBase64Binary("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"))]]></imageExpression>
+			</image>
+			<textField pattern="&apos;Ingreso: &apos; MMM dd, yyyy">
+				<reportElement x="5" y="256" width="168" height="18" uuid="73102157-601a-4be2-b77c-705acb89686a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ctreg_fecha_ingreso}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="69" y="71" width="190" height="20" forecolor="#000000"/>
-				<textElement verticalAlignment="Top">
-					<font fontName="Arial" size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_nombres}]]></textFieldExpression>
+				<reportElement x="0" y="218" width="148" height="18" uuid="ec821e80-2a6c-4f86-9377-857790e3fa50"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{carpt_codigo}]]></textFieldExpression>
 			</textField>
-			<textField pattern="dd/MM/yyyy">
-				<reportElement x="79" y="230" width="94" height="20" forecolor="#000000"/>
+			<textField>
+				<reportElement x="195" y="218" width="159" height="18" uuid="03dfd4e4-c066-4156-b3f0-8e2e1b52c3e8"/>
+				<box leftPadding="5"/>
+				<textFieldExpression><![CDATA[$F{cgg_carpt_codigo}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="168" y="238" width="186" height="18" uuid="649ca6dc-d764-419c-aef2-15c39231b5ce"/>
+				<box leftPadding="3"/>
+				<textFieldExpression><![CDATA[$F{ctreg_numero_vuelo}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="238" width="168" height="18" uuid="b2e9d3dd-2510-4b69-9ef4-1ae500928c8d"/>
+				<box rightPadding="3"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{craln_codigo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="272" y="51" width="74" height="20" uuid="c66bf115-ec0d-4729-9155-280af4bb184b"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ctreg_numero}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement x="178" y="188" width="171" height="16" uuid="c021c38d-7367-488b-b1dd-accc8af63c75"/>
 				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cpais_nombre}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="178" y="178" width="62" height="11" uuid="32177c11-676f-4589-b096-645fb9726ff7"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nacionalidad]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="178" y="50" width="171" height="20" uuid="72025be2-d35c-4208-84ed-59b8f6fbe359"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tctcat_nombre}!=null?$F{tctcat_nombre}.toUpperCase():"TURISTA"]]></textFieldExpression>
+			</textField>
+			<textField pattern="&apos;Salida: &apos; MMM dd, yyyy">
+				<reportElement x="178" y="256" width="168" height="18" uuid="b1bd29f2-3e05-4f7f-8aa7-83f6b13863b0"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ctreg_fecha_salida}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="266" y="70" width="72" height="11" uuid="aed8dd9c-d734-493c-8df8-5ee1821b4057"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[/ (Passport No)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="216" y="97" width="127" height="11" uuid="37d9b326-36d7-4c86-bb74-7628cdcaf5f7"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[/ (First Name)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="221" y="123" width="115" height="11" uuid="d491810a-c165-43d5-9a8a-e2a5a872e83c"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[/ (Surname)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="270" y="150" width="77" height="11" uuid="001447f8-b2af-475c-a5c6-6842f3b26971"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[/ (Birth Date)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="236" y="177" width="110" height="11" uuid="c7d758e0-66ae-4250-b78b-c3a321dd2ce2"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[/ (Nationality)]]></text>
+			</staticText>
+			<image>
+				<reportElement x="5" y="0" width="61" height="50" uuid="43d7e5f8-46a9-44f8-a7da-6ad3523de1eb"/>
+				<imageExpression><![CDATA["repo:/Resources/sii/cgg3bg"]]></imageExpression>
+			</image>
+		</band>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<summary>
+		<band height="69" splitType="Stretch">
+			<componentElement>
+				<reportElement positionType="FixRelativeToBottom" x="228" y="28" width="125" height="25" forecolor="#000000" uuid="36ad4575-d4b2-4cd2-92f5-f71598ca8196"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barHeight="54">
+					<jr:codeExpression><![CDATA[$F{ctreg_codigo_barras}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="FixRelativeToBottom" x="228" y="53" width="125" height="15" uuid="2ed23b2c-ea07-481a-b890-1b20b316e38c"/>
+				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{crper_fecha_nacimiento}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ctreg_codigo_barras}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement positionType="FixRelativeToBottom" x="19" y="26" width="100" height="20" forecolor="#000000" uuid="a2f00e37-4be4-4fe4-9e63-269fe22382fb"/>
+				<textElement verticalAlignment="Middle">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ckvdt_total}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="4" y="2" width="344" height="20" uuid="c40f843b-4f80-47d0-8c5f-c55c43473db0"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{info}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="44" y="303" width="257" height="20" forecolor="#000000"/>
-				<textElement>
-					<font size="8"/>
+				<reportElement positionType="FixRelativeToBottom" x="4" y="46" width="220" height="11" uuid="6c9cc3f0-0be0-4fad-9fd2-4b29ea7aa4fd"/>
+				<textElement markup="none">
+					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{ctigf_descripcion}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[( $F{ckvdt_total}!=null ? "Verifique que el valor pagado no exeda de "+ $F{ckvdt_total} + " USD" : "" )]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="22" y="97" width="100" height="20" forecolor="#000000"/>
-				<textElement verticalAlignment="Top">
-					<font fontName="Arial" size="8"/>
+				<reportElement positionType="FixRelativeToBottom" x="4" y="58" width="220" height="11" uuid="071a9b09-d8ac-48df-b1a4-5e4eaa4a3b31"/>
+				<textElement markup="none">
+					<font size="8" isBold="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_apellidos}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="21" y="122" width="128" height="20" forecolor="#000000"/>
-				<textElement verticalAlignment="Top">
-					<font fontName="Arial" size="8"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_num_doc_identific}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[( $F{ckvdt_total}!=null ? "Verify that the amount paid does not exceed "+$F{ckvdt_total}+ " USD" : "" )]]></textFieldExpression>
 			</textField>
 		</band>
-	</detail>
+	</summary>
 </jasperReport>

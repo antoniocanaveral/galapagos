@@ -335,9 +335,7 @@ AND TREG.CTREG_CODIGO=$P{P_CTREG_CODIGO}]]>
 				<text><![CDATA[/ (Nationality)]]></text>
 			</staticText>
 			<image>
-				<reportElement x="5" y="0" width="61" height="50" uuid="43d7e5f8-46a9-44f8-a7da-6ad3523de1eb">
-					<printWhenExpression><![CDATA[$P{P_PREVIEW} == 1]]></printWhenExpression>
-				</reportElement>
+				<reportElement x="5" y="0" width="61" height="50" uuid="43d7e5f8-46a9-44f8-a7da-6ad3523de1eb"/>
 				<imageExpression><![CDATA["repo:/Resources/sii/cgg3bg"]]></imageExpression>
 			</image>
 		</band>
