@@ -3,6 +3,7 @@ package com.besixplus.sii.job;
 import com.besixplus.sii.db.ManagerConnection;
 import com.besixplus.sii.objects.Cgg_buzon_correo;
 import com.besixplus.sii.objects.Cgg_configuracion;
+import com.bmlaurus.virtual.VirtualCache;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -19,6 +20,7 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Properties;
 
 public class SendMailJob implements Job{
 
@@ -79,10 +81,13 @@ class SendMailThread extends Thread{
 					e.printStackTrace();
 				}
 				tmpCon1.close();
+			}else{
+				Properties props = VirtualCache.getConfig(VirtualCache.PROP_MAILING_CONF);
+				tmpMessage.setFrom(new InternetAddress(props.getProperty("mail.smtp.from")));
 			}
 
 			tmpMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(myCorreo.getCBZC_DESTINATARIO()));
-			tmpMessage.addRecipient(Message.RecipientType.CC, new InternetAddress(myEmailCC));
+			tmpMessage.addRecipient(Message.RecipientType.BCC, new InternetAddress(myEmailCC));
 			tmpMessage.setSubject(myCorreo.getCBZC_ASUNTO());
 
 			Multipart multipart = new MimeMultipart( "alternative" );
