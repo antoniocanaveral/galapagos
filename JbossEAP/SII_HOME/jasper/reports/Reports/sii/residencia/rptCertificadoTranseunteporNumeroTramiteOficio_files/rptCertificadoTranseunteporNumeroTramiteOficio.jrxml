@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fcbfc38b-3be4-407b-b7ef-8c10870e04e1">
 	<property name="ireport.zoom" value="1.7715610000000017"/>
-	<property name="ireport.x" value="52"/>
-	<property name="ireport.y" value="137"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="79"/>
 	<property name="ireport.jasperserver.reportUnit" value="/Reports/sii/residencia/rptCertificadoTranseunteporNumeroTramiteOficio"/>
 	<property name="ireport.jasperserver.url" value="http://190.95.187.82:8081/jasperserver/services/repository"/>
 	<parameter name="P_CRTRA_CODIGO" class="java.lang.String"/>
@@ -55,7 +55,7 @@ AND TRA.CRTRA_CODIGO=$P{P_CRTRA_CODIGO}]]>
 	<title>
 		<band height="20" splitType="Stretch">
 			<subreport>
-				<reportElement x="0" y="1" width="555" height="19"/>
+				<reportElement x="0" y="1" width="555" height="19" uuid="17df76bf-fed9-431f-b97a-23b77b7d911d"/>
 				<subreportParameter name="SUBREPORT_DIR">
 					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -66,7 +66,7 @@ AND TRA.CRTRA_CODIGO=$P{P_CRTRA_CODIGO}]]>
 					<subreportParameterExpression><![CDATA[""]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptEncabezado"]]></subreportExpression>
+				<subreportExpression><![CDATA["repo:/Resources/sii/rptEncabezado"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
@@ -79,88 +79,88 @@ AND TRA.CRTRA_CODIGO=$P{P_CRTRA_CODIGO}]]>
 	<detail>
 		<band height="401" splitType="Stretch">
 			<staticText>
-				<reportElement x="138" y="0" width="217" height="20"/>
+				<reportElement x="138" y="0" width="217" height="20" uuid="9aa3c716-7ad7-4424-8f1a-0ce4ac26fd93"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[CERTIFICADO DE TRANSEÚNTE No.]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-				<reportElement x="28" y="85" width="522" height="50" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="28" y="85" width="522" height="50" isPrintWhenDetailOverflows="true" uuid="42e635aa-a9da-49bd-8fba-58f6a73d7863"/>
 				<textElement textAlignment="Justified" markup="html">
 					<font size="11"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["En cumplimiento a lo dispuesto en el Art. 24 de la LOREG, la resolución No "+$F{crres_numero_resolucion}+" del Comité de Calificación y Control de Residencia y vista la solicitud presentada por <b>"+ $F{crper_auspiciante} +"</b> para realizar actividades de <b>"+$F{crtra_actividad_residencia}+"</b>, mediante la cual solicita el ingreso en calidad de transeúntes."]]></textFieldExpression>
+				<textFieldExpression><![CDATA["En cumplimiento a lo dispuesto en el Art. 24 de la LOREG, la resolución No "+$F{crres_numero_resolucion}+" del Comité de Calificación y Control de Residencia y vista la solicitud presentada por <b>"+ $F{crper_auspiciante} +"</b> para realizar actividades de <b>"+$F{crtra_actividad_residencia}+"</b>, mediante la cual solicita el ingreso en calidad de transeúntes."]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-				<reportElement x="28" y="147" width="522" height="63" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="28" y="147" width="522" height="63" isPrintWhenDetailOverflows="true" uuid="1ddeb6d7-3ed0-4096-aa59-e9ee3041e592"/>
 				<textElement textAlignment="Justified" markup="html">
 					<font size="11"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Una vez autorizado por el (la) <b>"+$F{cusu_responsable}+" - "+$F{cargo_responsable}+" </b> y por cuanto reúnen los requisitos exigidos en el Art.23 del Reglamento Especial para la Calificación y Control de Residencia en la provincia de Galápagos, se extiende el presente certificado de transeúnte a las siguientes personas: "]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Una vez autorizado por el (la) <b>"+$F{cusu_responsable}+" - "+$F{cargo_responsable}+" </b> del Consejo de Gobierno de Régimen Especiál de Galápagos y por cuanto reúnen los requisitos exigidos en el Art.42 de la ley orgánica de Régimen Especial de la provincia de Galápagos, se extiende el presente certificado de transeúnte a las siguientes personas: "]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement positionType="Float" x="227" y="269" width="100" height="20" isPrintWhenDetailOverflows="true"/>
+				<reportElement positionType="Float" x="224" y="284" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="3606351c-f753-4a61-b1d8-5894494d6516"/>
 				<textElement textAlignment="Center" markup="none">
 					<font size="11"/>
 				</textElement>
 				<text><![CDATA[Lo Certifico]]></text>
 			</staticText>
 			<textField>
-				<reportElement positionType="Float" x="16" y="339" width="522" height="14" isPrintWhenDetailOverflows="true"/>
+				<reportElement positionType="Float" x="16" y="339" width="522" height="14" isPrintWhenDetailOverflows="true" uuid="4f948238-b139-469e-a99f-e37d526c9ec3"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font size="11"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{cusu_certifica}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cusu_certifica}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="28" y="43" width="296" height="20"/>
+				<reportElement x="28" y="43" width="296" height="20" uuid="ef4b6257-22e3-4435-8799-d3d66b244683"/>
 				<textElement>
 					<font size="11"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{cisla_nombre}.toUpperCase()+" "+new java.text.SimpleDateFormat("EEEEE, dd MMMMM yyyy").format($V{V_FECHA_ACTUAL})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cisla_nombre}.toUpperCase()+" "+new java.text.SimpleDateFormat("EEEEE, dd MMMMM yyyy").format($V{V_FECHA_ACTUAL})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="355" y="0" width="156" height="20"/>
+				<reportElement x="355" y="0" width="156" height="20" uuid="c17a2e07-fa11-4ba9-b723-897075586dce"/>
 				<textElement verticalAlignment="Middle">
 					<font size="13" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{crtra_numero}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{crtra_numero}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" x="152" y="353" width="250" height="46" isPrintWhenDetailOverflows="true"/>
+				<reportElement positionType="Float" x="152" y="353" width="250" height="46" isPrintWhenDetailOverflows="true" uuid="6e46138f-f92a-498b-a76e-3397f78249ad"/>
 				<textElement textAlignment="Center">
 					<font size="11" isBold="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["CONTROL DE RESIDENCIA CONSEJO DE GOBIERNO DEL RÉGIMEN ESPECIAL DE GALÁPAGOS"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["CONTROL DE RESIDENCIA CONSEJO DE GOBIERNO DEL RÉGIMEN ESPECIAL DE GALÁPAGOS"]]></textFieldExpression>
 			</textField>
 			<componentElement>
-				<reportElement positionType="Float" x="437" y="360" width="113" height="24" isPrintWhenDetailOverflows="true"/>
+				<reportElement positionType="Float" x="437" y="360" width="113" height="24" isPrintWhenDetailOverflows="true" uuid="c6e851ea-9789-48ef-b590-05da858f4a07"/>
 				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="2of7" drawText="false" checksumRequired="false">
 					<jr:codeExpression><![CDATA[$F{crtra_numero}]]></jr:codeExpression>
 				</jr:barbecue>
 			</componentElement>
 			<subreport>
-				<reportElement x="28" y="233" width="522" height="13"/>
+				<reportElement x="28" y="233" width="522" height="13" uuid="42b3a5de-2ddb-4d47-83d7-8427246b10d4"/>
 				<subreportParameter name="P_CRTRA_NUMERO">
 					<subreportParameterExpression><![CDATA[$F{crtra_numero}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression class="java.lang.String"><![CDATA["repo:rptPersonasCertificadoTranseunte"]]></subreportExpression>
+				<subreportExpression><![CDATA["repo:rptPersonasCertificadoTranseunte"]]></subreportExpression>
 			</subreport>
 			<staticText>
-				<reportElement x="28" y="213" width="483" height="20"/>
+				<reportElement x="41" y="249" width="483" height="35" isPrintWhenDetailOverflows="true" uuid="59759b68-e9a6-439d-97c0-a6deaa94519c"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Atención: Este certificado es válido para el beneficiario únicamente en la fecha de ingreso establecida.]]></text>
+				<text><![CDATA[Nota: El presente certificado le permite permanecer en la Provincia como transeúnte, así como ingresar durante las fechas indicadas previamente.]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" x="437" y="384" width="113" height="15"/>
+				<reportElement positionType="Float" x="437" y="384" width="113" height="15" uuid="cfd5cd92-1b3d-460e-8dbb-0272a3f06cdc"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{crtra_numero}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{crtra_numero}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -170,47 +170,47 @@ AND TRA.CRTRA_CODIGO=$P{P_CRTRA_CODIGO}]]>
 	<pageFooter>
 		<band height="66" splitType="Stretch">
 			<textField>
-				<reportElement x="511" y="3" width="12" height="15"/>
+				<reportElement x="511" y="3" width="12" height="15" uuid="87f30bd6-65bc-4e41-8511-61031f93faee"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="488" y="3" width="23" height="15"/>
+				<reportElement x="488" y="3" width="23" height="15" uuid="217a659b-967d-4bf6-823f-adb700c9b252"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Pág.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="524" y="3" width="12" height="15"/>
+				<reportElement x="524" y="3" width="12" height="15" uuid="21d5e8f7-85a7-48e3-b935-3b016356160b"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[de ]]></text>
 			</staticText>
 			<textField pattern="EEEEE dd MMMMM yyyy">
-				<reportElement x="3" y="3" width="120" height="15"/>
+				<reportElement x="3" y="3" width="120" height="15" uuid="2945b5b9-51c9-4835-ae4f-35e9360cc48e"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.util.Date"><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="2" y="1" width="552" height="1"/>
+				<reportElement x="2" y="1" width="552" height="1" uuid="2af94f6a-abfb-4ef5-8400-81a3b59728e8"/>
 			</line>
 			<textField>
-				<reportElement x="536" y="3" width="17" height="15"/>
+				<reportElement x="536" y="3" width="17" height="15" uuid="2b97a260-bced-4c95-9678-9146ea16108b"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_COUNT}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{PAGE_COUNT}]]></textFieldExpression>
 			</textField>
 			<subreport>
-				<reportElement x="3" y="18" width="551" height="48"/>
+				<reportElement x="3" y="18" width="551" height="48" uuid="f3d34854-af31-47b6-ac39-b41eb31b1b4c"/>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptPie"]]></subreportExpression>
+				<subreportExpression><![CDATA["repo:/Resources/sii/rptPie"]]></subreportExpression>
 			</subreport>
 		</band>
 	</pageFooter>

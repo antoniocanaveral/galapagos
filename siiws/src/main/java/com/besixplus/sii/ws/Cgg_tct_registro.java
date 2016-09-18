@@ -455,6 +455,14 @@ public class Cgg_tct_registro implements Serializable{
 					objPer.setCRPER_ESTADO(true);
 					objPer.setCRPER_USUARIO_UPDATE(usuarioName);
 
+					if(!((JSONObject)personaJson.get(i)).has("CRPER_CODIGO")){
+						new com.besixplus.sii.db.Cgg_res_persona(objPer).selectNumDoc(con);
+						if(objPer.getCRPER_CODIGO()!=null)
+							((JSONObject)personaJson.get(i)).put("CRPER_CODIGO",objPer.getCRPER_CODIGO());
+						else
+							((JSONObject)personaJson.get(i)).put("CRPER_CODIGO", "KEYGEN");
+					}
+
 					if (((JSONObject)personaJson.get(i)).getString("CRPER_CODIGO").trim().isEmpty()) {
 						objPer.setCRPER_CODIGO("KEYGEN");
 						objPer.setCRPER_USUARIO_INSERT(usuarioName);

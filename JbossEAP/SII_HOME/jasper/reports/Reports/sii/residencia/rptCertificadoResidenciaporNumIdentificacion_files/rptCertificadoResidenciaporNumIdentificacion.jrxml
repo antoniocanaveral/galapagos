@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="595" pageHeight="842" columnWidth="497" leftMargin="42" rightMargin="56" topMargin="56" bottomMargin="56" uuid="7549cee6-3daf-48c2-b05a-50b747461944">
 	<property name="ireport.zoom" value="1.1000000000000039"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="52"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["E:\\CGG\\APP\\REPORTS\\"]]></defaultValueExpression>
 	</parameter>
@@ -86,7 +86,7 @@ AND  BEN.CRPER_NUM_DOC_IDENTIFIC = $P{P_CRPER_NUM_DOC_IDENTIFIC}]]>
 					<subreportParameterExpression><![CDATA[""]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["repo:/Resources/sii/rptEncabezado.jrxml"]]></subreportExpression>
+				<subreportExpression><![CDATA["repo:/Resources/sii/rptEncabezado"]]></subreportExpression>
 			</subreport>
 		</band>
 	</pageHeader>
@@ -114,7 +114,7 @@ AND  BEN.CRPER_NUM_DOC_IDENTIFIC = $P{P_CRPER_NUM_DOC_IDENTIFIC}]]>
 				<textElement textAlignment="Justified">
 					<font size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Que la siguiente Persona se encuentra aprobada por el Comité de Calificación y Control de Residencia, como RESIDENTE "+$F{crtst_descripcion_padre}.toUpperCase()]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Que la siguiente Persona se encuentra aprobada, como RESIDENTE "+$F{crtst_descripcion_padre}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="1" y="170" width="259" height="24" uuid="3e2ad382-97d7-4e7f-9f5a-5df0cff4df9b"/>
@@ -205,9 +205,9 @@ AND  BEN.CRPER_NUM_DOC_IDENTIFIC = $P{P_CRPER_NUM_DOC_IDENTIFIC}]]>
 				<textElement markup="html">
 					<font size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{cisla_nombre}+" "+new java.text.SimpleDateFormat("EEEEE, dd MMMMM yyyy").format($V{V_FECHA_ACTUAL})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[( $F{cisla_nombre}!=null ? $F{cisla_nombre} : "" )+" "+new java.text.SimpleDateFormat("EEEEE, dd MMMMM yyyy").format($V{V_FECHA_ACTUAL})]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement positionType="Float" x="0" y="405" width="497" height="21" isPrintWhenDetailOverflows="true" uuid="932253a3-96c8-4e77-8e2a-039c652e8880"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font size="12"/>
@@ -215,11 +215,11 @@ AND  BEN.CRPER_NUM_DOC_IDENTIFIC = $P{P_CRPER_NUM_DOC_IDENTIFIC}]]>
 				<textFieldExpression><![CDATA[$F{cusu_responsable}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" x="89" y="426" width="324" height="46" isPrintWhenDetailOverflows="true" uuid="499360c9-e10c-4f5e-8526-5a284e4f90d4"/>
+				<reportElement positionType="Float" x="60" y="426" width="353" height="46" isPrintWhenDetailOverflows="true" uuid="499360c9-e10c-4f5e-8526-5a284e4f90d4"/>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA["COORDINACIÓN DE CONTROL DE RESIDENCIA EN "+ $F{cisla_nombre}.toUpperCase()+" CONSEJO DE GOBIERNO DEL RÉGIMEN ESPECIAL DE GALÁPAGOS"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["DIRECCION DE PROBLACIÓN Y CONTROL DE RESIDENCIA\n CONSEJO DE GOBIERNO DEL RÉGIMEN ESPECIAL DE GALÁPAGOS"]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement positionType="Float" x="0" y="331" width="497" height="20" isPrintWhenDetailOverflows="true" uuid="986bd670-1957-456f-9814-c9ec0c00ad28"/>
@@ -307,7 +307,7 @@ AND  BEN.CRPER_NUM_DOC_IDENTIFIC = $P{P_CRPER_NUM_DOC_IDENTIFIC}]]>
 			<subreport>
 				<reportElement x="1" y="18" width="497" height="13" uuid="d45dddee-8586-4fe2-b65f-2edc04191a48"/>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["repo:/Resources/sii/rptPie.jrxml"]]></subreportExpression>
+				<subreportExpression><![CDATA["repo:/Resources/sii/rptPie"]]></subreportExpression>
 			</subreport>
 		</band>
 	</pageFooter>
