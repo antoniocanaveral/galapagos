@@ -506,6 +506,8 @@ public class Cgg_tct_registro implements Serializable{
 							objKdx.setCKVDT_USUARIO_UPDATE(usuarioName);
 							res = new com.besixplus.sii.db.Cgg_kdx_venta_detalle(objKdx).insert(con);
 						}
+					}else{
+						System.err.println("NO ISERTO LA PERSONA: "+res);
 					}
 				}
 
