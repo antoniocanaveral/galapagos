@@ -766,7 +766,7 @@ public class Cgg_regla_validacion implements Serializable{
 			objJSONReglaParams = new JSONArray(inJSONRegla.getString("CRTSE_CAMPO_EVALUACION")).getJSONObject(0);
 
 		} catch (JSONException e1) {
-			// TODO Auto-generated catch block
+			System.err.println("REGLA ERROR (OBTENER PARAMETROS): " + inJSONRegla.toString());
 			e1.printStackTrace();
 		}
 		String respuesta = "false";

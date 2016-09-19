@@ -762,23 +762,27 @@ public class Cgg_regla_validacion implements Serializable{
 					RuleClass rule = (RuleClass) clazz.newInstance();
 					tmpResultado = rule.executeRule(objReglaMetadatos, objJSONRegla, jsonRecord);
 				}else
-					tmpResultado = 	new com.besixplus.sii.db.Cgg_regla_validacion().reglaStatement(con,objReglaMetadatos,objJSONRegla);
+				try {
+					tmpResultado = new com.besixplus.sii.db.Cgg_regla_validacion().reglaStatement(con, objReglaMetadatos, objJSONRegla);
 
-				if(tmpResultado==null){
-					System.err.println("REGLA DEVULEVE NULL: "+objRegla.getCRVAL_FUNCION_VALIDACION());
-					outResultadoValidacion = false;
-					arrayJSONRegla.getJSONObject(i).put("CRVAL_APROBADO", "FALSE");
-				}else {
-					outResult = tmpResultado.split(",");
-					if (Boolean.parseBoolean(outResult[0]) != objJSONRegla.getBoolean("CRVAL_RESULTADO_ACEPTACION")) {
-						arrayJSONRegla.getJSONObject(i).put("CRVAL_APROBADO", "FALSE");
+					if(tmpResultado==null){
+						System.err.println("REGLA DEVULEVE NULL: "+objRegla.getCRVAL_FUNCION_VALIDACION());
 						outResultadoValidacion = false;
-					} else {
-						arrayJSONRegla.getJSONObject(i).put("CRVAL_APROBADO", "TRUE");
+						arrayJSONRegla.getJSONObject(i).put("CRVAL_APROBADO", "FALSE");
+					}else {
+						outResult = tmpResultado.split(",");
+						if (Boolean.parseBoolean(outResult[0]) != objJSONRegla.getBoolean("CRVAL_RESULTADO_ACEPTACION")) {
+							arrayJSONRegla.getJSONObject(i).put("CRVAL_APROBADO", "FALSE");
+							outResultadoValidacion = false;
+						} else {
+							arrayJSONRegla.getJSONObject(i).put("CRVAL_APROBADO", "TRUE");
+						}
+						if (outResult.length > 1) {
+							arrayJSONRegla.getJSONObject(i).put("CRVAL_SUGERENCIA", outResult[1]);
+						}
 					}
-					if (outResult.length > 1) {
-						arrayJSONRegla.getJSONObject(i).put("CRVAL_SUGERENCIA", outResult[1]);
-					}
+				}catch (Exception e){
+					System.err.println("REGLA ERROR: " + objJSONRegla.toString());
 				}
 			}
 			con.commit();

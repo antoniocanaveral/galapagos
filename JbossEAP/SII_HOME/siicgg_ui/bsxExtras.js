@@ -5,7 +5,7 @@ var URL_WS = "/siiws/";
 var URL_APP="/sii/";
 var URL_DOC_VIEWER="/siiws/DocViewer";
 //var URL_REPORT='http://'+document.domain+':8081/jasperserver/flow.html?_flowId=viewReportFlow&standAlone=true&j_username=sii&j_password=sii';
-var URL_REPORT='http://sii.gobiernogalapagos.gob.ec:8081/jasperserver/flow.html?_flowId=viewReportFlow&standAlone=true&j_username=sii&j_password=sii';
+var URL_REPORT='http://181.211.249.77:8081/jasperserver/flow.html?_flowId=viewReportFlow&standAlone=true&j_username=sii&j_password=sii';
 var URL_LOGOUT = 'SessionManager?request=logout';
 var APP_TITLE='SIICGG';
 var OUTPUT_REPORT='pdf';
