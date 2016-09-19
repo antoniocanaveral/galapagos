@@ -460,7 +460,7 @@ public class Cgg_tct_registro implements Serializable{
 						if(objPer.getCRPER_CODIGO()!=null)
 							((JSONObject)personaJson.get(i)).put("CRPER_CODIGO",objPer.getCRPER_CODIGO());
 						else
-							((JSONObject)personaJson.get(i)).put("CRPER_CODIGO", "KEYGEN");
+							((JSONObject)personaJson.get(i)).put("CRPER_CODIGO", "");
 					}
 
 					if (((JSONObject)personaJson.get(i)).getString("CRPER_CODIGO").trim().isEmpty()) {
