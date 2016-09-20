@@ -11,7 +11,7 @@
                 return this;
             };
             
-            /*function ManagerCookies(){
+            function ManagerCookies(){
 
                 this.create = function Create(name,value,hours) {
                     var expires='';
@@ -54,21 +54,21 @@
 
             function setFocus(inId){
                  document.getElementById(inId).focus();
-            }*/
-
-            function visualizar(){
-                /*var usuario = new ManagerCookies().read('cgg_res_usuario');
-                if(usuario !== null && usuario !== undefined && usuario !== 'undefined'){
-                    document.getElementById('j_username').value = usuario;                    
-                    setFocus('j_password');
-                }else{                    
-                    setFocus('j_username');
-                }*/
             }
 
-            function recordarme(){                
+            function visualizar(){
+                var usuario = new ManagerCookies().read('cgg_res_usuario');
+                if(usuario !== null && usuario !== undefined && usuario !== 'undefined'){
+                    document.getElementById('j_username').value = usuario;
+                    setFocus('j_password');
+                }else{
+                    setFocus('j_username');
+                }
+            }
+
+            function recordarme(){
 				//document.loginForm.j_username.value = document.loginForm.j_username.value.toLowerCase();
-                //new ManagerCookies().create('cgg_res_usuario',document.getElementById('j_username').value,10080);
+                new ManagerCookies().create('cgg_res_usuario',document.getElementById('j_username').value,10080);
             }         
         </script>
     </head>

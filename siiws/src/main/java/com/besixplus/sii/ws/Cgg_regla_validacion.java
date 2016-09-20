@@ -782,7 +782,7 @@ public class Cgg_regla_validacion implements Serializable{
 						}
 					}
 				}catch (Exception e){
-					System.err.println("REGLA ERROR: " + objJSONRegla.toString());
+					System.err.println("zara-REGLA ERROR: " + objJSONRegla.toString());
 				}
 			}
 			con.commit();

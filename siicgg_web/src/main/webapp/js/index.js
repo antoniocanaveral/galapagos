@@ -23,7 +23,7 @@ function loadInit(){
 	var btnAcceso = document.getElementById("btnAcceso");	
 	var btnCambiarClave = document.getElementById("btnCambiarClave");	
 	document.getElementById("btnAcceso").onclick=function(){
-		ManagerCookies.erase();
+		document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
 		window.location="PrivateWS/SessionWeb?request=logout";
 	};
 	if (txtUsuario.value=="false"){
