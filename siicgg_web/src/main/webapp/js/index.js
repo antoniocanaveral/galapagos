@@ -85,6 +85,7 @@ function loadInit(){
 		divLogin.style.cssText = "background-color:#E6EFC2;border-color:#C1D573";
 		divUsuario.innerHTML = "<b>Bienvenido</b><br> "+ userObject.CRPER_NOMBRES+" "+userObject.CRPER_APELLIDO_PATERNO+" "+userObject.CRPER_APELLIDO_MATERNO+"";
 		btnAcceso.onclick=function(){
+			document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
 			window.location="PrivateWS/SessionWeb?request=logout";
 		}
 	}
