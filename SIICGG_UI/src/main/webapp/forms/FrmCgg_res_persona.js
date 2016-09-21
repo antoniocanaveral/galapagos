@@ -2887,7 +2887,7 @@ function FrmCgg_res_persona(INSENTENCIA_CGG_RES_PERSONA,INRECORD_CGG_RES_PERSONA
         text: 'Adjuntos',    //(opcional -> Texto del botón)
         tableName: 'Cgg_res_persona',
         validateRecordID:true,
-        recordID : INRECORD_CGG_RES_PERSONA.id,
+        recordID : (INRECORD_CGG_RES_PERSONA?INRECORD_CGG_RES_PERSONA.id:null),
         filter : null
     });
     //<== AC
