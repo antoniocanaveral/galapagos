@@ -300,7 +300,7 @@ public abstract class BasePublicAPI {
                             (String) props.get(PropertyIds.OBJECT_TYPE_ID),
                             file.getInputStream()
                     );
-            doc.appendContentStream(contentStream,true);
+            doc.setContentStream(contentStream,true);
             contentStream.getStream().close();
             System.out.println("Document Updated V: "+doc.getVersionLabel() +" Id: " + doc.getId());
         } catch (FileNotFoundException e) {

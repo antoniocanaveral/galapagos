@@ -1,18 +1,19 @@
 package com.besixplus.sii.ws;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.besixplus.sii.db.ManagerConnection;
+import com.besixplus.sii.i18n.Messages;
+import com.besixplus.sii.mail.Base64;
+import com.besixplus.sii.mail.ProcessMail;
+import com.besixplus.sii.misc.Formatter;
+import com.besixplus.sii.objects.Cgg_buzon_correo;
+import com.besixplus.sii.objects.Cgg_configuracion;
+import com.besixplus.sii.objects.Cgg_not_mail;
+import com.besixplus.sii.objects.Cgg_sec_usuario_contacto;
+import com.besixplus.sii.objects.Cgg_sec_usuario_rol;
+import com.besixplus.sii.objects.*;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
@@ -28,22 +29,18 @@ import javax.xml.ws.WebFault;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
-
-import com.besixplus.sii.mail.ProcessMail;
-import com.besixplus.sii.objects.*;
-import com.besixplus.sii.objects.Cgg_buzon_correo;
-import com.besixplus.sii.objects.Cgg_configuracion;
-import com.besixplus.sii.objects.Cgg_not_mail;
-import com.besixplus.sii.objects.Cgg_sec_usuario_contacto;
-import com.besixplus.sii.objects.Cgg_sec_usuario_rol;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.besixplus.sii.db.ManagerConnection;
-import com.besixplus.sii.i18n.Messages;
-import com.besixplus.sii.mail.Base64;
-import com.besixplus.sii.misc.Formatter;
+import java.io.Serializable;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * CLASE Cgg_usuario
@@ -268,8 +265,8 @@ EXTERNO.
 				con.rollback();
 			con.setAutoCommit(true);
 			con.close();
-			if(!res.equals("true"))
-				throw new SOAPFaultException(SOAPFactory.newInstance().createFault(res, new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
+			//if(!res.equals("true"))
+			//	throw new SOAPFaultException(SOAPFactory.newInstance().createFault(res, new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
 		}catch(SQLException inException){
 			com.besixplus.sii.db.SQLErrorHandler.errorHandler(inException);
 			throw new SOAPFaultException(SOAPFactory.newInstance().createFault(inException.getMessage(), new QName("http://schemas.xmlsoap.org/soap/envelope/", Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));

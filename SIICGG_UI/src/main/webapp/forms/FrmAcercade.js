@@ -28,7 +28,7 @@ function FrmAcercade(){
         modal:true,
         items:[{          
             region:'center',            
-            html:'<div><table border="0" width="100%" height="100%" style="background-image:url(resources/images/acercade.png)"><tr><td style ="height:170px"></td></tr><tr><td style="font-size:11px" align="center">Para m&aacute;s informaci&oacute;n: <a href="http://www.besixplus.com">http://www.besixplus.com<a></td></tr></table></div>'
+            html:'<div><table border="0" width="100%" height="100%" style="background-image:url(resources/images/acercade.png)"><tr><td style ="height:170px"></td></tr><tr><td style="font-size:11px" align="center">Para m&aacute;s informaci&oacute;n: <a href="http://www.bmlaurus.com">http://www.bmlaurus.com<a></td></tr></table></div>'
         }],        
         bbar:['->',btnSalirAcercade]
     });
