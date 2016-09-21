@@ -803,7 +803,7 @@ function loadIngresoTCT(){
 					genero = '1';
 				}
 				var a = (tblPersona.rows[i].cells[6].innerHTML).split('/');
-				var fechaNac = a[2]+'-'+a[1]+'-'+a[0]+'T00:00:00';
+				var fechaNac = a[2]+'-'+a[1]+'-'+a[0]+'T12:00:00';
 				jsonPersona += ((i==1)?'':',')+'{"CRDID_CODIGO":"'+tblPersona.rows[i].cells[0].id+'","CGNCN_CODIGO":"'+tblPersona.rows[i].cells[5].id+'",'+
 				'"CRPER_NOMBRES":"'+tblPersona.rows[i].cells[2].innerHTML+'",'+
 				'"CRPER_APELLIDO_PATERNO":"'+tblPersona.rows[i].cells[3].innerHTML+'",'+
@@ -881,11 +881,11 @@ function loadIngresoTCT(){
 			var yyyy = today.getFullYear();		
 			if (mm<10)	mm = '0'+mm;		
 			if (dd<10)	dd = '0'+dd;		
-			var fechaPreregsitro = yyyy+'-'+mm+'-'+dd+'T00:00:00';
+			var fechaPreregsitro = yyyy+'-'+mm+'-'+dd+'T12:00:00';
 			var arrFecha = dtFechaIngreso.value.split('/');
-			var fechaIngreso = arrFecha[2]+'-'+arrFecha[1]+'-'+arrFecha[0]+'T00:00:00';			
+			var fechaIngreso = arrFecha[2]+'-'+arrFecha[1]+'-'+arrFecha[0]+'T12:00:00';
 			arrFecha = dtFechaSalida.value.split('/');
-			var fechaSalida = arrFecha[2]+'-'+arrFecha[1]+'-'+arrFecha[0]+'T00:00:00';	
+			var fechaSalida = arrFecha[2]+'-'+arrFecha[1]+'-'+arrFecha[0]+'T12:00:00';
 
 			param.add('inCarpt_codigo', cbxOrigenAux.dom.value);
 			param.add('inCgg_carpt_codigo', cbxDestinoAux.dom.value);
