@@ -832,8 +832,9 @@ function loadIngresoTCT(){
 					'}';
 			}
 			jsonHospedaje += ']';
-
-			function CallBackCgg_tct_registro(r) {			
+			showForm($("divCargando1"));
+			function CallBackCgg_tct_registro(r) {
+				btnSalirAll($("divCargando1"));
 				r = eval ("("+r+")");
 				if(r.success){
 					new bsxMessageBox({

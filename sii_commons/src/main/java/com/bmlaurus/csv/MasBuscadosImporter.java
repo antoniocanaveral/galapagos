@@ -22,7 +22,7 @@ public class MasBuscadosImporter{
             for(File arch: parent.listFiles()){
                 if(arch.isFile()){
                     String result = parseFile(arch.getPath());
-                    if(result.trim().equals("{true}"))
+                    if(result!=null && result.trim().equals("{true}"))
                         arch.delete();
                 }
             }

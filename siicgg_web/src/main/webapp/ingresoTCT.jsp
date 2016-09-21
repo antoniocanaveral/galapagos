@@ -8,6 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="css/dialog.2.1.css" />
 	<link rel="stylesheet" type="text/css" href="css/jquery/jquery-ui.css"/>
 	<link rel="stylesheet" type="text/css" href="css/jquery/ui.all.css"/>
+	<link rel="stylesheet" type="text/css" href="css/form.css"/>
 
 
 	<%out.println(Env.loadExternalScripts("siicgg_web/javascripts.properties"));%>
@@ -192,6 +193,8 @@ Gal&aacute;pagos</div>
 
 <div id="divBgModal" class="bgtransparent"
 	style="width: 100%; height: 100%"></div>
+<div id="divCargando1" class="cargando"
+	 style="z-index: 10;display: none; position: fixed;"><span>Cargando...</span></div>
 <table style="width: 100%;" align="center">
 	<tbody>
 
