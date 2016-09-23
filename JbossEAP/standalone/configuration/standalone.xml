@@ -333,7 +333,8 @@
         <subsystem xmlns="urn:jboss:domain:web:2.2" default-virtual-server="default-host" native="false">
             <connector name="http" protocol="HTTP/1.1" scheme="http" socket-binding="http"/>
             <connector name="https" protocol="HTTP/1.1" scheme="https" socket-binding="https" enable-lookups="false" redirect-port="8443" secure="true">
-                <ssl name="ssl" password="siicgg2010" certificate-key-file="${SII_HOME}/cgg_sii.jks" protocol="TLSv1" verify-client="false"/>
+                <!--ssl name="ssl" password="siicgg2010" certificate-key-file="${SII_HOME}/cgg_sii.jks" protocol="TLSv1" verify-client="false"/-->
+                <ssl name="https" password="siicgg2010" certificate-key-file="standalone/configuration/server.keystore"/>
             </connector>
             <virtual-server name="default-host" enable-welcome-root="true">
                 <alias name="localhost"/>

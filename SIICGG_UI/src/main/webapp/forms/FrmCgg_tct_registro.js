@@ -1336,15 +1336,19 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
                             cbxCgg_carpt_codigo.setValue(tmpCarpt_codigo_destino);
                             cbxCraln_codigo.setValue(tmpCraln_codigo);
                         }
+                        //Formateamos las fechas por la diferencia Horaria;
+
+                        var formato12 = "Y-m-d\\T12:00:00";
+
                         param.add('inCarpt_codigo', cbxCarpt_codigo.getValue());
                         param.add('inCgg_carpt_codigo', cbxCgg_carpt_codigo.getValue());
                         param.add('inCraln_codigo', cbxCraln_codigo.getValue());
                         param.add('inCtreg_numero', numCtreg_numero.getValue());
                         param.add('inCtreg_numero_vuelo', numCtreg_numero_vuelo.getValue());
-                        param.add('inCtreg_fecha_preregistro', dtCtreg_fecha_preregistro.getValue().format(TypeDateFormat.Custom));
-                        param.add('inCtreg_fecha_ingreso', dtCtreg_fecha_ingreso.getValue().format(TypeDateFormat.Custom));
+                        param.add('inCtreg_fecha_preregistro', dtCtreg_fecha_preregistro.getValue().format(formato12));
+                        param.add('inCtreg_fecha_ingreso', dtCtreg_fecha_ingreso.getValue().format(formato12));
                         param.add('inCtreg_codigo_barras', numCtreg_codigo_barras.getValue());
-                        param.add('inCtreg_fecha_salida', dtCtreg_fecha_salida.getValue().format(TypeDateFormat.Custom));
+                        param.add('inCtreg_fecha_salida', dtCtreg_fecha_salida.getValue().format(formato12));
                         param.add('inHospedaje_JSON', createJSONObject(smTipo_Hospedaje.getSelections()));
                         param.add('inActividad_JSON', createJSONObject(smActividad.getSelections()));
                         param.add('inPersona_JSON', grdCgg_res_persona.getStore().getJsonData());

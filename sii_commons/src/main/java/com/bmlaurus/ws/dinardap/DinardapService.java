@@ -103,7 +103,9 @@ public abstract class DinardapService {
                 resultStaus = CALL_ERROR;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
+            result = CALL_ERROR;
+            resultStaus = CALL_ERROR;
         }
         return result;
     }

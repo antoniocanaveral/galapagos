@@ -32,18 +32,23 @@ CREATE OR REPLACE FUNCTION sii.f_keygen(intablename character varying, incolname
 $BODY$
 DECLARE
 GENERATED_OUT VARCHAR;
+STR_SQL VARCHAR;
 BEGIN
-	select nextval('SII.seq_'||lower(intablename)||'_'||lower(incolname)) INTO GENERATED_OUT;
+	select nextval('SII.seq_'||lower(intablename)||'_'||lower(incolname)||'_'||lower(inabr)) INTO GENERATED_OUT;
 	RETURN inabr||GENERATED_OUT;
 EXCEPTION WHEN others THEN
-	RAISE NOTICE '%; SQLSTATE: %', SQLERRM, SQLSTATE;
-	SELECT SII.F_OLD_KEYGEN(intablename,incolname,inabr) INTO GENERATED_OUT;
-	SELECT translate(GENERATED_OUT,inabr,'') into GENERATED_OUT;
+	--RAISE NOTICE '%; SQLSTATE: %', SQLERRM, SQLSTATE;
+	STR_SQL := 'SELECT MAX(SUBSTR('||incolname||',LENGTH('''||inabr||''')+1,LENGTH('||incolname||'))::numeric) FROM sii.'||intablename||' WHERE isnumeric(SUBSTR('||incolname||',LENGTH('''||inabr||''')+1,LENGTH('||incolname||')))';
+	--RAISE NOTICE '%', STR_SQL;
+	EXECUTE STR_SQL  INTO GENERATED_OUT;
 	--CREATE SEQUENCE
-	RAISE NOTICE 'CREATING SEQUENCE';
-	EXECUTE 'CREATE SEQUENCE SII.'||'seq_'||lower(intablename)||'_'||lower(incolname)
+	--RAISE NOTICE 'CREATING SEQUENCE';
+	EXECUTE 'CREATE SEQUENCE SII.'||'seq_'||lower(intablename)||'_'||lower(incolname)||'_'||lower(inabr)
 		||' INCREMENT 1'
 		||' START '||GENERATED_OUT;
+
+	PERFORM nextval('SII.seq_'||lower(intablename)||'_'||lower(incolname)||'_'||lower(inabr));
+	select nextval('SII.seq_'||lower(intablename)||'_'||lower(incolname)||'_'||lower(inabr)) INTO GENERATED_OUT;
 	RETURN inabr||GENERATED_OUT;
 END;
 $BODY$

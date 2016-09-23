@@ -1471,7 +1471,7 @@ function loadIngresoTCT(){
 			var fechaIngreso = arrFecha[2]+'-'+arrFecha[1]+'-'+arrFecha[0];			
             param.add('inCrper_num_doc_identific',txtNumeroDocumento.value);
 			param.add('inCrdid_codigo',cbxTipoDocumento.dom.value);
-            param.add('inCtreg_fecha_ingreso',fechaIngreso+'T00:00:00');
+            param.add('inCtreg_fecha_ingreso',fechaIngreso+'T12:00:00');
             param.add('format','JSON');
             SOAPClient.invoke(URL_WS+"PublicWS/Cgg_tct_registro",'selectPersonaTct',param, true, CallBackCgg_tct_persona);
      

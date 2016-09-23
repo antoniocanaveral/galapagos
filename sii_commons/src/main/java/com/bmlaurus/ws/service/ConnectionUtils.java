@@ -33,6 +33,8 @@ public class ConnectionUtils {
         String wsURL = config.getProperty("wsurl");
         URL url = new URL(wsURL);
         URLConnection connection = url.openConnection();
+        connection.setConnectTimeout(5000);
+        connection.setReadTimeout(5000);
         HttpURLConnection httpConn = (HttpURLConnection)connection;
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         String xmlInput = config.getProperty("body");
