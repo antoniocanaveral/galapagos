@@ -37,6 +37,9 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
     var tmpSelectionModel;
     var myJasperServer = new JasperServer();
     var deskApp = inDesktop;
+
+    var formato12 = "Y-m-d\\T12:00:00";
+
     /**
      * Ext.form.TextField IDENTIFICATIVO UNICO DE REGISTRO DE TCT
      */
@@ -773,7 +776,7 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
                 return dsGeneroPersona[inCrper_genero][1];
         }
         },
-        {dataIndex:'CRPER_FECHA_NACIMIENTO',header:'Fecha n.',width:80,sortable:true,editor:dtCrper_fecha_nacimiento,editable:!inPrintMode,renderer:truncDate},
+        {dataIndex:'CRPER_FECHA_NACIMIENTO',header:'Fecha n.',width:80,sortable:true,editor:    dtCrper_fecha_nacimiento,editable:!inPrintMode,renderer:truncDate},
         {dataIndex:'CGG_CPAIS_CODIGO',header:'Pa\u00eds Residencia',width:100,sortable:true,editor:cbxCgg_cpais_codigo,editable:!inPrintMode,renderer:function(inCpais_codigo) {
             var tmpRecord = SCGG_PAIS.getAt(SCGG_PAIS.findExact('CPAIS_CODIGO', inCpais_codigo));
             if(tmpRecord)
@@ -841,7 +844,7 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
                 cbxCgncn_codigo.setValue(SCGG_CONFIGURACION.getAt(SCGG_CONFIGURACION.findExact('CGCNF_CODIGO','CONF36')).get('CGCNF_VALOR_CADENA'));
                 cbxCgg_cpais_codigo.setValue(SCGG_CONFIGURACION.getAt(SCGG_CONFIGURACION.findExact('CGCNF_CODIGO','CONF38')).get('CGCNF_VALOR_CADENA'));
                 cbxCkesp_codigo.setValue(SCGG_CONFIGURACION.getAt(SCGG_CONFIGURACION.findExact('CGCNF_CODIGO','CONF35')).get('CGCNF_VALOR_CADENA'));
-                dtCrper_fecha_nacimiento.setValue(new Date());
+                dtCrper_fecha_nacimiento.setValue((new Date()).format(formato12));
                 tmpRecord.data.CRTRA_CODIGO = '';
                 txtCrtra_numero.setValue('');
                 txtCrtipo_persona.setValue('TURISTA');
@@ -885,7 +888,7 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
         var param = new SOAPClientParameters();
         param.add('inCrdid_codigo',cbxCrdid_codigo.getValue());
         param.add('inCrper_num_doc_identific',txtCrper_num_doc_identific.getValue());
-        param.add('inCtreg_fecha_ingreso',dtCtreg_fecha_ingreso.getValue().format(TypeDateFormat.Custom));
+        param.add('inCtreg_fecha_ingreso',dtCtreg_fecha_ingreso.getValue().format(formato12));
         param.add('format',TypeFormat.JSON);
         SOAPClient.invoke(urlCgg_tct_registro,'selectPersonaTct',param, true, CallBackCgg_tct_persona);
     }
@@ -1273,23 +1276,33 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
                         return;
                     }
                     function CallBackCgg_tct_registro(r) {
-                        winFrmCgg_tct_registro.getEl().unmask();
-                        var tmpResponse = Ext.util.JSON.decode(r);
-                        if(tmpResponse.success){
+                        try{
+                            winFrmCgg_tct_registro.getEl().unmask();
+                            var tmpResponse = Ext.util.JSON.decode(r);
+                            if(tmpResponse.success){
+                                Ext.Msg.show({
+                                    title:tituloCgg_tct_registro,
+                                    msg: 'La informaci\u00f3n de pre-registro ha sido almacenada. '+(isEdit?'':'<br>El n\u00famero de grupo es: <span class="numeroTramite">'+tmpResponse.msg+'</span>'),
+                                    buttons: Ext.Msg.OK,
+                                    icon: Ext.MessageBox.INFO
+                                });
+                                winFrmCgg_tct_registro.close();
+                            }else{
+                                Ext.Msg.show({
+                                    title:tituloCgg_tct_registro,
+                                    msg: 'La informaci\u00f3n de pre-registro no ha podido ser almacenada. ' + (tmpResponse.msg),
+                                    buttons: Ext.Msg.OK,
+                                    icon: Ext.MessageBox.ERROR
+                                });
+                            }
+                        }catch (e){
                             Ext.Msg.show({
                                 title:tituloCgg_tct_registro,
-                                msg: 'La informaci\u00f3n de pre-registro ha sido almacenada. '+(isEdit?'':'<br>El n\u00famero de grupo es: <span class="numeroTramite">'+tmpResponse.msg+'</span>'),
-                                buttons: Ext.Msg.OK,
-                                icon: Ext.MessageBox.INFO
-                            });
-                            winFrmCgg_tct_registro.close();
-                        }else{
-                            Ext.Msg.show({
-                                title:tituloCgg_tct_registro,
-                                msg: 'La informaci\u00f3n de pre-registro no ha podido ser almacenada. ' + (tmpResponse.msg),
+                                msg: 'La informaci\u00f3n de pre-registro no ha podido ser almacenada. Existen errores en los datos',
                                 buttons: Ext.Msg.OK,
                                 icon: Ext.MessageBox.ERROR
                             });
+                            console.log(e.message);
                         }
                         btnGuardarCgg_tct_registro.enable();
                     }
@@ -1337,8 +1350,6 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
                             cbxCraln_codigo.setValue(tmpCraln_codigo);
                         }
                         //Formateamos las fechas por la diferencia Horaria;
-
-                        var formato12 = "Y-m-d\\T12:00:00";
 
                         param.add('inCarpt_codigo', cbxCarpt_codigo.getValue());
                         param.add('inCgg_carpt_codigo', cbxCgg_carpt_codigo.getValue());
