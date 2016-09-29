@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="tct_residentes" language="groovy" pageWidth="243" pageHeight="153" orientation="Landscape" columnWidth="243" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isSummaryNewPage="true" uuid="de447089-d114-4d44-a556-b9c7d5a5b756">
 	<property name="ireport.zoom" value="2.1435888100000056"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="84"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="P_CRCNT_CODIGO" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -151,21 +151,21 @@ INNER JOIN SII.CGG_RES_CARNET CRNT ON CRNT.CRRSD_CODIGO = CRRSD.CRRSD_CODIGO AND
 				<textFieldExpression><![CDATA[$F{renovacion}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="102" width="72" height="10" uuid="9daad2c8-74df-4699-996c-44e1be700b78"/>
+				<reportElement x="0" y="119" width="72" height="10" uuid="9daad2c8-74df-4699-996c-44e1be700b78"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["No. "+$F{residencia}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="112" width="72" height="10" uuid="86ebf8aa-5bf5-419d-ac24-7277a49c1109"/>
+				<reportElement x="0" y="129" width="72" height="10" uuid="86ebf8aa-5bf5-419d-ac24-7277a49c1109"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($F{modalidad}.intValue()==0?"PERMANENTE":"TEMPORAL")]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="5" y="40" width="60" height="60" uuid="4ca8c712-907b-44ba-b3f5-dd7d77be50d2"/>
+				<reportElement x="5" y="57" width="60" height="60" uuid="4ca8c712-907b-44ba-b3f5-dd7d77be50d2"/>
 				<imageExpression><![CDATA[new ByteArrayInputStream((byte[])$F{foto})]]></imageExpression>
 			</image>
 			<textField pattern="dd/MM/yyyy">

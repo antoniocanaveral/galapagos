@@ -9,7 +9,7 @@
 	<parameter name="P_CUSU_RESPONSABLE" class="java.lang.String"/>
 	<parameter name="P_CUSU_CODIGO" class="java.lang.String"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["/home/klascano/BESIX/DEV/SIICGG/APP/REPORTS/"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT DISTINCT
