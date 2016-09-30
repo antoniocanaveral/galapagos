@@ -29,6 +29,22 @@ $(function() {
         //frame.src ="bienvenida.jsp?CWPAG_CODIGO=CWPAG1";
     });
 
+    $.template(
+        "resultadoReglaTemplate",
+            '<table id="tableResultado" style="font-size:11px">'+
+            '<tr class="even" style=" border-top: 2px #3399ff solid; padding: 0.4em;">'+
+            '<th colspan=3 style="text-align:left;">Validaci&oacute;n:</TH>'+
+            '</tr>'+
+            '{{each dataSet}}'+
+            '{{if CRVAL_APROBADO == "FALSE"}}'+
+            '<tr class="even">'+
+            '<td><b>${$index + 1}</b> .- ${CRVAL_SUGERENCIA}</td>'+
+            '<td><image style="float : left;" src="css/icon/eliminar.png"></image></td>'+
+            '</tr>'+
+            '{{/if}}'+
+            '{{/each}}'+
+            '</table>'
+    );
 
     function cancelEditing(){
         $("#cbxActividad").attr("disabled", true);
@@ -2278,24 +2294,6 @@ $(function() {
 
         return isComplete;
     }
-
-    $.template(
-            "resultadoReglaTemplate",
-            '<table id="tableResultado" style="font-size:11px">'+
-                    '<tr class="even" style=" border-top: 2px #3399ff solid; padding: 0.4em;">'+
-                    '<th colspan=3 style="text-align:left;">Validaci&oacute;n:</TH>'+
-                    '</tr>'+
-                    '{{each dataSet}}'+
-                    '{{if CRVAL_APROBADO == "FALSE"}}'+
-                    '<tr class="even">'+
-                    '<td><b>${$index + 1}</b> .- ${CRVAL_SUGERENCIA}</td>'+
-                    '<td><image style="float : left;" src="css/icon/eliminar.png"></image></td>'+
-                    '</tr>'+
-                    '{{/if}}'+
-                    '{{/each}}'+
-                    '</table>'
-            );
-
 
     /*
      * Inicializacion de los datos asignados al objeto de tipo dialogo para seleccion de vehiculos

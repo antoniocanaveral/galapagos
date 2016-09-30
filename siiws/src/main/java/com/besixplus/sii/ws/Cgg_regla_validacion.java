@@ -731,7 +731,7 @@ public class Cgg_regla_validacion implements Serializable{
 		JSONArray arrayJSONRegla = null;
 		JSONObject objJSONRegla = null;
 		boolean outResultadoValidacion =  true; 
-		String tmpResultado;
+		String tmpResultado = null;
 		String [] outResult = null;
 		try{
 			Connection con = ManagerConnection.getConnection();
@@ -761,29 +761,30 @@ public class Cgg_regla_validacion implements Serializable{
 					Class clazz = Class.forName(className,true,externalClassLoader);
 					RuleClass rule = (RuleClass) clazz.newInstance();
 					tmpResultado = rule.executeRule(objReglaMetadatos, objJSONRegla, jsonRecord);
-				}else
-				try {
-					tmpResultado = new com.besixplus.sii.db.Cgg_regla_validacion().reglaStatement(con, objReglaMetadatos, objJSONRegla);
-
-					if(tmpResultado==null){
-						System.err.println("REGLA DEVULEVE NULL: "+objRegla.getCRVAL_FUNCION_VALIDACION());
-						outResultadoValidacion = false;
-						arrayJSONRegla.getJSONObject(i).put("CRVAL_APROBADO", "FALSE");
-					}else {
-						outResult = tmpResultado.split(",");
-						if (Boolean.parseBoolean(outResult[0]) != objJSONRegla.getBoolean("CRVAL_RESULTADO_ACEPTACION")) {
-							arrayJSONRegla.getJSONObject(i).put("CRVAL_APROBADO", "FALSE");
-							outResultadoValidacion = false;
-						} else {
-							arrayJSONRegla.getJSONObject(i).put("CRVAL_APROBADO", "TRUE");
-						}
-						if (outResult.length > 1) {
-							arrayJSONRegla.getJSONObject(i).put("CRVAL_SUGERENCIA", outResult[1]);
-						}
+				}else {
+					try {
+						tmpResultado = new com.besixplus.sii.db.Cgg_regla_validacion().reglaStatement(con, objReglaMetadatos, objJSONRegla);
+					} catch (Exception e) {
+						System.err.println("zara-REGLA ERROR: " + objJSONRegla.toString());
 					}
-				}catch (Exception e){
-					System.err.println("zara-REGLA ERROR: " + objJSONRegla.toString());
 				}
+				if(tmpResultado==null){
+					System.err.println("REGLA DEVULEVE NULL: "+objRegla.getCRVAL_FUNCION_VALIDACION());
+					outResultadoValidacion = false;
+					arrayJSONRegla.getJSONObject(i).put("CRVAL_APROBADO", "FALSE");
+				}else {
+					outResult = tmpResultado.split(",");
+					if (Boolean.parseBoolean(outResult[0]) != objJSONRegla.getBoolean("CRVAL_RESULTADO_ACEPTACION")) {
+						arrayJSONRegla.getJSONObject(i).put("CRVAL_APROBADO", "FALSE");
+						outResultadoValidacion = false;
+					} else {
+						arrayJSONRegla.getJSONObject(i).put("CRVAL_APROBADO", "TRUE");
+					}
+					if (outResult.length > 1) {
+						arrayJSONRegla.getJSONObject(i).put("CRVAL_SUGERENCIA", outResult[1]);
+					}
+				}
+
 			}
 			con.commit();
 			con.close();
