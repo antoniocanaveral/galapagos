@@ -5,6 +5,23 @@ function FrmCaptureImage(){
     var tituloCaptura = "Captura de Imagen";
     var descCaptura = "Seleccione el dispositivo que va a utilizar para la captura";
 
+    var zoom = 1,
+        rotate = 0;
+    var _x=0,_y=0;
+
+    function updateCanvas() {
+        var canvas = document.getElementById('canvas');
+        var video = document.getElementById('video');
+        var context = canvas.getContext('2d');
+        context.setTransform(1, 0, 0, 1, 0, 0);
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.translate(canvas.width * 0.5, canvas.height * 0.5);
+        context.rotate(rotate * Math.PI / 180);
+        context.scale(zoom, zoom);
+        context.translate(-canvas.width * 0.5, -canvas.height * 0.5);
+        context.drawImage(video, _x, _y, 320, 240);
+    }
+
     var btnCapturar = new Ext.Button({
         id:'snap',
         iconCls:'iconCamara',
@@ -12,13 +29,100 @@ function FrmCaptureImage(){
         text:'Capturar Foto',
         listeners:{
             click:function(){
-                // Elements for taking the snapshot
-                var canvas = document.getElementById('canvas');
-                var video = document.getElementById('video');
-                var context = canvas.getContext('2d');
-                context.drawImage(video, 0, 0, 320, 240);
+                zoom=1;
+                rotate=0;
+                _x=0;
+                _y=0;
+                updateCanvas();
             }
         }
+    });
+
+    var btnZin = new Ext.Button({
+        id:'_plus',
+        tooltip:'Zoom In',
+        text:'+',
+        width:25,
+        listeners:{
+            click:function(){
+                zoom = zoom + 0.1;
+                updateCanvas();
+            }
+        }
+    });
+    var btnZOut = new Ext.Button({
+        id:'_minus',
+        tooltip:'Zoom Out',
+        text:'-',
+        width:25,
+        listeners:{
+            click:function(){
+                zoom = zoom - 0.1;
+                updateCanvas();
+            }
+        }
+    });
+    var btnLeft = new Ext.Button({
+        id:'_left',
+        tooltip:'Izquierda',
+        text:'<-',
+        width:25,
+        listeners:{
+            click:function(){
+                _x=_x-5;
+                updateCanvas();
+            }
+        }
+    });
+    var btnRight = new Ext.Button({
+        id:'_right',
+        tooltip:'Derecha',
+        text:'->',
+        width:25,
+        listeners:{
+            click:function(){
+                _x=_x+5;
+                updateCanvas();
+            }
+        }
+    });
+    var btnUp = new Ext.Button({
+        id:'_up',
+        tooltip:'Arriba',
+        text:'^',
+        width:25,
+        listeners:{
+            click:function(){
+                _y=_y-5;
+                updateCanvas();
+            }
+        }
+    });
+    var btnDown = new Ext.Button({
+        id:'_down',
+        tooltip:'Abajo',
+        text:'_',
+        width:25,
+        listeners:{
+            click:function(){
+                _y=_y+5;
+                updateCanvas();
+            }
+        }
+    });
+
+    var ctlPanel = new Ext.Panel({
+        id:'ctlPanel',
+        layout: 'table',
+        defaults: {
+            // applied to each contained panel
+            bodyStyle:'padding:2px'
+        },
+        layoutConfig: {
+            // The total column count must be specified here
+            columns: 6
+        },
+        items:[btnZin,btnZOut,btnLeft,btnRight,btnUp,btnDown]
     });
 
     var pnlMainCamera = new Ext.Panel({
@@ -37,7 +141,7 @@ function FrmCaptureImage(){
             },
             {
                 html:'<canvas id="canvas" width="320" height="240"></canvas>'
-            },btnCapturar]
+            },btnCapturar,ctlPanel]
     });
 
     var btnGuardarFoto = new Ext.Button({

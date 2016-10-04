@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1f2ec8fc-0dab-45ee-806c-af051e5637ce">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="152"/>
 	<parameter name="P_CRTRA_CODIGO" class="java.lang.String"/>
 	<parameter name="P_CUSU_RESPONSABLE" class="java.lang.String"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
@@ -12,15 +12,17 @@
 		<![CDATA[SELECT DISTINCT
 	TRA.CRTRA_NUMERO,
 	(SELECT I.CISLA_NOMBRE FROM SII.CGG_ISLA I WHERE I.CISLA_CODIGO = TRA.CISLA_CODIGO ) AS CISLA_NOMBRE,
+(select cctn_descripcion from cgg_canton where cctn_codigo = (select cctn_codigo from CGG_USUARIO where cusu_codigo =$P{P_CUSU_RESPONSABLE})) as canton,
 	(SELECT RES.CRRES_NUMERO_RESOLUCION FROM SII.CGG_RES_RESOLUCION RES WHERE TST.CRRES_CODIGO = RES.CRRES_CODIGO) AS CRRES_NUMERO_RESOLUCION,
 	CASE
 		WHEN TRA.CRPJR_CODIGO IS NOT NULL THEN SII.F_RPT_NOMBRE_AUSPICIANTE(TRA.CRPJR_CODIGO)
 		WHEN TRA.CRPJR_CODIGO IS NULL AND TRA.CRPER_CODIGO IS NOT NULL THEN SII.F_RPT_NOMBRE_AUSPICIANTE(TRA.CRPER_CODIGO)
 	END AS CRPER_AUSPICIANTE,
-	SII.F_RPT_NOMBRE_OFERTANTE($P{P_CUSU_RESPONSABLE}) AS CUSU_RESPONSABLE,
+	(SELECT COALESCE(P.CRPER_NOMBRES,'')||' '||COALESCE(P.CRPER_APELLIDO_PATERNO,'')||' '||COALESCE(P.CRPER_APELLIDO_MATERNO,'') FROM SII.CGG_RES_PERSONA P WHERE P.CRPER_CODIGO = (select crper_codigo from CGG_USUARIO where cusu_codigo = $P{P_CUSU_RESPONSABLE})) AS CUSU_RESPONSABLE,
 	COALESCE((SELECT G.CGCRG_NOMBRE FROM SII.CGG_GEM_CARGO G WHERE G.CGCRG_CODIGO = TRA.CRTRA_ACTIVIDAD_RESIDENCIA),'NINGUNA') CRTRA_ACTIVIDAD_RESIDENCIA,
 	SII.F_CGG_RES_PERSONA_SELECT_NOMBRES(TRA.CGG_CRPER_CODIGO) AS CRPER_NOMBRES,
-	RSD.CRRSD_FECHA_INICIO::DATE CRTRA_FECHA_INGRESO,
+	(SELECT p.cpais_nombre FROM cgg_pais p WHERE p.cpais_codigo=(SELECT per.cgg_cpais_codigo FROM cgg_res_persona per WHERE per.crper_codigo=TRA.CGG_CRPER_CODIGO)) as CPAIS_NOMBRE,
+	RSD.CRRSD_FECHA_INICIO::DATE CRTRA_FECHA_INGRESO,RSD.CRRSD_FECHA_CADUCIDAD::DATE CRTRA_FECHA_SALIDA,
 	(SELECT P.CRPER_NUM_DOC_IDENTIFIC FROM SII.CGG_RES_PERSONA P WHERE P.CRPER_CODIGO = TRA.CGG_CRPER_CODIGO) CRPER_NUM_DOC_IDENTIFIC
  FROM SII.CGG_RES_TRAMITE TRA
  INNER JOIN SII.CGG_RES_TIPO_SOLICITUD_TRAMITE TST ON(TST.CRTST_CODIGO = TRA.CRTST_CODIGO)
@@ -30,15 +32,36 @@
  --AND RSD.CRRSD_TRAMITE_PENDIENTE = TRUE
  AND TRA.CRTRA_CODIGO=$P{P_CRTRA_CODIGO}]]>
 	</queryString>
-	<field name="crtra_numero" class="java.math.BigDecimal"/>
-	<field name="cisla_nombre" class="java.lang.String"/>
-	<field name="crres_numero_resolucion" class="java.lang.String"/>
+	<field name="crtra_numero" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[NUMERO SECUENCIAL UNICO DEL TRAMITE, QUE SE RESTABLECE ANUALMENTE.]]></fieldDescription>
+	</field>
+	<field name="cisla_nombre" class="java.lang.String">
+		<fieldDescription><![CDATA[NOMBRE DE LA ISLA O DE CIUDAD]]></fieldDescription>
+	</field>
+	<field name="canton" class="java.lang.String"/>
+	<field name="crres_numero_resolucion" class="java.lang.String">
+		<fieldDescription><![CDATA[NUMERO IDENTIFICATIVO DE LA RESOLUCION]]></fieldDescription>
+	</field>
 	<field name="crper_auspiciante" class="java.lang.String"/>
 	<field name="cusu_responsable" class="java.lang.String"/>
-	<field name="crtra_actividad_residencia" class="java.lang.String"/>
-	<field name="crper_nombres" class="java.lang.String"/>
-	<field name="crtra_fecha_ingreso" class="java.sql.Timestamp"/>
-	<field name="crper_num_doc_identific" class="java.lang.String"/>
+	<field name="crtra_actividad_residencia" class="java.lang.String">
+		<fieldDescription><![CDATA[ACTIVIDAD A REALIZAR EN LA PROVINCIA POR PARTE DEL BENEFICIARIO RESIDENCIA]]></fieldDescription>
+	</field>
+	<field name="crper_nombres" class="java.lang.String">
+		<fieldDescription><![CDATA[NOMBRES DE LA PERSONA]]></fieldDescription>
+	</field>
+	<field name="cpais_nombre" class="java.lang.String">
+		<fieldDescription><![CDATA[NOMBRE DEL PAIS]]></fieldDescription>
+	</field>
+	<field name="crtra_fecha_ingreso" class="java.sql.Date">
+		<fieldDescription><![CDATA[FECHA DE INGRESO A LA PROVINCIA DEL BENEFICIARIO]]></fieldDescription>
+	</field>
+	<field name="crtra_fecha_salida" class="java.sql.Date">
+		<fieldDescription><![CDATA[FECHA DE SALIDA DE LA PROVINCIA DEL BENEFICIARIO]]></fieldDescription>
+	</field>
+	<field name="crper_num_doc_identific" class="java.lang.String">
+		<fieldDescription><![CDATA[NUMERO DE DOCUMENTO DE IDENTIFICACION DE LA PERSONA]]></fieldDescription>
+	</field>
 	<variable name="V_FILA" class="java.math.BigDecimal">
 		<variableExpression><![CDATA[new BigDecimal($V{V_FILA}.intValue()+1)]]></variableExpression>
 		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
@@ -83,32 +106,32 @@
 				<text><![CDATA[CERTIFICADO DE TRANSEUNTE No.]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-				<reportElement x="28" y="76" width="522" height="96" isPrintWhenDetailOverflows="true" uuid="1021ca58-af43-444b-8f74-71edc117d2a3"/>
+				<reportElement x="28" y="76" width="522" height="65" isPrintWhenDetailOverflows="true" uuid="1021ca58-af43-444b-8f74-71edc117d2a3"/>
 				<textElement textAlignment="Justified" markup="html">
 					<font size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA["El(la) suscrito(a) "+$F{cusu_responsable}+" de la Unidad de Control de Residencia del Consejo de Gobierno de Regimen Especial de Galapagos, AUTORIZA EN INGRESO EN CALIDAD DE TRANSEUNTE al señor(a) "+$F{crper_nombres}.toUpperCase()+" para realizar actividades de "+$F{crtra_actividad_residencia}.toUpperCase()+", el mencionado señor(a) ingresa por el auspicio de "+$F{crper_auspiciante}.toUpperCase()+", y no podra realizar otras actividades que las establecidas en su contrato o aquellas que motivaron su ingreso a la provincia de Galapagos."]]></textFieldExpression>
+				<textFieldExpression><![CDATA["En cumplimiento a lo dispuesto en los artículos 14 numeral 10 y artículo 39 de la  Ley Orgánica de Régimen Especial de la provincia de Galápagos, y vista la solicitud presentada por: "+$F{crper_auspiciante}.toUpperCase()+" para realizar actividades de "+$F{crtra_actividad_residencia}.toUpperCase()+", mediante la cual solicita el ingreso en calidad de transeúnte."]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-				<reportElement x="28" y="185" width="522" height="87" isPrintWhenDetailOverflows="true" uuid="ead927fc-8ce2-40a7-94bd-e00959fe3db5"/>
+				<reportElement x="28" y="147" width="522" height="68" isPrintWhenDetailOverflows="true" uuid="ead927fc-8ce2-40a7-94bd-e00959fe3db5"/>
 				<textElement textAlignment="Justified" markup="html">
 					<font size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Este certificado se emite de conformidad a lo establecido en el articulo 4, numeral 4 de la LOREG; y, las resoluciones N. 2467-CCCRCI-18-VIII-2009 y N. 5946-CCCRCI-27-VI-2008 del Comité de Calificación y Control de Residencia, <b>NO CONSTITUYE CALIFICACION DE RESIDENCIA TEMPORAL</b>, la misma que es competencia exclusiva del Comité de Calificación y Control de Residencia y tendrá validez hasta que el Comité de Calificación y Control de Residencia conozca y resuelva sobre la misma."]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Una vez autorizado por la Dirección de Población y Control de Residencia del Consejo de Gobierno del Régimen Especial de Galápagos por cuanto reúne los requisitos exigidos en el Art. 42 de la Ley Orgánica de Régimen Especial de la provincia de Galápagos, se extiende el presente certificado de <b>TRANSEÚNTE</b>,  a la siguiente persona: "]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement positionType="Float" x="227" y="372" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="5088d2b6-eb7a-4ed4-9f81-6d71c8c3c984"/>
 				<textElement textAlignment="Center" markup="none">
-					<font size="11"/>
+					<font size="11" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Lo Certifico]]></text>
+				<text><![CDATA[Atentamente,]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="28" y="43" width="296" height="20" uuid="ddef346a-7f54-4593-ad75-fba499461bee"/>
 				<textElement>
 					<font size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{cisla_nombre}.toUpperCase()+" "+new java.text.SimpleDateFormat("EEEEE, dd MMMMM yyyy").format($V{V_FECHA_ACTUAL})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{canton}.toUpperCase()+" "+new java.text.SimpleDateFormat("EEEEE, dd MMMMM yyyy").format($V{V_FECHA_ACTUAL})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="341" y="0" width="156" height="20" uuid="0d741f87-6355-4a6d-8544-42d4fe8da5b6"/>
@@ -131,15 +154,7 @@
 				</jr:barbecue>
 			</componentElement>
 			<staticText>
-				<reportElement x="64" y="284" width="38" height="20" uuid="bce066f2-d08a-43d4-994d-b8509f21e79b"/>
-				<box leftPadding="3"/>
-				<textElement verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
-				</textElement>
-				<text><![CDATA[N.]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="102" y="284" width="207" height="20" uuid="cf0b83b7-b1e2-4245-910b-6851418ebd55"/>
+				<reportElement x="28" y="234" width="168" height="20" uuid="cf0b83b7-b1e2-4245-910b-6851418ebd55"/>
 				<box leftPadding="3"/>
 				<textElement verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
@@ -147,35 +162,35 @@
 				<text><![CDATA[NOMBRES]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="309" y="284" width="108" height="20" uuid="9d8687cf-37e5-49cd-9751-221e96e361e2"/>
+				<reportElement x="292" y="234" width="91" height="20" uuid="9d8687cf-37e5-49cd-9751-221e96e361e2"/>
 				<box leftPadding="3"/>
 				<textElement verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[IDENTIFICACIÓN]]></text>
+				<text><![CDATA[NACIONALIDAD]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="417" y="284" width="100" height="20" uuid="6040ac0f-4ab5-46a3-b03d-5d9fa0e3425b"/>
+				<reportElement x="383" y="234" width="80" height="20" uuid="6040ac0f-4ab5-46a3-b03d-5d9fa0e3425b"/>
 				<box leftPadding="3"/>
 				<textElement verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[FECHA INGRESO]]></text>
+				<text><![CDATA[DESDE]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="102" y="304" width="207" height="20" uuid="66cc6d0a-2eba-4c01-8976-ea7265df88d3"/>
+				<reportElement stretchType="RelativeToTallestObject" x="28" y="254" width="168" height="20" uuid="66cc6d0a-2eba-4c01-8976-ea7265df88d3"/>
 				<box leftPadding="3"/>
 				<textFieldExpression><![CDATA[$F{crper_nombres}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="309" y="304" width="108" height="20" uuid="59f2b759-2452-471c-8915-771e9f040da3"/>
+				<reportElement stretchType="RelativeToTallestObject" x="196" y="254" width="96" height="20" uuid="59f2b759-2452-471c-8915-771e9f040da3"/>
 				<box leftPadding="3"/>
 				<textFieldExpression><![CDATA[$F{crper_num_doc_identific}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="417" y="304" width="80" height="20" uuid="9b7096dd-751c-4b5f-8934-a8dca4533bb2"/>
+				<reportElement stretchType="RelativeToTallestObject" x="383" y="254" width="80" height="20" uuid="9b7096dd-751c-4b5f-8934-a8dca4533bb2"/>
 				<box leftPadding="3"/>
-				<textElement textAlignment="Center"/>
+				<textElement verticalAlignment="Top"/>
 				<textFieldExpression><![CDATA[$F{crtra_fecha_ingreso}]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -183,15 +198,43 @@
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{cusu_responsable}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="64" y="304" width="38" height="20" uuid="e2dc481f-9d19-4176-8968-dabd7fdcff9b"/>
-				<box leftPadding="3"/>
-				<textFieldExpression><![CDATA[$V{V_FILA}]]></textFieldExpression>
-			</textField>
 			<textField>
 				<reportElement positionType="Float" x="437" y="493" width="113" height="20" uuid="8422a158-aab7-445f-b218-b1c4f9943b93"/>
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{crtra_numero}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="463" y="254" width="80" height="20" uuid="a42e2335-47da-49f4-b625-805a28896552"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{crtra_fecha_salida}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="463" y="234" width="80" height="20" uuid="aadf9336-ba1a-4189-a1e9-68ae2d136a53"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HASTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="196" y="234" width="96" height="20" uuid="780b0c8e-f72a-44c0-84ec-20ad47f5e379"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[IDENTIFICACIÓN]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement x="28" y="286" width="515" height="47" isPrintWhenDetailOverflows="true" uuid="704dec77-8aed-41b2-ab3d-cbef386b34d6"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Nota: El presente certificado le permite permanecer en la Provincia como transeúnte durante las fechas indicadas previamente. Tome en cuenta que podrá ingresar a partir de "+new java.text.SimpleDateFormat("dd MMMMM yyyy").format($F{crtra_fecha_ingreso})+", y su fecha máxima de salida es "+new java.text.SimpleDateFormat("dd MMMMM yyyy").format($F{crtra_fecha_salida})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="292" y="254" width="91" height="20" uuid="ec8bc44e-6217-4da1-9c9b-d57adad2910f"/>
+				<textFieldExpression><![CDATA[$F{cpais_nombre}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

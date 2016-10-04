@@ -43,6 +43,9 @@ public class HijoDelRepresentante implements RuleClass{
             RegistroCivil registroCivil = new RegistroCivil(cedulaBeneficiario);
             if(registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_ERROR)){
                 error = (String) registroCivil.getResultMap().get(RegistroCivil.KEY_MENSAJE);
+                System.err.println(error);
+                //Damos por válido cuando no puede conectarse al RC.
+                return "true";
             }else{
                 if(registroCivil.getCedulaMadre()!=null && registroCivil.getCedulaMadre().equals(cedulaRepresentante)){
                     return "true";

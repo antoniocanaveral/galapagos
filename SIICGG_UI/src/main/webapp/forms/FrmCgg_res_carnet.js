@@ -471,7 +471,7 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 		frame:true,
 		title:'Foto',
 		iconCls:'iconCamara',
-		html:'<img id="imgFotoPrsnCrn" height="320" width="240" src="resources/images/male_avatar.jpeg"/>',
+		html:'<img id="imgFotoPrsnCrn" height="320" width="320" src="resources/images/male_avatar.jpeg"/>',
 		bbar:[btnCapturarFoto]
 	});	
 	

@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="tct_residentes" language="groovy" pageWidth="243" pageHeight="153" orientation="Landscape" columnWidth="243" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isSummaryNewPage="true" uuid="99c533b7-6d87-4a37-848d-e1c871e4dcf0">
 	<property name="ireport.zoom" value="2.1435888100000056"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="83"/>
 	<parameter name="P_CRCNT_CODIGO" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -139,14 +139,14 @@ INNER JOIN SII.CGG_RES_CARNET CRNT ON CRNT.CRRSD_CODIGO = CRRSD.CRRSD_CODIGO AND
 				<text><![CDATA[APROBACION:]]></text>
 			</staticText>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="125" y="115" width="35" height="8" uuid="fb55f825-5392-486d-a0e7-7e54b9f34830"/>
+				<reportElement x="125" y="115" width="50" height="8" uuid="fb55f825-5392-486d-a0e7-7e54b9f34830"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{aprobacion}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="160" y="115" width="35" height="8" uuid="da2b183d-90de-4d14-9ad7-5d5e75ae75a3"/>
+				<reportElement x="179" y="115" width="50" height="8" uuid="da2b183d-90de-4d14-9ad7-5d5e75ae75a3"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6"/>
 				</textElement>
@@ -224,15 +224,15 @@ INNER JOIN SII.CGG_RES_CARNET CRNT ON CRNT.CRRSD_CODIGO = CRRSD.CRRSD_CODIGO AND
 	<summary>
 		<band height="153">
 			<image>
-				<reportElement x="0" y="89" width="82" height="32" uuid="70d951bc-013e-40f2-8514-6b130af25bb1"/>
+				<reportElement x="5" y="100" width="62" height="22" uuid="70d951bc-013e-40f2-8514-6b130af25bb1"/>
 				<imageExpression><![CDATA[new ByteArrayInputStream((byte[])$F{firma_secre})]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="160" y="90" width="82" height="32" uuid="8cb4cb85-0bb5-4a40-bbb9-d22ac2820cc0"/>
+				<reportElement x="160" y="100" width="62" height="22" uuid="8cb4cb85-0bb5-4a40-bbb9-d22ac2820cc0"/>
 				<imageExpression><![CDATA[new ByteArrayInputStream((byte[])$F{firma})]]></imageExpression>
 			</image>
 			<componentElement>
-				<reportElement x="72" y="70" width="110" height="17" uuid="2554ee21-c047-4dee-a756-b7b0f65991b5"/>
+				<reportElement x="72" y="88" width="110" height="17" uuid="2554ee21-c047-4dee-a756-b7b0f65991b5"/>
 				<jr:Code128 xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" textPosition="none">
 					<jr:codeExpression><![CDATA[$F{residencia}]]></jr:codeExpression>
 				</jr:Code128>
