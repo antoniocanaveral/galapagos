@@ -855,6 +855,7 @@ $(function() {
             limpiarTablaResidenciasVigentes();
             var param = new SOAPClientParameters();
             param.add('inCrper_codigo',tmpRecordAuspiciante[0].CRPER_CODIGO);
+            param.add('inCgg_crpjr_codigo',tmpRecordAuspiciante[0].CRPJR_CODIGO);
             SOAPClient.invoke(URL_WS+"Cgg_res_residencia","selectResidenciasByAuspiciante",param, true, fillTablaResidenciasVigentes);
             var cbxTR=document.getElementById("cbxTipoResidenciaPadre");
             cbxTR.disabled=true;
@@ -1279,6 +1280,7 @@ $(function() {
                 limpiarTablaResidenciasVigentes();
                 var param = new SOAPClientParameters();
                 param.add('inCrper_codigo',tmpRecordAuspiciante[0].CRPER_CODIGO);
+                param.add('inCgg_crpjr_codigo',tmpRecordAuspiciante[0].CRPJR_CODIGO);
                 SOAPClient.invoke(URL_WS+"Cgg_res_residencia","selectResidenciasByAuspiciante",param, true, fillTablaResidenciasVigentes);
                 break;
             case 'CRTST2':

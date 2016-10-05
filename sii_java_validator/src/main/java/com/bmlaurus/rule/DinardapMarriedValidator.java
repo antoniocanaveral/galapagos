@@ -42,8 +42,12 @@ public class DinardapMarriedValidator implements RuleClass {
 		}else{
 			RegistroCivil registroCivil = new RegistroCivil(ruleData.getCRPER_NUM_DOC_IDENTIFIC());
 			if(registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_ERROR)){
-				if(registroCivil.getResultMap()!=null)
+				if(registroCivil.getResultMap()!=null) {
 					error = (String) registroCivil.getResultMap().get(RegistroCivil.KEY_MENSAJE);
+					//if(error.equals("07:PAQUETE DE INFORMACION INCORRECTO")){
+					return "true";
+					//}
+				}
 				else
 					return "true,"+RegistroCivil.SERVICE_ERROR;
 			}else{

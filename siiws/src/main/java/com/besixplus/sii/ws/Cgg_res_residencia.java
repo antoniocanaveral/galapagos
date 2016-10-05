@@ -510,11 +510,12 @@ NO
 	* */
 	@WebMethod
 	public String selectResidenciasByAuspiciante(
+			@WebParam(name="inCgg_crpjr_codigo")String inCrpjr_codigo,
 			@WebParam(name="inCrper_codigo")String inCrper_codigo
 	)throws SOAPException
 	{
 		if(inCrper_codigo!=null) {
-			ResidenciaBeneficiarioData beneficiarioData = new ResidenciaBeneficiarioData(inCrper_codigo);
+			ResidenciaBeneficiarioData beneficiarioData = new ResidenciaBeneficiarioData(inCrper_codigo,inCrpjr_codigo);
 			List<ResidenciaBeneficiario> beneficiarioList = beneficiarioData.selectBeneficiarios();
 			if (beneficiarioList != null && beneficiarioList.size() > 0) {
 				return new Gson().toJson(beneficiarioList);

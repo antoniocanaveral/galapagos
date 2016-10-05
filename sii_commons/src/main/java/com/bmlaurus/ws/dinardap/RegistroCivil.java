@@ -27,6 +27,13 @@ public class RegistroCivil extends DinardapService {
     private String fotografia;
     private String firma;
 
+    //Campos nuevos
+    private String condicionCiudadano;
+    private String domicilio;
+    private String callesDomicilio;
+    private String numeroCasa;
+    private String lugarMatrimonio;
+
 
     public RegistroCivil(String numeroIdentificacion) {
         super(SERVICE_RC, numeroIdentificacion);
@@ -206,5 +213,45 @@ public class RegistroCivil extends DinardapService {
 
     public void setFirma(String firma) {
         this.firma = firma;
+    }
+
+    public String getCondicionCiudadano() {
+        return condicionCiudadano;
+    }
+
+    public void setCondicionCiudadano(String condicionCiudadano) {
+        this.condicionCiudadano = condicionCiudadano;
+    }
+
+    public String getDomicilio() {
+        return domicilio;
+    }
+
+    public void setDomicilio(String domicilio) {
+        this.domicilio = domicilio;
+    }
+
+    public String getCallesDomicilio() {
+        return callesDomicilio;
+    }
+
+    public void setCallesDomicilio(String callesDomicilio) {
+        this.callesDomicilio = callesDomicilio;
+    }
+
+    public String getNumeroCasa() {
+        return numeroCasa;
+    }
+
+    public void setNumeroCasa(String numeroCasa) {
+        this.numeroCasa = numeroCasa;
+    }
+
+    public String getLugarMatrimonio() {
+        return lugarMatrimonio;
+    }
+
+    public void setLugarMatrimonio(String lugarMatrimonio) {
+        this.lugarMatrimonio = lugarMatrimonio;
     }
 }

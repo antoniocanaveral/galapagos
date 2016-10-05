@@ -19,9 +19,13 @@ public class ResidenciaBeneficiarioData {
 
     //Auspiciante
     private String inCrper_codigo;
+    private String inCrpjr_codigo;
 
-    public ResidenciaBeneficiarioData(String inCrper_codigo) {
+    public ResidenciaBeneficiarioData(String inCrper_codigo, String inCrpjr_codigo) {
         this.inCrper_codigo = inCrper_codigo;
+        this.inCrpjr_codigo = inCrpjr_codigo;
+        if(this.inCrpjr_codigo==null)
+            this.inCrpjr_codigo = inCrper_codigo;
     }
 
     public List<ResidenciaBeneficiario> selectBeneficiarios(){
@@ -41,7 +45,7 @@ public class ResidenciaBeneficiarioData {
             ResultSet results=null;
             stmt = conn.prepareStatement(strSql);
             stmt.setString(1,inCrper_codigo);
-            stmt.setString(2,inCrper_codigo);
+            stmt.setString(2,inCrpjr_codigo);
             results = stmt.executeQuery();
             while(results.next()) {
                 ResidenciaBeneficiario beneficiario = new ResidenciaBeneficiario();
