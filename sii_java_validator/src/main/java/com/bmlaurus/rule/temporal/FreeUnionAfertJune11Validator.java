@@ -61,7 +61,7 @@ public class FreeUnionAfertJune11Validator implements RuleClass {
              Date fechaMatrimonio = DateUtil.formatDate(DateUtil.F_ddMMyyyy, registroCivil.getFechaMatrimonio()); 
              
              if(registroCivil.getCedulaConyuge().trim().equals(ruleData.getCRPER_NUM_DOC_IDENTIFIC())){//cedula del beneficiario
-             	if(registroCivil.getEstadoCivil().equalsIgnoreCase(Constantes.UNION_DE_HECHO)){
+             	if(registroCivil.getEstadoCivil().toUpperCase().contains(Constantes.UNION_DE_HECHO)){
              		if(fechaMatrimonio.after(DateUtil.formatDate(DateUtil.F_yyyy_MM_dd, DateUtil.FECHA_11JUNIO))){
              			return "true";
              		}

@@ -52,7 +52,7 @@ public class FreeUnionValidator implements RuleClass {
        	    }
        	 
             if(registroCivil.getCedulaConyuge().trim().equals(ruleData.getCRPER_NUM_DOC_IDENTIFIC())){//cedula del beneficiario
-            	if(registroCivil.getEstadoCivil().equalsIgnoreCase(Constantes.UNION_DE_HECHO)){
+            	if(registroCivil.getEstadoCivil().toUpperCase().contains(Constantes.UNION_DE_HECHO)){
             		return "true";
                	}
             }

@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="tct_residentes" language="groovy" pageWidth="243" pageHeight="153" orientation="Landscape" columnWidth="243" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isSummaryNewPage="true" uuid="99c533b7-6d87-4a37-848d-e1c871e4dcf0">
 	<property name="ireport.zoom" value="2.1435888100000056"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="83"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="P_CRCNT_CODIGO" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -78,147 +78,154 @@ INNER JOIN SII.CGG_RES_CARNET CRNT ON CRNT.CRRSD_CODIGO = CRRSD.CRRSD_CODIGO AND
 		<band height="153" splitType="Stretch">
 			<image>
 				<reportElement x="70" y="25" width="103" height="102" uuid="8f263f79-77c1-490d-9430-0bb1b3640bcf">
-					<printWhenExpression><![CDATA[$P{P_PREVIEW}==1]]></printWhenExpression>
+					<printWhenExpression><![CDATA[$P{P_PREVIEW}==3]]></printWhenExpression>
 				</reportElement>
 				<imageExpression><![CDATA["repo:/Resources/sii/images/VistaPreliminar"]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement x="125" y="73" width="85" height="8" uuid="d00aaa0b-8345-4a51-8d74-9426ff6cf4e6"/>
+				<reportElement x="125" y="60" width="85" height="8" uuid="d00aaa0b-8345-4a51-8d74-9426ff6cf4e6"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cedula}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="72" y="73" width="52" height="8" uuid="60755d5c-0295-4aee-b15d-84ffadb9b904"/>
+				<reportElement x="72" y="60" width="52" height="8" uuid="60755d5c-0295-4aee-b15d-84ffadb9b904"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[CEDULA:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="72" y="57" width="52" height="8" uuid="77a9fba2-50f6-49f5-bc78-1562a27c1469"/>
+				<reportElement x="72" y="44" width="52" height="8" uuid="77a9fba2-50f6-49f5-bc78-1562a27c1469"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[NOMBRES:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="72" y="65" width="52" height="8" uuid="7dc16a24-c87b-499b-885c-7be36a1b5e19"/>
+				<reportElement x="72" y="52" width="52" height="8" uuid="7dc16a24-c87b-499b-885c-7be36a1b5e19"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[APELLIDOS:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="72" y="81" width="52" height="8" uuid="fbb497e8-60b3-4404-b8e4-f3c0d8cd00fe"/>
+				<reportElement x="72" y="68" width="52" height="8" uuid="fbb497e8-60b3-4404-b8e4-f3c0d8cd00fe"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[NACIONALIDAD:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="72" y="89" width="52" height="8" uuid="53f95ec0-d5ca-46fc-b70e-36e0f7412d40"/>
+				<reportElement x="72" y="76" width="52" height="8" uuid="53f95ec0-d5ca-46fc-b70e-36e0f7412d40"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[F. NACIMIENTO:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="72" y="97" width="52" height="8" uuid="a7c9d17c-6f65-4668-bf20-f2c3bb664bee"/>
+				<reportElement x="72" y="84" width="52" height="8" uuid="a7c9d17c-6f65-4668-bf20-f2c3bb664bee"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[MOTIVO:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="72" y="113" width="52" height="8" uuid="bd14abbc-4df7-4e1b-bc2f-583f0c20497f"/>
+				<reportElement x="72" y="100" width="52" height="8" uuid="bd14abbc-4df7-4e1b-bc2f-583f0c20497f"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[APROBACION:]]></text>
 			</staticText>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="125" y="113" width="50" height="8" uuid="fb55f825-5392-486d-a0e7-7e54b9f34830"/>
+				<reportElement x="125" y="100" width="85" height="8" uuid="fb55f825-5392-486d-a0e7-7e54b9f34830"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{aprobacion}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="179" y="113" width="50" height="8" uuid="da2b183d-90de-4d14-9ad7-5d5e75ae75a3"/>
+				<reportElement x="125" y="108" width="85" height="8" uuid="da2b183d-90de-4d14-9ad7-5d5e75ae75a3"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{renovacion}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="122" width="72" height="10" uuid="fbe65f63-ace8-4990-8931-f8e82db656aa"/>
+				<reportElement x="0" y="119" width="72" height="10" uuid="fbe65f63-ace8-4990-8931-f8e82db656aa"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["No. "+$F{residencia}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="132" width="72" height="10" uuid="d80501ca-e253-45b1-9d14-02bbb0e96984"/>
+				<reportElement x="0" y="129" width="72" height="10" uuid="d80501ca-e253-45b1-9d14-02bbb0e96984"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($F{modalidad}.intValue()==0?"PERMANENTE":"TEMPORAL")]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="7" y="57" width="60" height="60" uuid="c9ddd21c-085b-4503-9bb6-e301ed1d0a2c"/>
+				<reportElement x="6" y="57" width="60" height="60" uuid="c9ddd21c-085b-4503-9bb6-e301ed1d0a2c"/>
 				<imageExpression><![CDATA[new ByteArrayInputStream((byte[])$F{foto})]]></imageExpression>
 			</image>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="125" y="89" width="84" height="8" uuid="42dbcd19-809b-492b-99a8-a14921ddd0d2"/>
+				<reportElement x="125" y="76" width="85" height="8" uuid="42dbcd19-809b-492b-99a8-a14921ddd0d2"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{fecha_nac}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="125" y="57" width="104" height="8" uuid="3cb12deb-5cbc-4cd2-813e-d28c63275d37"/>
+				<reportElement x="125" y="44" width="104" height="8" uuid="3cb12deb-5cbc-4cd2-813e-d28c63275d37"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nombres}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="125" y="81" width="85" height="8" uuid="20d6b811-413e-446c-a7f5-aa52b20fbe3e"/>
+				<reportElement x="125" y="68" width="85" height="8" uuid="20d6b811-413e-446c-a7f5-aa52b20fbe3e"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nacionalidad}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="125" y="97" width="104" height="8" uuid="f30ab4c6-e6e2-44ab-af82-66841e9c0888"/>
+				<reportElement x="125" y="84" width="104" height="8" uuid="f30ab4c6-e6e2-44ab-af82-66841e9c0888"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{motivo}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="72" y="105" width="52" height="8" uuid="1e47f32a-a1b9-49db-8f5c-85b9f80719c8"/>
+				<reportElement x="72" y="92" width="52" height="8" uuid="1e47f32a-a1b9-49db-8f5c-85b9f80719c8"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[AUSPICIANTE:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="125" y="105" width="104" height="8" uuid="7d250c70-97ad-4d3d-93ba-ca9cc1f5b6b7"/>
+				<reportElement x="125" y="92" width="104" height="8" uuid="7d250c70-97ad-4d3d-93ba-ca9cc1f5b6b7"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{auspiciante}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="125" y="65" width="85" height="8" uuid="6c268675-bf1a-4d61-b8e9-d91368ba9d7b"/>
+				<reportElement x="125" y="52" width="85" height="8" uuid="6c268675-bf1a-4d61-b8e9-d91368ba9d7b"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{apellidos_paterno}+" "+$F{apellidos_materno}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="72" y="108" width="52" height="8" uuid="3252991f-c2cc-4d79-9277-a9a8933665de"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CADUCIDAD:]]></text>
+			</staticText>
 		</band>
 	</detail>
 	<summary>
