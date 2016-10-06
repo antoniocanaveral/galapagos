@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="tct_residentes" language="groovy" pageWidth="243" pageHeight="153" orientation="Landscape" columnWidth="243" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isSummaryNewPage="true" uuid="de447089-d114-4d44-a556-b9c7d5a5b756">
 	<property name="ireport.zoom" value="2.1435888100000056"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="51"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="P_CRCNT_CODIGO" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -76,7 +76,7 @@ INNER JOIN SII.CGG_RES_CARNET CRNT ON CRNT.CRRSD_CODIGO = CRRSD.CRRSD_CODIGO AND
 			<textField>
 				<reportElement x="125" y="61" width="85" height="8" uuid="ddf565fd-bf42-4ce6-a741-cecf79bcc73a"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Arial" size="6"/>
+					<font fontName="Arial" size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cedula}]]></textFieldExpression>
 			</textField>
@@ -132,7 +132,7 @@ INNER JOIN SII.CGG_RES_CARNET CRNT ON CRNT.CRRSD_CODIGO = CRRSD.CRRSD_CODIGO AND
 			<textField pattern="dd/MM/yyyy">
 				<reportElement x="125" y="93" width="84" height="8" uuid="3df6253f-6432-47ec-919c-b1f432791eeb"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Arial" size="6"/>
+					<font fontName="Arial" size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{aprobacion}]]></textFieldExpression>
 			</textField>
@@ -146,7 +146,7 @@ INNER JOIN SII.CGG_RES_CARNET CRNT ON CRNT.CRRSD_CODIGO = CRRSD.CRRSD_CODIGO AND
 			<textField pattern="dd/MM/yyyy">
 				<reportElement x="125" y="101" width="84" height="8" uuid="0f230691-b58d-4927-a14f-dbf8da420afd"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Arial" size="6"/>
+					<font fontName="Arial" size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{renovacion}]]></textFieldExpression>
 			</textField>
@@ -165,41 +165,41 @@ INNER JOIN SII.CGG_RES_CARNET CRNT ON CRNT.CRRSD_CODIGO = CRRSD.CRRSD_CODIGO AND
 				<textFieldExpression><![CDATA[($F{modalidad}.intValue()==0?"PERMANENTE":"TEMPORAL")]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="10" y="57" width="50" height="60" uuid="4ca8c712-907b-44ba-b3f5-dd7d77be50d2"/>
+				<reportElement x="6" y="57" width="60" height="60" uuid="4ca8c712-907b-44ba-b3f5-dd7d77be50d2"/>
 				<imageExpression><![CDATA[new ByteArrayInputStream((byte[])$F{foto})]]></imageExpression>
 			</image>
 			<textField pattern="dd/MM/yyyy">
 				<reportElement x="125" y="77" width="84" height="8" uuid="eedfb797-f7a0-4060-9a4f-bff4fee5125c"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Arial" size="6"/>
+					<font fontName="Arial" size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{fecha_nac}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="125" y="45" width="104" height="8" uuid="68169059-0301-4da8-a77d-751844ac1f0a"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Arial" size="6"/>
+					<font fontName="Arial" size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nombres}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="125" y="69" width="85" height="8" uuid="16b6370a-076b-43a7-9892-676fa4434bf3"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Arial" size="6"/>
+					<font fontName="Arial" size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nacionalidad}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="125" y="85" width="84" height="8" uuid="fa82f2b0-caa2-4a31-8638-d60025981cfe"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Arial" size="6"/>
+					<font fontName="Arial" size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="125" y="53" width="85" height="8" uuid="dbdb00df-2841-4cee-a8e6-bd2648ac4da5"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Arial" size="6"/>
+					<font fontName="Arial" size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{apellidos_paterno}+" "+$F{apellidos_materno}]]></textFieldExpression>
 			</textField>
@@ -208,11 +208,11 @@ INNER JOIN SII.CGG_RES_CARNET CRNT ON CRNT.CRRSD_CODIGO = CRRSD.CRRSD_CODIGO AND
 	<summary>
 		<band height="153">
 			<image>
-				<reportElement x="17" y="99" width="62" height="22" uuid="5fea42d0-902b-4b19-97a9-6f099042e591"/>
+				<reportElement x="17" y="99" width="68" height="28" uuid="5fea42d0-902b-4b19-97a9-6f099042e591"/>
 				<imageExpression><![CDATA[new ByteArrayInputStream((byte[])$F{firma_secre})]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="167" y="99" width="62" height="22" uuid="f1d9d619-0e8d-4cdc-987b-698add7464ba"/>
+				<reportElement x="150" y="99" width="68" height="28" uuid="f1d9d619-0e8d-4cdc-987b-698add7464ba"/>
 				<imageExpression><![CDATA[new ByteArrayInputStream((byte[])$F{firma})]]></imageExpression>
 			</image>
 			<componentElement>

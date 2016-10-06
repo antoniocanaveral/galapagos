@@ -581,10 +581,12 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 			}else
 				tmpCrrsdFechaFin = Date.parse(tmpResidencia.CRRSD_FECHA_CADUCIDAD.substr(0,tmpResidencia.CRRSD_FECHA_CADUCIDAD.lastIndexOf('.')));
 				
-			/*dtCrcnt_fecha_emision.setValue(Date.parse(tmpResidencia.CRRSD_FECHA_INICIO.substr(0,tmpResidencia.CRRSD_FECHA_INICIO.lastIndexOf('.'))));
-			dtCrcnt_fecha_caducidad.setValue(tmpCrrsdFechaFin);*/
+			//dtCrcnt_fecha_emision.setValue(Date.parse(tmpResidencia.CRRSD_FECHA_INICIO.substr(0,tmpResidencia.CRRSD_FECHA_INICIO.lastIndexOf('.'))));
 			dtCrcnt_fecha_emision.setValue(CURRENT_DATE);
-			dtCrcnt_fecha_caducidad.setValue(CURRENT_DATE.add(Date.MONTH, tmpDuracion).add(Date.DAY,-1));
+			if(tmpResidencia.CRRSD_MODALIDAD == 1)
+				dtCrcnt_fecha_caducidad.setValue(tmpCrrsdFechaFin);
+			else
+				dtCrcnt_fecha_caducidad.setValue(CURRENT_DATE.add(Date.MONTH, tmpDuracion).add(Date.DAY,-1));
 		}else if (tmpResidencia){
 			dtCrcnt_fecha_emision.setReadOnly(tmpResidencia.CRRSD_MODALIDAD == 1);
 			dtCrcnt_fecha_caducidad.setReadOnly(tmpResidencia.CRRSD_MODALIDAD == 1);
@@ -599,8 +601,7 @@ function FrmCgg_res_carnet(IN_SENTENCIA_CGG_RES_CARNET, IN_RECORD_CGG_RES_CARNET
 			}else{
 				tmpCrrsdFechaFin = Date.parse(tmpResidencia.CRRSD_FECHA_CADUCIDAD.substr(0,tmpResidencia.CRRSD_FECHA_CADUCIDAD.lastIndexOf('.')));
 			}
-			//dtCrcnt_fecha_caducidad.setValue(tmpCrrsdFechaFin);
-			dtCrcnt_fecha_caducidad.setValue(CURRENT_DATE.add(Date.MONTH, tmpDuracion).add(Date.DAY,-1));
+			dtCrcnt_fecha_caducidad.setValue(tmpCrrsdFechaFin);
 		}
 	}
 	

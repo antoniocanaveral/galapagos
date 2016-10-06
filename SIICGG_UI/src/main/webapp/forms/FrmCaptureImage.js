@@ -137,10 +137,10 @@ function FrmCaptureImage(){
             columns: 2
         },
         items:[{
-                html:'<video id="video" width="320" height="240" autoplay></video>'
+                html:'<video id="video" width="320" height="320" autoplay></video>'
             },
             {
-                html:'<canvas id="canvas" width="320" height="240"></canvas>'
+                html:'<canvas id="canvas" width="320" height="320"></canvas>'
             },btnCapturar,ctlPanel]
     });
 

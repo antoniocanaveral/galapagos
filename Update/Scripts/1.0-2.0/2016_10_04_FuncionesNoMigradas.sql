@@ -66,3 +66,42 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100
   ROWS 1000;
+
+
+  -->*** FUNCION MODIFICADA REGLA DE DIAS DE TEMPORAL
+
+  CREATE OR REPLACE FUNCTION f_tiempo_estadia_temporal(
+    in_crper_codigo character varying,
+    in_fecha_ingreso character varying,
+    in_fecha_salida character varying,
+    in_operador character varying,
+    in_valor_comparacion character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+	TMP_ESTADIA INT;
+        OUT_RESULTADO VARCHAR;
+        TMP_ESTADIA_TOTAL INT;
+        TMP_TIEMPO_RESTANTE INT;
+BEGIN
+
+	--SELECT SII.F_CALCULO_DIAS_ESTADIA_TEMPORALES(CURRENT_TIMESTAMP, IN_CRPER_CODIGO) INTO TMP_ESTADIA;
+  TMP_ESTADIA := 0;
+	TMP_ESTADIA_TOTAL= (TMP_ESTADIA + (IN_FECHA_SALIDA::DATE - IN_FECHA_INGRESO::DATE));
+
+	IF (TMP_ESTADIA = 0) THEN
+            OUT_RESULTADO := 'true';
+	ELSE
+	    SELECT SII.F_CGG_REGLA_VALIDACION(TMP_ESTADIA_TOTAL::VARCHAR,IN_OPERADOR,IN_VALOR_COMPARACION) INTO OUT_RESULTADO;
+	END IF;
+
+	  IF (OUT_RESULTADO='false') THEN
+	    TMP_TIEMPO_RESTANTE=730-TMP_ESTADIA;
+	    OUT_RESULTADO='FALSE, Solo cuenta con: ' || TMP_TIEMPO_RESTANTE || ' días como residente temporal';
+	    END IF;
+
+	RETURN OUT_RESULTADO;
+END
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;

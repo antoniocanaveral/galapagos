@@ -83,72 +83,72 @@ INNER JOIN SII.CGG_RES_CARNET CRNT ON CRNT.CRRSD_CODIGO = CRRSD.CRRSD_CODIGO AND
 				<imageExpression><![CDATA["repo:/Resources/sii/images/VistaPreliminar"]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement x="125" y="75" width="85" height="8" uuid="d00aaa0b-8345-4a51-8d74-9426ff6cf4e6"/>
+				<reportElement x="125" y="73" width="85" height="8" uuid="d00aaa0b-8345-4a51-8d74-9426ff6cf4e6"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Tahoma" size="6"/>
+					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cedula}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="72" y="75" width="52" height="8" uuid="60755d5c-0295-4aee-b15d-84ffadb9b904"/>
+				<reportElement x="72" y="73" width="52" height="8" uuid="60755d5c-0295-4aee-b15d-84ffadb9b904"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[CEDULA:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="72" y="59" width="52" height="8" uuid="77a9fba2-50f6-49f5-bc78-1562a27c1469"/>
+				<reportElement x="72" y="57" width="52" height="8" uuid="77a9fba2-50f6-49f5-bc78-1562a27c1469"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[NOMBRES:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="72" y="67" width="52" height="8" uuid="7dc16a24-c87b-499b-885c-7be36a1b5e19"/>
+				<reportElement x="72" y="65" width="52" height="8" uuid="7dc16a24-c87b-499b-885c-7be36a1b5e19"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[APELLIDOS:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="72" y="83" width="52" height="8" uuid="fbb497e8-60b3-4404-b8e4-f3c0d8cd00fe"/>
+				<reportElement x="72" y="81" width="52" height="8" uuid="fbb497e8-60b3-4404-b8e4-f3c0d8cd00fe"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[NACIONALIDAD:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="72" y="91" width="52" height="8" uuid="53f95ec0-d5ca-46fc-b70e-36e0f7412d40"/>
+				<reportElement x="72" y="89" width="52" height="8" uuid="53f95ec0-d5ca-46fc-b70e-36e0f7412d40"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[F. NACIMIENTO:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="72" y="99" width="52" height="8" uuid="a7c9d17c-6f65-4668-bf20-f2c3bb664bee"/>
+				<reportElement x="72" y="97" width="52" height="8" uuid="a7c9d17c-6f65-4668-bf20-f2c3bb664bee"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[MOTIVO:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="72" y="115" width="52" height="8" uuid="bd14abbc-4df7-4e1b-bc2f-583f0c20497f"/>
+				<reportElement x="72" y="113" width="52" height="8" uuid="bd14abbc-4df7-4e1b-bc2f-583f0c20497f"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[APROBACION:]]></text>
 			</staticText>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="125" y="115" width="50" height="8" uuid="fb55f825-5392-486d-a0e7-7e54b9f34830"/>
+				<reportElement x="125" y="113" width="50" height="8" uuid="fb55f825-5392-486d-a0e7-7e54b9f34830"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Tahoma" size="6"/>
+					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{aprobacion}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="179" y="115" width="50" height="8" uuid="da2b183d-90de-4d14-9ad7-5d5e75ae75a3"/>
+				<reportElement x="179" y="113" width="50" height="8" uuid="da2b183d-90de-4d14-9ad7-5d5e75ae75a3"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Tahoma" size="6"/>
+					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{renovacion}]]></textFieldExpression>
 			</textField>
@@ -167,55 +167,55 @@ INNER JOIN SII.CGG_RES_CARNET CRNT ON CRNT.CRRSD_CODIGO = CRRSD.CRRSD_CODIGO AND
 				<textFieldExpression><![CDATA[($F{modalidad}.intValue()==0?"PERMANENTE":"TEMPORAL")]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="5" y="60" width="60" height="60" uuid="c9ddd21c-085b-4503-9bb6-e301ed1d0a2c"/>
+				<reportElement x="7" y="57" width="60" height="60" uuid="c9ddd21c-085b-4503-9bb6-e301ed1d0a2c"/>
 				<imageExpression><![CDATA[new ByteArrayInputStream((byte[])$F{foto})]]></imageExpression>
 			</image>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="125" y="91" width="84" height="8" uuid="42dbcd19-809b-492b-99a8-a14921ddd0d2"/>
+				<reportElement x="125" y="89" width="84" height="8" uuid="42dbcd19-809b-492b-99a8-a14921ddd0d2"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Tahoma" size="6"/>
+					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{fecha_nac}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="125" y="59" width="104" height="8" uuid="3cb12deb-5cbc-4cd2-813e-d28c63275d37"/>
+				<reportElement x="125" y="57" width="104" height="8" uuid="3cb12deb-5cbc-4cd2-813e-d28c63275d37"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Tahoma" size="6"/>
+					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nombres}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="125" y="83" width="85" height="8" uuid="20d6b811-413e-446c-a7f5-aa52b20fbe3e"/>
+				<reportElement x="125" y="81" width="85" height="8" uuid="20d6b811-413e-446c-a7f5-aa52b20fbe3e"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Tahoma" size="6"/>
+					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nacionalidad}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="125" y="99" width="104" height="8" uuid="f30ab4c6-e6e2-44ab-af82-66841e9c0888"/>
+				<reportElement x="125" y="97" width="104" height="8" uuid="f30ab4c6-e6e2-44ab-af82-66841e9c0888"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Tahoma" size="6"/>
+					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{motivo}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="72" y="107" width="52" height="8" uuid="1e47f32a-a1b9-49db-8f5c-85b9f80719c8"/>
+				<reportElement x="72" y="105" width="52" height="8" uuid="1e47f32a-a1b9-49db-8f5c-85b9f80719c8"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[AUSPICIANTE:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="125" y="107" width="104" height="8" uuid="7d250c70-97ad-4d3d-93ba-ca9cc1f5b6b7"/>
+				<reportElement x="125" y="105" width="104" height="8" uuid="7d250c70-97ad-4d3d-93ba-ca9cc1f5b6b7"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Tahoma" size="6"/>
+					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{auspiciante}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="125" y="67" width="85" height="8" uuid="6c268675-bf1a-4d61-b8e9-d91368ba9d7b"/>
+				<reportElement x="125" y="65" width="85" height="8" uuid="6c268675-bf1a-4d61-b8e9-d91368ba9d7b"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Tahoma" size="6"/>
+					<font fontName="Tahoma" size="6" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{apellidos_paterno}+" "+$F{apellidos_materno}]]></textFieldExpression>
 			</textField>
@@ -224,18 +224,18 @@ INNER JOIN SII.CGG_RES_CARNET CRNT ON CRNT.CRRSD_CODIGO = CRRSD.CRRSD_CODIGO AND
 	<summary>
 		<band height="153">
 			<image>
-				<reportElement x="5" y="100" width="62" height="22" uuid="70d951bc-013e-40f2-8514-6b130af25bb1"/>
+				<reportElement x="17" y="99" width="68" height="28" uuid="70d951bc-013e-40f2-8514-6b130af25bb1"/>
 				<imageExpression><![CDATA[new ByteArrayInputStream((byte[])$F{firma_secre})]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="160" y="100" width="62" height="22" uuid="8cb4cb85-0bb5-4a40-bbb9-d22ac2820cc0"/>
+				<reportElement x="150" y="99" width="68" height="28" uuid="8cb4cb85-0bb5-4a40-bbb9-d22ac2820cc0"/>
 				<imageExpression><![CDATA[new ByteArrayInputStream((byte[])$F{firma})]]></imageExpression>
 			</image>
 			<componentElement>
-				<reportElement x="72" y="88" width="110" height="17" uuid="2554ee21-c047-4dee-a756-b7b0f65991b5"/>
-				<jr:Code128 xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" textPosition="none">
+				<reportElement x="60" y="88" width="125" height="11" uuid="5cfc9224-7dc6-4b8c-af9d-54ff7b3ba5e2"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128A" drawText="false" checksumRequired="false" barHeight="0">
 					<jr:codeExpression><![CDATA[$F{residencia}]]></jr:codeExpression>
-				</jr:Code128>
+				</jr:barbecue>
 			</componentElement>
 		</band>
 	</summary>

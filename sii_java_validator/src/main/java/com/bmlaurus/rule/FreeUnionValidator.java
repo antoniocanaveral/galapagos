@@ -1,16 +1,14 @@
 package com.bmlaurus.rule;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import com.besixplus.sii.db.ManagerConnection;
 import com.besixplus.sii.objects.Cgg_regla_validacion_metadatos;
 import com.besixplus.sii.objects.Cgg_res_persona;
-import com.bmlaurus.rule.RuleClass;
 import com.bmlaurus.util.Constantes;
 import com.bmlaurus.ws.dinardap.RegistroCivil;
-
 import org.json.JSONObject;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * Created by acanaveral on 15/6/16.
@@ -38,8 +36,12 @@ public class FreeUnionValidator implements RuleClass {
          	
         RegistroCivil registroCivil = new RegistroCivil(auspiciante.getCRPER_NUM_DOC_IDENTIFIC());//cedula del auspiciante
         if(registroCivil.callServiceAsObject().equals(RegistroCivil.CALL_ERROR)){
-            if(registroCivil.getResultMap()!=null)
+            if(registroCivil.getResultMap()!=null) {
                 error = (String) registroCivil.getResultMap().get(RegistroCivil.KEY_MENSAJE);
+                //if(error.equals("07:PAQUETE DE INFORMACION INCORRECTO")){
+                return "true";
+                //}
+            }
             else
                 return "true,"+RegistroCivil.SERVICE_ERROR;
         }else{

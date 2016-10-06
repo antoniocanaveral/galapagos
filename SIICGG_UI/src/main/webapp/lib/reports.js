@@ -28,7 +28,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 {
                                     label:'Fecha inicio',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date',
                                     required:true
                                 };
@@ -37,7 +37,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 {
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date',
                                     required:true
                                 };
@@ -138,7 +138,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -146,7 +146,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -166,7 +166,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -174,7 +174,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -248,7 +248,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -256,7 +256,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -311,7 +311,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -319,7 +319,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -374,7 +374,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -382,7 +382,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -412,7 +412,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -420,7 +420,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -450,14 +450,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -581,7 +581,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -589,7 +589,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 									
@@ -608,7 +608,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -616,7 +616,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
                                         var reporte = new FrmCriterioReporte('rptListadoTramitesResidencia', '/Reports/sii/residencia', null);
@@ -636,7 +636,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -644,7 +644,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -686,7 +686,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -694,7 +694,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -758,7 +758,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -766,7 +766,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -787,7 +787,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -796,7 +796,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -836,7 +836,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -845,7 +845,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -886,7 +886,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -895,7 +895,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -926,7 +926,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -935,7 +935,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -997,7 +997,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1006,7 +1006,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1039,7 +1039,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
 											
@@ -1049,7 +1049,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1088,7 +1088,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[1]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1096,7 +1096,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[2]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1178,7 +1178,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1187,7 +1187,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1253,7 +1253,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 params[0]={
                                     label:'Fecha inicio',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date',
 									required:true
                                 };
@@ -1261,7 +1261,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 params[1]={
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date',
 									required:true
                                 };
@@ -1308,7 +1308,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1317,7 +1317,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1358,7 +1358,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -1366,7 +1366,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
                                         params[2]=
@@ -1407,7 +1407,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1416,7 +1416,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1467,7 +1467,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1476,7 +1476,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1507,7 +1507,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1516,7 +1516,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1566,7 +1566,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -1574,7 +1574,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
                                         var reporte = new FrmCriterioReporte('rptListadoCabotajePasajerosDestinosIslasPeriodo', '/Reports/sii/tct', null);
@@ -1593,7 +1593,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1602,7 +1602,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1635,7 +1635,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1644,7 +1644,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1674,7 +1674,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {   
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1683,7 +1683,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1731,7 +1731,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1740,7 +1740,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1759,7 +1759,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1768,7 +1768,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1797,7 +1797,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1805,7 +1805,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[2]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1834,7 +1834,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1843,7 +1843,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1882,7 +1882,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1890,7 +1890,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -1929,14 +1929,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
                                         params[2]=
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
                                         var reporte = new FrmCriterioReporte('rptListadoTramitesResidenciasPermanentes', '/Reports/sii/residencia', null);
@@ -1966,7 +1966,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -1974,7 +1974,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -2004,7 +2004,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -2012,7 +2012,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -2034,7 +2034,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -2042,7 +2042,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
                                         var reporte = new FrmCriterioReporte('rptTotaldeTipoResidencias', '/Reports/sii/residencia', null);
@@ -2072,7 +2072,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -2080,7 +2080,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -2111,7 +2111,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -2119,7 +2119,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
                                         
@@ -2170,7 +2170,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -2178,7 +2178,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
                                         
@@ -2230,7 +2230,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 {
                                     label:'Fecha inicio',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date',
                                     required:true
                                 };
@@ -2239,7 +2239,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 {
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date',
                                     required:true
                                 };
@@ -2268,14 +2268,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 {
                                     label:'Fecha inicio',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
                                 params[1]=
                                 {
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
@@ -2304,14 +2304,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 {
                                     label:'Fecha inicio',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
                                 params[1]=
                                 {
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
@@ -2359,14 +2359,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 params[2]={
                                     label:'Fecha inicial',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
                                 params[3]={
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
@@ -2406,14 +2406,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 params[2]={
                                     label:'Fecha inicial',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
                                 params[3]={
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
@@ -2452,13 +2452,13 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 params[2]={
                                     label:'Fecha inicial',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
                                 params[3]={
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
@@ -2555,14 +2555,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 params[2]={
                                     label:'Fecha inicio',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
                                 params[3]={
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
@@ -2609,14 +2609,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 params[0]={
                                     label:'Fecha inicio',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
                                 params[1]={
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
@@ -2643,14 +2643,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 params[1]={
                                     label:'Fecha inicio',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
                                 params[2]={
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
@@ -2686,14 +2686,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 params[2]={
                                     label:'Fecha inicio',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
                                 params[3]={
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
@@ -2721,14 +2721,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 params[1]={
                                     label:'Fecha inicio',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
                                 params[2]={
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
                                 var reporte = new FrmCriterioReporte('rptTipoTotalizadoVentasPorOficina', '/Reports/sii/kardex', null);
@@ -2755,14 +2755,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 params[1]={
                                     label:'Fecha inicio',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
                                 params[2]={
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
                                 var reporte = new FrmCriterioReporte('rptTotalizadoVentasporTipoEspecie', '/Reports/sii/kardex', null);
@@ -2796,7 +2796,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -2804,7 +2804,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -2836,7 +2836,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -2845,7 +2845,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -2876,7 +2876,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -2885,7 +2885,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -2926,7 +2926,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -2935,7 +2935,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -3000,7 +3000,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -3008,7 +3008,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -3069,7 +3069,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -3077,7 +3077,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -3109,7 +3109,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -3117,7 +3117,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
                                         var reporte = new FrmCriterioReporte('rptListadoParqueAutomotorInstitucional', '/Reports/sii/vehiculos', null);
@@ -3136,7 +3136,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -3144,7 +3144,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -3193,7 +3193,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -3201,7 +3201,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
                                         var reporte = new FrmCriterioReporte('rptListadoVehiculosporIslaTipoCombustible', '/Reports/sii/vehiculos', null);
@@ -3231,7 +3231,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -3240,7 +3240,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -3271,7 +3271,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -3279,7 +3279,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -3331,7 +3331,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -3339,7 +3339,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
                                         var reporte = new FrmCriterioReporte('rptListadoVehiculosTemporalesProximosSalir', '/Reports/sii/vehiculos', null);
@@ -3369,7 +3369,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -3377,7 +3377,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -3419,7 +3419,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -3427,7 +3427,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -3488,14 +3488,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
                                             value: tmpCurrentDate,
-                                            paramValue:tmpCurrentDate.toString('yyyyMMddhhmmss'),
+                                            paramValue:tmpCurrentDate.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
                                         params[2]={
@@ -3558,7 +3558,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -3566,7 +3566,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -3596,14 +3596,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -3634,14 +3634,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -3722,14 +3722,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[4]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[5]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -3782,14 +3782,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -3809,7 +3809,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -3817,7 +3817,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -3853,7 +3853,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha m\u00E1xima',
                                             paramName:'P_FECHA_CORTE',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -3893,7 +3893,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };											
@@ -3901,7 +3901,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -3990,7 +3990,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };											
@@ -3998,7 +3998,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -4038,14 +4038,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -4129,7 +4129,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -4137,7 +4137,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -4170,7 +4170,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -4178,7 +4178,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -4239,7 +4239,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -4247,7 +4247,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         {
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -4279,14 +4279,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[1]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[2]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -4362,7 +4362,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[2]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -4370,7 +4370,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[3]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -4421,7 +4421,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[3]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -4429,7 +4429,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[4]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date',
                                             required:true
                                         };
@@ -4469,14 +4469,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[1]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[2]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -4514,14 +4514,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[2]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[3]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -4585,13 +4585,13 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 params[0]={
                                     label:'Fecha inicio',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
                                 params[1]={
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
                                 var reporte = new FrmCriterioReporte('rptListadoSolicitudesResidenciaTratadasSesionComite', '/Reports/sii/comite', null);
@@ -4608,13 +4608,13 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 params[0]={
                                     label:'Fecha inicio',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
                                 params[1]={
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
                                 var reporte = new FrmCriterioReporte('rptListadoResolucionesComite', '/Reports/sii/comite', null);
@@ -4680,14 +4680,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 params[0]={
                                     label:'Fecha inicio',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
                                 params[1]={
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
@@ -4724,14 +4724,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 params[0]={
                                     label:'Fecha inicio',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
                                 params[1]={
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 								
@@ -4768,14 +4768,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 params[0]={
                                     label:'Fecha inicio',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
                                 params[1]={
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
@@ -4833,14 +4833,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 params[1]={
                                     label:'Fecha inicio',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
                                 params[2]={
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };      
                                 params[3]={
@@ -4877,14 +4877,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 params[0]={
                                     label:'Fecha inicio',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
                                 params[1]={
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };      
                                 params[2]={
@@ -4919,14 +4919,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 params[0]={
                                     label:'Fecha inicio',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
                                 params[1]={
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
                                 var reporte = new FrmCriterioReporte('rptOfertaRadio', '/Reports/sii/gem', null);
@@ -4960,14 +4960,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
                                         params[2]=
@@ -4994,14 +4994,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
                                         params[2]=
@@ -5029,14 +5029,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
                                         params[2]=
@@ -5063,14 +5063,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -5089,14 +5089,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
                                         params[2]=
@@ -5123,14 +5123,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
                                         params[2]=
@@ -5157,14 +5157,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
                                         params[2]=
@@ -5200,14 +5200,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
                                         params[2]=
@@ -5279,14 +5279,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -5315,14 +5315,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -5352,14 +5352,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -5389,14 +5389,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -5435,14 +5435,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -5470,14 +5470,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -5506,14 +5506,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -5541,14 +5541,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -5576,14 +5576,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
                                         params[2]={
@@ -5620,14 +5620,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -5655,14 +5655,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -5702,14 +5702,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 params[0]={
                                     label:'Fecha inicio',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
                                 params[1]={
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
@@ -5737,14 +5737,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 params[0]={
                                     label:'Fecha inicio',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
                                 params[1]={
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
                                 var reporte = new FrmCriterioReporte('rptListadoCertificadoEmitido', '/Reports/sii/dhu', null);
@@ -5761,14 +5761,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 params[0]={
                                     label:'Fecha inicio',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
                                 params[1]={
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
                                 params[2]={
@@ -5804,14 +5804,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 params[0]={
                                     label:'Fecha inicio',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
                                 params[1]={
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
@@ -5876,14 +5876,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
                                         params[2]=
@@ -5912,14 +5912,14 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                         params[0]={
                                             label:'Fecha inicio',
                                             paramName:'P_FECHA_INICIAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
                                         params[1]={
                                             label:'Fecha fin',
                                             paramName:'P_FECHA_FINAL',
-                                            paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                             type:'date'
                                         };
 
@@ -5963,7 +5963,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 {
                                     label:'Fecha inicio',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
@@ -5971,7 +5971,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 {
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
@@ -6038,7 +6038,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 {
                                     label:'Fecha inicio',
                                     paramName:'P_FECHA_INICIAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
@@ -6046,7 +6046,7 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                                 {
                                     label:'Fecha fin',
                                     paramName:'P_FECHA_FINAL',
-                                    paramValue:CURRENT_DATE.toString('yyyyMMddhhmmss'),
+                                    paramValue:CURRENT_DATE.toString('yyyyMMdd'),
                                     type:'date'
                                 };
 
