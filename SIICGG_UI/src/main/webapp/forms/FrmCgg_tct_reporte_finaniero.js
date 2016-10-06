@@ -58,8 +58,8 @@ function FrmCgg_tct_reporte_finaniero(inUser){
 	        }]
 	});
 	
-    var winUsuarioAC = new Ext.Window({
-        id:'winUsuarioAC',
+    var winFrmCgg_tct_reporte_finaniero = new Ext.Window({
+        id:'winFrmCgg_tct_reporte_finaniero',
         title:'Criterio de reporte',
         iconCls:'iconReporte',
         width:400,
@@ -74,12 +74,12 @@ function FrmCgg_tct_reporte_finaniero(inUser){
     });
 	
     /**
-     *FUNCION MIEMBRO QUE DEVUELVE LA VENTANA winUsuarioAC
-     * @returns VENTANA winUsuarioAC.
+     *FUNCION MIEMBRO QUE DEVUELVE LA VENTANA winFrmCgg_tct_reporte_finaniero
+     * @returns VENTANA winFrmCgg_tct_reporte_finaniero.
      */ 
     this.getWindow = function(){
-        return winUsuarioAC;
-    }
+        return winFrmCgg_tct_reporte_finaniero;
+    };
 	
 	   /**
      *Agrega parametros o componentes visuales al formulario actual.
@@ -155,9 +155,9 @@ function FrmCgg_tct_reporte_finaniero(inUser){
             }    
             pnlUsuarioAC.add(comps);            
             pnlUsuarioAC.doLayout();            
-            winUsuarioAC.doLayout();                    
+            winFrmCgg_tct_reporte_finaniero.doLayout();
         }        
-    }
+    };
     
     
     function findParam(inParamName){
@@ -181,7 +181,7 @@ function FrmCgg_tct_reporte_finaniero(inUser){
 }
 
 /**
- *Funcion prototipo. Permite mostrar la ventana winUsuarioAC desde una instancia.
+ *Funcion prototipo. Permite mostrar la ventana winFrmCgg_tct_reporte_finaniero desde una instancia.
  */
 FrmCgg_tct_reporte_finaniero.prototype.show = function(){
  var dsTipoEspecie1= [['CKESP6','TCT TRANSEUNTE'],['CKESP4','TCT no valorada'],['CKESP3','TCT TURISTAS']];
@@ -224,14 +224,14 @@ FrmCgg_tct_reporte_finaniero.prototype.show = function(){
 }
 
 /**
- *Funcion prototipo. Permite cerrar la ventana winUsuarioAC desde una instancia.
+ *Funcion prototipo. Permite cerrar la ventana winFrmCgg_tct_reporte_finaniero desde una instancia.
  */
 FrmCgg_tct_reporte_finaniero.prototype.close = function(){
     this.getWindow().close();
 }
 
 /**
- *Funcion prototipo. Permite saber si se ha cerrado la ventana winUsuarioAC,
+ *Funcion prototipo. Permite saber si se ha cerrado la ventana winFrmCgg_tct_reporte_finaniero,
  *con el fin de realizar otras acciones desde una instancia.
  */
 FrmCgg_tct_reporte_finaniero.prototype.closeHandler = function(inFunctionHandler){

@@ -4450,6 +4450,51 @@ MyDesktop.mReporte = Ext.extend(MyDesktop.StartMenuItem, {
                             menu:{
                                 items:[
                                 {
+                                    text:'Reporte Financiero TCT',
+                                    iconCls:'iconReporte',
+                                    hidden:true,
+                                    id:'mnTct-Ctr-rptReporteFinancieroEspeciesTCT',
+                                    handler:function(){
+                                        //Enlazado
+                                        var dsTipoEspecie1= [['CKESP6','TCT TRANSEUNTE'],['CKESP4','TCT no valorada'],['CKESP3','TCT TURISTAS']];
+                                        var dsPuntoVenta= [['CKPVT7','AEROPUERTO BALTRA'],['CKPVT2','AEROPUERTO GUAYAQUIL'],['CKPVT8','AEROPUERTO ISABELA'],['CKPVT1','AEROPUERTO QUITO '],['CKPVT6','AEROPUERTO SAN CRISTOBAL'],['CKPVT10','OFICINA QUITO'],['CKPVT9','PUERTO AYORA - SANTA CRUZ'],['CKPVT5','RESIDENCIA ISABELA'],['CKPVT3','RESIDENCIA SAN CRISTOBAL'],['CKPVT4','RESIDENCIA SANTA CRUZ']];
+                                        var params = [];
+
+                                        params[0]={
+                                            label:'Fecha inicio',
+                                            paramName:'P_FECHA_INICIAL',
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
+                                            type:'date'
+                                        };
+
+                                        params[1]={
+                                            label:'Fecha fin',
+                                            paramName:'P_FECHA_FINAL',
+                                            paramValue:CURRENT_DATE.toString('yyyyMMdd'),
+                                            type:'date'
+                                        };
+
+                                        params[2]={
+                                            label:'Punto de venta',
+                                            paramName:'P_CKPVT_CODIGO',
+                                            value:dsPuntoVenta,
+                                            paramValue:'',
+                                            type:'combo'
+                                        };
+                                        params[3]=
+                                        {
+                                            label:'Tipo de especie',
+                                            paramName:'P_CKESP_CODIGO',
+                                            value:dsTipoEspecie1,
+                                            paramValue:'',
+                                            type:'combo'
+                                        };
+                                        var reporte = new FrmCriterioReporte('rptReporteFinancieroEspeciesTCT', '/Reports/sii/tct', null);
+                                        reporte.addParams(params);
+                                        reporte.show();
+                                    }
+                                },
+                                {
                                     text:'Reporte totalizado por oficina',
                                     iconCls:'iconReporte',
                                     hidden:true,

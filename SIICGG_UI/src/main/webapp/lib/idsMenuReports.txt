@@ -81,6 +81,7 @@
 'Cuantificados de ingreso/salida por tipo','mnTct-Ing-rptListadoTuristasTranseuntesIngresosSalidasporPersona',
 'Listado de ingreso/salida por aerol\u00EDnea','mnTct-Ing-rptListadodeIngresoSalidasporAerolinea',
 'Informe de totales de turistas por periodo','mnTct-Ing-rptTotaledeTuristasMensualporTipo',
+'Reporte Financiero TCT','mnTct-Ctr-rptReporteFinancieroEspeciesTCT',
 'Reporte totalizado por oficina','mnTct-Ctr-rptTipoTotalizadoVentasPorOficina',
 'Reporte totalizado por oficina_especies','mnTct-Ctr-rptTipoEspeciesEnBodegasInventario',
 'Reporte por tipo de tarjetas','mnTct-Ctr-rptStockTipoTarjetas',
