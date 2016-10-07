@@ -361,7 +361,7 @@ AND TREG.CTREG_CODIGO=$P{P_CTREG_CODIGO}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ctreg_codigo_barras}]]></textFieldExpression>
 			</textField>
-			<textField pattern="¤ #,##0.00" isBlankWhenNull="true">
+			<textField pattern="&apos;$&apos; #,##0.00" isBlankWhenNull="true">
 				<reportElement positionType="FixRelativeToBottom" x="19" y="26" width="100" height="20" forecolor="#000000" uuid="a2f00e37-4be4-4fe4-9e63-269fe22382fb"/>
 				<textElement verticalAlignment="Middle">
 					<font size="13" isBold="true"/>
