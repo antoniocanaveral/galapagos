@@ -122,7 +122,7 @@ public class ProcessMail extends Thread{
                         enviar = not.getNTFN_TIPO_SOLICITUD().equals(tramite.getCRTST_CODIGO());
                     }
                     if(enviar) {
-                        String destMail = "antoniocanaveral@gmail.com";
+                        String destMail = null;
                         Cgg_res_persona_contacto contacto = null;
                         switch (not.getNTFN_DESTINATARIO()) {
                             case Cgg_not_fase_notificacion.DEST_AUSPICIANTE:
@@ -155,14 +155,17 @@ public class ProcessMail extends Thread{
                             default:
                                 break;
                         }
+                        if(destMail!=null) {
+                            Cgg_not_mail correo = new Cgg_not_mail();
+                            correo.setNtml_codigo(not.getNTML_CODIGO());
+                            correo = new com.besixplus.sii.db.Cgg_not_mail(correo).selectByCode(objConn);
+                            if (correo != null) {
+                                buildMessage(objConn, correo, destMail);
+                            }
+                            System.out.println("NOTIFICACION por MAIL");
+                        }else
+                            System.err.println("NO HAY DESTINATARIO");
 
-                        Cgg_not_mail correo = new Cgg_not_mail();
-                        correo.setNtml_codigo(not.getNTML_CODIGO());
-                        correo = new com.besixplus.sii.db.Cgg_not_mail(correo).selectByCode(objConn);
-                        if (correo != null) {
-                            buildMessage(objConn, correo, destMail);
-                        }
-                        System.out.println("NOTIFICACION por MAIL");
                     }
                 }
             }
