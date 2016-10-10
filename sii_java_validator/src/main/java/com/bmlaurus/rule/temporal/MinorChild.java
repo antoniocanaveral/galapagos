@@ -24,8 +24,12 @@ public class MinorChild implements RuleClass {
 	        fechaNacimientoHijo = DateUtil.formatDate(DateUtil.F_ddMMyyyy, ruleData.getCRPER_FECHA_NACIMIENTO());
 	        fechaTemp = DateUtil.sumarAnos(fechaNacimientoHijo, 18);
         }catch(NullPointerException ec){
-        	fechaNacimientoHijo = DateUtil.formatDate(DateUtil.F_yyyy_MM_dd, ruleData.getCRPER_FECHA_NACIMIENTO());
-	        fechaTemp = DateUtil.sumarAnos(fechaNacimientoHijo, 18);
+            try {
+                fechaNacimientoHijo = DateUtil.formatDate(DateUtil.F_yyyy_MM_dd, ruleData.getCRPER_FECHA_NACIMIENTO());
+                fechaTemp = DateUtil.sumarAnos(fechaNacimientoHijo, 18);
+            }catch (Exception e){
+                return "true";
+            }
         }    
         
         Date fechaActual = new Date();

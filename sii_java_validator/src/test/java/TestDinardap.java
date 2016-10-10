@@ -1,4 +1,7 @@
-import com.bmlaurus.ws.dinardap.CNE;
+import com.bmlaurus.rule.RuleClass;
+import com.bmlaurus.rule.RuleData;
+import com.bmlaurus.rule.temporal.MinorChild;
+import org.json.JSONObject;
 import org.junit.Test;
 
 /**
@@ -21,9 +24,9 @@ public class TestDinardap {
         //DinardapService cne = new CNE("1002867800");
         //System.out.println(cne.callServiceAsObject());
 */
-        CNE cne = new CNE("1752679405");
+        /*CNE cne = new CNE("1752679405");
         System.out.println(cne.callServiceAsObject());
-        System.out.println(cne.toString());
+        System.out.println(cne.toString());*/
 
         //JSONObject kk =  new JSONObject(new Gson().toJson(registroCivil));
        // System.out.println(kk.getString("cedula"));
@@ -39,6 +42,13 @@ public class TestDinardap {
         } catch (Exception e) {
             e.printStackTrace();
         }*/
+
+        RuleData data = new RuleData();
+        data.setCRPER_FECHA_NACIMIENTO("2016-10-02");
+        JSONObject regla = new JSONObject();
+        regla.put("CRVAL_SUGERENCIA","Sugerencia");
+        RuleClass ruleClass = new MinorChild();
+        ruleClass.executeRule(null,regla,data);
 
     }
 
