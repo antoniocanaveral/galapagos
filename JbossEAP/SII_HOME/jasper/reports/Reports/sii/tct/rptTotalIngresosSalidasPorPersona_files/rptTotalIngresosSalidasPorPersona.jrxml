@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a0d1eebf-e182-4772-b098-4db6afcd05ba">
 	<property name="ireport.zoom" value="1.3636363636363638"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Crosstab Data Text" hAlign="Center"/>
-	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["//home//klascano//BESIX//DEV//SIICGG_ambato//REPORTS//"]]></defaultValueExpression>
-	</parameter>
 	<parameter name="P_CRPER_NUM_DOC_IDENTIFIC" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -56,7 +53,7 @@ ORDER BY CRMOV_TIPO_OPERACION ASC,CRMOV_FECHA_VIAJE::DATE ASC]]>
 		<groupHeader>
 			<band height="43">
 				<staticText>
-					<reportElement x="102" y="23" width="113" height="20"/>
+					<reportElement x="102" y="23" width="113" height="20" uuid="80e0d8be-23e1-4988-b1f3-86b403a54145"/>
 					<box>
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
@@ -70,7 +67,7 @@ ORDER BY CRMOV_TIPO_OPERACION ASC,CRMOV_FECHA_VIAJE::DATE ASC]]>
 					<text><![CDATA[Cantón]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="215" y="23" width="113" height="20"/>
+					<reportElement x="215" y="23" width="113" height="20" uuid="f89e5818-1407-45a2-8829-3fc2f5093ee2"/>
 					<box>
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
@@ -84,7 +81,7 @@ ORDER BY CRMOV_TIPO_OPERACION ASC,CRMOV_FECHA_VIAJE::DATE ASC]]>
 					<text><![CDATA[Fecha viaje]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="75" y="23" width="27" height="20"/>
+					<reportElement x="75" y="23" width="27" height="20" uuid="eb7ec943-8798-422d-a1a0-f857f096e910"/>
 					<box>
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
@@ -98,14 +95,14 @@ ORDER BY CRMOV_TIPO_OPERACION ASC,CRMOV_FECHA_VIAJE::DATE ASC]]>
 					<text><![CDATA[N.]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="31" y="0" width="493" height="20"/>
+					<reportElement x="31" y="0" width="493" height="20" uuid="7ecac11d-adbd-483e-bf86-6b50c2268157"/>
 					<textElement verticalAlignment="Middle">
 						<font size="10" isBold="true"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{crmov_tipo_operacion}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{crmov_tipo_operacion}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="328" y="23" width="147" height="20"/>
+					<reportElement x="328" y="23" width="147" height="20" uuid="254c8938-3185-4bb4-9d79-11af5a7ebfbf"/>
 					<box>
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
@@ -123,7 +120,7 @@ ORDER BY CRMOV_TIPO_OPERACION ASC,CRMOV_FECHA_VIAJE::DATE ASC]]>
 		<groupFooter>
 			<band height="20">
 				<staticText>
-					<reportElement x="375" y="0" width="100" height="20"/>
+					<reportElement x="375" y="0" width="100" height="20" uuid="8dc756c0-9098-4269-b28c-e85322a9c011"/>
 					<box rightPadding="5"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font isBold="true"/>
@@ -131,11 +128,11 @@ ORDER BY CRMOV_TIPO_OPERACION ASC,CRMOV_FECHA_VIAJE::DATE ASC]]>
 					<text><![CDATA[TOTAL:]]></text>
 				</staticText>
 				<textField pattern="###0">
-					<reportElement x="475" y="0" width="79" height="20"/>
+					<reportElement x="475" y="0" width="79" height="20" uuid="b831d37b-c6ae-42eb-867c-36b90931b3c0"/>
 					<textElement verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
-					<textFieldExpression class="java.lang.Integer"><![CDATA[$V{gOperacion_COUNT}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{gOperacion_COUNT}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -146,7 +143,7 @@ ORDER BY CRMOV_TIPO_OPERACION ASC,CRMOV_FECHA_VIAJE::DATE ASC]]>
 	<title>
 		<band height="20" splitType="Stretch">
 			<subreport>
-				<reportElement x="0" y="0" width="554" height="20"/>
+				<reportElement x="0" y="0" width="554" height="20" uuid="9996fa31-d27c-4dd1-9845-2eae8f29c62b"/>
 				<subreportParameter name="SUBREPORT_DIR"/>
 				<subreportParameter name="P_SUBTITULO_2">
 					<subreportParameterExpression><![CDATA["Desde " + new java.text.SimpleDateFormat("dd/MM/yyyy").format($P{P_FECHA_INICIAL})+ " hasta " + new java.text.SimpleDateFormat("dd/MM/yyyy").format($P{P_FECHA_FINAL})]]></subreportParameterExpression>
@@ -155,7 +152,7 @@ ORDER BY CRMOV_TIPO_OPERACION ASC,CRMOV_FECHA_VIAJE::DATE ASC]]>
 					<subreportParameterExpression><![CDATA["Total de ingresos/salidas por persona"]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptEncabezado"]]></subreportExpression>
+				<subreportExpression><![CDATA["repo:/Resources/sii/rptEncabezado"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
@@ -165,28 +162,28 @@ ORDER BY CRMOV_TIPO_OPERACION ASC,CRMOV_FECHA_VIAJE::DATE ASC]]>
 	<columnHeader>
 		<band height="41" splitType="Stretch">
 			<textField>
-				<reportElement x="64" y="21" width="491" height="20"/>
+				<reportElement x="64" y="21" width="491" height="20" uuid="56e61e5f-d2ab-4c12-bc4d-ac1ded176325"/>
 				<textElement verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_nombres}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{crper_nombres}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="92" y="0" width="463" height="20"/>
+				<reportElement x="92" y="0" width="463" height="20" uuid="e1e94a9c-21ce-4e6f-a05e-cbdb4d38e60e"/>
 				<textElement verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_num_doc_identific}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{crper_num_doc_identific}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="6" y="2" width="86" height="18"/>
+				<reportElement x="6" y="2" width="86" height="18" uuid="1420c4cc-8ef7-41b4-b848-d32b4fbcf726"/>
 				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Nº Documento:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="6" y="21" width="58" height="20"/>
+				<reportElement x="6" y="21" width="58" height="20" uuid="6001de42-12cc-4b91-ba5c-bf4e1f8dce5f"/>
 				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
@@ -197,36 +194,36 @@ ORDER BY CRMOV_TIPO_OPERACION ASC,CRMOV_FECHA_VIAJE::DATE ASC]]>
 	<detail>
 		<band height="22" splitType="Stretch">
 			<textField>
-				<reportElement x="102" y="0" width="113" height="20"/>
+				<reportElement x="102" y="0" width="113" height="20" uuid="6ebfae59-a73f-4843-8232-7495cd7c2346"/>
 				<box>
 					<bottomPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{cisla_nombre}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cisla_nombre}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="215" y="0" width="113" height="20"/>
+				<reportElement x="215" y="0" width="113" height="20" uuid="349a6611-815a-4e21-8810-bbdc6f55ce91"/>
 				<box>
 					<bottomPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression class="java.util.Date"><![CDATA[$F{crmov_fecha_viaje}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{crmov_fecha_viaje}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0">
-				<reportElement x="75" y="0" width="27" height="20"/>
+				<reportElement x="75" y="0" width="27" height="20" uuid="15295c96-b330-4a20-b9e8-b7b8aa70fe25"/>
 				<box>
 					<bottomPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{vFilaActual}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{vFilaActual}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="328" y="0" width="147" height="20"/>
+				<reportElement x="328" y="0" width="147" height="20" uuid="cb938246-375f-487d-ba93-ba469430ab5a"/>
 				<box>
 					<bottomPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{categoria}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{categoria}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -236,47 +233,47 @@ ORDER BY CRMOV_TIPO_OPERACION ASC,CRMOV_FECHA_VIAJE::DATE ASC]]>
 	<pageFooter>
 		<band height="52" splitType="Stretch">
 			<subreport>
-				<reportElement x="0" y="18" width="554" height="13"/>
+				<reportElement x="0" y="18" width="554" height="13" uuid="d95061e9-ea27-4ccf-99c7-110b4014a076"/>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptPie"]]></subreportExpression>
+				<subreportExpression><![CDATA["repo:/Resources/sii/rptPie"]]></subreportExpression>
 			</subreport>
 			<textField pattern="EEEEE dd MMMMM yyyy">
-				<reportElement x="3" y="3" width="120" height="15"/>
+				<reportElement x="3" y="3" width="120" height="15" uuid="ee1fd251-4e07-4446-ba45-b7e3dadd191f"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.util.Date"><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="488" y="3" width="23" height="15"/>
+				<reportElement x="488" y="3" width="23" height="15" uuid="19b949df-5190-4d4e-9479-74374bf89abe"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Pág.]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="511" y="3" width="12" height="15"/>
+				<reportElement x="511" y="3" width="12" height="15" uuid="9330a56e-a653-42a4-9106-74dfa56ef758"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="536" y="3" width="16" height="15"/>
+				<reportElement x="536" y="3" width="16" height="15" uuid="74696dae-fe56-4db8-929a-df51d04a23ee"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="524" y="3" width="12" height="15"/>
+				<reportElement x="524" y="3" width="12" height="15" uuid="1f071b50-9cb4-4d4b-b176-3d465555abbf"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[de ]]></text>
 			</staticText>
 			<line>
-				<reportElement x="2" y="0" width="552" height="1"/>
+				<reportElement x="2" y="0" width="552" height="1" uuid="acf23ae0-264f-4d45-9050-dcc1f589891b"/>
 			</line>
 		</band>
 	</pageFooter>

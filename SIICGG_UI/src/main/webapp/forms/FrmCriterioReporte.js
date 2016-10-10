@@ -370,7 +370,7 @@ function FrmCriterioReporte(inReportName,inReportFolder,inParams){
         if(inThis.getXType()=='combo'||inThis.getXType()=='textfield'){
             tmpParam.paramValue =inNewValue;
         }else{
-            tmpParam.paramValue = inNewValue.toString('yyyyMMdd');
+            tmpParam.paramValue = inNewValue.toString('yyyy-MM-dd');
         }
     }
 
