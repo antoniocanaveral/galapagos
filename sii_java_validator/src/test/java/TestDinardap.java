@@ -1,6 +1,7 @@
 import com.bmlaurus.rule.RuleClass;
 import com.bmlaurus.rule.RuleData;
 import com.bmlaurus.rule.temporal.MinorChild;
+import com.bmlaurus.ws.dinardap.RegistroCivil;
 import org.json.JSONObject;
 import org.junit.Test;
 
@@ -11,6 +12,9 @@ public class TestDinardap {
 
     @Test
     public void ServiceTestet(){
+        RegistroCivil registroCivil = new RegistroCivil("0928297209");
+        System.out.println(registroCivil.callServiceAsObject());
+        System.out.println(registroCivil.toString());
 
 /*         RegistroCivil registroCivil = new RegistroCivil("1752679405");
         System.out.println(registroCivil.callServiceAsObject());

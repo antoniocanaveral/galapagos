@@ -1,6 +1,7 @@
 package com.bmlaurus.attachment;
 
 import com.besixplus.sii.db.ManagerConnection;
+import com.besixplus.sii.objects.Cgg_configuracion;
 import com.besixplus.sii.objects.Cgg_res_persona;
 import com.besixplus.sii.objects.Cgg_res_persona_juridica;
 import com.bmlaurus.alfresco.model.SiiDocControl;
@@ -16,7 +17,7 @@ import java.sql.SQLException;
  */
 public class CreatorInvoker {
 
-    private static final long TIME_LIMIT = 86400000; //1 dia
+    private static final long TIME_LIMIT = 3600000; //1 hora
 
     private RegistroCivil registroCivil;
     private CNE cne;
@@ -38,6 +39,21 @@ public class CreatorInvoker {
     public CreatorInvoker(SRI sri, Cgg_res_persona_juridica empresa) {
         this.sri = sri;
         this.empresa = empresa;
+    }
+
+    private long timeLimit(Connection objConn){
+        long limit = TIME_LIMIT;
+        try {
+            com.besixplus.sii.objects.Cgg_configuracion tmpConfiguracion = new Cgg_configuracion();
+            tmpConfiguracion.setCGCNF_CODIGO("CONF205");
+            new com.besixplus.sii.db.Cgg_configuracion(tmpConfiguracion).select(objConn);
+            if(tmpConfiguracion.getCGCNF_VALOR_CADENA()!=null){
+                limit = Long.parseLong(tmpConfiguracion.getCGCNF_VALOR_CADENA());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return limit;
     }
 
     public void createEmpresaDocuments(){
@@ -83,7 +99,7 @@ public class CreatorInvoker {
                 if(con!=null) {
                     SiiDocControl control = new SiiDocControl(document_type, record_id);
                     control.query(con);
-                    if (control.getDate_created() == null || (System.currentTimeMillis() - control.getDate_created().getTime() > TIME_LIMIT)) {
+                    if (control.getDate_created() == null || ((System.currentTimeMillis() - control.getDate_created().getTime()) > timeLimit(con))) {
                         control.save(con);
                         ret = true;
                     }
