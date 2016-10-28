@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1f2ec8fc-0dab-45ee-806c-af051e5637ce">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="1f2ec8fc-0dab-45ee-806c-af051e5637ce">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
-	<property name="ireport.x" value="50"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="168"/>
 	<parameter name="P_CRTRA_CODIGO" class="java.lang.String"/>
 	<parameter name="P_CUSU_RESPONSABLE" class="java.lang.String"/>
@@ -31,8 +31,10 @@
  INNER JOIN SII.CGG_RES_RESIDENCIA RSD ON (TRA.CRTRA_CODIGO = RSD.CRTRA_CODIGO)
  WHERE TRA.CRTRA_ESTADO=TRUE
  AND TST.CRTST_APLICA_OTRO = TRUE
- --AND RSD.CRRSD_TRAMITE_PENDIENTE = TRUE
- AND TRA.CRTRA_CODIGO=$P{P_CRTRA_CODIGO}]]>
+ AND TRA.CRTRA_CODIGO IN
+	(SELECT crtra_codigo  FROM SII.CGG_RES_TRAMITE TRA1 where
+	TRA1.CRTRA_ANIO = (SELECT CRTRA_ANIO FROM SII.CGG_RES_TRAMITE WHERE CRTRA_CODIGO=$P{P_CRTRA_CODIGO})
+	AND TRA1.CRTRA_NUMERO=(SELECT CRTRA_NUMERO FROM SII.CGG_RES_TRAMITE WHERE CRTRA_CODIGO=$P{P_CRTRA_CODIGO}) )]]>
 	</queryString>
 	<field name="crtra_numero" class="java.math.BigDecimal">
 		<fieldDescription><![CDATA[NUMERO SECUENCIAL UNICO DEL TRAMITE, QUE SE RESTABLECE ANUALMENTE.]]></fieldDescription>
@@ -68,14 +70,11 @@
 		<variableExpression><![CDATA[new BigDecimal($V{V_FILA}.intValue()+1)]]></variableExpression>
 		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
 	</variable>
-	<variable name="V_FECHA_ACTUAL" class="java.util.Date">
-		<variableExpression><![CDATA[new Date()]]></variableExpression>
-	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="20" splitType="Stretch">
+		<band height="10" splitType="Stretch">
 			<subreport>
 				<reportElement x="2" y="1" width="553" height="9" uuid="e11c96fa-3f7f-4cd3-bc06-b87ddb7179d6"/>
 				<subreportParameter name="P_SUBTITULO_1">
@@ -93,126 +92,56 @@
 		</band>
 	</title>
 	<pageHeader>
-		<band height="11" splitType="Stretch"/>
-	</pageHeader>
-	<columnHeader>
-		<band height="18" splitType="Stretch"/>
-	</columnHeader>
-	<detail>
-		<band height="522" splitType="Stretch">
-			<staticText>
-				<reportElement x="86" y="1" width="253" height="20" uuid="b349149e-af69-4413-9a6a-a834ca3f2a94"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="12" isBold="true"/>
-				</textElement>
-				<text><![CDATA[CERTIFICADO DE TRANSEUNTE No.]]></text>
-			</staticText>
+		<band height="190" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-				<reportElement x="28" y="76" width="522" height="65" isPrintWhenDetailOverflows="true" uuid="1021ca58-af43-444b-8f74-71edc117d2a3"/>
+				<reportElement x="24" y="58" width="522" height="59" isPrintWhenDetailOverflows="true" uuid="1021ca58-af43-444b-8f74-71edc117d2a3"/>
 				<textElement textAlignment="Justified" markup="html">
 					<font size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA["En cumplimiento a lo dispuesto en los artículos 14 numeral 10 y artículo 39 de la  Ley Orgánica de Régimen Especial de la provincia de Galápagos, y vista la solicitud presentada por: "+$F{crper_auspiciante}.toUpperCase()+" para realizar actividades de "+$F{crtra_actividad_residencia}.toUpperCase()+", mediante la cual solicita el ingreso en calidad de transeúnte."]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-				<reportElement x="28" y="147" width="522" height="68" isPrintWhenDetailOverflows="true" uuid="ead927fc-8ce2-40a7-94bd-e00959fe3db5"/>
+				<reportElement x="24" y="122" width="522" height="68" isPrintWhenDetailOverflows="true" uuid="ead927fc-8ce2-40a7-94bd-e00959fe3db5"/>
 				<textElement textAlignment="Justified" markup="html">
 					<font size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Una vez autorizado por la Dirección de Población y Control de Residencia del Consejo de Gobierno del Régimen Especial de Galápagos por cuanto reúne los requisitos exigidos en el Art. 42 de la Ley Orgánica de Régimen Especial de la provincia de Galápagos, se extiende el presente certificado de <b>TRANSEÚNTE</b>,  a la siguiente persona: "]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement positionType="Float" x="227" y="372" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="5088d2b6-eb7a-4ed4-9f81-6d71c8c3c984"/>
-				<textElement textAlignment="Center" markup="none">
-					<font size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Atentamente,]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="28" y="43" width="296" height="20" uuid="ddef346a-7f54-4593-ad75-fba499461bee"/>
-				<textElement>
-					<font size="11"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{canton}.toUpperCase()+" "+new java.text.SimpleDateFormat("EEEEE, dd MMMMM yyyy").format($V{V_FECHA_ACTUAL})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Una vez autorizado por la Dirección de Población y Control de Residencia del Consejo de Gobierno del Régimen Especial de Galápagos por cuanto reúne los requisitos exigidos en el Art. 42 de la Ley Orgánica de Régimen Especial de la provincia de Galápagos, se extiende el presente certificado de <b>TRANSEÚNTE</b>,  a la(s) siguiente(s) persona(s): "]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="341" y="0" width="156" height="20" uuid="0d741f87-6355-4a6d-8544-42d4fe8da5b6"/>
+				<reportElement x="353" y="0" width="156" height="20" uuid="0d741f87-6355-4a6d-8544-42d4fe8da5b6"/>
 				<textElement verticalAlignment="Middle">
 					<font size="13" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{crtra_numero}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" x="152" y="461" width="250" height="46" isPrintWhenDetailOverflows="true" uuid="7f887fd9-ece3-4e73-8cf6-2a6f5b0951c7"/>
-				<textElement textAlignment="Center">
-					<font size="11" isBold="false"/>
+			<staticText>
+				<reportElement x="98" y="0" width="253" height="20" uuid="b349149e-af69-4413-9a6a-a834ca3f2a94"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["CONTROL DE RESIDENCIA CONSEJO DE GOBIERNO DEL RÉGIMEN ESPECIAL DE GALÁPAGOS"]]></textFieldExpression>
+				<text><![CDATA[CERTIFICADO DE TRANSEUNTE No.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="23" y="32" width="304" height="20" uuid="9c4d752e-7f73-4baa-969b-946969f6ea78"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{canton}.toUpperCase()+" "+new java.text.SimpleDateFormat("EEEEE, dd MMMMM yyyy").format(new Date())]]></textFieldExpression>
 			</textField>
-			<componentElement>
-				<reportElement positionType="Float" x="437" y="468" width="113" height="25" isPrintWhenDetailOverflows="true" uuid="2a9596d7-1543-4b57-a790-2ba8093fdad9"/>
-				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="2of7" drawText="false" checksumRequired="false">
-					<jr:codeExpression><![CDATA[$F{crtra_numero}]]></jr:codeExpression>
-				</jr:barbecue>
-			</componentElement>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
 			<staticText>
-				<reportElement x="28" y="234" width="168" height="20" uuid="cf0b83b7-b1e2-4245-910b-6851418ebd55"/>
-				<box leftPadding="3"/>
-				<textElement verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
-				</textElement>
-				<text><![CDATA[NOMBRES]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="292" y="234" width="91" height="20" uuid="9d8687cf-37e5-49cd-9751-221e96e361e2"/>
-				<box leftPadding="3"/>
-				<textElement verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
-				</textElement>
-				<text><![CDATA[NACIONALIDAD]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="383" y="234" width="80" height="20" uuid="6040ac0f-4ab5-46a3-b03d-5d9fa0e3425b"/>
+				<reportElement x="383" y="0" width="80" height="20" uuid="6040ac0f-4ab5-46a3-b03d-5d9fa0e3425b"/>
 				<box leftPadding="3"/>
 				<textElement verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[DESDE]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="28" y="254" width="168" height="20" uuid="66cc6d0a-2eba-4c01-8976-ea7265df88d3"/>
-				<box leftPadding="3"/>
-				<textFieldExpression><![CDATA[$F{crper_nombres}.toUpperCase()]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="196" y="254" width="96" height="20" uuid="59f2b759-2452-471c-8915-771e9f040da3"/>
-				<box leftPadding="3"/>
-				<textFieldExpression><![CDATA[$F{crper_num_doc_identific}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="383" y="254" width="80" height="20" uuid="9b7096dd-751c-4b5f-8934-a8dca4533bb2"/>
-				<box leftPadding="3"/>
-				<textElement verticalAlignment="Top"/>
-				<textFieldExpression><![CDATA[$F{crtra_fecha_ingreso}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="0" y="442" width="554" height="20" uuid="0268b356-784e-44f4-991b-89c56a41d89a"/>
-				<textElement textAlignment="Center"/>
-				<textFieldExpression><![CDATA[$F{cusu_responsable}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement positionType="Float" x="437" y="493" width="113" height="20" uuid="8422a158-aab7-445f-b218-b1c4f9943b93"/>
-				<textElement textAlignment="Center"/>
-				<textFieldExpression><![CDATA[$F{crtra_numero}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="463" y="254" width="80" height="20" uuid="a42e2335-47da-49f4-b625-805a28896552"/>
-				<box leftPadding="3"/>
-				<textElement verticalAlignment="Top"/>
-				<textFieldExpression><![CDATA[$F{crtra_fecha_salida}]]></textFieldExpression>
-			</textField>
 			<staticText>
-				<reportElement x="463" y="234" width="80" height="20" uuid="aadf9336-ba1a-4189-a1e9-68ae2d136a53"/>
+				<reportElement x="463" y="0" width="80" height="20" uuid="aadf9336-ba1a-4189-a1e9-68ae2d136a53"/>
 				<box leftPadding="3"/>
 				<textElement verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
@@ -220,76 +149,153 @@
 				<text><![CDATA[HASTA]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="196" y="234" width="96" height="20" uuid="780b0c8e-f72a-44c0-84ec-20ad47f5e379"/>
+				<reportElement x="28" y="0" width="168" height="20" uuid="cf0b83b7-b1e2-4245-910b-6851418ebd55"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOMBRES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="196" y="0" width="96" height="20" uuid="780b0c8e-f72a-44c0-84ec-20ad47f5e379"/>
 				<box leftPadding="3"/>
 				<textElement verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[IDENTIFICACIÓN]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-				<reportElement x="28" y="286" width="515" height="47" isPrintWhenDetailOverflows="true" uuid="704dec77-8aed-41b2-ab3d-cbef386b34d6"/>
-				<textElement textAlignment="Justified" markup="html">
-					<font size="11" isBold="true"/>
+			<staticText>
+				<reportElement x="292" y="0" width="91" height="20" uuid="9d8687cf-37e5-49cd-9751-221e96e361e2"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Nota: El presente certificado le permite permanecer en la Provincia como transeúnte durante las fechas indicadas previamente. Tome en cuenta que podrá ingresar a partir de "+new java.text.SimpleDateFormat("dd MMMMM yyyy").format($F{crtra_fecha_ingreso})+", y su fecha máxima de salida es "+new java.text.SimpleDateFormat("dd MMMMM yyyy").format($F{crtra_fecha_salida})]]></textFieldExpression>
+				<text><![CDATA[NACIONALIDAD]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="28" y="0" width="168" height="20" uuid="66cc6d0a-2eba-4c01-8976-ea7265df88d3"/>
+				<box leftPadding="3"/>
+				<textFieldExpression><![CDATA[$F{crper_nombres}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="196" y="0" width="96" height="20" uuid="59f2b759-2452-471c-8915-771e9f040da3"/>
+				<box leftPadding="3"/>
+				<textFieldExpression><![CDATA[$F{crper_num_doc_identific}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="383" y="0" width="80" height="20" uuid="9b7096dd-751c-4b5f-8934-a8dca4533bb2"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{crtra_fecha_ingreso}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="463" y="0" width="80" height="20" uuid="a42e2335-47da-49f4-b625-805a28896552"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{crtra_fecha_salida}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="292" y="254" width="91" height="20" uuid="ec8bc44e-6217-4da1-9c9b-d57adad2910f"/>
+				<reportElement x="292" y="0" width="91" height="20" uuid="ec8bc44e-6217-4da1-9c9b-d57adad2910f"/>
 				<textFieldExpression><![CDATA[$F{cpais_nombre}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="5" splitType="Stretch"/>
+		<band height="197" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="Float" x="227" y="56" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="5088d2b6-eb7a-4ed4-9f81-6d71c8c3c984"/>
+				<textElement textAlignment="Center" markup="none">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Atentamente,]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="152" y="145" width="250" height="46" isPrintWhenDetailOverflows="true" uuid="7f887fd9-ece3-4e73-8cf6-2a6f5b0951c7"/>
+				<textElement textAlignment="Center">
+					<font size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CONTROL DE RESIDENCIA CONSEJO DE GOBIERNO DEL RÉGIMEN ESPECIAL DE GALÁPAGOS"]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement positionType="Float" x="437" y="152" width="113" height="25" isPrintWhenDetailOverflows="true" uuid="2a9596d7-1543-4b57-a790-2ba8093fdad9"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="2of7" drawText="false" checksumRequired="false">
+					<jr:codeExpression><![CDATA[$F{crtra_numero}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<textField>
+				<reportElement x="0" y="126" width="554" height="20" uuid="0268b356-784e-44f4-991b-89c56a41d89a"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{cusu_responsable}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="437" y="177" width="113" height="20" uuid="8422a158-aab7-445f-b218-b1c4f9943b93"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{crtra_numero}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement x="28" y="10" width="515" height="47" isPrintWhenDetailOverflows="true" uuid="704dec77-8aed-41b2-ab3d-cbef386b34d6"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Nota: El presente certificado le permite permanecer en la Provincia como transeúnte durante las fechas indicadas previamente. Tome en cuenta que podrá ingresar a partir de "+new java.text.SimpleDateFormat("dd MMMMM yyyy").format($F{crtra_fecha_ingreso})+", y su fecha máxima de salida es "+new java.text.SimpleDateFormat("dd MMMMM yyyy").format($F{crtra_fecha_salida})]]></textFieldExpression>
+			</textField>
+		</band>
 	</columnFooter>
 	<pageFooter>
-		<band height="52" splitType="Stretch">
+		<band height="17" splitType="Stretch">
 			<textField>
-				<reportElement x="511" y="3" width="12" height="15" uuid="9a609d81-1710-43c7-bf76-aa865c02223a"/>
+				<reportElement x="509" y="2" width="12" height="15" uuid="9a609d81-1710-43c7-bf76-aa865c02223a"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="488" y="3" width="23" height="15" uuid="7131e36b-a1b9-4aba-a9ce-79002fe2a532"/>
+				<reportElement x="486" y="2" width="23" height="15" uuid="7131e36b-a1b9-4aba-a9ce-79002fe2a532"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Pág.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="524" y="3" width="12" height="15" uuid="fd085163-85ce-4583-8375-9ecd61d00f8b"/>
+				<reportElement x="522" y="2" width="12" height="15" uuid="fd085163-85ce-4583-8375-9ecd61d00f8b"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[de ]]></text>
 			</staticText>
 			<textField pattern="EEEEE dd MMMMM yyyy">
-				<reportElement x="3" y="3" width="120" height="15" uuid="141b4a82-e39f-4ece-8e4c-21b29f27a074"/>
+				<reportElement x="1" y="2" width="120" height="15" uuid="141b4a82-e39f-4ece-8e4c-21b29f27a074"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="2" y="1" width="552" height="1" uuid="50c79130-6ae1-494f-acb0-94041e8839e9"/>
+				<reportElement x="0" y="0" width="552" height="1" uuid="50c79130-6ae1-494f-acb0-94041e8839e9"/>
 			</line>
 			<textField>
-				<reportElement x="536" y="3" width="17" height="15" uuid="f3c45dda-b0e2-42fd-89c1-39c4d83c9663"/>
+				<reportElement x="534" y="2" width="17" height="15" uuid="f3c45dda-b0e2-42fd-89c1-39c4d83c9663"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{PAGE_COUNT}]]></textFieldExpression>
 			</textField>
+		</band>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="21">
 			<subreport>
-				<reportElement x="1" y="21" width="552" height="10" uuid="70fa44a0-6b5b-4045-a99d-b45df89a8a94"/>
+				<reportElement positionType="FixRelativeToBottom" x="1" y="3" width="552" height="18" uuid="70fa44a0-6b5b-4045-a99d-b45df89a8a94"/>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["repo:/Resources/sii/rptPie"]]></subreportExpression>
 			</subreport>
 		</band>
-	</pageFooter>
+	</lastPageFooter>
 	<summary>
 		<band splitType="Stretch"/>
 	</summary>

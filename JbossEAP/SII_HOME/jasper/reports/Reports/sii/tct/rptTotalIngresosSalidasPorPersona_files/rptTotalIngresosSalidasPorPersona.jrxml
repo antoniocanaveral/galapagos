@@ -26,21 +26,37 @@ CASE
   (SELECT C.CCTN_NOMBRE FROM SII.CGG_CANTON C INNER JOIN SII.CGG_RES_AEROPUERTO A ON(A.CCTN_CODIGO=C.CCTN_CODIGO)
 		   WHERE A.CARPT_CODIGO = M.CARPT_CODIGO)
 END AS CISLA_NOMBRE,
-(SELECT T.CRTST_DESCRIPCION FROM SII.CGG_RES_TIPO_SOLICITUD_TRAMITE T WHERE T.CRTST_CODIGO=R.CRTST_CODIGO) AS CATEGORIA
+(SELECT T.CRTST_DESCRIPCION FROM SII.CGG_RES_TIPO_SOLICITUD_TRAMITE T WHERE T.CRTST_CODIGO=R.CRTST_CODIGO) AS CATEGORIA,
+M.CRMOV_SOPORTE,M.crmov_codigo
 FROM SII.CGG_RES_MOVILIDAD M
 INNER JOIN SII.CGG_RES_RESIDENCIA R ON (M.CRRSD_CODIGO = R.CRRSD_CODIGO)
 INNER JOIN SII.CGG_RES_PERSONA P ON (R.CRPER_CODIGO = P.CRPER_CODIGO)
 AND M.CRMOV_FECHA_VIAJE::DATE BETWEEN $P{P_FECHA_INICIAL} AND $P{P_FECHA_FINAL}
 AND (P.CRPER_NUM_DOC_IDENTIFIC=$P{P_CRPER_NUM_DOC_IDENTIFIC} OR 			     P.CRPER_NUMERO_RESIDENCIA=$P{P_CRPER_NUM_DOC_IDENTIFIC})
-AND M.CRMOV_SOPORTE=FALSE
 ORDER BY CRMOV_TIPO_OPERACION ASC,CRMOV_FECHA_VIAJE::DATE ASC]]>
 	</queryString>
-	<field name="crper_nombres" class="java.lang.String"/>
-	<field name="crper_num_doc_identific" class="java.lang.String"/>
-	<field name="crmov_tipo_operacion" class="java.lang.String"/>
+	<field name="crper_nombres" class="java.lang.String">
+		<fieldDescription><![CDATA[NOMBRES DE LA PERSONA]]></fieldDescription>
+	</field>
+	<field name="crper_num_doc_identific" class="java.lang.String">
+		<fieldDescription><![CDATA[NUMERO DE DOCUMENTO DE IDENTIFICACION DE LA PERSONA]]></fieldDescription>
+	</field>
+	<field name="crmov_tipo_operacion" class="java.lang.String">
+		<fieldDescription><![CDATA[TIPO DE OPERACION
+0 - ENTRADA
+1 - SALIDA    ]]></fieldDescription>
+	</field>
 	<field name="crmov_fecha_viaje" class="java.sql.Date"/>
-	<field name="cisla_nombre" class="java.lang.String"/>
+	<field name="cisla_nombre" class="java.lang.String">
+		<fieldDescription><![CDATA[NOMBRE DE LA ISLA O DE CIUDAD]]></fieldDescription>
+	</field>
 	<field name="categoria" class="java.lang.String"/>
+	<field name="crmov_soporte" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[SI EL REGISTRO FUE CREADO COMO INDICADOR DE CADUCIDAD DE UNA RESIDENCIA]]></fieldDescription>
+	</field>
+	<field name="crmov_codigo" class="java.lang.String">
+		<fieldDescription><![CDATA[IDENTIFICATIVO UNICO DE REGISTRO]]></fieldDescription>
+	</field>
 	<variable name="V_FECHA_ACTUAL" class="java.util.Date">
 		<variableExpression><![CDATA[new Date()]]></variableExpression>
 	</variable>
@@ -81,7 +97,7 @@ ORDER BY CRMOV_TIPO_OPERACION ASC,CRMOV_FECHA_VIAJE::DATE ASC]]>
 					<text><![CDATA[Fecha viaje]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="75" y="23" width="27" height="20" uuid="eb7ec943-8798-422d-a1a0-f857f096e910"/>
+					<reportElement x="42" y="23" width="27" height="20" uuid="eb7ec943-8798-422d-a1a0-f857f096e910"/>
 					<box>
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
@@ -114,6 +130,20 @@ ORDER BY CRMOV_TIPO_OPERACION ASC,CRMOV_FECHA_VIAJE::DATE ASC]]>
 						<font isBold="true"/>
 					</textElement>
 					<text><![CDATA[Categoría]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="69" y="23" width="33" height="20" uuid="80197507-35bf-4939-b3aa-85a2125b3c8f"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Corte]]></text>
 				</staticText>
 			</band>
 		</groupHeader>
@@ -193,9 +223,9 @@ ORDER BY CRMOV_TIPO_OPERACION ASC,CRMOV_FECHA_VIAJE::DATE ASC]]>
 	</columnHeader>
 	<detail>
 		<band height="22" splitType="Stretch">
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="102" y="0" width="113" height="20" uuid="6ebfae59-a73f-4843-8232-7495cd7c2346"/>
-				<box>
+				<box leftPadding="2">
 					<bottomPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle"/>
@@ -210,7 +240,7 @@ ORDER BY CRMOV_TIPO_OPERACION ASC,CRMOV_FECHA_VIAJE::DATE ASC]]>
 				<textFieldExpression><![CDATA[$F{crmov_fecha_viaje}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0">
-				<reportElement x="75" y="0" width="27" height="20" uuid="15295c96-b330-4a20-b9e8-b7b8aa70fe25"/>
+				<reportElement x="42" y="0" width="27" height="20" uuid="15295c96-b330-4a20-b9e8-b7b8aa70fe25"/>
 				<box>
 					<bottomPen lineWidth="0.25"/>
 				</box>
@@ -224,6 +254,14 @@ ORDER BY CRMOV_TIPO_OPERACION ASC,CRMOV_FECHA_VIAJE::DATE ASC]]>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{categoria}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="69" y="0" width="33" height="20" uuid="b9c4d268-fc26-4a5f-a78f-28488c7e85ef"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{crmov_soporte}?"SI":"NO"]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

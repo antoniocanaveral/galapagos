@@ -141,7 +141,19 @@ public class Cgg_tct_registro implements Serializable{
 					objPer.setCRDID_CODIGO(personaJson.getJSONObject(i).getString("CRDID_CODIGO"));
 					objPer.setCGNCN_CODIGO(personaJson.getJSONObject(i).getString("CGNCN_CODIGO"));
 					objPer.setCRPER_NOMBRES(personaJson.getJSONObject(i).getString("CRPER_NOMBRES"));
-					objPer.setCRPER_APELLIDO_PATERNO(personaJson.getJSONObject(i).getString("CRPER_APELLIDO_PATERNO"));
+					//NO PODEMOS DIVIDIR ASÍ QUE DAMOS POR ECHO QUE EL PATERNO ES EL PRIMERO Y EL MATERNO EL SEGUNDO.
+					String apellidos = personaJson.getJSONObject(i).getString("CRPER_APELLIDO_PATERNO");
+					if(apellidos.contains(" ")){
+						String[] apell = apellidos.split(" ");
+						if(apell.length==2) {
+							objPer.setCRPER_APELLIDO_PATERNO(apell[0]);
+							objPer.setCRPER_APELLIDO_MATERNO(apell[1]);
+						}else if(apell.length>2) {
+							objPer.setCRPER_APELLIDO_PATERNO(apell[0] + apell[1]);
+							objPer.setCRPER_APELLIDO_MATERNO(apell[2]);
+						}
+					}else
+						objPer.setCRPER_APELLIDO_PATERNO(personaJson.getJSONObject(i).getString("CRPER_APELLIDO_PATERNO"));
 					objPer.setCRPER_NUM_DOC_IDENTIFIC(personaJson.getJSONObject(i).getString("CRPER_NUM_DOC_IDENTIFIC"));
 					objPer.setCRPER_FECHA_NACIMIENTO(Timestamp.valueOf(personaJson.getJSONObject(i).getString("CRPER_FECHA_NACIMIENTO").replace("T", " ")));
 					objPer.setCRPER_GENERO(personaJson.getJSONObject(i).getInt("CRPER_GENERO"));
@@ -447,7 +459,19 @@ public class Cgg_tct_registro implements Serializable{
 					objPer.setCRDID_CODIGO(personaJson.getJSONObject(i).getString("CRDID_CODIGO"));
 					objPer.setCGNCN_CODIGO(personaJson.getJSONObject(i).getString("CGNCN_CODIGO"));
 					objPer.setCRPER_NOMBRES(personaJson.getJSONObject(i).getString("CRPER_NOMBRES"));
-					objPer.setCRPER_APELLIDO_PATERNO(personaJson.getJSONObject(i).getString("CRPER_APELLIDO_PATERNO"));
+					//NO PODEMOS DIVIDIR ASÍ QUE DAMOS POR ECHO QUE EL PATERNO ES EL PRIMERO Y EL MATERNO EL SEGUNDO.
+					String apellidos = personaJson.getJSONObject(i).getString("CRPER_APELLIDO_PATERNO");
+					if(apellidos.contains(" ")){
+						String[] apell = apellidos.split(" ");
+						if(apell.length==2) {
+							objPer.setCRPER_APELLIDO_PATERNO(apell[0]);
+							objPer.setCRPER_APELLIDO_MATERNO(apell[1]);
+						}else if(apell.length>2) {
+							objPer.setCRPER_APELLIDO_PATERNO(apell[0] + apell[1]);
+							objPer.setCRPER_APELLIDO_MATERNO(apell[2]);
+						}
+					}else
+						objPer.setCRPER_APELLIDO_PATERNO(personaJson.getJSONObject(i).getString("CRPER_APELLIDO_PATERNO"));
 					objPer.setCRPER_NUM_DOC_IDENTIFIC(personaJson.getJSONObject(i).getString("CRPER_NUM_DOC_IDENTIFIC"));
 					objPer.setCRPER_FECHA_NACIMIENTO(Timestamp.valueOf(personaJson.getJSONObject(i).getString("CRPER_FECHA_NACIMIENTO").replace("T", " ")));
 					objPer.setCRPER_GENERO(personaJson.getJSONObject(i).getInt("CRPER_GENERO"));
@@ -640,7 +664,19 @@ public class Cgg_tct_registro implements Serializable{
 					objPer.setCRDID_CODIGO(personaJson.getJSONObject(i).getString("CRDID_CODIGO"));
 					objPer.setCGNCN_CODIGO(personaJson.getJSONObject(i).getString("CGNCN_CODIGO"));
 					objPer.setCRPER_NOMBRES(personaJson.getJSONObject(i).getString("CRPER_NOMBRES"));
-					objPer.setCRPER_APELLIDO_PATERNO(personaJson.getJSONObject(i).getString("CRPER_APELLIDO_PATERNO"));
+					//NO PODEMOS DIVIDIR ASÍ QUE DAMOS POR ECHO QUE EL PATERNO ES EL PRIMERO Y EL MATERNO EL SEGUNDO.
+					String apellidos = personaJson.getJSONObject(i).getString("CRPER_APELLIDO_PATERNO");
+					if(apellidos.contains(" ")){
+						String[] apell = apellidos.split(" ");
+						if(apell.length==2) {
+							objPer.setCRPER_APELLIDO_PATERNO(apell[0]);
+							objPer.setCRPER_APELLIDO_MATERNO(apell[1]);
+						}else if(apell.length>2) {
+							objPer.setCRPER_APELLIDO_PATERNO(apell[0] + apell[1]);
+							objPer.setCRPER_APELLIDO_MATERNO(apell[2]);
+						}
+					}else
+						objPer.setCRPER_APELLIDO_PATERNO(personaJson.getJSONObject(i).getString("CRPER_APELLIDO_PATERNO"));
 					objPer.setCRPER_NUM_DOC_IDENTIFIC(personaJson.getJSONObject(i).getString("CRPER_NUM_DOC_IDENTIFIC"));
 					objPer.setCRPER_FECHA_NACIMIENTO(Timestamp.valueOf(personaJson.getJSONObject(i).getString("CRPER_FECHA_NACIMIENTO").replace("T", " ")));
 					objPer.setCRPER_GENERO(personaJson.getJSONObject(i).getInt("CRPER_GENERO"));
@@ -1103,7 +1139,19 @@ public class Cgg_tct_registro implements Serializable{
 					objPer.setCRDID_CODIGO(personaJson.getJSONObject(i).getString("CRDID_CODIGO"));
 					objPer.setCRPER_NOMBRES(personaJson.getJSONObject(i).getString("CRPER_NOMBRES"));
 					objPer.setCRPER_NUM_DOC_IDENTIFIC(personaJson.getJSONObject(i).getString("CRPER_NUM_DOC_IDENTIFIC"));
-					objPer.setCRPER_APELLIDO_PATERNO(personaJson.getJSONObject(i).getString("CRPER_APELLIDO_PATERNO"));
+					//NO PODEMOS DIVIDIR ASÍ QUE DAMOS POR ECHO QUE EL PATERNO ES EL PRIMERO Y EL MATERNO EL SEGUNDO.
+					String apellidos = personaJson.getJSONObject(i).getString("CRPER_APELLIDO_PATERNO");
+					if(apellidos.contains(" ")){
+						String[] apell = apellidos.split(" ");
+						if(apell.length==2) {
+							objPer.setCRPER_APELLIDO_PATERNO(apell[0]);
+							objPer.setCRPER_APELLIDO_MATERNO(apell[1]);
+						}else if(apell.length>2) {
+							objPer.setCRPER_APELLIDO_PATERNO(apell[0] + apell[1]);
+							objPer.setCRPER_APELLIDO_MATERNO(apell[2]);
+						}
+					}else
+						objPer.setCRPER_APELLIDO_PATERNO(personaJson.getJSONObject(i).getString("CRPER_APELLIDO_PATERNO"));
 					objPer.setCRPER_GENERO(personaJson.getJSONObject(i).getInt("CRPER_GENERO"));
 					objPer.setCGNCN_CODIGO(personaJson.getJSONObject(i).getString("CGNCN_CODIGO"));
 					objPer.setCRPER_SEGUIMIENTO(personaJson.getJSONObject(i).getBoolean("CRPER_SEGUIMIENTO"));

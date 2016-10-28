@@ -858,7 +858,8 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
                 tmpCrper_codigo = tmpSelect[0].CRPER_CODIGO;
                 tmpRecord.data.CRPER_CODIGO = tmpSelect[0].CRPER_CODIGO;
                 txtCrper_nombres.setValue(tmpSelect[0].CRPER_NOMBRES);
-                txtCrper_apellido_paterno.setValue(tmpSelect[0].CRPER_APELLIDO_PATERNO);
+                var apellidos = tmpSelect[0].CRPER_APELLIDO_PATERNO + (tmpSelect[0].CRPER_APELLIDO_MATERNO!=null ? " "+tmpSelect[0].CRPER_APELLIDO_MATERNO:"");
+                txtCrper_apellido_paterno.setValue(apellidos);
                 var tmps= (tmpSelect[0].CRPER_GENERO+" ").trim();
                 if (tmps.length>0)
                     cbxCrper_genero.setValue(tmpSelect[0].CRPER_GENERO);
