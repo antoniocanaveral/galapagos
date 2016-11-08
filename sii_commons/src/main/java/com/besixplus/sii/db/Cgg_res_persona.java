@@ -2376,21 +2376,22 @@ public class Cgg_res_persona implements Serializable{
 		String outResult = "true";
 
 		try{
-			CallableStatement stmInsert = inConnection.prepareCall("{ ? = call sii.F_CGG_TCT_REGISTRO_PERSONA_INSERT(?, ?, ?, ?, ?, ?, ?,?::smallint,?,  ?, ?, ?, ?) }");
+			CallableStatement stmInsert = inConnection.prepareCall("{ ? = call sii.F_CGG_TCT_REGISTRO_PERSONA_INSERT(?, ?, ?, ?, ?, ?, ?, ?, ?::smallint,?, ?, ?, ?, ?) }");
 			stmInsert.registerOutParameter(1, java.sql.Types.VARCHAR);
 			stmInsert.setString(2, this.getCgg_res_persona().getCRPER_CODIGO());
 			stmInsert.setString(3, this.getCgg_res_persona().getCRDID_CODIGO());
 			stmInsert.setString(4, this.getCgg_res_persona().getCGNCN_CODIGO());
 			stmInsert.setString(5, this.getCgg_res_persona().getCRPER_NOMBRES());
 			stmInsert.setString(6, this.getCgg_res_persona().getCRPER_APELLIDO_PATERNO());
-			stmInsert.setString(7, this.getCgg_res_persona().getCRPER_NUM_DOC_IDENTIFIC());
-			stmInsert.setTimestamp(8, this.getCgg_res_persona().getCRPER_FECHA_NACIMIENTO()==null?null:new java.sql.Timestamp(this.getCgg_res_persona().getCRPER_FECHA_NACIMIENTO().getTime()));
-			stmInsert.setInt(9, this.getCgg_res_persona().getCRPER_GENERO());
-			stmInsert.setString(10, this.getCgg_res_persona().getCGG_CPAIS_CODIGO());
-			stmInsert.setBoolean(11, this.getCgg_res_persona().getCRPER_ESTADO());
-			stmInsert.setString(12, this.getCgg_res_persona().getCRPER_USUARIO_INSERT());
-			stmInsert.setString(13,this.getCgg_res_persona().getCRPER_USUARIO_UPDATE());
-			stmInsert.setBoolean(14,this.getCgg_res_persona().getCRPER_SEGUIMIENTO());
+			stmInsert.setString(7, this.getCgg_res_persona().getCRPER_APELLIDO_MATERNO());
+			stmInsert.setString(8, this.getCgg_res_persona().getCRPER_NUM_DOC_IDENTIFIC());
+			stmInsert.setTimestamp(9, this.getCgg_res_persona().getCRPER_FECHA_NACIMIENTO()==null?null:new java.sql.Timestamp(this.getCgg_res_persona().getCRPER_FECHA_NACIMIENTO().getTime()));
+			stmInsert.setInt(10, this.getCgg_res_persona().getCRPER_GENERO());
+			stmInsert.setString(11, this.getCgg_res_persona().getCGG_CPAIS_CODIGO());
+			stmInsert.setBoolean(12, this.getCgg_res_persona().getCRPER_ESTADO());
+			stmInsert.setString(13, this.getCgg_res_persona().getCRPER_USUARIO_INSERT());
+			stmInsert.setString(14,this.getCgg_res_persona().getCRPER_USUARIO_UPDATE());
+			stmInsert.setBoolean(15,this.getCgg_res_persona().getCRPER_SEGUIMIENTO());
 			stmInsert.execute();
 			this.getCgg_res_persona().setCRPER_CODIGO(stmInsert.getString(1));
 			stmInsert.close();

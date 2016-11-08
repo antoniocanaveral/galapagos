@@ -673,6 +673,7 @@ var chbSalida = {
 var dtCrmov_fecha_viaje2 = new Ext.form.DateField({
     id:'dtCrmov_fecha_viaje2',
     name:'dtCrmov_fecha_viaje2',
+    maxValue: CURRENT_DATE,
     fieldLabel :'Viaje',
     value:CURRENT_DATE
 });

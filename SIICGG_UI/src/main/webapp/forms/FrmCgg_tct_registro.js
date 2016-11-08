@@ -913,6 +913,7 @@ function FrmCgg_tct_registro(IN_SENTENCIA_CGG_TCT_REGISTRO,IN_RECORD_CGG_TCT_REG
             {name:'CRPER_NUM_DOC_IDENTIFIC'},
             {name:'CRPER_NOMBRES'},
             {name:'CRPER_APELLIDO_PATERNO'},
+            {name:'CRPER_APELLIDO_MATERNO'},
             {name:'CRPER_GENERO'},
             {name:'CGNCN_CODIGO'},
             {name:'CRPER_FECHA_NACIMIENTO'},

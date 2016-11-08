@@ -130,10 +130,11 @@ public class Cgg_tct_registro implements Serializable{
 			if(res.equals("true")){
 				//////////////////////////////////////
 				//Almacenar en la tabla Cgg_tct_registro y persona
-				com.besixplus.sii.objects.Cgg_res_persona objPer = new com.besixplus.sii.objects.Cgg_res_persona();
+				com.besixplus.sii.objects.Cgg_res_persona objPer = null;
 				com.besixplus.sii.objects.Cgg_tct_registro obj = new com.besixplus.sii.objects.Cgg_tct_registro();
 				codigoRegisUsu = com.besixplus.sii.db.Cgg_tct_registro.selecUsuario(con, usuarioName);
 				for (int i = 0 ; i < personaJson.length(); i++){
+					objPer = new com.besixplus.sii.objects.Cgg_res_persona();
 					numRegistro=com.besixplus.sii.db.Cgg_tct_registro.numeroRegistroTct(con);
 					obj.setCTREG_CODIGO("KEYGEN");
 					//////////////////////////////////////////////////////////
@@ -448,14 +449,14 @@ public class Cgg_tct_registro implements Serializable{
 
 			if (res.equals("true"))
 			{
-				com.besixplus.sii.objects.Cgg_res_persona objPer = new com.besixplus.sii.objects.Cgg_res_persona();
+				com.besixplus.sii.objects.Cgg_res_persona objPer = null;
 				com.besixplus.sii.objects.Cgg_tct_registro obj = new com.besixplus.sii.objects.Cgg_tct_registro();
 
 				String codigoRegisUsu = com.besixplus.sii.db.Cgg_tct_registro.selecUsuario(con, usuarioName);
 				for (int i = 0; i < personaJson.length(); i++) {
+					objPer = new com.besixplus.sii.objects.Cgg_res_persona();
 					String numRegistro = com.besixplus.sii.db.Cgg_tct_registro.numeroRegistroTct(con);
 					obj.setCTREG_CODIGO("KEYGEN");
-
 					objPer.setCRDID_CODIGO(personaJson.getJSONObject(i).getString("CRDID_CODIGO"));
 					objPer.setCGNCN_CODIGO(personaJson.getJSONObject(i).getString("CGNCN_CODIGO"));
 					objPer.setCRPER_NOMBRES(personaJson.getJSONObject(i).getString("CRPER_NOMBRES"));

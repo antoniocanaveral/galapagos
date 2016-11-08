@@ -1035,7 +1035,6 @@ VALORES:
 												objSeguimientoHijo.setCRSEG_VECES_REVISION(new BigDecimal(0)); 
 												objSeguimientoHijo.setCRSEG_NUMERO(new BigDecimal(0));
 												objSeguimientoHijo.setCRSEG_ESTADO(true);
-												objSeguimientoHijo.setCUSU_CODIGO(objUsuarioRegistro.getCUSU_CODIGO());
 
 												objSeguimientoHijo.setCRSEG_USUARIO_INSERT(userName);
 												objSeguimientoHijo.setCRSEG_USUARIO_UPDATE(userName);											
@@ -3082,9 +3081,6 @@ VALORES:
 				return null;
 			}
 
-			objUsuarioRegistro.setCUSU_NOMBRE_USUARIO(userName);
-			new com.besixplus.sii.db.Cgg_usuario(objUsuarioRegistro).selectByUsername(objConn);
-
 			obj = new com.besixplus.sii.db.Cgg_res_tramite(obj).select(objConn);
 
 			if(obj.getCRTRA_CODIGO()!= null &&
@@ -3446,7 +3442,6 @@ VALORES:
 												objSeguimientoHijo.setCRSEG_VECES_REVISION(new BigDecimal(0)); 
 												objSeguimientoHijo.setCRSEG_NUMERO(new BigDecimal(0));
 												objSeguimientoHijo.setCRSEG_ESTADO(true);
-												objSeguimientoHijo.setCUSU_CODIGO(objUsuarioRegistro.getCUSU_CODIGO());
 
 												objSeguimientoHijo.setCRSEG_USUARIO_INSERT(userName);
 												objSeguimientoHijo.setCRSEG_USUARIO_UPDATE(userName);											
