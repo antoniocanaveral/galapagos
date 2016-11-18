@@ -8,7 +8,7 @@ public class TestDinardap {
 
     @Test
     public void ServiceTestet(){
-        RegistroCivil registroCivil = new RegistroCivil("0922126297");
+        RegistroCivil registroCivil = new RegistroCivil("");
         System.out.println(registroCivil.callServiceAsObject());
         System.out.println(registroCivil.toString());
 

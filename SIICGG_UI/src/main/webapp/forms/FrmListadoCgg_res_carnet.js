@@ -553,6 +553,9 @@ function FrmListadoCgg_res_carnet(inDesktop,crper_num_doc_identific) {
         myJasperServer.addParam('P_CRCNT_CODIGO',inRecord.get('CRCNT_CODIGO'));
         myJasperServer.setReportFolder('/Reports/sii/residencia');
         myJasperServer.setReportName(inRecord.data.CKESP_REPORTE);
+        if(inRecord.data.CKESP_REPORTE==""){//El Default es Temporal
+            myJasperServer.setReportName("rptCarnetTemporales");
+        }
         myJasperServer.run();
     }
     /**
