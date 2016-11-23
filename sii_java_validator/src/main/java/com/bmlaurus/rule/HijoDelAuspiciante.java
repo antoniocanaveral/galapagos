@@ -49,6 +49,21 @@ public class HijoDelAuspiciante  implements RuleClass{
                     return "true";
                 }else if(registroCivil.getCedulaPadre()!=null && registroCivil.getCedulaPadre().equals(cedulaAuspiciante)){
                     return "true";
+                }else{
+                    //Verificamos el parentezco segun nombres completos.
+                    String nombreCompleto = auspiciante.getCRPER_APELLIDO_PATERNO() + " "
+                            +auspiciante.getCRPER_APELLIDO_MATERNO()!=null ? auspiciante.getCRPER_APELLIDO_MATERNO():""+auspiciante.getCCNT_NOMBRE();
+                    if(registroCivil.getNombreMadre().equals(nombreCompleto)){
+                        return "true";
+                    }else if(registroCivil.getNombrePadre().equals(nombreCompleto)){
+                        return "true";
+                    }else{
+                        //La ultima opcion es validar por una sola coincidencia
+                        if(registroCivil.getNombre().contains(auspiciante.getCRPER_APELLIDO_PATERNO())) {
+                            System.err.println("COINCIDENCIA DE HIJO SOLO POR APELLIDO PATERNO");
+                            return "true";
+                        }
+                    }
                 }
             }
         }
