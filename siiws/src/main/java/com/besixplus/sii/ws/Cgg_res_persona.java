@@ -1786,6 +1786,33 @@ public class Cgg_res_persona implements Serializable{
 			return tmpFormat.getData().toString();
 		return null;
 	}
+
+	@WebMethod
+	public String selectTuristaTranseunte(
+			@WebParam(name="inCrper_codigo")String inCrper_codigo,
+			@WebParam(name="format")String format
+	) throws SOAPException{
+		com.besixplus.sii.misc.Formatter tmpFormat = null;
+		HttpServletRequest tmpRequest = (HttpServletRequest) wctx.getMessageContext().get(MessageContext.SERVLET_REQUEST);
+		ArrayList<HashMap<String,Object>> per = new ArrayList<HashMap<String,Object>>();
+		try{
+			Connection con = ManagerConnection.getConnection();
+			if(!com.besixplus.sii.db.Cgg_sec_objeto.isGrant(con, Thread.currentThread().getStackTrace()[1].getMethodName(), Thread.currentThread().getStackTrace()[1].getClassName(), tmpRequest.getUserPrincipal().getName(), 1)){
+				con.close();
+				throw new SOAPFaultException(SOAPFactory.newInstance().createFault(myInfoMessages.getMessage("sii.seguridad.acceso.negado", null), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
+			}
+			con.setAutoCommit(!ManagerConnection.isDeployed());
+			per = com.besixplus.sii.db.Cgg_res_persona.selectTuristaTranseunte(con,inCrper_codigo);
+			tmpFormat = new com.besixplus.sii.misc.Formatter(format, per);
+			con.close();
+		}catch(SQLException inException){
+			com.besixplus.sii.db.SQLErrorHandler.errorHandler(inException);
+			throw new SOAPFaultException(SOAPFactory.newInstance().createFault(inException.getMessage(), new QName("http://schemas.xmlsoap.org/soap/envelope/",Thread.currentThread().getStackTrace()[1].getClassName()+" "+Thread.currentThread().getStackTrace()[1].getMethodName())));
+		}
+		if (per!= null)
+			return tmpFormat.getData().toString();
+		return null;
+	}
 	
 	/**
 	 * SELECCIONA TODOS LOS EMAILS DE UNA PERSONA

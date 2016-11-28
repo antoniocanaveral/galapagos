@@ -2249,6 +2249,34 @@ public class Cgg_res_persona implements Serializable{
 		}
 		return outCgg_res_estadia;
 	}
+
+	public static ArrayList<HashMap<String,Object>> selectTuristaTranseunte(
+			java.sql.Connection inConnection,
+			String inCrper_codigo
+	){
+		ArrayList<HashMap<String,Object>> outCgg_res_estadia = new ArrayList<HashMap<String,Object>>();
+		try{
+			CallableStatement stmSelect = inConnection.prepareCall("{ ? = call sii.f_cgg_res_persona_consulta_turista_transeunte(?) }");
+			stmSelect.registerOutParameter(1, Types.OTHER);
+			stmSelect.setString(2, inCrper_codigo);
+			stmSelect.execute();
+			ResultSet results = (ResultSet) stmSelect.getObject(1);
+			int tmpColumnCount = results.getMetaData().getColumnCount();
+			while (results.next()) {
+				HashMap<String,Object> tmpObj = new HashMap<String,Object>();
+				for (int i = 1 ; i <= tmpColumnCount; i++)
+					if(results.getObject(i) != null)
+						tmpObj.put(results.getMetaData().getColumnName(i).toUpperCase(), results.getObject(i));
+				outCgg_res_estadia.add(tmpObj);
+			}
+			results.close();
+			stmSelect.close();
+		}catch(SQLException e){
+			com.besixplus.sii.db.SQLErrorHandler.errorHandler(e);
+		}
+		return outCgg_res_estadia;
+	}
+
 	/**
 	 * SELECCIONA UN REGISTRO DE LA TABLA Cgg_res_residencia DE ACUERDO A SU NUMERO DE DOCUMENTO.
 	 * @param inConnection CONEXION A LA BASE DE DATOS.

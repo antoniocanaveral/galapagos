@@ -14,6 +14,7 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
     var descCgg_res_persona_historial = 'El formulario permite consultar el historial de una persona';    
     var tmpInformacionPersona;
     var tmpInformacionPersonaEstadia;
+    var tmpInformacionTuristaTranseunte;
     var tmpUserSession = new UserSession();
 
 
@@ -1103,6 +1104,7 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
                             }                        
                             consultarImagenPersona();
                             pnlPersonaConsultaEstadia.setVisible(true);
+                            pnlTuristasTranseuntes.setVisible(true);
                             try {
                                 
                                 function CallBackCgg_persona(r) {
@@ -1124,6 +1126,27 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
 
 
                             }
+                            try {
+
+                                function CallBackTuristaTranseunte(r) {
+                                    if (r.length > 0) {
+                                        tmpInformacionTuristaTranseunte = Ext.util.JSON.decode(r)[0];
+                                        tmpInfoTuristasTranseuntes.overwrite(Ext.getCmp('pnlTuristasTranseuntes').body, tmpInformacionTuristaTranseunte);
+                                    }
+                                    else {
+                                        pnlTuristasTranseuntes.setVisible(false);
+                                    }
+                                    Ext.getCmp('pnlTuristasTranseuntes').getEl().unmask();
+                                }
+                                //Ext.getCmp('pnlTuristasTranseuntes').getEl().mask('Cargando...', 'x-mask-loading');
+                                var param = new SOAPClientParameters();
+                                param.add('inCrper_codigo', txtCrper_codigo.getValue());
+                                param.add('format', TypeFormat.JSON);
+                                SOAPClient.invoke(URL_WS + "Cgg_res_persona", "selectTuristaTranseunte", param, true, CallBackTuristaTranseunte);
+                            } catch(inErr) {
+
+
+                            }
                         }
 
                     }
@@ -1139,6 +1162,7 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
         try {          
             tmpInfoPersona.overwrite(Ext.getCmp('pnlPersonaConsulta').body, datosPersona);
             pnlPersonaConsultaEstadia.setVisible(false);
+            pnlTuristasTranseuntes.setVisible(false);
             function CallBackCgg_persona(r) {
                 var tmpResponse = Ext.util.JSON.decode(r);
                 tmpInformacionPersona = tmpResponse.dataSet[0];
@@ -1158,6 +1182,7 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
                         }                    
                         consultarImagenPersona();
                         pnlPersonaConsultaEstadia.setVisible(true);
+                        pnlTuristasTranseuntes.setVisible(true);
                         
                         function CallBackCgg_personaEstadia(r) {
                             if (r.length > 2){
@@ -1174,6 +1199,25 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
                         param.add('inCrper_codigo', txtCrper_codigo.getValue());
                         param.add('format', TypeFormat.JSON);
                         SOAPClient.invoke(URL_WS + "Cgg_res_persona", "selectPersonaTiempoEstadia", param, true, CallBackCgg_personaEstadia);
+
+
+                        function CallBackTurTrans(r) {
+                            if (r.length > 0){
+                                tmpInformacionTuristaTranseunte = Ext.util.JSON.decode(r)[0];
+                                tmpInfoTuristasTranseuntes.overwrite(Ext.getCmp('pnlTuristasTranseuntes').body,tmpInformacionTuristaTranseunte)
+                            }else{
+                                pnlTuristasTranseuntes.setVisible(false);
+                            }
+                            Ext.getCmp('pnlTuristasTranseuntes').getEl().unmask();
+                        }
+
+                        //Ext.getCmp('pnlTuristasTranseuntes').getEl().mask('Cargando...', 'x-mask-loading');
+                        var param = new SOAPClientParameters();
+                        param.add('inCrper_codigo', txtCrper_codigo.getValue());
+                        param.add('format', TypeFormat.JSON);
+                        SOAPClient.invoke(URL_WS + "Cgg_res_persona", "selectTuristaTranseunte", param, true, CallBackTurTrans);
+
+
                     } else {
 
                         Ext.Msg.show({
@@ -1183,6 +1227,7 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
                             icon: Ext.MessageBox.INFO
                         });
                         pnlPersonaConsultaEstadia.setVisible(false);
+                        pnlTuristasTranseuntes.setVisible(false);
 
                     }
                 }else{
@@ -1328,9 +1373,10 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
         CRRSD_VIGENTE:'0',
         TIPO_OPERACION:'',
         CADUCIDAD:'0',
-        DIAS_VIGENTE:'0'
-
-
+        DIAS_VIGENTE:'0',
+        CRRSD_AUSPICIANTE:'',
+        CRRSD_AUSPICIANTE_ID:'',
+        CRRSD_TRAMITE:''
     };
     /*template de la consulta de persona historial*/
     var tmpInfoPersonaEstadia = new Ext.XTemplate(
@@ -1338,20 +1384,24 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
         '<tr>'+
         '<td width="90px"><b>Residencia:<b></td>		<td width="200px">{TIPO_RESIDENCIA}</td>' +
         '<td><b>Fecha inicio:</b></td>	<td>{[this.myDate(values.FECHA_INICIO)]}</td>' +
-        '<td><b>F. caducidad:</b></td>	<td>{[this.myDate(values.FECHA_CADUCIDAD)]}</td>' +
-        '</tr><tr>' +
+        '<td><b>Fecha caducidad:</b></td>	<td>{[this.myDate(values.FECHA_CADUCIDAD)]}</td>' +
+        '</tr>' +
         //'<td><b>Estadia m&aacute;xima:</b></td><td>{DIAS_AUTORIZADOS}  d&iacute;a</td>' +
         //'<td><b>Estadia actual<b></td>	<td>{ESTADIA_ACTUAL} d&iacute;as </td>' +
-        '<td><b>D&iacute;as vigente:</td><td><b>',
-        '<tpl if="0<=DIAS_VIGENTE">','{DIAS_VIGENTE}','</tpl>',
-        '<tpl if="DIAS_VIGENTE<=0 && TIPO_OPERACION ==0">','Exedido','</tpl>',
-        '</b></td>' +
-        '</tr><tr>' +
-        '<td><b>Est.residencia:</b></td><td><b>',
+        //'<tr><td><b>D&iacute;as vigente:</td><td><b>',
+        //'<tpl if="0<=DIAS_VIGENTE">','{DIAS_VIGENTE}','</tpl>',
+        //'<tpl if="DIAS_VIGENTE<=0 && TIPO_OPERACION ==0">','Exedido','</tpl>',
+        //'</b></td>' +
+        //'</tr>' +
+        '<tr><td><b>Auspiciante:</b></td><td>{values.CRRSD_AUSPICIANTE}</td>' +
+        '<td><b>Identificaci&oacute;n:</b></td><td>{values.CRRSD_AUSPICIANTE_ID}</td>' +
+        '<td><b>Tr&aacute;mite:</b></td><td>{values.CRRSD_TRAMITE}</td></tr>'+
+
+        '<tr><td><b>Estado residencia:</b></td><td><b>',
         '<tpl if="CRRSD_VIGENTE ==true">','Vigente','</tpl>',
         '<tpl if="CRRSD_VIGENTE ==false">','No vigente','</tpl>',
         '</b></td>' +
-        '<td><b>Est. migratorio:</b></td><td colspan=2><b>',
+        '<td><b>Estado migratorio:</b></td><td colspan=2><b>',
         '<tpl if="TIPO_OPERACION==0 && CADUCIDAD==false">',
         '<span style="color:red;font-size:11px">Se encuentra en la provincia <br/>y residencia a caducado</span>',
         '</tpl>',
@@ -1428,7 +1478,7 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
 
     var pnlPersonaConsultaEstadia = new  Ext.form.FieldSet({
         id:'pnlPersonaConsultaEstadia',
-        region:'center',
+        height:125,
         title:'Estadia',
         data:datosPersonaResidencia,
         tpl:tmpInfoPersonaEstadia,
@@ -1436,6 +1486,53 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
     });
     
     pnlPersonaConsultaEstadia.setVisible(false);
+
+
+    var datosTuristaTranseuntes = {
+        TURISTA_USADOS:'0',
+        TURISTA_RESTANTE:'0',
+        TRANSEUNTE_USADOS:'0',
+        TRANSEUNTE_RESTANTE:'0'
+    };
+
+    var tmpInfoTuristasTranseuntes =  new Ext.XTemplate(
+        "<table width='100%' cellpadding='5' style ='font-size: 12px;font-family:Arial, Helvetica, sans-serif' cellspacing=5>" +
+        "   <TR>" +
+        "      <TD><b>TURISTA</b></TD>" +
+        "      <TD><b>D&iacute;as usados:</b></TD>" +
+        "      <TD>{values.TURISTA_USADOS}</TD>" +
+        "      <TD><b>D&iacute;as restantes:</b></TD>" +
+        "      <TD>{values.TURISTA_RESTANTE}</TD>" +
+        "   </TR>" +
+        "   <TR>" +
+        "      <TD><b>TRANSEUNTE</b></TD>" +
+        "      <TD><b>D&iacute;as usados:</b></TD>" +
+        "      <TD>{values.TRANSEUNTE_USADOS}</TD>" +
+        "      <TD><b>D&iacute;as restantes:</b></TD>" +
+        "      <TD>{values.TRANSEUNTE_RESTANTE}</TD>" +
+        "   </TR>" +
+        "</table>"
+    );
+
+
+    var pnlTuristasTranseuntes = new Ext.form.FieldSet({
+        id:'pnlTuristasTranseuntes',
+        height:80,
+        title:'Disponibilidad de Dias',
+        data:datosTuristaTranseuntes,
+        tpl:tmpInfoTuristasTranseuntes,
+        frame:false
+    });
+
+    pnlTuristasTranseuntes.setVisible(false);
+
+    var pnlEstadia = new Ext.Panel({
+        region:'center',
+        layout:'form',
+        height:210,
+        items:[pnlPersonaConsultaEstadia, pnlTuristasTranseuntes]
+    });
+
     /**panel que visualiza los registros del template persona para observado*/
     var pnlConsuPersona1 = new Ext.Panel({
         height:170,
@@ -1705,7 +1802,7 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
                 tabTip: 'Historial persona',
                 layout:'border',
                 frame:true,
-                items: [pnlPersonaConsul,pnlPersonaConsultaEstadia],
+                items: [pnlPersonaConsul,pnlEstadia],
                 bbar:[btnEmitirCertificadoResidente]
             },
             {
