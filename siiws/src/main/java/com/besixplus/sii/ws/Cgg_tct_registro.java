@@ -1726,10 +1726,19 @@ public class Cgg_tct_registro implements Serializable{
 				obj.setCTREG_USUARIO_UPDATE(tmpRequest.getUserPrincipal().getName());
 				res = new com.besixplus.sii.db.Cgg_tct_registro(obj).updateEstado(con);
 
-				///// Cgg_kdx_venta_detalle				
+				///// Cgg_kdx_venta_detalle
 				objKdx = new com.besixplus.sii.objects.Cgg_kdx_venta_detalle();
-				objKdx.setCKESP_CODIGO(((org.json.JSONObject)personaJson.get(i)).get("CKESP_CODIGO").toString());
 				objKdx.setCTREG_CODIGO(((org.json.JSONObject)personaJson.get(i)).get("CTREG_CODIGO").toString());
+				//Evaluamos si es grupo o individual
+				if(((org.json.JSONObject)personaJson.get(i)).get("CKESP_CODIGO")!=null
+						&& ( ((org.json.JSONObject)personaJson.get(i)).get("CKESP_CODIGO").toString().equals("undefined")
+						||((org.json.JSONObject)personaJson.get(i)).get("CKESP_CODIGO").toString().isEmpty() )){
+
+					ArrayList<HashMap<String, Object>> tmpArray  = new com.besixplus.sii.db.Cgg_kdx_venta_detalle(objKdx).selectCGG_TCT_REGISTRO(con);
+					objKdx.setCKESP_CODIGO(tmpArray.get(0).get("CKESP_CODIGO").toString());
+				}else{
+					objKdx.setCKESP_CODIGO(((org.json.JSONObject)personaJson.get(i)).get("CKESP_CODIGO").toString());
+				}
 				res = new com.besixplus.sii.db.Cgg_kdx_venta_detalle(objKdx).ventaRegistro(con, tmpRequest.getUserPrincipal().getName(), TipoAmbitoEspecie.TCT.getValue());
 				if(!res.equals("true")){
 					break;

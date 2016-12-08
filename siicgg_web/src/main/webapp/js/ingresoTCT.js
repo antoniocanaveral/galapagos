@@ -695,38 +695,46 @@ function loadIngresoTCT(){
 			}
 		}
 		var swVerificado = false;
-		if(trim(txtNumeroDocumento.value)==0){				
+		mensaje = '';
+		if(trim(txtNumeroDocumento.value)==0){
+			mensaje = mensaje+"</br>Numero de Documento";
 			txtNumeroDocumento.focus();
 			swVerificado=false;
-		}else if(trim(txtNombrePersona.value)==0){				
+		}else if(trim(txtNombrePersona.value)==0){
+			mensaje = mensaje+"</br>Nombres";
 			txtNombrePersona.focus();
 			swVerificado=false;
-		}else if(trim(txtApellidoPersona.value)==0){				
+		}else if(trim(txtApellidoPersona.value)==0){
+			mensaje = mensaje+"</br>Apellidos";
 			txtApellidoPersona.focus();
 			swVerificado=false;
 		}else if(txtFechaNacimiento.value.length==0){
+			mensaje = mensaje+"</br>Fecha de Nacimiento";
 			txtFechaNacimiento.focus();
 			swVerificado = false;
-		}else{
-			swVerificado = true;
-		}
-		if(cbxEstadoCivil.dom.value==0){
+		}else if(cbxEstadoCivil.dom.value==0){
+			mensaje = mensaje+"</br>Estado Civil";
 			swVerificado = false;
 			//cbxEstadoCivil.focus();
-		}
-		if(txtCorreoElectronico.value && txtCorreoElectronico.value.length>0 && txtCorreoElectronico.value == txtConfirCorreoElectronico.value){
-			swVerificado = true;
-		}else{
+		}else if(cbxPaisResidencia.dom.value=0){
+			mensaje = mensaje+"</br>Pais de Residencia";
+			swVerificado = false;
+		}else if(cbxNacionalidad.dom.value=0){
+			mensaje = mensaje+"</br>Nacionalidad";
+			swVerificado = false;
+		}else if(!(txtCorreoElectronico.value && txtCorreoElectronico.value.length>0 && txtCorreoElectronico.value == txtConfirCorreoElectronico.value)){
+			mensaje = mensaje+"</br>Hay problemas validando el correo electronico.";
 			txtCorreoElectronico.focus();
 			swVerificado = false;
-			mensaje = "Hay problemas validando el correo electronico.";
+		}else{
+			swVerificado = true;
 		}
 		if (swVerificado == true && flagValido == true){
 			fnLlenarPersona();
 		}else{
 			new bsxMessageBox({
 				title:"Error validaci\u00f3n",
-				msg:'<span>No se puede realizar el registro de la persona.!!</span>'+mensaje,
+				msg:'<span>No se puede realizar el registro de la persona.!!</span><br/>'+mensaje,
 				icon:"iconError"
 			});	
 		}

@@ -1478,7 +1478,7 @@ function FrmCgg_res_persona_historial(inDesktop,INRECORDHISTORIALPERSONA) {
 
     var pnlPersonaConsultaEstadia = new  Ext.form.FieldSet({
         id:'pnlPersonaConsultaEstadia',
-        height:125,
+        height:130,
         title:'Estadia',
         data:datosPersonaResidencia,
         tpl:tmpInfoPersonaEstadia,
