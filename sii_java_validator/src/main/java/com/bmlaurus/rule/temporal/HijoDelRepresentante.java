@@ -54,7 +54,7 @@ public class HijoDelRepresentante implements RuleClass{
                 }else{
                     //Verificamos el parentezco segun nombres completos.
                     String nombreCompleto = representante.getCRPER_APELLIDO_PATERNO() + " "
-                            +representante.getCRPER_APELLIDO_MATERNO()!=null ? representante.getCRPER_APELLIDO_MATERNO():""+representante.getCCNT_NOMBRE();
+                            +representante.getCRPER_APELLIDO_MATERNO()!=null ? representante.getCRPER_APELLIDO_MATERNO():""+" "+representante.getCRPER_NOMBRES();
                     if(registroCivil.getNombreMadre().equals(nombreCompleto)){
                         return "true";
                     }else if(registroCivil.getNombrePadre().equals(nombreCompleto)){
