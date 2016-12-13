@@ -33,7 +33,6 @@ public class HijoDelRepresentante implements RuleClass{
             representante.setCRPER_CODIGO(ruleData.getREP_CRPER_CODIGO());
             representante = new com.besixplus.sii.db.Cgg_res_persona(representante).select(con);
             cedulaRepresentante = representante.getCRPER_NUM_DOC_IDENTIFIC();
-            representante = null;
             con.close();
         } catch (SQLException e) {
             e.printStackTrace();
