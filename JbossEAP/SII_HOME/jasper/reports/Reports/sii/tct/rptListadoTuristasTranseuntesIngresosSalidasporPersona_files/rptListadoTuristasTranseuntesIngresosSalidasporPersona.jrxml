@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptPlantilla" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c0b5b9e3-f31b-4c0d-b16b-89b6ec092805">
 	<property name="ireport.zoom" value="1.464100000000001"/>
-	<property name="ireport.x" value="238"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["E:\\CGG\\APP\\REPORTS\\"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<parameter name="P_CRPER_NOMBRES" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
@@ -57,6 +57,7 @@ AND DATE(MVD.CRMOV_FECHA_VIAJE) = (SELECT MOV2.CRMOV_FECHA_VIAJE
 			      WHERE DATE(MOV2.CRMOV_FECHA_VIAJE) >= DATE(MOV.CRMOV_FECHA_VIAJE)
 			      AND  MOV2.CRPER_CODIGO = PER.CRPER_CODIGO
 			      AND  MOV2.CRMOV_TIPO_OPERACION = 1
+			      AND  MOV2.CRMOV_ESTADO
 			      ORDER BY MOV2.CRMOV_FECHA_VIAJE ASC LIMIT 1 )) --SALIDA
 WHERE  MOV.CRMOV_TIPO_OPERACION = 0  --ENTRADA
 AND MOV.CRMOV_ESTADO
@@ -96,7 +97,7 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 		<groupHeader>
 			<band height="71">
 				<staticText>
-					<reportElement x="2" y="31" width="135" height="40"/>
+					<reportElement x="2" y="31" width="135" height="40" uuid="16149f42-8599-4f33-9d74-3f594f15a927"/>
 					<box>
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
@@ -110,7 +111,7 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 					<text><![CDATA[Categoría]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="0" y="0" width="31" height="20"/>
+					<reportElement x="0" y="0" width="31" height="20" uuid="8f11d7c8-9be1-4d56-8571-b456e0c17cda"/>
 					<box>
 						<pen lineWidth="0.0"/>
 						<topPen lineWidth="0.0"/>
@@ -124,7 +125,7 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 					<text><![CDATA[Tipo:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="101" y="0" width="72" height="20"/>
+					<reportElement x="101" y="0" width="72" height="20" uuid="93ab3a86-681d-426e-91e5-abc9186d77aa"/>
 					<box>
 						<pen lineWidth="0.0"/>
 						<topPen lineWidth="0.0"/>
@@ -138,7 +139,7 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 					<text><![CDATA[Nacionalidad:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="137" y="31" width="335" height="20"/>
+					<reportElement x="137" y="31" width="335" height="20" uuid="caf5b4a8-58d8-4e21-b40b-aa8b24b45338"/>
 					<box>
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
@@ -152,7 +153,7 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 					<text><![CDATA[Ingresos]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="137" y="51" width="50" height="20"/>
+					<reportElement x="137" y="51" width="50" height="20" uuid="90be7821-3370-4c42-93be-f298b5dc9345"/>
 					<box>
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
@@ -166,7 +167,7 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 					<text><![CDATA[Usuario]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="187" y="51" width="59" height="20"/>
+					<reportElement x="187" y="51" width="59" height="20" uuid="5508df20-66a1-4021-ae04-fd076969f87a"/>
 					<box>
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
@@ -180,7 +181,7 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 					<text><![CDATA[Fecha]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="472" y="31" width="330" height="20"/>
+					<reportElement x="472" y="31" width="330" height="20" uuid="50688874-d6b0-4b26-ad21-51b9a711bb9f"/>
 					<box>
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
@@ -194,7 +195,7 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 					<text><![CDATA[Salidas]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="259" y="0" width="91" height="20"/>
+					<reportElement x="259" y="0" width="91" height="20" uuid="d6e9d155-9267-4d37-ac28-2a1f44464463"/>
 					<box>
 						<pen lineWidth="0.0"/>
 						<topPen lineWidth="0.0"/>
@@ -208,7 +209,7 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 					<text><![CDATA[Nº Identificación:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="425" y="0" width="57" height="20"/>
+					<reportElement x="425" y="0" width="57" height="20" uuid="00589f55-4136-4241-a521-795424f9ccea"/>
 					<box>
 						<pen lineWidth="0.0"/>
 						<topPen lineWidth="0.0"/>
@@ -222,7 +223,7 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 					<text><![CDATA[Nombres:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="246" y="51" width="49" height="20"/>
+					<reportElement x="246" y="51" width="49" height="20" uuid="60c5b8a1-6632-4a4c-a5ba-430622826260"/>
 					<box>
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
@@ -236,7 +237,7 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 					<text><![CDATA[Aerolinea]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="295" y="51" width="44" height="20"/>
+					<reportElement x="295" y="51" width="44" height="20" uuid="85c5f1a5-4a08-449d-b6ce-44c45ec9690f"/>
 					<box>
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
@@ -250,7 +251,7 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 					<text><![CDATA[Nº Vuelo]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="339" y="51" width="133" height="20"/>
+					<reportElement x="339" y="51" width="133" height="20" uuid="5c5a1842-a941-4618-9e79-0620d16553cb"/>
 					<box>
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
@@ -264,7 +265,7 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 					<text><![CDATA[Observación]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="472" y="51" width="52" height="20"/>
+					<reportElement x="472" y="51" width="52" height="20" uuid="4c54ba97-2d04-4bb1-b3c7-9b36e8434aca"/>
 					<box>
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
@@ -278,7 +279,7 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 					<text><![CDATA[Usuario]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="524" y="51" width="64" height="20"/>
+					<reportElement x="524" y="51" width="64" height="20" uuid="15625e81-1bd9-4abd-96b5-a42d4589b4e1"/>
 					<box>
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
@@ -292,7 +293,7 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 					<text><![CDATA[Fecha]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="588" y="51" width="53" height="20"/>
+					<reportElement x="588" y="51" width="53" height="20" uuid="b8b331f9-7d3e-47fe-a8aa-5b8db65ff214"/>
 					<box>
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
@@ -306,7 +307,7 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 					<text><![CDATA[Aerolínea]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="641" y="51" width="40" height="20"/>
+					<reportElement x="641" y="51" width="40" height="20" uuid="15514829-65da-494f-862a-56cd0021a20d"/>
 					<box>
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
@@ -320,7 +321,7 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 					<text><![CDATA[Nº Vuelo]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="681" y="51" width="121" height="20"/>
+					<reportElement x="681" y="51" width="121" height="20" uuid="b4e48939-0999-4136-af13-c6c7f3cd7730"/>
 					<box>
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
@@ -334,7 +335,7 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 					<text><![CDATA[Observación]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" x="31" y="0" width="70" height="20" isPrintWhenDetailOverflows="true"/>
+					<reportElement stretchType="RelativeToTallestObject" x="31" y="0" width="70" height="20" isPrintWhenDetailOverflows="true" uuid="79af45d1-257d-4cf8-9187-bfc7c9b01990"/>
 					<box>
 						<pen lineWidth="0.0"/>
 						<topPen lineWidth="0.0"/>
@@ -345,10 +346,10 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 					<textElement verticalAlignment="Middle">
 						<font size="10"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_tipo}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{crper_tipo}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" x="173" y="0" width="86" height="20" isPrintWhenDetailOverflows="true"/>
+					<reportElement stretchType="RelativeToTallestObject" x="173" y="0" width="86" height="20" isPrintWhenDetailOverflows="true" uuid="c71c57bb-7104-4125-80fe-2aa0a565ddca"/>
 					<box>
 						<pen lineWidth="0.0"/>
 						<topPen lineWidth="0.0"/>
@@ -359,10 +360,10 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 					<textElement verticalAlignment="Middle">
 						<font size="10"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_nacionalidad}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{crper_nacionalidad}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" x="350" y="0" width="75" height="20" isPrintWhenDetailOverflows="true"/>
+					<reportElement stretchType="RelativeToTallestObject" x="350" y="0" width="75" height="20" isPrintWhenDetailOverflows="true" uuid="cbc4645f-c5d0-4efc-a4e1-e9ff20fc4731"/>
 					<box>
 						<pen lineWidth="0.0"/>
 						<topPen lineWidth="0.0"/>
@@ -373,10 +374,10 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 					<textElement verticalAlignment="Middle">
 						<font size="10"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_num_doc_identific}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{crper_num_doc_identific}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" x="482" y="0" width="320" height="20" isPrintWhenDetailOverflows="true"/>
+					<reportElement stretchType="RelativeToTallestObject" x="482" y="0" width="320" height="20" isPrintWhenDetailOverflows="true" uuid="ae660667-d7c8-484b-a633-3e1eef7d4bf3"/>
 					<box>
 						<pen lineWidth="0.0"/>
 						<topPen lineWidth="0.0"/>
@@ -387,7 +388,7 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 					<textElement verticalAlignment="Middle">
 						<font size="10"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_nombres}.toUpperCase()]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{crper_nombres}.toUpperCase()]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -401,7 +402,7 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 	<title>
 		<band height="20" splitType="Stretch">
 			<subreport>
-				<reportElement x="0" y="0" width="802" height="20"/>
+				<reportElement x="0" y="0" width="802" height="20" uuid="a8680c40-bc43-499f-af3a-e761b2af233a"/>
 				<subreportParameter name="SUBREPORT_DIR"/>
 				<subreportParameter name="P_SUBTITULO_2">
 					<subreportParameterExpression><![CDATA[""]]></subreportParameterExpression>
@@ -410,7 +411,7 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 					<subreportParameterExpression><![CDATA["Ingreso y salidas de Galápagos por persona"]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptEncabezadoHor"]]></subreportExpression>
+				<subreportExpression><![CDATA["repo:/Resources/sii/rptEncabezadoHor"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
@@ -423,107 +424,107 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 	<detail>
 		<band height="27" splitType="Stretch">
 			<textField isBlankWhenNull="true">
-				<reportElement x="137" y="0" width="50" height="27" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="137" y="0" width="50" height="27" isPrintWhenDetailOverflows="true" uuid="8ce4f769-b210-4f1c-bbbb-9feda5a8ac40"/>
 				<box>
 					<bottomPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{crmov_usuario_insert_ingreso}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{crmov_usuario_insert_ingreso}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement x="187" y="0" width="59" height="27" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="187" y="0" width="59" height="27" isPrintWhenDetailOverflows="true" uuid="331842a0-82c8-4cfc-bfd1-95e99a76415d"/>
 				<box>
 					<bottomPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.util.Date"><![CDATA[$F{crmov_fecha_viaje_ingreso}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{crmov_fecha_viaje_ingreso}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="246" y="0" width="49" height="27" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="246" y="0" width="49" height="27" isPrintWhenDetailOverflows="true" uuid="861f7df0-43d3-4a91-aff1-e5d098e3ad4f"/>
 				<box>
 					<bottomPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{craln_nombre_ingreso}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{craln_nombre_ingreso}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="295" y="0" width="44" height="27" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="295" y="0" width="44" height="27" isPrintWhenDetailOverflows="true" uuid="9f812410-718a-44fd-8875-779f163dbfc4"/>
 				<box>
 					<bottomPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{crmov_numero_vuelo_ingreso}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{crmov_numero_vuelo_ingreso}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="472" y="0" width="52" height="27" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="472" y="0" width="52" height="27" isPrintWhenDetailOverflows="true" uuid="37cfe877-bc35-4fe7-8db6-692204e5b46d"/>
 				<box>
 					<bottomPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{crmov_usuario_insert_salida}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{crmov_usuario_insert_salida}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement x="524" y="0" width="64" height="27" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="524" y="0" width="64" height="27" isPrintWhenDetailOverflows="true" uuid="c393e555-4bd5-4b30-aad4-039e24940134"/>
 				<box>
 					<bottomPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{crmov_fecha_viaje_salida}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{crmov_fecha_viaje_salida}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="588" y="0" width="53" height="27" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="588" y="0" width="53" height="27" isPrintWhenDetailOverflows="true" uuid="2c6f0be9-9247-4d57-adca-2eff22d1d1d2"/>
 				<box>
 					<bottomPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{craln_nombre_salida}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{craln_nombre_salida}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="641" y="0" width="40" height="27" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="641" y="0" width="40" height="27" isPrintWhenDetailOverflows="true" uuid="3078c3cd-6bc9-467e-914d-b3063b929ac0"/>
 				<box>
 					<bottomPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{crmov_numero_vuelo_salida}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{crmov_numero_vuelo_salida}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="339" y="0" width="133" height="27" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="339" y="0" width="133" height="27" isPrintWhenDetailOverflows="true" uuid="951eb48d-9878-4891-8a16-ae4614a7fd3e"/>
 				<box>
 					<bottomPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{crmov_observacion_ingreso}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{crmov_observacion_ingreso}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="681" y="0" width="121" height="27" isPrintWhenDetailOverflows="true"/>
+				<reportElement x="681" y="0" width="121" height="27" isPrintWhenDetailOverflows="true" uuid="935888fc-508c-4600-90dc-001e3bc02d88"/>
 				<box>
 					<bottomPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{crmov_observacion_salida}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{crmov_observacion_salida}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="3" y="0" width="134" height="27"/>
+				<reportElement x="3" y="0" width="134" height="27" uuid="6779886a-fa76-4d32-bea4-08370b4fda86"/>
 				<box>
 					<pen lineWidth="0.0"/>
 					<topPen lineWidth="0.0"/>
@@ -534,7 +535,7 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{crper_categoria}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{crper_categoria}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -544,47 +545,47 @@ ORDER BY CRPER_CATEGORIA, CRPER_NOMBRES, MOV.CRMOV_FECHA_VIAJE DESC]]>
 	<pageFooter>
 		<band height="52" splitType="Stretch">
 			<subreport>
-				<reportElement x="0" y="18" width="802" height="13"/>
+				<reportElement x="0" y="18" width="802" height="13" uuid="a65be793-8af4-4562-88af-90164ee529eb"/>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression class="java.lang.String"><![CDATA["repo:/Resources/sii/rptPieHor"]]></subreportExpression>
+				<subreportExpression><![CDATA["repo:/Resources/sii/rptPieHor"]]></subreportExpression>
 			</subreport>
 			<textField>
-				<reportElement x="760" y="3" width="12" height="15"/>
+				<reportElement x="760" y="3" width="12" height="15" uuid="e919d954-94dc-4c8a-a6ce-88a68ef49b60"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="737" y="3" width="23" height="15"/>
+				<reportElement x="737" y="3" width="23" height="15" uuid="37b4958e-9faf-433f-80c1-eeddc03f0126"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Pág.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="773" y="3" width="12" height="15"/>
+				<reportElement x="773" y="3" width="12" height="15" uuid="da1a40a4-acc1-4b52-9db9-9bdea90396c4"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[de ]]></text>
 			</staticText>
 			<textField pattern="EEEEE dd MMMMM yyyy">
-				<reportElement x="3" y="3" width="120" height="15"/>
+				<reportElement x="3" y="3" width="120" height="15" uuid="61d7ff7e-6b0d-4088-ab77-9cbb65ec3b53"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.util.Date"><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{V_FECHA_ACTUAL}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="2" y="1" width="800" height="1"/>
+				<reportElement x="2" y="1" width="800" height="1" uuid="b65708f9-26b6-4fea-8135-5f4b72fc6627"/>
 			</line>
 			<textField>
-				<reportElement x="785" y="3" width="17" height="15"/>
+				<reportElement x="785" y="3" width="17" height="15" uuid="376e4a35-d169-43e5-872e-c5aa51bf4bb0"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_COUNT}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{PAGE_COUNT}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>

@@ -32,31 +32,22 @@ FROM SII.CGG_RES_MOVILIDAD M
 INNER JOIN SII.CGG_RES_RESIDENCIA R ON (M.CRRSD_CODIGO = R.CRRSD_CODIGO)
 INNER JOIN SII.CGG_RES_PERSONA P ON (R.CRPER_CODIGO = P.CRPER_CODIGO)
 AND M.CRMOV_FECHA_VIAJE::DATE BETWEEN $P{P_FECHA_INICIAL} AND $P{P_FECHA_FINAL}
-AND (P.CRPER_NUM_DOC_IDENTIFIC=$P{P_CRPER_NUM_DOC_IDENTIFIC} OR 			     P.CRPER_NUMERO_RESIDENCIA=$P{P_CRPER_NUM_DOC_IDENTIFIC})
+AND (P.CRPER_NUM_DOC_IDENTIFIC=$P{P_CRPER_NUM_DOC_IDENTIFIC} OR P.CRPER_NUMERO_RESIDENCIA=$P{P_CRPER_NUM_DOC_IDENTIFIC})
+AND M.CRMOV_ESTADO
 ORDER BY CRMOV_TIPO_OPERACION ASC,CRMOV_FECHA_VIAJE::DATE ASC]]>
 	</queryString>
 	<field name="crper_nombres" class="java.lang.String">
 		<fieldDescription><![CDATA[NOMBRES DE LA PERSONA]]></fieldDescription>
 	</field>
-	<field name="crper_num_doc_identific" class="java.lang.String">
-		<fieldDescription><![CDATA[NUMERO DE DOCUMENTO DE IDENTIFICACION DE LA PERSONA]]></fieldDescription>
-	</field>
-	<field name="crmov_tipo_operacion" class="java.lang.String">
-		<fieldDescription><![CDATA[TIPO DE OPERACION
-0 - ENTRADA
-1 - SALIDA    ]]></fieldDescription>
-	</field>
+	<field name="crper_num_doc_identific" class="java.lang.String"/>
+	<field name="crmov_tipo_operacion" class="java.lang.String"/>
 	<field name="crmov_fecha_viaje" class="java.sql.Date"/>
 	<field name="cisla_nombre" class="java.lang.String">
 		<fieldDescription><![CDATA[NOMBRE DE LA ISLA O DE CIUDAD]]></fieldDescription>
 	</field>
 	<field name="categoria" class="java.lang.String"/>
-	<field name="crmov_soporte" class="java.lang.Boolean">
-		<fieldDescription><![CDATA[SI EL REGISTRO FUE CREADO COMO INDICADOR DE CADUCIDAD DE UNA RESIDENCIA]]></fieldDescription>
-	</field>
-	<field name="crmov_codigo" class="java.lang.String">
-		<fieldDescription><![CDATA[IDENTIFICATIVO UNICO DE REGISTRO]]></fieldDescription>
-	</field>
+	<field name="crmov_soporte" class="java.lang.Boolean"/>
+	<field name="crmov_codigo" class="java.lang.String"/>
 	<variable name="V_FECHA_ACTUAL" class="java.util.Date">
 		<variableExpression><![CDATA[new Date()]]></variableExpression>
 	</variable>
