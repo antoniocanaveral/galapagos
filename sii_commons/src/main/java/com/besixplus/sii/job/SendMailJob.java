@@ -108,7 +108,6 @@ class SendMailThread extends Thread{
 
 			myCorreo.setCBZC_ENVIADO(true);
 		} catch (MessagingException e) {
-			e.printStackTrace();
 			myCorreo.setCBZC_ENVIADO(false);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
