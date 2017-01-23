@@ -78,7 +78,7 @@ INNER JOIN SII.CGG_RES_CARNET CRNT ON CRNT.CRRSD_CODIGO = CRRSD.CRRSD_CODIGO AND
 		<band height="153" splitType="Stretch">
 			<image>
 				<reportElement x="70" y="25" width="103" height="102" uuid="8f263f79-77c1-490d-9430-0bb1b3640bcf">
-					<printWhenExpression><![CDATA[$P{P_PREVIEW}==3]]></printWhenExpression>
+					<printWhenExpression><![CDATA[$P{P_PREVIEW}==1]]></printWhenExpression>
 				</reportElement>
 				<imageExpression><![CDATA["repo:/Resources/sii/images/VistaPreliminar"]]></imageExpression>
 			</image>

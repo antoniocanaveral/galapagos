@@ -67,6 +67,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
     var crdptCodigo = null;
     var cvvehCodigo;
     var cvmtrCodigo;
+    var codigoTipoTramite=null;
     /******************FIN DE DEFINICION DE VARIABLES PARA REGLA DE VALIDACION DE INFORMAICON*******************/
 
     var crettSoloGuardado = null;
@@ -484,6 +485,7 @@ function FrmCgg_res_tramite(INSENTENCIA_CGG_RES_TRAMITE, INRECORD_CGG_RES_TRAMIT
             select:function(inThis,inRecord,inIndex){
                 btnCrtst_codigo.disabled = false;
                 crtt_codigo = inIndex;
+                codigoTipoTramite = inIndex;
             }
         }
     });
