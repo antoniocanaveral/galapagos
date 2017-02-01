@@ -2914,16 +2914,9 @@ var storeCgg_gem_pj_isla = new Ext.data.Store({
 function Cgg_gem_cargo_data(){
     this.columnModel = new Ext.grid.ColumnModel([
     {
-        dataIndex:'CGARE_NOMBRE',
-        header:'Area',
-        width:150,
-        sortable:true
-    },
-
-    {
         dataIndex:'CGCRG_NOMBRE',
         header:'Cargo',
-        width:250,
+        width:300,
         sortable:true
     },
 

@@ -204,8 +204,9 @@ function FrmCgg_gem_vacante(inSentenciaCgg_gem_vacante, inRecordCgg_gem_vacante)
 		id:'chkCargo',         
 		name:'chkCargo',         
 		hideLabel: true,
-		hidden:(SEG_GES_EMP == "CSROL_GEADM" && inSentenciaCgg_gem_vacante == "insert")?true:false,		
-		checked:false,    
+		hidden:true,//(SEG_GES_EMP == "CSROL_GEADM" && inSentenciaCgg_gem_vacante == "insert")?true:false,
+		visible:false,
+        checked:false,
 		tabTip:'Nuevo cargo',		
 		listeners:{             
 			check: function (obj,value){ 				
@@ -223,7 +224,8 @@ function FrmCgg_gem_vacante(inSentenciaCgg_gem_vacante, inRecordCgg_gem_vacante)
 		name:'chkTitulo', 
 		tabTip:'Nuevo t\u00EDtulo profesional',
 		hideLabel: true,	
-		hidden:(SEG_GES_EMP == "CSROL_GEADM" && inSentenciaCgg_gem_vacante == "insert")?false:true,
+		hidden:true,//(SEG_GES_EMP == "CSROL_GEADM" && inSentenciaCgg_gem_vacante == "insert")?false:true,
+        visible:false,
 		checked:false,         
 		listeners:{             
 			check: function (obj,value){
@@ -279,7 +281,7 @@ function FrmCgg_gem_vacante(inSentenciaCgg_gem_vacante, inRecordCgg_gem_vacante)
     var txtCgvcn_direccion_isla = new Ext.form.TextArea({
         id: 'txtCgvcn_direccion_isla',
         name: 'txtCgvcn_direccion_isla',
-        fieldLabel: 'Isla empleo',
+        fieldLabel: 'Cant\u00f3n empleo',
         anchor: '100%',
 		height:35,
 		readOnly:true,
@@ -299,7 +301,7 @@ function FrmCgg_gem_vacante(inSentenciaCgg_gem_vacante, inRecordCgg_gem_vacante)
 				new Ext.Window({
 					id:'winTmpDireccion',
 					iconCls:"iconBuscar",
-					title:"Seleccione una o mas Islas",
+					title:"Seleccione uno o mas Cantones",
 					items:[new Ext.grid.GridPanel({
 						cm:new Ext.grid.ColumnModel([
 							sm,
@@ -886,7 +888,7 @@ function FrmCgg_gem_vacante(inSentenciaCgg_gem_vacante, inRecordCgg_gem_vacante)
 	
 	var tbarReq= (SEG_GES_EMP == "CSROL_GEADM" && inSentenciaCgg_gem_vacante == "insert")?
 		[btnNuevoRequisito,btnEliminarRequisito]:
-		[btnNuevoRequisito,btnEliminarRequisito,chkTitulo,chkCargo];
+		[btnNuevoRequisito,btnEliminarRequisito];
 		
     /**
      * Ext.grid.GridPanel Representacion de los datos de la tabla Cgg_gem_requisito_vacante en un formato tabular de filas y columnas.
@@ -925,8 +927,8 @@ function FrmCgg_gem_vacante(inSentenciaCgg_gem_vacante, inRecordCgg_gem_vacante)
         bbar: [btnGuardarCgg_gem_vacante,btnGuardarEnviarCgg_gem_vacante,btnRevisarCgg_gem_vacante,btnCancelarCgg_gem_vacante, '->', btnCerrarCgg_gem_vacante]
 		,listeners:{
 			show:function(){
-				insertCheckboxInTextField("chkCargo","txtCgcrg_codigo");
-				insertCheckboxInTextField("chkTitulo","txtCgvcn_titulo_profesional");
+				//insertCheckboxInTextField("chkCargo","txtCgcrg_codigo");
+				//insertCheckboxInTextField("chkTitulo","txtCgvcn_titulo_profesional");
 				if (txtCgcrg_codigo_COD=='CGCRG0')	chkCargo.setValue(true);
 				if (txtCgvcn_titulo_profesional_COD=='CGTPR0')chkTitulo.setValue(true);
 			}

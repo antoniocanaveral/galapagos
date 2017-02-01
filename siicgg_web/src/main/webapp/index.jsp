@@ -126,43 +126,21 @@
                                         </div>
                                         <div id="btnInfoAdicional" style="display: none"></div>
                                         <ul class="linkLI">
-                                            <li id="btnBuscarEmpleo" style="display: none">Ver ofertas
-                                                de empleo
-                                            </li>
+                                            <li id="btnBuscarEmpleo" style="display: none">Ver ofertas de empleo</li>
                                             <li id="btnHojaVida" style="display: none">Mi Curriculum</li>
-                                            <li id="btnAplicaciones" style="display: none">Mis
-                                                Aplicaciones
-                                            </li>
-                                            <li id="btnDenunciaSugerencia" style="display: none">Denuncia
-                                                y Sugerencia
-                                            </li>
-                                            <li id="btnSubscripcionCargos" style="display: none">Cargos
-                                                de inter&eacute;s
-                                            </li>
-                                            <li id="btnActivarCuenta" style="display: none">Inscribir al
-                                                sistema
-                                            </li>
-                                            <li id="btnEmpresasRegistradas" style="display: none">Empresas
-                                                afiliadas
-                                            </li>
-                                            <li id="btnDesactivarCuenta" style="display: none">Dar de
-                                                baja del sistema
-                                            </li>
-                                            <li id="btnRegistroEmpresa" style="display: none">Registro
-                                                de empresa
-                                            </li>
-                                            <li id="btnAccederSistema" style="display: none">Acceder al
-                                                sistema
-                                            </li>
-                                            <li id="btnComunicadoRadial" style="display: none">Comunicado
-                                                Radial
-                                            </li>
+                                            <li id="btnAplicaciones" style="display: none">Mis Aplicaciones</li>
+                                            <li id="btnDenunciaSugerencia" style="display: none">Denuncia y Sugerencia</li>
+                                            <li id="btnSubscripcionCargos" style="display: none">Cargos de inter&eacute;s</li>
+                                            <li id="btnActivarCuenta" style="display: none">Inscribir al sistema</li>
+                                            <li id="btnEmpresasRegistradas" style="display: none">Empresas afiliadas</li>
+                                            <li id="btnDesactivarCuenta" style="display: none">Dar de baja del sistema</li>
+                                            <!--li id="btnRegistroEmpresa" style="display: none">Registro de empresa</li-->
+                                            <li id="btnAccederSistema" style="display: none">Acceder al sistema</li>
+                                            <li id="btnComunicadoRadial" style="display: none">Comunicado Radial</li>
                                         </ul>
-                                        <div id="divIndicador" class="descripcionAcceso"
+                                        <div id="divIndicador" class="descripcionEstadoAcceso"
                                              style="display: none; border-top: 1px solid #CCCCCC; margin-right: 10px">
                                         </div>
-
-
                                     </div>
                                     <!--Panel de accesos directos-->
                                     <table width="100%" class="accesoDirecto" cellpadding="0"
@@ -180,8 +158,8 @@
                                                 <div id="divGestEmpleo">
                                                     <div class="icon iconGE"></div>
                                                     <span class="tituloAcceso">Gesti&oacute;n Empleo</span><br/>
-								<span class="descripcionAcceso">Si deseas encontrar
-								empleo</span></div>
+                                                    <span class="descripcionAcceso">Si deseas encontrar empleo</span>
+                                                </div>
                                                 <div id="divGestEmpleo-Items" class="clsItems"
                                                      style="display: none">
                                                     <div style="max-width: 175px">
@@ -191,17 +169,16 @@
                                                                 Buscar
                                                                 empleo
                                                             </li>
-                                                            <li style="list-style-image: url(css/icon/bricks.png);">
-                                                                Publicar
-                                                                ofertas
+                                                            <li id="linkAdministrador" style="list-style-image: url(css/icon/bricks.png);">
+                                                                Publicar ofertas
                                                             </li>
-                                                            <ul style="margin: 0px; padding-left: 20px">
-                                                                <li id="linkAdministrador"
-                                                                    title="Si deseas publicar ofertas">Persona
-                                                                    Natural
-                                                                </li>
+                                                            <li id="btnRegistroEmpresa" style="list-style-image: url(css/icon/bricks.png);">
+                                                                Registrar empresa
+                                                            </li>
+                                                            <!--ul style="margin: 0px; padding-left: 20px">
+                                                                <li id="linkAdministrador" title="Si deseas publicar ofertas">Persona Natural</li>
                                                                 <li id="linkEmpresas">Persona Jur&iacute;dica</li>
-                                                            </ul>
+                                                            </ul-->
                                                             <li
                                                                     style="margin-bottom: 0px 5px 10px 0px; width: 120px; cursor: default; list-style-type: none; border-bottom: 1px dotted #EE8E41">
                                                                 &nbsp;</li>

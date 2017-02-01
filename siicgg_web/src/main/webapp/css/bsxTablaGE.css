@@ -167,10 +167,10 @@ table.searchBar td:nth-child(1) {
     border-radius: 3px 0 0 3px;
 }
 table.searchBar button {
-    background-color: transparent;
+    background-color: #ded8dc;
     background-position: center center;
     background-repeat: no-repeat;
-    border: 1px solid #ded8dc;
+    border: 0px solid #ded8dc;
     border-radius: 0 3px 3px 0;
     height: 23px;
     margin: 0 0 0 -3px;

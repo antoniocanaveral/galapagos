@@ -235,33 +235,38 @@ function setOptionModuloSeleccionado(idModulo){
 	document.getElementById("btnDesactivarCuenta").style.display="none";
 	document.getElementById("loading").style.display="none";
 	document.getElementById("divIndicador").style.display="none";
-	document.getElementById("btnRegistroEmpresa").style.display="none";	
+	//document.getElementById("btnRegistroEmpresa").style.display="none";
 	document.getElementById("btnAccederSistema").style.display="none";
 	//document.getElementById("divIndicador").style.display="none";
+
+
+	document.getElementById("btnHojaVida").onclick=function(){document.getElementById("iFrameBody").src="hojaVida.jsp";}
+	document.getElementById("btnDenunciaSugerencia").onclick=function(){document.getElementById("iFrameBody").src="denunciaSugerencia.jsp";}
+	document.getElementById("btnSubscripcionCargos").onclick=function(){document.getElementById("iFrameBody").src="subscripcionCargo.jsp";}
+	document.getElementById("btnAplicaciones").onclick=function(){document.getElementById("iFrameBody").src="ofertasByUsuario.jsp";}
+	document.getElementById("btnActivarCuenta").onclick=function(){document.getElementById("iFrameBody").src="activarCuentaGestionEmpleo.jsp";}
+	document.getElementById("btnDesactivarCuenta").onclick=function(){document.getElementById("iFrameBody").src="desactivarCuentaGestionEmpleo.jsp";}
+	document.getElementById("btnBuscarEmpleo").onclick=function(){document.getElementById("iFrameBody").src="gestionEmpleo.jsp";}
+	document.getElementById("btnEmpresasRegistradas").onclick=function(){document.getElementById("iFrameBody").src="listadoEmpresas.jsp";}
+	document.getElementById("btnComunicadoRadial").onclick=function(){document.getElementById("iFrameBody").src="comunicadoRadial.jsp";}
+	document.getElementById("btnAccederSistema").onclick=function(){window.open('/sii','_blank');}
+	document.getElementById("btnRegistroEmpresa").onclick=function(){document.getElementById("iFrameBody").src="registroDatosEmpresa.jsp";}
+	if (RolUsuario == "CSROL_GEAPL"){
+		pnlGestionEmpleo.style.display="block";
+		document.getElementById("divIndicador").style.display="none";
+		//document.getElementById("btnBuscarEmpleo").style.display="block";
+		document.getElementById("btnHojaVida").style.display="block";
+		document.getElementById("btnAplicaciones").style.display="block";
+		document.getElementById("btnDenunciaSugerencia").style.display="block";
+		document.getElementById("btnSubscripcionCargos").style.display="block";
+		document.getElementById("btnEmpresasRegistradas").style.display="block";
+		document.getElementById("divIndicador").style.display="block";
+	}
+
 	if(idModulo == "linkCandidatos"){			
 			
 		if (txtUsuario.value!="false"){			
-			document.getElementById("btnHojaVida").onclick=function(){document.getElementById("iFrameBody").src="hojaVida.jsp";}
-			document.getElementById("btnDenunciaSugerencia").onclick=function(){document.getElementById("iFrameBody").src="denunciaSugerencia.jsp";}
-			document.getElementById("btnSubscripcionCargos").onclick=function(){document.getElementById("iFrameBody").src="subscripcionCargo.jsp";}
-			document.getElementById("btnAplicaciones").onclick=function(){document.getElementById("iFrameBody").src="ofertasByUsuario.jsp";}
-			document.getElementById("btnActivarCuenta").onclick=function(){document.getElementById("iFrameBody").src="activarCuentaGestionEmpleo.jsp";}
-			document.getElementById("btnDesactivarCuenta").onclick=function(){document.getElementById("iFrameBody").src="desactivarCuentaGestionEmpleo.jsp";}
-			document.getElementById("btnBuscarEmpleo").onclick=function(){document.getElementById("iFrameBody").src="gestionEmpleo.jsp";}
-			document.getElementById("btnEmpresasRegistradas").onclick=function(){document.getElementById("iFrameBody").src="listadoEmpresas.jsp";}
-			document.getElementById("btnComunicadoRadial").onclick=function(){document.getElementById("iFrameBody").src="comunicadoRadial.jsp";}			
-			document.getElementById("btnAccederSistema").onclick=function(){window.open('/sii','_blank');}
-			if (RolUsuario == "CSROL_GEAPL"){
-				pnlGestionEmpleo.style.display="block";
-				document.getElementById("divIndicador").style.display="none";
-				document.getElementById("btnBuscarEmpleo").style.display="block";
-				document.getElementById("btnHojaVida").style.display="block";
-				document.getElementById("btnAplicaciones").style.display="block";
-				document.getElementById("btnDenunciaSugerencia").style.display="block";
-				document.getElementById("btnSubscripcionCargos").style.display="block";
-				document.getElementById("btnEmpresasRegistradas").style.display="block";
-				document.getElementById("divIndicador").style.display="block";
-			}
+			;
 		}else{
 			document.getElementById("btnInfoAdicional").style.fontSize ="11";
 			document.getElementById("btnInfoAdicional").innerHTML = "Por favor presione el bot&oacute;n del panel superior para aplicar a ofertas de empleo "
@@ -272,8 +277,7 @@ function setOptionModuloSeleccionado(idModulo){
 		pnlGestionEmpleo.style.display="block";
 		if (txtUsuario.value!="false"){
 			pnlGestionEmpleo.style.display="block";
-			document.getElementById("btnRegistroEmpresa").onclick=function(){
-			document.getElementById("iFrameBody").src="registroDatosEmpresa.jsp";}
+			document.getElementById("btnRegistroEmpresa").onclick=function(){document.getElementById("iFrameBody").src="registroDatosEmpresa.jsp";}
 			document.getElementById("btnDenunciaSugerencia").onclick=function(){document.getElementById("iFrameBody").src="denunciaSugerencia.jsp";}
 			document.getElementById("btnDenunciaSugerencia").style.display="block";
 			document.getElementById("btnRegistroEmpresa").style.display="block";	
